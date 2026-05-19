@@ -1,0 +1,222 @@
+/* ---------- Top Strip ---------- */
+.dgap-header-strip {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #fff;
+	padding: 14px 20px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 20px;
+	margin-left: -20px;
+}
+
+.dgap-header-left h1 {
+	margin: 0;
+	font-size: 24px;
+	line-height: 1.2;
+}
+
+.dgap-header-left .description {
+	margin: 5px 0 0 0;
+	color: #555;
+	font-size: 13px;
+}
+
+.dgap-header-right .button {
+	margin-left: 10px;
+}
+
+/* ---------- Settings Layout ---------- */
+.dgap-settings-layout {
+	display: flex;
+	gap: 20px;
+	margin-right: 20px;
+}
+
+/* LEFT COLUMN */
+.dgap-settings-main {
+	flex: 3;
+	background: #fff;	
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+}
+.dgap-settings-main form {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* RIGHT COLUMN */
+.dgap-settings-sidebar {
+	flex: 1;
+	background: #fff;
+	padding: 20px;
+	border: 1px solid #fff;
+	border-radius: 4px;
+}
+
+/* ---------- Boxes in Sidebar ---------- */
+.dgap-box {
+	background: #fff;
+	border: 1px solid #ddd;
+	padding: 15px 20px;
+	margin-bottom: 20px;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+}
+
+.dgap-box h3 {
+	margin-top: 0;
+	margin-bottom: 10px;
+	font-size: 16px;
+}
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+	.dgap-settings-layout {
+		flex-direction: column;
+	}
+}
+
+/* Tabs */
+.dgap-tabs {
+	display: flex;
+	gap: 24px;
+	border-bottom: 1px solid #dcdcde;
+	margin-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.dgap-tabs a {
+	font-size: 16px;
+	font-weight: 500;
+	color: #1d2327;
+	text-decoration: none;
+	padding: 13px 0;
+	margin-bottom: -1px; /* important */
+	border-bottom: 3px solid transparent;
+}
+
+.dgap-tabs a:hover {
+	border-bottom-color: #8c8f94;
+}
+
+.dgap-tabs a.active {
+	color: #2271b1;
+	border-bottom-color: #2271b1;
+}
+.dgap-tabs a,
+.dgap-subtabs a {
+	outline: none;        /* remove default focus outline */
+	box-shadow: none;     /* remove any focus shadow */
+}
+
+.dgap-tabs a:focus,
+.dgap-subtabs a:focus {
+	outline: none;
+	box-shadow: none;
+}
+.dgap-subtabs {
+	display: flex;
+	gap: 10px;
+	margin: 8px 0 20px;
+	padding-left: 20px;
+}
+
+/* base = button for ALL */
+.dgap-subtabs a {
+	font-size: 13px;
+	font-weight: 500;
+	color: #50575e;
+	text-decoration: none;
+
+	/* 👇 height kam yahin se hogi */
+	padding: 3px 10px;
+
+	border-radius: 4px;
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+
+	transition: all 0.15s ease;
+	outline: none;
+	box-shadow: none;
+}
+
+
+/* hover = slightly stronger */
+.dgap-subtabs a:hover {
+	background: #eef0f1;
+	border-color: #c3c4c7;
+	color: #1d2327;
+}
+
+/* active = primary button */
+.dgap-subtabs a.active {
+	background: #6c7b86;
+	border-color: #6c7b86;
+	color: #fff;
+}
+
+/* focus cleanup (WP default hatane ke liye) */
+.dgap-subtabs a:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+/* Modern Accordion Styles - Fixed Alignment */
+.dgap-accordion {
+	margin-bottom: 10px;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+	background: #fff;	
+	overflow: hidden;
+}
+
+.dgap-accordion-title {
+	padding: 10px 12px;
+	font-weight: 600;
+	cursor: pointer;
+	background: #f1f1f1;
+	border-radius: 4px 4px 0 0;
+	/* Flex to align title left and arrow right */
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: auto;
+}
+
+.dgap-accordion-title:hover {
+	background: #eaeaea;
+}
+
+.dgap-accordion-title::before {
+	content: "\25BC"; /* Down arrow */
+	font-size: 12px;
+	transition: transform 0.3s ease;
+}
+
+.dgap-accordion-title.active::before {
+	transform: rotate(180deg);
+}
+
+.dgap-accordion-content {
+	display: none;
+	padding: 10px 12px;
+	background: #fff;
+	border-top: 1px solid #d1d1d1;
+	animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+/* Optional: smooth editor styling inside accordion */
+.dgap-accordion-content .wp-editor-container {
+	margin-top: 10px;
+}
+
+.dgap-email-labels{
+	margin-left: auto;
+}

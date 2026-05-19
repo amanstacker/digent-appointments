@@ -1,0 +1,92 @@
+.dgap-calendar {
+	border: 1px solid #ddd;
+	padding: 10px;
+	margin-top: 20px;
+}
+
+.dgap-calendar.disabled {
+	opacity: 0.4;
+	pointer-events: none;
+}
+
+.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.calendar-weekdays,
+.calendar-days {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	text-align: center;
+}
+
+.day {
+	padding: 10px;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+.day:hover {
+	background: #f1f1f1;
+}
+
+.day.active {
+	background: #2271b1;
+	color: #fff;
+}
+
+.day.empty {
+	cursor: default;
+	background: none;
+}
+
+.dgap-slots {
+	margin-top: 10px;
+}
+
+.slots-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.slot {
+	padding: 6px 10px;
+	border: 1px solid #2271b1;
+	background: #fff;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+.slot:hover {
+	background: #2271b1;
+	color: #fff;
+}
+.slot {
+	border: 1px solid #ccc;
+	background: #fff;
+	cursor: pointer;
+}
+
+.slot.active {
+	background: #2271b1;
+	color: #fff;
+	border-color: #2271b1;
+}
+
+.slot.selected {
+	opacity: 0.9;
+}
+
+.dgap-error {
+	border-color: #dc2626 !important;
+}
+
+.dgap-error-message {
+	color: #dc2626;
+	font-size: 12px;
+	margin-top: 4px;
+}

@@ -1,0 +1,121 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class DGAP_Form_Ajax {
+
+	public function register() {
+
+		add_action( 'wp_ajax_dgap_render_preview', [ $this, 'render_preview' ] );
+		add_action( 'wp_ajax_dgap_save_form', [ $this, 'save_form' ] );
+		add_action( 'wp_ajax_dgap_delete_form', [ $this, 'delete' ] );
+
+	}
+
+	public function render_preview() {
+
+		// First, parse the serialized form data
+	    if ( empty( $_POST['form_data'] ) ) {
+	        wp_send_json_error( ['message' => 'No data received'] );
+	    }
+	    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --Reason Sanitization is handled below
+	    parse_str( $_POST['form_data'], $form_data );
+
+	    // Verify nonce
+	    if ( ! isset( $form_data['_dgap_nonce'] ) 
+	         || ! wp_verify_nonce( $form_data['_dgap_nonce'], 'dgap_render_preview' ) ) {
+	        wp_send_json_error( ['message' => 'Security check failed'] );
+	    }
+
+	    // Capability check
+	    if ( ! current_user_can( 'manage_options' ) ) {
+	        wp_send_json_error( 'Unauthorized' );
+	    }
+
+	    require_once DGAP_PATH . 'includes/admin/class-dgap-form-renderer.php';
+
+	    $html = DGAP_Form_Renderer::render( $form_data );
+
+		wp_send_json_success([
+			'html' => $html
+		]);
+
+	}
+
+	public static function save_form() {
+
+        // Verify nonce
+        if ( ! check_ajax_referer( 'dgap_render_preview', '_dgap_nonce', false ) ) {
+            wp_send_json_error( [ 'message' => 'Invalid nonce' ], 403 );
+        }
+
+        // Permissions
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => 'Unauthorized' ], 403 );
+        }
+
+        $id            = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
+        $name          = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '(no-title)';
+        $layout        = isset( $_POST['layout'] ) ? sanitize_text_field( wp_unslash( $_POST['layout'] ) ) : 'layout-1';
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason: Sanitization and escaping is done below.
+        $settings      = isset( $_POST['settings'] ) ? $_POST['settings'] : [];
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason: Sanitization and escaping is done below.
+        $custom_fields = isset( $_POST['custom_fields'] ) ? $_POST['custom_fields'] : [];
+
+        // Sanitize settings recursively
+        $settings      = self::sanitize_array( $settings );
+        $custom_fields = self::sanitize_array( $custom_fields );
+
+        foreach ( $custom_fields as $key => $field ) {
+        	if ( strpos( $field['name'] , 'custom_' ) !== 0 ) {
+        		continue;
+        	}
+
+        	$custom_fields[$key]['name'] 	=	'_dgap_form_' . str_replace( '-', '_', sanitize_title( $field['label'] ) );
+        }	        
+
+        $data = [
+            'name'          => $name,
+            'layout'        => $layout,
+            'settings'      => serialize( $settings ),
+            'custom_fields' => serialize( $custom_fields ),
+        ];
+
+        if ( $id ) {
+            // Update
+            $result = DGAP_Form_Repo::update( $id, $data );
+            wp_send_json_success( [ 'id' => $id, 'message' => 'Form updated successfully' ] );
+        } else {
+            // Insert
+            $new_id = DGAP_Form_Repo::insert( $data );
+            if ( $new_id ) {
+                wp_send_json_success( [ 'id' => $new_id, 'message' => 'Form saved successfully' ] );
+            } else {
+                wp_send_json_error( [ 'message' => 'Failed to save form' ] );
+            }
+        }
+    }
+
+    private static function sanitize_array( $array ) {
+        if ( ! is_array( $array ) ) {
+            return sanitize_text_field( wp_unslash( $array ) );
+        }
+        return array_map( [ __CLASS__, 'sanitize_array' ], $array );
+    }
+
+    /**
+	 * Delete Form
+	 */
+	public function delete() {
+
+		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+		
+		if ( ! empty( $_POST['id'] ) ) {
+			DGAP_Form_Repo::delete( (int) $_POST['id'] );
+
+			wp_send_json_success();
+		}
+	}
+
+}
