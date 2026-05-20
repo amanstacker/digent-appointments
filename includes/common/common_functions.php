@@ -42,7 +42,7 @@ function dgap_get_form_default_settings() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( ! empty( $_GET['page'] ) && ! empty( $_GET['id'] ) ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( $_GET['page'] === 'digent-forms' && $_GET['id'] > 0 ) {
+		if ( $_GET['page'] === 'digent-appointments-forms' && $_GET['id'] > 0 ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$saved_settings = DGAP_Form_Repo::get( absint( $_GET['id'] ) );	
 			

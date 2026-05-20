@@ -48,7 +48,7 @@ class DGAP_Admin {
         if (strpos($hook, 'digent') === false) return;
         if (strpos($hook, 'digent-settings') === true) return;
         if ( 'toplevel_page_digent' === $hook ) return;
-                    
+                       
         wp_enqueue_media();
         wp_enqueue_script( 'jquery-ui-datepicker' );
         
@@ -105,7 +105,7 @@ class DGAP_Admin {
     public function enqueue_settings_assets($hook) {
         
         // Only load assets on our plugin pages
-        if (strpos($hook, 'digent-settings') === false) return;
+        if (strpos($hook, 'digent-appointments-settings') === false) return;
                 
 
         wp_enqueue_style(
@@ -131,7 +131,7 @@ class DGAP_Admin {
     public function enqueue_calendar_assets( $hook ) {
         
         // Load only on digent Bookings page
-        if ( 'toplevel_page_digent' !== $hook || 'digent_page_digent-forms' !== $hook ) {
+        if ( 'toplevel_page_digent-appointments' !== $hook ) {
             return;
         }
 
@@ -159,9 +159,7 @@ class DGAP_Admin {
     public function enqueue_booking_form_assets( $hook ) {
     
         // Load only on digent Bookings Form page
-        if ( 'digent_page_digent-forms' !== $hook ) {
-            return;
-        }
+        if (strpos($hook, 'digent-appointments-forms') === false) return;
 
         wp_enqueue_style(
             'dgap-forms-shared',

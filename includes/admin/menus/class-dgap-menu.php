@@ -6,10 +6,10 @@ class DGAP_Menu {
 
 	public function register() {
 		add_menu_page(
-			'Digent',
-			'Digent',
+			'DG Appointments',
+			'DG Appointments',
 			'manage_options',
-			'digent',
+			'digent-appointments',
 			[ $this, 'dashboard' ],
 			'dashicons-calendar-alt',
 			26
@@ -39,11 +39,11 @@ class DGAP_Menu {
 
 		foreach ( $menus as $slug => $title ) {
 			add_submenu_page(
-				'digent',
+				'digent-appointments',
 				$title,
 				$title,
 				'manage_options',
-				"digent-$slug",
+				"digent-appointments-$slug",
 				function () use ( $slug ) {
 					include DGAP_PLUGIN_DIR_PATH . "includes/admin/pages/$slug.php";
 				}

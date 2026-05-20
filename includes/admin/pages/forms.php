@@ -23,7 +23,7 @@ if ( in_array( $action, ['edit', 'new'] ) ) {
 		</div>
 
 		<div class="dgap-strip-right">
-			<a href="<?php echo esc_url( admin_url('admin.php?page=digent-forms&action=new') ); ?>" 
+			<a href="<?php echo esc_url( admin_url('admin.php?page=digent-appointments-forms&action=new') ); ?>" 
 			   class="dgap-btn button button-primary">
 				<?php esc_html_e( 'Add Form', 'digent-appointments' ); ?>
 			</a>

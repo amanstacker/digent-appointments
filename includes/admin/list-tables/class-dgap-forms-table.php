@@ -52,7 +52,7 @@ class DGAP_Forms_Table extends WP_List_Table {
 	}
 
 	public function column_actions( $item ) {
-		$edit_url = admin_url( 'admin.php?page=digent-forms&action=edit&id=' . $item['id'] );
+		$edit_url = admin_url( 'admin.php?page=digent-appointments-forms&action=edit&id=' . $item['id'] );
 
 		return sprintf(
 			'<a href="%1$s" class="button button-small">%2$s</a>
