@@ -182,12 +182,12 @@
 }
 
 /* ================= List Table ================= */
-.wp-list-table th {
+.dgap-admin-wrap .wp-list-table th {
 	font-weight: 600;
 	background: #f6f7f7;
 }
 
-.wp-list-table tr:hover {
+.dgap-admin-wrap .wp-list-table tr:hover {
 	background: #f9fafb;
 }
 
@@ -223,7 +223,7 @@
 }
 
 /* ================= Table Action Buttons ================= */
-.wp-list-table .button-small {
+.dgap-admin-wrap .wp-list-table .button-small {
 	margin-right: 6px;
 }
 

@@ -51,12 +51,12 @@
 				<div class="dgap-timeoff-card">
 
 					<div class="dgap-timeoff-left">
-						<div id="timeoff-calendar"></div>
+						<div id="dgap-timeoff-calendar"></div>
 					</div>
 
 					<div class="dgap-timeoff-right">
 
-						<ul id="timeoff-dates"></ul>
+						<ul id="dgap-timeoff-dates"></ul>
 
 					</div>
 				</div>

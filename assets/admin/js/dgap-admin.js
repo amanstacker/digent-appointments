@@ -532,7 +532,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 	let selectedDates = [];
 
 	function renderDates() {
-		const $list = $('#timeoff-dates').empty();
+		const $list = $('#dgap-timeoff-dates').empty();
 
 		selectedDates.forEach(function (date) {
 			$list.append(
@@ -544,7 +544,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		});
 	}
 
-	$('#timeoff-calendar').datepicker({
+	$('#dgap-timeoff-calendar').datepicker({
 		dateFormat: 'yy-mm-dd',
 		beforeShowDay: function (date) {
 
@@ -586,14 +586,14 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		}
 	});
 
-	$(document).on('click', '#timeoff-dates button', function () {
+	$(document).on('click', '#dgap-timeoff-dates button', function () {
 
 		const date = $(this).closest('li').data('date');
 
 		selectedDates = selectedDates.filter(d => d !== date);
 
 		renderDates();
-		$('#timeoff-calendar').datepicker('refresh');
+		$('#dgap-timeoff-calendar').datepicker('refresh');
 	});
 
 	/* =========================================================
@@ -696,7 +696,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 				});
 
 				renderDates();
-				$('#timeoff-calendar').datepicker('refresh');
+				$('#dgap-timeoff-calendar').datepicker('refresh');
 			}
 
 			/* ==================================================

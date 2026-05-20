@@ -230,15 +230,15 @@
     pointer-events: none;
 }
 
-.dgap-preview-wrap .calendar-header {
+.dgap-preview-wrap .dgap-calendar-header {
     display:         flex;
     justify-content: space-between;
     align-items:     center;
     margin-bottom:   10px;
 }
 
-.dgap-preview-wrap .calendar-weekdays,
-.dgap-preview-wrap .calendar-days {
+.dgap-preview-wrap .dgap-calendar-weekdays,
+.dgap-preview-wrap .dgap-calendar-days {
     display:               grid;
     grid-template-columns: repeat(7, 1fr);
     text-align:            center;
@@ -272,7 +272,7 @@
     margin-top: 10px;
 }
 
-.dgap-preview-wrap .slots-row {
+.dgap-preview-wrap .dgap-slots-row {
     display:   flex;
     flex-wrap: wrap;
     gap:       8px;

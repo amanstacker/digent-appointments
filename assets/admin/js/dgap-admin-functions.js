@@ -66,7 +66,7 @@
 					currentForm.find('.dgap-break-row:not(:first)').remove();
 					currentForm.find('.dgap-day-pill span').removeClass('selected');
 					currentForm.find('.dgap-break-row').remove();	
-					$('#timeoff-calendar').datepicker('refresh');
+					$('#dgap-timeoff-calendar').datepicker('refresh');
 					$('.dgap-timeoff-time').hide();	
 					
 					const $select = $('#timeoff-entity');					

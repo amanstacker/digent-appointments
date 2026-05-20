@@ -32,11 +32,11 @@
  * DATEPICKER – CUSTOM
  * ========================================================= */
 
-#timeoff-calendar {
+#dgap-timeoff-calendar {
 	width: 100%;
 }
 
-#timeoff-calendar .ui-datepicker {
+#dgap-timeoff-calendar .ui-datepicker {
 	width: 100%;
 	border: none;
 	background: transparent;
@@ -45,7 +45,7 @@
 }
 
 /* Header */
-#timeoff-calendar .ui-datepicker-header {
+#dgap-timeoff-calendar .ui-datepicker-header {
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -56,15 +56,15 @@
 	border-radius: 6px;
 }
 
-#timeoff-calendar .ui-datepicker-title {
+#dgap-timeoff-calendar .ui-datepicker-title {
 	font-weight: 600;
 	font-size: 14px;
 	color: #111827;
 }
 
 /* Nav */
-#timeoff-calendar .ui-datepicker-prev,
-#timeoff-calendar .ui-datepicker-next {
+#dgap-timeoff-calendar .ui-datepicker-prev,
+#dgap-timeoff-calendar .ui-datepicker-next {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
@@ -77,41 +77,41 @@
 	cursor: pointer;
 }
 
-#timeoff-calendar .ui-datepicker-prev { left: 6px; }
-#timeoff-calendar .ui-datepicker-next { right: 6px; }
+#dgap-timeoff-calendar .ui-datepicker-prev { left: 6px; }
+#dgap-timeoff-calendar .ui-datepicker-next { right: 6px; }
 
-#timeoff-calendar .ui-icon {
+#dgap-timeoff-calendar .ui-icon {
 	display: none !important;
 }
 
-#timeoff-calendar .ui-datepicker-prev::before,
-#timeoff-calendar .ui-datepicker-next::before {
+#dgap-timeoff-calendar .ui-datepicker-prev::before,
+#dgap-timeoff-calendar .ui-datepicker-next::before {
 	font-family: dashicons;
 	font-size: 16px;
 	color: #374151;
 }
 
-#timeoff-calendar .ui-datepicker-prev::before {
+#dgap-timeoff-calendar .ui-datepicker-prev::before {
 	content: "\f341";
 }
 
-#timeoff-calendar .ui-datepicker-next::before {
+#dgap-timeoff-calendar .ui-datepicker-next::before {
 	content: "\f345";
 }
 
-#timeoff-calendar .ui-datepicker-prev:hover,
-#timeoff-calendar .ui-datepicker-next:hover {
+#dgap-timeoff-calendar .ui-datepicker-prev:hover,
+#dgap-timeoff-calendar .ui-datepicker-next:hover {
 	background: #e5e7eb;
 }
 
 /* Table */
-#timeoff-calendar table {
+#dgap-timeoff-calendar table {
 	width: 100%;
 	table-layout: fixed;
 	border-collapse: collapse;
 }
 
-#timeoff-calendar th {
+#dgap-timeoff-calendar th {
 	padding: 6px 0;
 	font-size: 12px;
 	font-weight: 600;
@@ -119,13 +119,13 @@
 	text-align: center;
 }
 
-#timeoff-calendar td {
+#dgap-timeoff-calendar td {
 	width: 32px;
 	height: 32px;
 	padding: 0;
 }
 
-#timeoff-calendar td a {
+#dgap-timeoff-calendar td a {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -139,7 +139,7 @@
 	transition: background .15s ease, color .15s ease;
 }
 
-#timeoff-calendar td a:hover {
+#dgap-timeoff-calendar td a:hover {
 	background: #e5e7eb;
 }
 
@@ -147,21 +147,21 @@
  * SELECTED DAY (FIXED)
  * =============================== */
 
-#timeoff-calendar td.dgap-selected-day a {
+#dgap-timeoff-calendar td.dgap-selected-day a {
 	background: #2563eb;
 	color: #fff;
 	border-radius: 6px;
 }
 
 /* TODAY */
-#timeoff-calendar .ui-datepicker-today a {
+#dgap-timeoff-calendar .ui-datepicker-today a {
 	background: #e0e7ff;
 	color: #1e3a8a;
 	border: 1px solid #2563eb;
 }
 
 /* TODAY + SELECTED → SELECTED WINS */
-#timeoff-calendar .ui-datepicker-today.dgap-selected-day a {
+#dgap-timeoff-calendar .ui-datepicker-today.dgap-selected-day a {
 	background: #2563eb;
 	color: #fff;
 	border-color: #2563eb;
@@ -171,7 +171,7 @@
  * SELECTED DATES (RIGHT)
  * ========================================================= */
 
-#timeoff-dates {
+#dgap-timeoff-dates {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -182,7 +182,7 @@
 	overflow-y: auto;
 }
 
-#timeoff-dates li {
+#dgap-timeoff-dates li {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -193,11 +193,11 @@
 	font-size: 12px;
 }
 
-#timeoff-dates li:hover {
+#dgap-timeoff-dates li:hover {
 	background: #e5e7eb;
 }
 
-#timeoff-dates button {
+#dgap-timeoff-dates button {
 	background: none;
 	border: none;
 	padding: 0;
@@ -206,7 +206,7 @@
 	color: #dc2626;
 }
 
-#timeoff-dates button:hover {
+#dgap-timeoff-dates button:hover {
 	color: #b91c1c;
 }
 
@@ -223,14 +223,14 @@
  * DISABLED PAST DAYS (CUSTOM)
  * =============================== */
 
-#timeoff-calendar td.dgap-disabled-day a {
+#dgap-timeoff-calendar td.dgap-disabled-day a {
 	background: transparent;
 	color: #9ca3af;
 	pointer-events: none;
 	cursor: not-allowed;
 }
 
-#timeoff-calendar td.dgap-disabled-day a:hover {
+#dgap-timeoff-calendar td.dgap-disabled-day a:hover {
 	background: transparent;
 }
 .dgap-form textarea{

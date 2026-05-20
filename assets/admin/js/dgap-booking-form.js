@@ -290,7 +290,7 @@ jQuery(function ($) {
         formState.date     = $('.day.active').data('date') || '';
 
         formState.slots = [];
-        $('.slot.selected').each(function () {
+        $('.dgap-slot.selected').each(function () {
             formState.slots.push($(this).data('start'));
         });
 

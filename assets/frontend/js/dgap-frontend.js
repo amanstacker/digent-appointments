@@ -111,22 +111,22 @@ jQuery(function ($) {
         const startDay    = (firstDay.getDay() + 6) % 7;
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        $('.month-label').text(
+        $('.dgap-month-label').text(
             firstDay.toLocaleString('default', { month: 'long', year: 'numeric' })
         );
 
         let html = '';
         for (let i = 0; i < startDay; i++) {
-            html += '<div class="day empty"></div>';
+            html += '<div class="dgap-day empty"></div>';
         }
         for (let d = 1; d <= daysInMonth; d++) {
             const mm  = String(month + 1).padStart(2, '0');
             const dd  = String(d).padStart(2, '0');
             const dateStr = `${year}-${mm}-${dd}`;
-            html += `<div class="day" data-date="${dateStr}">${d}</div>`;
+            html += `<div class="dgap-day" data-date="${dateStr}">${d}</div>`;
         }
 
-        $('.calendar-days').html(html);
+        $('.dgap-calendar-days').html(html);
     }
 
     function disableCalendar() {
@@ -267,12 +267,12 @@ jQuery(function ($) {
             _dgap_nonce: dgap_frontend._dgap_frontend_nonce
         }, function (res) {
 
-            let html = '<div class="slots-row">';
+            let html = '<div class="dgap-slots-row">';
 
             if (res.success && res.data.length) {
                 $.each(res.data, function (_, slot) {
                     html += `
-                        <button type="button" class="slot"
+                        <button type="button" class="dgap-slot"
                             data-start="${slot.start}"
                             data-end="${slot.end}">
                             ${slot.label}
@@ -295,23 +295,23 @@ jQuery(function ($) {
         return (parseInt(parts[0], 10) * 60) + parseInt(parts[1], 10);
     }
 
-    $(document).on('click', '.slot', function () {
+    $(document).on('click', '.dgap-slot', function () {
 
-        $('.slot').removeClass('active selected');
+        $('.dgap-slot').removeClass('active selected');
 
         const clickedStart = timeToMinutes($(this).data('start'));
         const clickedEnd   = timeToMinutes($(this).data('end'));
         const windowEnd    = clickedStart + (clickedEnd - clickedStart);
 
-        $('.slot').each(function () {
+        $('.dgap-slot').each(function () {
             const slotStart = timeToMinutes($(this).data('start'));
             if (slotStart >= clickedStart && slotStart < windowEnd) {
                 $(this).addClass('active selected');
             }
         });
 
-        selectedSlotStart = $('.slot.active').first().data('start');
-        selectedSlotEnd   = $('.slot.active').last().data('end');
+        selectedSlotStart = $('.dgap-slot.active').first().data('start');
+        selectedSlotEnd   = $('.dgap-slot.active').last().data('end');
 
         // Update summary
         updateSummary();
@@ -452,7 +452,7 @@ jQuery(function ($) {
                 return false;
             }
 
-            if (!$('.slot.active').length) {
+            if (!$('.dgap-slot.active').length) {
                 alert('Please select a time slot.');
                 $('.dgap-slots').get(0)?.scrollIntoView({
                     behavior: 'smooth',
@@ -535,7 +535,7 @@ jQuery(function ($) {
             return;
         }
 
-        const activeSlots = $('.slot.active');
+        const activeSlots = $('.dgap-slot.active');
 
         if (!activeSlots.length) {
             alert('Please select a time slot.');
@@ -690,7 +690,7 @@ jQuery(function ($) {
         // -------------------------
         // Slot
         // -------------------------
-        if (!$('.slot.active').length) {
+        if (!$('.dgap-slot.active').length) {
 
             alert('Please select time slot');
 

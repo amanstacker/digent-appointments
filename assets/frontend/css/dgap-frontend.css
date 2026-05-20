@@ -9,36 +9,36 @@
 	pointer-events: none;
 }
 
-.calendar-header {
+.dgap-calendar-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	margin-bottom: 10px;
 }
 
-.calendar-weekdays,
-.calendar-days {
+.dgap-calendar-weekdays,
+.dgap-calendar-days {
 	display: grid;
 	grid-template-columns: repeat(7, 1fr);
 	text-align: center;
 }
 
-.day {
+.dgap-day {
 	padding: 10px;
 	cursor: pointer;
 	border-radius: 4px;
 }
 
-.day:hover {
+.dgap-day:hover {
 	background: #f1f1f1;
 }
 
-.day.active {
+.dgap-day.active {
 	background: #2271b1;
 	color: #fff;
 }
 
-.day.empty {
+.dgap-day.empty {
 	cursor: default;
 	background: none;
 }
@@ -47,13 +47,13 @@
 	margin-top: 10px;
 }
 
-.slots-row {
+.dgap-slots-row {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
 }
 
-.slot {
+.dgap-slot {
 	padding: 6px 10px;
 	border: 1px solid #2271b1;
 	background: #fff;
@@ -61,23 +61,23 @@
 	border-radius: 4px;
 }
 
-.slot:hover {
+.dgap-slot:hover {
 	background: #2271b1;
 	color: #fff;
 }
-.slot {
+.dgap-slot {
 	border: 1px solid #ccc;
 	background: #fff;
 	cursor: pointer;
 }
 
-.slot.active {
+.dgap-slot.active {
 	background: #2271b1;
 	color: #fff;
 	border-color: #2271b1;
 }
 
-.slot.selected {
+.dgap-slot.selected {
 	opacity: 0.9;
 }
 
