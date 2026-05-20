@@ -1,23 +1,22 @@
 <?php
-/**
- * Plugin Name: Digent Appointments
- * Description: Advanced appointment scheduling engine for WordPress.
- * Version: 1.0.0
- * Author: Your Name
- * Text Domain: digent-appointments
- * License: GPLv3 or later
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+/*
+Plugin Name: Digent Appointments
+Description: Advanced appointment scheduling plugin for WordPress Sites.
+Version: 1.0.0
+Text Domain: digent-appointments
+Author: amanstacker
+Author URI: https://profiles.wordpress.org/amanstacker/
+License: GPLv3 or later
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 define( 'DGAP_VERSION', '1.0.0' );
-define( 'DGAP_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DGAP_URL', plugin_dir_url( __FILE__ ) );
+define( 'DGAP_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
+define( 'DGAP_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
 
-require_once DGAP_PATH . 'includes/core/class-dgap-loader.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/core/class-dgap-loader.php';
 
 function dgap_run() {
 	$loader = new DGAP_Loader();

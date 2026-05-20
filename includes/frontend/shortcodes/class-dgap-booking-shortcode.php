@@ -26,9 +26,9 @@ class DGAP_Booking_Shortcode {
         }
 
         // Load repos needed for rendering
-        require_once DGAP_PATH . 'includes/repositories/class-dgap-location-repo.php';
-        require_once DGAP_PATH . 'includes/repositories/class-dgap-form-repo.php';
-        require_once DGAP_PATH . 'includes/admin/class-dgap-form-renderer.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-location-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/class-dgap-form-renderer.php';
 
         $form = DGAP_Form_Repo::get( $id );
 

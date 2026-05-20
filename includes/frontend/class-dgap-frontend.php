@@ -15,19 +15,19 @@ class DGAP_Frontend {
 	 */
 	private function includes() {
 		// Shortcodes
-		require_once DGAP_PATH . 'includes/frontend/shortcodes/class-dgap-booking-shortcode.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/frontend/shortcodes/class-dgap-booking-shortcode.php';
 
 		// AJAX Handlers
-		require_once DGAP_PATH . 'includes/frontend/ajax/class-dgap-frontend-booking-ajax.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/frontend/ajax/class-dgap-frontend-booking-ajax.php';
 
 		// Repos needed on frontend
-        require_once DGAP_PATH . 'includes/repositories/class-dgap-location-repo.php';
-        require_once DGAP_PATH . 'includes/repositories/class-dgap-service-repo.php';
-        require_once DGAP_PATH . 'includes/repositories/class-dgap-staff-repo.php';
-        require_once DGAP_PATH . 'includes/repositories/class-dgap-schedule-repo.php';
-        require_once DGAP_PATH . 'includes/repositories/class-dgap-booking-repo.php';
-        require_once DGAP_PATH . 'includes/repositories/class-dgap-form-repo.php';
-        require_once DGAP_PATH . 'includes/admin/class-dgap-form-renderer.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-location-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-service-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-staff-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-schedule-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/class-dgap-form-renderer.php';
 	}
 
 	/**
@@ -48,14 +48,14 @@ class DGAP_Frontend {
 		// CSS
 		wp_enqueue_style(
 		    'dgap-forms-shared',
-		    DGAP_URL . 'assets/shared/css/dgap-forms.css',
+		    DGAP_PLUGIN_DIR_URL . 'assets/shared/css/dgap-forms.css',
 		    [],
 		    DGAP_VERSION
 		);
 
 		wp_enqueue_style(
 			'dgap-frontend',
-			DGAP_URL . 'assets/frontend/css/dgap-frontend.css',
+			DGAP_PLUGIN_DIR_URL . 'assets/frontend/css/dgap-frontend.css',
 			['dgap-forms-shared'],
 			DGAP_VERSION
 		);
@@ -63,13 +63,13 @@ class DGAP_Frontend {
 		// Flatpickr (calendar)
 		wp_enqueue_style(
 			'dgap-flatpickr-css',
-			DGAP_URL . 'assets/admin/css/flatpickr.min.css',
+			DGAP_PLUGIN_DIR_URL . 'assets/admin/css/flatpickr.min.css',
 			[],
 			DGAP_VERSION
 		);
 		wp_enqueue_script(
 			'dgap-flatpickr',
-			DGAP_URL . 'assets/admin/js/flatpickr.min.js',
+			DGAP_PLUGIN_DIR_URL . 'assets/admin/js/flatpickr.min.js',
 			[],
 			DGAP_VERSION,
 			true
@@ -78,7 +78,7 @@ class DGAP_Frontend {
 		// JS
 		wp_enqueue_script(
 			'dgap-frontend',
-			DGAP_URL . 'assets/frontend/js/dgap-frontend.js',
+			DGAP_PLUGIN_DIR_URL . 'assets/frontend/js/dgap-frontend.js',
 			[ 'jquery', 'dgap-flatpickr', 'wp-i18n' ],
 			DGAP_VERSION,
 			true

@@ -35,7 +35,7 @@
 
 						<div class="dgap-avatar-wrap" style="text-align:center; margin-bottom:10px;">
 							<img
-								src="<?php echo esc_url( DGAP_URL . 'assets/admin/img/person.avif' ); ?>"
+								src="<?php echo esc_url( DGAP_PLUGIN_DIR_URL . 'assets/admin/img/person.avif' ); ?>"
 								alt=""
 								class="dgap-image-preview"
 								style="border-radius:50%; width:100px; height:100px; object-fit:cover;"

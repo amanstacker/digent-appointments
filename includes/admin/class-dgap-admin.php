@@ -13,7 +13,7 @@ class DGAP_Admin {
 	}
 
 	private function includes() {
-        require_once DGAP_PATH . 'includes/admin/menus/class-dgap-menu.php';                    
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/menus/class-dgap-menu.php';                    
     }
 
     private function get_ajax_data( array $extra = [] ) {
@@ -54,14 +54,14 @@ class DGAP_Admin {
         
         wp_enqueue_style(
             'dgap-admin',
-            DGAP_URL . 'assets/admin/css/dgap-admin.css',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-admin.css',
             [],
             'digent-appointments'
         );
 
         wp_enqueue_script(
             'dgap-admin-functions',
-            DGAP_URL . 'assets/admin/js/dgap-admin-functions.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-admin-functions.js',
             [ 'jquery' ],
             'digent-appointments',
             true
@@ -69,7 +69,7 @@ class DGAP_Admin {
         
         wp_enqueue_script(
             'dgap-admin',
-            DGAP_URL . 'assets/admin/js/dgap-admin.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-admin.js',
             ['jquery', 'dgap-admin-functions'],
             'digent-appointments',
             true
@@ -77,20 +77,20 @@ class DGAP_Admin {
                         
         wp_enqueue_style(
             'dgap-select2',
-            DGAP_URL . 'assets/external/css/select2.min.css',
+            DGAP_PLUGIN_DIR_URL . 'assets/external/css/select2.min.css',
             [],
             'digent-appointments'
         );
         wp_enqueue_style(
             'dgap-timeoff',
-            DGAP_URL . 'assets/admin/css/dgap-timeoff.css',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-timeoff.css',
             [],
             'digent-appointments'
         );
         
         wp_enqueue_script(
             'dgap-select2',
-            DGAP_URL . 'assets/external/js/select2.min.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/external/js/select2.min.js',
             [ 'jquery' ],
             'digent-appointments',
             true
@@ -98,7 +98,7 @@ class DGAP_Admin {
 
         // Localize AJAX URL
         wp_localize_script('dgap-admin', 'dgap_admin', $this->get_ajax_data(
-				[ 'default_avatar' => DGAP_URL . 'assets/admin/img/person.avif']
+				[ 'default_avatar' => DGAP_PLUGIN_DIR_URL . 'assets/admin/img/person.avif']
 		));
     }
 
@@ -110,7 +110,7 @@ class DGAP_Admin {
 
         wp_enqueue_style(
             'dgap-settings',
-            DGAP_URL . 'assets/admin/css/dgap-settings.css',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-settings.css',
             [],
             DGAP_VERSION
         );
@@ -118,7 +118,7 @@ class DGAP_Admin {
         // JS
         wp_enqueue_script(
             'dgap-settings',
-            DGAP_URL . 'assets/admin/js/dgap-settings.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-settings.js',
             ['jquery'],
             DGAP_VERSION,
             true
@@ -138,7 +138,7 @@ class DGAP_Admin {
         // FullCalendar JS
         wp_enqueue_script(
             'dgap-fullcalendar',
-            DGAP_URL . 'assets/external/js/fullcalendar.min.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/external/js/fullcalendar.min.js',
             [ 'jquery' ],
             DGAP_VERSION,
             true
@@ -147,7 +147,7 @@ class DGAP_Admin {
         // Your custom JS to initialize calendar
         wp_enqueue_script(
             'dgap-calendar',
-            DGAP_URL . 'assets/admin/js/dgap-calendar.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-calendar.js',
             [ 'jquery', 'dgap-fullcalendar' ],
             DGAP_VERSION,
             true
@@ -165,21 +165,21 @@ class DGAP_Admin {
 
         wp_enqueue_style(
             'dgap-forms-shared',
-            DGAP_URL . 'assets/shared/css/dgap-forms.css',
+            DGAP_PLUGIN_DIR_URL . 'assets/shared/css/dgap-forms.css',
             [],
             DGAP_VERSION
         );
 
         wp_enqueue_style(
             'dgap-booking-form',
-            DGAP_URL . 'assets/admin/css/dgap-booking-form.css',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-booking-form.css',
             ['dgap-forms-shared'],
             DGAP_VERSION
         );
 
         wp_enqueue_script(
             'dgap-forms-shared',
-            DGAP_URL . 'assets/shared/js/dgap-forms.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/shared/js/dgap-forms.js',
             [ 'jquery' ],
             DGAP_VERSION,
             true
@@ -187,7 +187,7 @@ class DGAP_Admin {
         
         wp_enqueue_script(
             'dgap-booking-form',
-            DGAP_URL . 'assets/admin/js/dgap-booking-form.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-booking-form.js',
             [ 'jquery', 'dgap-forms-shared' ],
             DGAP_VERSION,
             true
@@ -195,7 +195,7 @@ class DGAP_Admin {
 
         wp_enqueue_style(
             'dgap-frontend-css',
-            DGAP_URL . 'assets/frontend/css/dgap-frontend.css',
+            DGAP_PLUGIN_DIR_URL . 'assets/frontend/css/dgap-frontend.css',
             [],
             DGAP_VERSION
         );
@@ -203,13 +203,13 @@ class DGAP_Admin {
         // Flatpickr (calendar)
         wp_enqueue_style(
             'dgap-flatpickr-css',
-            DGAP_URL . 'assets/admin/css/flatpickr.min.css',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/css/flatpickr.min.css',
             [],
             DGAP_VERSION
         );
         wp_enqueue_script(
             'dgap-flatpickr',
-            DGAP_URL . 'assets/admin/js/flatpickr.min.js',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/js/flatpickr.min.js',
             [],
             DGAP_VERSION,
             true

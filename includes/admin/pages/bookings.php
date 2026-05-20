@@ -3,8 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once DGAP_PATH . 'includes/repositories/class-dgap-booking-repo.php';
-require_once DGAP_PATH . 'includes/admin/list-tables/class-dgap-bookings-table.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-bookings-table.php';
 ?>
 
 <div class="dgap-top-strip">
@@ -36,4 +36,4 @@ require_once DGAP_PATH . 'includes/admin/list-tables/class-dgap-bookings-table.p
 </div>
 
 <?php
-include DGAP_PATH . 'includes/templates/admin/booking-slide-panel.php';
+include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/booking-slide-panel.php';

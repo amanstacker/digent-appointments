@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class DGAP_Activator {
 
 	public static function activate() {
-		require_once DGAP_PATH . 'includes/core/class-dgap-db.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/core/class-dgap-db.php';
 		DGAP_DB::create_tables();
 	}
 }

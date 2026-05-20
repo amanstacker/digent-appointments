@@ -47,9 +47,9 @@ class DGAP_Form_Renderer {
 
 		// Wizard layouts live in a separate folder
 	    if ( $design === 'wizard' ) {
-	        $layout_file = DGAP_PATH . 'includes/templates/admin/forms/wizard/' . $form['layout'] . '.php';
+	        $layout_file = DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/forms/wizard/' . $form['layout'] . '.php';
 	    } else {
-	        $layout_file = DGAP_PATH . 'includes/templates/admin/forms/' . $form['layout'] . '.php';
+	        $layout_file = DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/forms/' . $form['layout'] . '.php';
 	    }
 
 		if ( file_exists( $layout_file ) ) {

@@ -1,8 +1,8 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-require_once DGAP_PATH . 'includes/admin/list-tables/class-dgap-forms-table.php';
-require_once DGAP_PATH . 'includes/repositories/class-dgap-form-repo.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-forms-table.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 
@@ -10,7 +10,7 @@ $action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['act
  * If Edit or New → Load Builder Page
  */
 if ( in_array( $action, ['edit', 'new'] ) ) {
-	include DGAP_PATH . 'includes/admin/pages/form-builder.php';
+	include DGAP_PLUGIN_DIR_PATH . 'includes/admin/pages/form-builder.php';
 	return;
 }
 ?>

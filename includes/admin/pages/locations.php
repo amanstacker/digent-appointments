@@ -3,8 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once DGAP_PATH . 'includes/repositories/class-dgap-location-repo.php';
-require_once DGAP_PATH . 'includes/admin/list-tables/class-dgap-locations-table.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-location-repo.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-locations-table.php';
 ?>
 
 <div class="dgap-top-strip">
@@ -32,4 +32,4 @@ require_once DGAP_PATH . 'includes/admin/list-tables/class-dgap-locations-table.
 </div>
 
 <?php
-include DGAP_PATH . 'includes/templates/admin/location-slide-panel.php';
+include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/location-slide-panel.php';

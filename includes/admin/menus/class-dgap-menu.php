@@ -19,7 +19,7 @@ class DGAP_Menu {
 	}
 
 	public function dashboard() {
-		include DGAP_PATH . 'includes/admin/pages/dashboard.php';
+		include DGAP_PLUGIN_DIR_PATH . 'includes/admin/pages/dashboard.php';
 	}
 
 	private function submenus() {
@@ -45,7 +45,7 @@ class DGAP_Menu {
 				'manage_options',
 				"digent-$slug",
 				function () use ( $slug ) {
-					include DGAP_PATH . "includes/admin/pages/$slug.php";
+					include DGAP_PLUGIN_DIR_PATH . "includes/admin/pages/$slug.php";
 				}
 			);
 		}

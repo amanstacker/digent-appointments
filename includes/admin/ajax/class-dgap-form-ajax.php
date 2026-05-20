@@ -33,7 +33,7 @@ class DGAP_Form_Ajax {
 	        wp_send_json_error( 'Unauthorized' );
 	    }
 
-	    require_once DGAP_PATH . 'includes/admin/class-dgap-form-renderer.php';
+	    require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/class-dgap-form-renderer.php';
 
 	    $html = DGAP_Form_Renderer::render( $form_data );
 

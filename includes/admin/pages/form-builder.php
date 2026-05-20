@@ -103,7 +103,7 @@ if ( ! $dgap_is_new && $id ) {
 					        <div id="dgap-custom-fields-container">
 					            <?php
 					            if ( ! $dgap_is_new && $id ) {
-					                require_once DGAP_PATH . 'includes/templates/admin/forms/custom-fields.php';
+					                require_once DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/forms/custom-fields.php';
 					            }
 					            ?>
 					        </div>
