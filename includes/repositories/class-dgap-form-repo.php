@@ -15,7 +15,7 @@ class DGAP_Form_Repo {
 	/* ================= Get ================= */
 
 	public static function get_all() {
-		$cache_key = 'all_forms';
+		$cache_key = 'dgap_all_forms';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -32,7 +32,7 @@ class DGAP_Form_Repo {
 	}
 
 	public static function get( $id ) {
-		$cache_key = 'form_' . $id;
+		$cache_key = 'dgap_form_' . $id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -62,7 +62,7 @@ class DGAP_Form_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_forms', self::cache_group() );
+		wp_cache_delete( 'dgap_all_forms', self::cache_group() );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -86,8 +86,8 @@ class DGAP_Form_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_forms', self::cache_group() );
-		wp_cache_delete( 'form_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_forms', self::cache_group() );
+		wp_cache_delete( 'dgap_form_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -110,8 +110,8 @@ class DGAP_Form_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_forms', self::cache_group() );
-		wp_cache_delete( 'form_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_forms', self::cache_group() );
+		wp_cache_delete( 'dgap_form_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}

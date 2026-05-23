@@ -8,28 +8,28 @@ function dgap_get_form_default_settings() {
 	$default_fields 	=	[
 		"_dgap_form_name" 		=> [
 			"name" 			=>	"_dgap_form_name",
-			"label" 		=>	"Name",
+			"label" 		=>	esc_html__( "Name", 'digent-appointments' ),
 			"type" 			=>	"text",
 			"required" 		=>	true,
 			"is_default"	=>	true,
 		],
 		"_dgap_form_phone" 	=> [
 			"name" 			=>	"_dgap_form_phone",
-			"label" 		=>	"Phone",
+			"label" 		=>	esc_html__( "Phone", 'digent-appointments' ),
 			"type" 			=>	"phone",
 			"required" 		=>	false,
 			"is_default"	=>	true,
 		],
 		"_dgap_form_email" 	=> [
 			"name" 			=>	"_dgap_form_email",
-			"label" 		=>	"Email",
+			"label" 		=>	esc_html__( "Email", 'digent-appointments' ),
 			"type" 			=>	"email",
 			"required" 		=>	true,
 			"is_default"	=>	true,
 		],
 		"_dgap_form_description" 	=> [
 			"name" 			=>	"_dgap_form_description",
-			"label" 		=>	"Description",
+			"label" 		=>	esc_html__( "Description", 'digent-appointments' ),
 			"type" 			=>	"textarea",
 			"required" 		=>	true,
 			"is_default"	=>	true,

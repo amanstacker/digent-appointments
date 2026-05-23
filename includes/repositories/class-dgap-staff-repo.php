@@ -17,7 +17,7 @@ class DGAP_Staff_Repo {
 	/* ================= Get ================= */
 
 	public static function get_all() {
-		$cache_key = 'all_staff';
+		$cache_key = 'dgap_all_staff';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -95,7 +95,7 @@ class DGAP_Staff_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_staff', self::cache_group() );
+		wp_cache_delete( 'dgap_all_staff', self::cache_group() );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -138,7 +138,7 @@ class DGAP_Staff_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_staff', self::cache_group() );
+		wp_cache_delete( 'dgap_all_staff', self::cache_group() );
 		wp_cache_delete( 'staff_' . $id, self::cache_group() );
 
 		return (int) $result;
@@ -162,7 +162,7 @@ class DGAP_Staff_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_staff', self::cache_group() );
+		wp_cache_delete( 'dgap_all_staff', self::cache_group() );
 		wp_cache_delete( 'staff_' . $id, self::cache_group() );
 
 		return (int) $result;

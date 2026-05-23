@@ -17,7 +17,7 @@ class DGAP_Schedules_Repo {
 	/* ================= Get ================= */
 
 	public static function get_all() {
-		$cache_key = 'all_schedules';
+		$cache_key = 'dgap_all_schedules';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -34,7 +34,7 @@ class DGAP_Schedules_Repo {
 	}
 
 	public static function get( $id ) {
-		$cache_key = 'schedule_' . $id;
+		$cache_key = 'dgap_schedule_' . $id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -80,7 +80,7 @@ class DGAP_Schedules_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_schedules', self::cache_group() );
+		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -117,8 +117,8 @@ class DGAP_Schedules_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_schedules', self::cache_group() );
-		wp_cache_delete( 'schedule_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
+		wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -141,8 +141,8 @@ class DGAP_Schedules_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_schedules', self::cache_group() );
-		wp_cache_delete( 'schedule_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
+		wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}

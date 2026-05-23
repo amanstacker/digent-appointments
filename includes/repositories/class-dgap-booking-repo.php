@@ -27,7 +27,7 @@ class DGAP_Booking_Repo {
 
 	public static function get_all() {
 
-		$cache_key = 'all_bookings';
+		$cache_key = 'dgap_all_bookings';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -61,7 +61,7 @@ class DGAP_Booking_Repo {
 
 	public static function get( $id ) {
 
-		$cache_key = 'booking_' . $id;
+		$cache_key = 'dgap_booking_' . $id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -109,11 +109,11 @@ class DGAP_Booking_Repo {
 		if ( false === $result ) {
 			return new WP_Error(
 				'db_insert_failed',
-				$wpdb->last_error ?: __( 'Failed to insert booking.', 'digent-appointments' )
+				$wpdb->last_error ?: esc_html__( 'Failed to insert booking.', 'digent-appointments' )
 			);
 		}
 
-		wp_cache_delete( 'all_bookings', self::cache_group() );
+		wp_cache_delete( 'dgap_all_bookings', self::cache_group() );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -133,12 +133,12 @@ class DGAP_Booking_Repo {
 		if ( false === $result ) {
 			return new WP_Error(
 				'db_update_failed',
-				$wpdb->last_error ?: __( 'Failed to update booking.', 'digent-appointments' )
+				$wpdb->last_error ?: esc_html__( 'Failed to update booking.', 'digent-appointments' )
 			);
 		}
 
-		wp_cache_delete( 'all_bookings', self::cache_group() );
-		wp_cache_delete( 'booking_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_bookings', self::cache_group() );
+		wp_cache_delete( 'dgap_booking_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -156,12 +156,12 @@ class DGAP_Booking_Repo {
 		if ( false === $result ) {
 			return new WP_Error(
 				'db_delete_failed',
-				$wpdb->last_error ?: __( 'Failed to delete booking.', 'digent-appointments' )
+				$wpdb->last_error ?: esc_html__( 'Failed to delete booking.', 'digent-appointments' )
 			);
 		}
 
-		wp_cache_delete( 'all_bookings', self::cache_group() );
-		wp_cache_delete( 'booking_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_bookings', self::cache_group() );
+		wp_cache_delete( 'dgap_booking_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}

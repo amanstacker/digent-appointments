@@ -17,7 +17,7 @@ class DGAP_Location_Repo {
 	/* ================= Get ================= */
 
 	public static function get_all() {
-		$cache_key = 'all_locations';
+		$cache_key = 'dgap_all_locations';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -34,7 +34,7 @@ class DGAP_Location_Repo {
 	}
 
 	public static function get( $id ) {
-		$cache_key = 'location_' . $id;
+		$cache_key = 'dgap_location_' . $id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -68,7 +68,7 @@ class DGAP_Location_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_locations', self::cache_group() );
+		wp_cache_delete( 'dgap_all_locations', self::cache_group() );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -93,8 +93,8 @@ class DGAP_Location_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_locations', self::cache_group() );
-		wp_cache_delete( 'location_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_locations', self::cache_group() );
+		wp_cache_delete( 'dgap_location_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -117,8 +117,8 @@ class DGAP_Location_Repo {
 			);
 		}
 
-		wp_cache_delete( 'all_locations', self::cache_group() );
-		wp_cache_delete( 'location_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_locations', self::cache_group() );
+		wp_cache_delete( 'dgap_location_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}

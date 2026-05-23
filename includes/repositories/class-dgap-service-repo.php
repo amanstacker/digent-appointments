@@ -17,7 +17,7 @@ class DGAP_Service_Repo {
 	/* ================= Get ================= */
 
 	public static function get_all() {
-		$cache_key = 'all_services';
+		$cache_key = 'dgap_all_services';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -34,7 +34,7 @@ class DGAP_Service_Repo {
 	}
 
 	public static function get( $id ) {
-		$cache_key = 'service_' . $id;
+		$cache_key = 'dgap_service_' . $id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -91,7 +91,7 @@ class DGAP_Service_Repo {
 		}
 
 		// Clear cache
-		wp_cache_delete( 'all_services', self::cache_group() );
+		wp_cache_delete( 'dgap_all_services', self::cache_group() );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -115,8 +115,8 @@ class DGAP_Service_Repo {
 		}
 
 		// Clear cache
-		wp_cache_delete( 'all_services', self::cache_group() );
-		wp_cache_delete( 'service_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_services', self::cache_group() );
+		wp_cache_delete( 'dgap_service_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -140,8 +140,8 @@ class DGAP_Service_Repo {
 		}
 
 		// Clear cache
-		wp_cache_delete( 'all_services', self::cache_group() );
-		wp_cache_delete( 'service_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_services', self::cache_group() );
+		wp_cache_delete( 'dgap_service_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}

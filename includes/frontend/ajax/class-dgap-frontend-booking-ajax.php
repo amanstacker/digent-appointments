@@ -47,7 +47,7 @@ class DGAP_Frontend_Booking_Ajax {
 		$location_id = absint( $_POST['location_id'] ?? 0 );
 
 		if ( ! $location_id ) {
-			wp_send_json_error( 'Invalid location' );
+			wp_send_json_error( esc_html__( 'Invalid location', 'digent-appointments' ) );
 		}
 
 		$results = DGAP_Booking_Repo::get_services_by_location( $location_id );
@@ -65,7 +65,7 @@ class DGAP_Frontend_Booking_Ajax {
 		$service_id  = absint( $_POST['service_id'] ?? 0 );
 
 		if ( ! $location_id || ! $service_id ) {
-			wp_send_json_error( 'Invalid data' );
+			wp_send_json_error( esc_html__( 'Invalid data', 'digent-appointments' ) );
 		}
 
 		$results = DGAP_Booking_Repo::get_staff_by_location_service(
@@ -89,7 +89,7 @@ class DGAP_Frontend_Booking_Ajax {
 		$date        = sanitize_text_field( wp_unslash( $_POST['date'] ?? '' ) );
 
 		if ( ! $staff_id || ! $service_id || ! $location_id || ! $date ) {
-			wp_send_json_error( 'Invalid data' );
+			wp_send_json_error( esc_html__( 'Invalid data', 'digent-appointments' ) );
 		}
 
 		$schedule = DGAP_Booking_Repo::get_schedule(
@@ -100,13 +100,13 @@ class DGAP_Frontend_Booking_Ajax {
 		);
 
 		if ( ! $schedule ) {
-			wp_send_json_error( 'No schedule found' );
+			wp_send_json_error( esc_html__( 'No schedule found', 'digent-appointments' ) );
 		}
 
 		$service = DGAP_Booking_Repo::get_service_meta( $service_id );
 
 		if ( ! $service ) {
-			wp_send_json_error( 'Service not found' );
+			wp_send_json_error( esc_html__( 'Service not found', 'digent-appointments' ) );
 		}
 
 		$slots = DGAP_Slot_Generator::generate_slot_from_schedule(
@@ -173,17 +173,17 @@ class DGAP_Frontend_Booking_Ajax {
 
 		if ( ! empty( $missing ) ) {
 			wp_send_json_error(
-				'Missing required fields: ' . implode( ', ', $missing )
+				esc_html__( 'Missing required fields: ', 'digent-appointments' ) . implode( ', ', $missing )
 			);
 		}
 
 		if ( ! is_email( $data['email'] ) ) {
-			wp_send_json_error( 'Invalid email address' );
+			wp_send_json_error( esc_html__( 'Invalid email address', 'digent-appointments' ) );
 		}
 
 		$form_id 	=	isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
 		if ( $form_id <= 0 ) {
-			wp_send_json_error( 'Form ID is missing' );	
+			wp_send_json_error( esc_html__( 'Form ID is missing', 'digent-appointments' ) );	
 		}
 
 		// Get dynamic custom fields
@@ -213,7 +213,7 @@ class DGAP_Frontend_Booking_Ajax {
 		$result = DGAP_Booking_Repo::create_booking( $data );
 
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( $result->get_error_message() );
+			wp_send_json_error( esc_html( $result->get_error_message() ) );
 		}
 
 		// Assign booking id
@@ -234,7 +234,7 @@ class DGAP_Frontend_Booking_Ajax {
 
 		wp_send_json_success(
 			[
-				'message'    => 'Booking confirmed',
+				'message'    => esc_html__( 'Booking confirmed', 'digent-appointments' ),
 				'booking_id' => (int) $result,
 			]
 		);
