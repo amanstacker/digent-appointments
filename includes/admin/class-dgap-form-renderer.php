@@ -55,7 +55,7 @@ class DGAP_Form_Renderer {
 		if ( file_exists( $layout_file ) ) {
 			include $layout_file;
 		} else {
-			echo '<p>Layout not found</p>';
+			echo '<p>' . esc_html__( 'Layout not found', 'digent-appointments' ) . '</p>';
 		}
 
 		return ob_get_clean();

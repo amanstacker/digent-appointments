@@ -56,14 +56,14 @@ class DGAP_Admin {
             'dgap-admin',
             DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-admin.css',
             [],
-            'digent-appointments'
+            DGAP_VERSION
         );
 
         wp_enqueue_script(
             'dgap-admin-functions',
             DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-admin-functions.js',
             [ 'jquery' ],
-            'digent-appointments',
+            DGAP_VERSION,
             true
         );
         
@@ -71,7 +71,7 @@ class DGAP_Admin {
             'dgap-admin',
             DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-admin.js',
             ['jquery', 'dgap-admin-functions'],
-            'digent-appointments',
+            DGAP_VERSION,
             true
         );
                         
@@ -79,20 +79,20 @@ class DGAP_Admin {
             'dgap-select2',
             DGAP_PLUGIN_DIR_URL . 'assets/external/css/select2.min.css',
             [],
-            'digent-appointments'
+            DGAP_VERSION
         );
         wp_enqueue_style(
             'dgap-timeoff',
             DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-timeoff.css',
             [],
-            'digent-appointments'
+            DGAP_VERSION
         );
         
         wp_enqueue_script(
             'dgap-select2',
             DGAP_PLUGIN_DIR_URL . 'assets/external/js/select2.min.js',
             [ 'jquery' ],
-            'digent-appointments',
+            DGAP_VERSION,
             true
         );
 
