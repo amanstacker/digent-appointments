@@ -169,16 +169,7 @@ class DGAP_Booking_Repo {
 	public static function get_for_calendar( $start = '', $end = '' ) {
 
 		global $wpdb;
-
-		$where = '';
-
-		if ( $start && $end ) {
-			$where = $wpdb->prepare(
-				'WHERE b.booking_date BETWEEN %s AND %s',
-				$start,
-				$end
-			);
-		}
+		
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, 	PluginCheck.Security.DirectDB.UnescapedDBParameter --Reason Joining the tables and getting specific booking date
 		return $wpdb->get_results(
 			"
@@ -195,8 +186,7 @@ class DGAP_Booking_Repo {
 			FROM {$wpdb->prefix}dgap_bookings b
 			LEFT JOIN {$wpdb->prefix}dgap_customers c ON c.id = b.customer_id
 			LEFT JOIN {$wpdb->prefix}dgap_services s ON s.id = b.service_id
-			LEFT JOIN {$wpdb->prefix}dgap_staff st ON st.id = b.staff_id
-			{$where}
+			LEFT JOIN {$wpdb->prefix}dgap_staff st ON st.id = b.staff_id			
 			ORDER BY b.booking_date ASC, b.start_time ASC
 			",
 			ARRAY_A
