@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<div class="dgap-strip-right">
-			<button class="dgap-btn button button-primary dgap-add" data-entity="<?php echo esc_attr( 'location'); ?>" data-title="<?php echo esc_attr( 'Add Location', 'digent-appointments');?>">
+			<button class="dgap-btn button button-primary dgap-add" data-entity="<?php echo esc_attr( 'location'); ?>" data-title="<?php esc_attr_e( 'Add Location', 'digent-appointments');?>">
 				<?php esc_html_e( 'Add Location', 'digent-appointments' ); ?>
 			</button>
 		</div>

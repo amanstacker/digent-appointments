@@ -12,7 +12,7 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-servi
 			<span><?php esc_html_e( 'Manage booking services', 'digent-appointments' ); ?></span>
 		</div>
 		<div class="dgap-strip-right">
-			<button class="dgap-btn button button-primary dgap-add" data-entity="service" data-title="Add Service">
+			<button class="dgap-btn button button-primary dgap-add" data-entity="service" data-title="<?php esc_attr_e( 'Add Service', 'digent-appointments' ); ?>">
 				<?php esc_html_e( 'Add Service', 'digent-appointments' ); ?>
 			</button>
 		</div>

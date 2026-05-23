@@ -15,7 +15,7 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-locat
 		</div>
 
 		<div class="dgap-strip-right">
-			<button class="dgap-btn button button-primary dgap-add" data-entity="location"data-title="Add Location">
+			<button class="dgap-btn button button-primary dgap-add" data-entity="location" data-title="<?php esc_attr_e( 'Add Location', 'digent-appointments' ); ?>">
 				<?php esc_html_e( 'Add Location', 'digent-appointments' ); ?>
 			</button>
 		</div>

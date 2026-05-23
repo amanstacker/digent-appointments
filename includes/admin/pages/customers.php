@@ -15,7 +15,7 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-custo
 		</div>
 
 		<div class="dgap-strip-right">
-			<button class="dgap-btn button button-primary dgap-add" data-entity="customer" data-title="Add Customer">
+			<button class="dgap-btn button button-primary dgap-add" data-entity="customer" data-title="<?php esc_attr_e( 'Add Customer', 'digent-appointments' ); ?>">
 				<?php esc_html_e( 'Add Customer', 'digent-appointments' ); ?>
 			</button>
 		</div>

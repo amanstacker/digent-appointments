@@ -18,7 +18,7 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-booki
 			<button
 				class="dgap-btn button button-primary dgap-add"
 				data-entity="booking"
-				data-title="Add Booking"
+				data-title="<?php esc_attr_e( 'Add Booking', 'digent-appointments' ); ?>"
 			>
 				<?php esc_html_e( 'Add Booking', 'digent-appointments' ); ?>
 			</button>

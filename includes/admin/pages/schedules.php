@@ -15,7 +15,7 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-sched
 		</div>
 
 		<div class="dgap-strip-right">
-			<button class="dgap-btn button button-primary dgap-add" data-entity="schedule" data-title="Add Schedule">
+			<button class="dgap-btn button button-primary dgap-add" data-entity="schedule" data-title="<?php esc_attr_e( 'Add Schedule', 'digent-appointments' ); ?>">
 				<?php esc_html_e( 'Add Schedule', 'digent-appointments' ); ?>
 			</button>
 		</div>
