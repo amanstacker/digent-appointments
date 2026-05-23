@@ -6,9 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="dgap-calendar disabled">
 	<div class="dgap-calendar-header">
-		<button type="button" class="prev-month" type="button">&lsaquo;</button>
+		<button type="button" class="dgap-prev-month" type="button">&lsaquo;</button>
 		<span class="dgap-month-label"></span>
-		<button type="button" class="next-month" type="button">&rsaquo;</button>
+		<button type="button" class="dgap-next-month" type="button">&rsaquo;</button>
 	</div>
 
 	<div class="dgap-calendar-weekdays">

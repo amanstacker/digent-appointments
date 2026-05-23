@@ -20,7 +20,7 @@ if ( is_array( $digent_custom_fields ) && ! empty( $digent_custom_fields ) ) {
 	?>
 		<div class="dgap-field-item" data-index="${dgap_fieldIndex}">
 			
-			<input type="text" name="<?php echo esc_attr( $digent_label_name ); ?>" value="<?php echo esc_attr( $digent_field['label'] ); ?>"  placeholder="Field Label" />
+			<input type="text" name="<?php echo esc_attr( $digent_label_name ); ?>" value="<?php echo esc_attr( $digent_field['label'] ); ?>"  placeholder="<?php echo esc_attr__( 'Field Label', 'digent-appointments' ); ?>" />
 
 			<select name="<?php echo esc_attr( $digent_type_name ); ?>">
 				<option value="text" <?php selected( $digent_field['type'], 'text' ); ?>><?php echo esc_html__( 'Text', 'digent-appointments' ); ?></option>

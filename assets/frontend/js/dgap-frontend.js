@@ -140,12 +140,12 @@ jQuery(function ($) {
     /* ------------------------------
         MONTH NAVIGATION
     -------------------------------- */
-    $(document).on('click', '.prev-month', function () {
+    $(document).on('click', '.dgap-prev-month', function () {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         renderCalendar();
     });
 
-    $(document).on('click', '.next-month', function () {
+    $(document).on('click', '.dgap-next-month', function () {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         renderCalendar();
     });
