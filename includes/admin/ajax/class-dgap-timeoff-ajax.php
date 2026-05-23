@@ -15,6 +15,10 @@ class DGAP_Timeoff_Ajax {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to view this item.', 'digent-appointments' ) ], 403 );
+        }
+
 		$type   = sanitize_text_field( wp_unslash( $_POST['type'] ?? 'staff' ) );
 		$search = sanitize_text_field( wp_unslash( $_POST['search'] ?? '' ) );
 		$page   = absint( $_POST['page'] ?? 1 );
@@ -36,6 +40,10 @@ class DGAP_Timeoff_Ajax {
 	public function save() {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to view this item.', 'digent-appointments' ) ], 403 );
+        }
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated --Reason Sanitization is handled below
 		parse_str( wp_unslash( $_POST['data'] ), $data );
 
@@ -43,7 +51,7 @@ class DGAP_Timeoff_Ajax {
 		* Basic validation
 		* ===================================================== */
 		if ( empty( $data['name'] ) ) {
-			wp_send_json_error( [ 'message' => __( 'Time off name is required.', 'digent-appointments' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Time off name is required.', 'digent-appointments' ) ] );
 		}
 
 		/* =====================================================
@@ -56,7 +64,7 @@ class DGAP_Timeoff_Ajax {
 		);
 
 		if ( empty( $entity_ids ) ) {
-			wp_send_json_error( [ 'message' => __( 'Please select at least one staff or service.', 'digent-appointments' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Please select at least one staff or service.', 'digent-appointments' ) ] );
 		}
 
 		/* =====================================================
@@ -65,7 +73,7 @@ class DGAP_Timeoff_Ajax {
 		$raw_dates = $data['dates'] ?? '';
 
 		if ( empty( $raw_dates ) ) {
-			wp_send_json_error( [ 'message' => __( 'Please select at least one date.', 'digent-appointments' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Please select at least one date.', 'digent-appointments' ) ] );
 		}
 
 		$dates = is_array( $raw_dates )
@@ -73,7 +81,7 @@ class DGAP_Timeoff_Ajax {
 			: json_decode( $raw_dates, true );
 
 		if ( empty( $dates ) || ! is_array( $dates ) ) {
-			wp_send_json_error( [ 'message' => __( 'Please select at least one date or Given wrong date format', 'digent-appointments' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Please select at least one date or Given wrong date format', 'digent-appointments' ) ] );
 		}
 
 		$validated_dates = [];
@@ -85,7 +93,7 @@ class DGAP_Timeoff_Ajax {
 				empty( $item['date'] ) ||
 				empty( $item['mode'] )
 			) {
-				wp_send_json_error( [ 'message' => __( 'Invalid date entry detected.', 'digent-appointments' ) ] );
+				wp_send_json_error( [ 'message' => esc_html__( 'Invalid date entry detected.', 'digent-appointments' ) ] );
 			}
 
 			$date = sanitize_text_field( $item['date'] );
@@ -94,12 +102,12 @@ class DGAP_Timeoff_Ajax {
 			// validate date
 			$d = \DateTime::createFromFormat( 'Y-m-d', $date );
 			if ( ! $d || $d->format( 'Y-m-d' ) !== $date ) {
-				wp_send_json_error( [ 'message' => __( 'Invalid date value.', 'digent-appointments' ) ] );
+				wp_send_json_error( [ 'message' => esc_html__( 'Invalid date value.', 'digent-appointments' ) ] );
 			}
 
 			// validate mode
 			if ( ! in_array( $mode, [ 'full', 'time' ], true ) ) {
-				wp_send_json_error( [ 'message' => __( 'Invalid time off mode.', 'digent-appointments' ) ] );
+				wp_send_json_error( [ 'message' => esc_html__( 'Invalid time off mode.', 'digent-appointments' ) ] );
 			}
 
 			$time_start = '00:00';
@@ -108,7 +116,7 @@ class DGAP_Timeoff_Ajax {
 			if ( $mode === 'time' ) {
 
 				if ( empty( $item['time_start'] ) || empty( $item['time_end'] ) ) {
-					wp_send_json_error( [ 'message' => __( 'Time range is required for time-based mode.', 'digent-appointments' ) ] );
+					wp_send_json_error( [ 'message' => esc_html__( 'Time range is required for time-based mode.', 'digent-appointments' ) ] );
 				}
 
 				$time_start = sanitize_text_field( $item['time_start'] );
@@ -118,7 +126,7 @@ class DGAP_Timeoff_Ajax {
 					! preg_match( '/^\d{2}:\d{2}$/', $time_start ) ||
 					! preg_match( '/^\d{2}:\d{2}$/', $time_end )
 				) {
-					wp_send_json_error( [ 'message' => __( 'Invalid time format.', 'digent-appointments' ) ] );
+					wp_send_json_error( [ 'message' => esc_html__( 'Invalid time format.', 'digent-appointments' ) ] );
 				}
 			}
 
@@ -156,6 +164,10 @@ class DGAP_Timeoff_Ajax {
 	public function get() {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to view this item.', 'digent-appointments' ) ], 403 );
+        }
 
 		$id = absint( $_POST['id'] ?? 0 );
 
@@ -204,8 +216,14 @@ class DGAP_Timeoff_Ajax {
 
 	public function delete() {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to delete this item.', 'digent-appointments' ) ], 403 );
+        }
+		
 		$id = absint( $_POST['id'] ?? 0 );
 		DGAP_Timeoff_Repo::delete( $id );
 		wp_send_json_success();
 	}
 }
+	

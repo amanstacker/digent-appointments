@@ -143,12 +143,30 @@ class DGAP_Locations_Ajax {
 
 	public function get() {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				[
+					'message' => esc_html__( 'You are not allowed to perform this action.', 'digent-appointments' ),
+				]
+			);
+		}
+
 		$id = absint( $_POST['id'] ?? 0 );
 		wp_send_json_success( DGAP_Location_Repo::get( $id ) );
 	}
 
 	public function delete() {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				[
+					'message' => esc_html__( 'You are not allowed to perform this action.', 'digent-appointments' ),
+				]
+			);
+		}
+		
 		$id = absint( $_POST['id'] ?? 0 );
 		DGAP_Location_Repo::delete( $id );
 		wp_send_json_success();

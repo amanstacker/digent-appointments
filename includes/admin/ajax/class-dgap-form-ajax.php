@@ -17,7 +17,7 @@ class DGAP_Form_Ajax {
 
 		// First, parse the serialized form data
 	    if ( empty( $_POST['form_data'] ) ) {
-	        wp_send_json_error( ['message' => 'No data received'] );
+	        wp_send_json_error( ['message' => esc_html__( 'No data received', 'digent-appointments' ) ] );
 	    }
 	    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --Reason Sanitization is handled below
 	    parse_str( $_POST['form_data'], $form_data );
@@ -25,12 +25,12 @@ class DGAP_Form_Ajax {
 	    // Verify nonce
 	    if ( ! isset( $form_data['_dgap_nonce'] ) 
 	         || ! wp_verify_nonce( $form_data['_dgap_nonce'], 'dgap_render_preview' ) ) {
-	        wp_send_json_error( ['message' => 'Security check failed'] );
+	        wp_send_json_error( ['message' => esc_html__( 'Security check failed', 'digent-appointments' ) ] );
 	    }
 
 	    // Capability check
 	    if ( ! current_user_can( 'manage_options' ) ) {
-	        wp_send_json_error( 'Unauthorized' );
+	        wp_send_json_error( ['message' => esc_html__( 'Unauthorized', 'digent-appointments' ) ] );
 	    }
 
 	    require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/class-dgap-form-renderer.php';
@@ -47,12 +47,12 @@ class DGAP_Form_Ajax {
 
         // Verify nonce
         if ( ! check_ajax_referer( 'dgap_render_preview', '_dgap_nonce', false ) ) {
-            wp_send_json_error( [ 'message' => 'Invalid nonce' ], 403 );
+            wp_send_json_error( [ 'message' => esc_html__( 'Invalid nonce', 'digent-appointments' ) ], 403 );
         }
 
         // Permissions
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( [ 'message' => 'Unauthorized' ], 403 );
+            wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized', 'digent-appointments' ) ], 403 );
         }
 
         $id            = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
@@ -85,14 +85,14 @@ class DGAP_Form_Ajax {
         if ( $id ) {
             // Update
             $result = DGAP_Form_Repo::update( $id, $data );
-            wp_send_json_success( [ 'id' => $id, 'message' => 'Form updated successfully' ] );
+            wp_send_json_success( [ 'id' => $id, 'message' => esc_html__( 'Form updated successfully', 'digent-appointments' ) ] );
         } else {
             // Insert
             $new_id = DGAP_Form_Repo::insert( $data );
             if ( $new_id ) {
-                wp_send_json_success( [ 'id' => $new_id, 'message' => 'Form saved successfully' ] );
+                wp_send_json_success( [ 'id' => $new_id, 'message' => esc_html__( 'Form saved successfully', 'digent-appointments' ) ] );
             } else {
-                wp_send_json_error( [ 'message' => 'Failed to save form' ] );
+                wp_send_json_error( [ 'message' => esc_html__( 'Failed to save form', 'digent-appointments' ) ] );
             }
         }
     }

@@ -102,13 +102,13 @@ class DGAP_Customers_Ajax {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => __( 'Permission denied.', 'digent-appointments' ) ], 403 );
+			wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 'digent-appointments' ) ], 403 );
 		}
 		$cust_id = absint( $_POST['id'] ?? 0 );
 		$customer = DGAP_Customer_Repo::get( $cust_id );
 
 		if ( ! $customer ) {
-			wp_send_json_error( [ 'message' => 'Customer not found.' ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Customer not found.', 'digent-appointments' ) ] );
 		}
 
 		wp_send_json_success( $customer );
@@ -121,13 +121,13 @@ class DGAP_Customers_Ajax {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => 'Permission denied.' ], 403 );
+			wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 'digent-appointments' ) ], 403 );
 		}
 		$cust_id = absint( $_POST['id'] ?? 0 );
 		$result = DGAP_Customer_Repo::delete( $cust_id );
 
 		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( [ 'message' => $result->get_error_message() ] );
+			wp_send_json_error( [ 'message' => esc_html( $result->get_error_message() ) ] );
 		}
 
 		wp_send_json_success();

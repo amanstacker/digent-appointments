@@ -147,7 +147,7 @@ class DGAP_Staff_Ajax {
 	public function get() {
         check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( [ 'message' => __( 'You do not have permission to delete this item.', 'digent-appointments' ) ], 403 );
+            wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to view this item.', 'digent-appointments' ) ], 403 );
         }
         $id = absint( $_POST['id'] ?? 0 );
 		$staff = DGAP_Staff_Repo::get( $id );
@@ -157,7 +157,7 @@ class DGAP_Staff_Ajax {
 	public function delete() {
         check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
         if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( [ 'message' => __( 'You do not have permission to delete this item.', 'digent-appointments' ) ], 403 );
+            wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to delete this item.', 'digent-appointments' ) ], 403 );
         }
         $id = absint( $_POST['id'] ?? 0 );
 		DGAP_Staff_Repo::delete( $id );

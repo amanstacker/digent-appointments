@@ -29,7 +29,7 @@ class DGAP_Bookings_Ajax {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( 'Unauthorized' );
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
 		}
 
 		$id     = absint( $_POST['id'] ?? 0 );
@@ -37,7 +37,7 @@ class DGAP_Bookings_Ajax {
 		$notify = ! empty( $_POST['notify'] );
 
 		if ( ! $id || ! $status ) {
-			wp_send_json_error( 'Invalid data' );
+			wp_send_json_error( esc_html__( 'Invalid data.', 'digent-appointments' ) );
 		}
 
 		$allowed_statuses = [
@@ -50,7 +50,7 @@ class DGAP_Bookings_Ajax {
 		];
 
 		if ( ! in_array( $status, $allowed_statuses, true ) ) {
-			wp_send_json_error( 'Invalid status' );
+			wp_send_json_error( esc_html__( 'Invalid status.', 'digent-appointments' ) );
 		}
 
 		// Update only status
@@ -61,7 +61,7 @@ class DGAP_Bookings_Ajax {
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error(
-				[ 'message' => $result->get_error_message() ]
+				[ 'message' => esc_html( $result->get_error_message() ) ]
 			);
 		}
 
@@ -90,6 +90,10 @@ class DGAP_Bookings_Ajax {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
+		}
+
 		$results = DGAP_Booking_Repo::get_locations();
 
 		wp_send_json_success( $results );
@@ -101,10 +105,14 @@ class DGAP_Bookings_Ajax {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
+		}
+
 		$location_id = absint( $_POST['location_id'] ?? 0 );
 
 		if ( ! $location_id ) {
-			wp_send_json_error( 'Invalid location' );
+			wp_send_json_error( esc_html__( 'Invalid location.', 'digent-appointments' ) );
 		}
 
 		$results = DGAP_Booking_Repo::get_services_by_location( $location_id );
@@ -118,11 +126,15 @@ class DGAP_Bookings_Ajax {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
+		}
+
 		$location_id = absint( $_POST['location_id'] ?? 0 );
 		$service_id  = absint( $_POST['service_id'] ?? 0 );
 
 		if ( ! $location_id || ! $service_id ) {
-			wp_send_json_error( 'Invalid data' );
+			wp_send_json_error( esc_html__( 'Invalid data.', 'digent-appointments' ) );
 		}
 
 		$results = DGAP_Booking_Repo::get_staff_by_location_service(
@@ -139,13 +151,17 @@ class DGAP_Bookings_Ajax {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
+		}
+
 		$staff_id    = absint( $_POST['staff_id'] ?? 0 );
 		$service_id  = absint( $_POST['service_id'] ?? 0 );
 		$location_id = absint( $_POST['location_id'] ?? 0 );
 		$date        = sanitize_text_field( wp_unslash( $_POST['date'] ?? '' ) );
 
 		if ( ! $staff_id || ! $service_id || ! $location_id || ! $date ) {
-			wp_send_json_error( 'Invalid data' );
+			wp_send_json_error( esc_html__( 'Invalid data.', 'digent-appointments' ) );
 		}
 
 		$schedule = DGAP_Booking_Repo::get_schedule(
@@ -156,13 +172,13 @@ class DGAP_Bookings_Ajax {
 		);
 
 		if ( ! $schedule ) {
-			wp_send_json_error( 'No schedule found' );
+			wp_send_json_error( esc_html__( 'No schedule found.', 'digent-appointments' ) );
 		}
 
 		$service = DGAP_Booking_Repo::get_service_meta( $service_id );
 
 		if ( ! $service ) {
-			wp_send_json_error( 'Service not found' );
+			wp_send_json_error( esc_html__( 'Service not found.', 'digent-appointments' ) );
 		}
 
 		$slots = DGAP_Slot_Generator::generate_slot_from_schedule(
@@ -177,6 +193,10 @@ class DGAP_Bookings_Ajax {
 	public function calendar() {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
+		}
 
 		$start = sanitize_text_field( wp_unslash( $_POST['start']  ?? '' ) );
 		$end   = sanitize_text_field( wp_unslash( $_POST['end'] ?? '' ) );
@@ -208,6 +228,11 @@ class DGAP_Bookings_Ajax {
 	public function save() {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
+		}
+
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason: Sanitization is handled below
 		parse_str( wp_unslash( $_POST['data'] ), $data );
 
@@ -242,7 +267,7 @@ class DGAP_Bookings_Ajax {
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error(
 				[
-					'message' => $result->get_error_message(),
+					'message' => esc_html( $result->get_error_message() ),
 				]
 			);
 		}
@@ -261,6 +286,10 @@ class DGAP_Bookings_Ajax {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
+		}
+
 		$id = absint( $_POST['id'] ?? 0 );
 
 		wp_send_json_success(
@@ -274,6 +303,10 @@ class DGAP_Bookings_Ajax {
 	public function delete() {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
+		}
 
 		DGAP_Booking_Repo::delete( absint( $_POST['id'] ?? 0 ) );
 
