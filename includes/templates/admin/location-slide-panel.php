@@ -42,7 +42,7 @@
 				<!-- Days -->
 				<div class="dgap-days-grid">
 					<?php
-					$digent_days = [
+					$dgap_days = [
 						'mon' => 'Mon',
 						'tue' => 'Tue',
 						'wed' => 'Wed',
@@ -52,11 +52,11 @@
 						'sun' => 'Sun',
 					];
 
-					foreach ( $digent_days as $digent_key => $digent_label ) :
+					foreach ( $dgap_days as $dgap_key => $dgap_label ) :
 					?>
 						<label class="dgap-day-pill">
-							<input type="checkbox" name="hours[<?php echo esc_attr( $digent_key ); ?>][enabled]" value="1">
-							<span><?php echo esc_html( $digent_label ); ?></span>
+							<input type="checkbox" name="hours[<?php echo esc_attr( $dgap_key ); ?>][enabled]" value="1">
+							<span><?php echo esc_html( $dgap_label ); ?></span>
 						</label>
 					<?php endforeach; ?>
 				</div>

@@ -22,9 +22,9 @@
 					<label><?php esc_html_e( 'Location', 'digent-appointments' ); ?></label>
 					<select name="location_id" required>
 						<option value=""><?php esc_html_e( '-- Select Location --', 'digent-appointments' ); ?></option>
-						<?php foreach ( DGAP_Location_Repo::get_all() as $digent_loc ) : ?>
-							<option value="<?php echo esc_attr( $digent_loc['id'] ); ?>">
-								<?php echo esc_html( $digent_loc['name'] ); ?>
+						<?php foreach ( DGAP_Location_Repo::get_all() as $dgap_loc ) : ?>
+							<option value="<?php echo esc_attr( $dgap_loc['id'] ); ?>">
+								<?php echo esc_html( $dgap_loc['name'] ); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -34,9 +34,9 @@
 					<label><?php esc_html_e( 'Service', 'digent-appointments' ); ?></label>
 					<select name="service_id" required>
 						<option value=""><?php esc_html_e( '-- Select Service --', 'digent-appointments' ); ?></option>
-						<?php foreach ( DGAP_Service_Repo::get_all() as $digent_service ) : ?>
-							<option value="<?php echo esc_attr( $digent_service['id'] ); ?>">
-								<?php echo esc_html( $digent_service['name'] ); ?>
+						<?php foreach ( DGAP_Service_Repo::get_all() as $dgap_service ) : ?>
+							<option value="<?php echo esc_attr( $dgap_service['id'] ); ?>">
+								<?php echo esc_html( $dgap_service['name'] ); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -46,14 +46,14 @@
 					<label><?php esc_html_e( 'Staff Member', 'digent-appointments' ); ?></label>
 					<select name="staff_id" required>
 						<option value=""><?php esc_html_e( '-- Select Staff --', 'digent-appointments' ); ?></option>
-						<?php foreach ( DGAP_Staff_Repo::get_all() as $digent_staff ) : ?>
-							<option value="<?php echo esc_attr( $digent_staff['id'] ); ?>">
+						<?php foreach ( DGAP_Staff_Repo::get_all() as $dgap_staff ) : ?>
+							<option value="<?php echo esc_attr( $dgap_staff['id'] ); ?>">
 								<?php
-									$digent_full_name = $digent_staff['first_name'];
-									if ( ! empty( $digent_staff['last_name'] ) ) {
-										$digent_full_name .= ' ' . $digent_staff['last_name'];
+									$dgap_full_name = $dgap_staff['first_name'];
+									if ( ! empty( $dgap_staff['last_name'] ) ) {
+										$dgap_full_name .= ' ' . $dgap_staff['last_name'];
 									}
-									echo esc_html( $digent_full_name );
+									echo esc_html( $dgap_full_name );
 								?>
 							</option>
 						<?php endforeach; ?>
@@ -76,7 +76,7 @@
 	<!-- Days -->
 	<div class="dgap-days-grid">
 		<?php
-		$digent_days = [
+		$dgap_days = [
 			'mon' => 'Mon',
 			'tue' => 'Tue',
 			'wed' => 'Wed',
@@ -86,15 +86,15 @@
 			'sun' => 'Sun',
 		];
 
-		foreach ( $digent_days as $digent_key => $digent_label ) :
+		foreach ( $dgap_days as $dgap_key => $dgap_label ) :
 		?>
 			<label class="dgap-day-pill">
 				<input
 					type="checkbox"
-					name="availability[<?php echo esc_attr( $digent_key ); ?>][enabled]"
+					name="availability[<?php echo esc_attr( $dgap_key ); ?>][enabled]"
 					value="1"
 				>
-				<span><?php echo esc_html( $digent_label ); ?></span>
+				<span><?php echo esc_html( $dgap_label ); ?></span>
 			</label>
 		<?php endforeach; ?>
 	</div>

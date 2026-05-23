@@ -7,19 +7,19 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     <div class="dgap-boxed-header">
         <div class="dgap-boxed-steps">
             <?php
-            $digent_steps = [
+            $dgap_steps = [
                 1 => [ 'icon' => '📍', 'label' => __( 'Appointment', 'digent-appointments' ) ],
                 2 => [ 'icon' => '📅', 'label' => __( 'Date & Time', 'digent-appointments' ) ],
                 3 => [ 'icon' => '👤', 'label' => __( 'Details',     'digent-appointments' ) ],
                 4 => [ 'icon' => '✅', 'label' => __( 'Confirm',     'digent-appointments' ) ],
             ];
-            foreach ( $digent_steps as $digent_num => $digent_step ) :
+            foreach ( $dgap_steps as $dgap_num => $dgap_step ) :
             ?>
-            <div class="dgap-boxed-step <?php echo $digent_num === 1 ? 'active' : ''; ?>" data-step="<?php echo esc_attr( $digent_num ); ?>">
-                <div class="dgap-boxed-icon"><?php echo esc_html( $digent_step['icon'] ); ?></div>
-                <span class="dgap-boxed-label"><?php echo esc_html( $digent_step['label'] ); ?></span>
+            <div class="dgap-boxed-step <?php echo $dgap_num === 1 ? 'active' : ''; ?>" data-step="<?php echo esc_attr( $dgap_num ); ?>">
+                <div class="dgap-boxed-icon"><?php echo esc_html( $dgap_step['icon'] ); ?></div>
+                <span class="dgap-boxed-label"><?php echo esc_html( $dgap_step['label'] ); ?></span>
             </div>
-            <?php if ( $digent_num < 4 ) : ?>
+            <?php if ( $dgap_num < 4 ) : ?>
                 <div class="dgap-boxed-connector"></div>
             <?php endif; ?>
             <?php endforeach; ?>
