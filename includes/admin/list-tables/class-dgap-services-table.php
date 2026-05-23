@@ -10,11 +10,11 @@ class DGAP_Services_Table extends WP_List_Table {
 	public function get_columns() {
 		return [
 			'cb'       => '<input type="checkbox" />',
-			'name'     => __( 'Service', 'digent-appointments' ),
-			'duration' => __( 'Duration', 'digent-appointments' ),
-			'price'    => __( 'Price', 'digent-appointments' ),
-			'status'   => __( 'Status', 'digent-appointments' ),
-			'actions'  => __( 'Actions', 'digent-appointments' ),
+			'name'     => esc_html__( 'Service', 'digent-appointments' ),
+			'duration' => esc_html__( 'Duration', 'digent-appointments' ),
+			'price'    => esc_html__( 'Price', 'digent-appointments' ),
+			'status'   => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'  => esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -34,19 +34,19 @@ class DGAP_Services_Table extends WP_List_Table {
 	}
 
 	public function column_price( $item ) {
-		return  $item['price'];
+		return  esc_html( $item['price'] );
 	}
 
 	public function column_status( $item ) {
 		return (int) $item['status'] === 1
-			? '<span class="dgap-badge dgap-badge-active">Active</span>'
-			: '<span class="dgap-badge dgap-badge-inactive">Inactive</span>';
+			? '<span class="dgap-badge dgap-badge-active">' . esc_html__( 'Active', 'digent-appointments' ) . '</span>'
+			: '<span class="dgap-badge dgap-badge-inactive">' . esc_html__( 'Inactive', 'digent-appointments' ) . '</span>';
 	}
 
 	public function column_actions( $item ) {
 		return sprintf(
-			'<button data-title="Edit Service" data-entity="service" class="button button-small dgap-edit" data-id="%1$d">Edit</button>
-			 <button data-entity="service" class="button button-small dgap-delete" data-id="%1$d">Delete</button>',
+			'<button data-title="' . esc_attr__( 'Edit Service', 'digent-appointments' ) . '" data-entity="service" class="button button-small dgap-edit" data-id="%1$d">' . esc_html__( 'Edit', 'digent-appointments' ) . '</button>
+			 <button data-entity="service" class="button button-small dgap-delete" data-id="%1$d">' . esc_html__( 'Delete', 'digent-appointments' ) . '</button>',
 			$item['id']
 		);
 	}

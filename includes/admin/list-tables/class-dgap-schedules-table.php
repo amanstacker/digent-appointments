@@ -12,13 +12,13 @@ class DGAP_Schedules_Table extends WP_List_Table {
 	public function get_columns() {
 		return [
 			'cb'           => '<input type="checkbox" />',
-			'location'     => __( 'Location', 'digent-appointments' ),
-			'staff'        => __( 'Staff', 'digent-appointments' ),
-			'service'      => __( 'Service', 'digent-appointments' ),
-			'availability' => __( 'Availability', 'digent-appointments' ),
-			'capacity'     => __( 'Capacity', 'digent-appointments' ),
-			'status'       => __( 'Status', 'digent-appointments' ),
-			'actions'      => __( 'Actions', 'digent-appointments' ),
+			'location'     => esc_html__( 'Location', 'digent-appointments' ),
+			'staff'        => esc_html__( 'Staff', 'digent-appointments' ),
+			'service'      => esc_html__( 'Service', 'digent-appointments' ),
+			'availability' => esc_html__( 'Availability', 'digent-appointments' ),
+			'capacity'     => esc_html__( 'Capacity', 'digent-appointments' ),
+			'status'       => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'      => esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -100,8 +100,8 @@ class DGAP_Schedules_Table extends WP_List_Table {
 
 	public function column_status( $item ) {
 		return ( (int) $item['status'] === 1 )
-			? '<span class="dgap-badge dgap-badge-active">' . __( 'Active', 'digent-appointments' ) . '</span>'
-			: '<span class="dgap-badge dgap-badge-inactive">' . __( 'Inactive', 'digent-appointments' ) . '</span>';
+			? '<span class="dgap-badge dgap-badge-active">' . esc_html__( 'Active', 'digent-appointments' ) . '</span>'
+			: '<span class="dgap-badge dgap-badge-inactive">' . esc_html__( 'Inactive', 'digent-appointments' ) . '</span>';
 	}
 
 	public function column_actions( $item ) {
@@ -109,8 +109,8 @@ class DGAP_Schedules_Table extends WP_List_Table {
 			'<button data-title="%4$s" data-entity="schedule" class="button button-small dgap-edit" data-id="%1$d">%2$s</button>
 			 <button data-entity="schedule" class="button button-small button-secondary dgap-delete" data-id="%1$d">%3$s</button>',
 			$item['id'],
-			__( 'Edit', 'digent-appointments' ),
-			__( 'Delete', 'digent-appointments' ),
+			esc_html__( 'Edit', 'digent-appointments' ),
+			esc_html__( 'Delete', 'digent-appointments' ),
 			esc_attr__( 'Edit Schedule', 'digent-appointments' )
 		);
 	}

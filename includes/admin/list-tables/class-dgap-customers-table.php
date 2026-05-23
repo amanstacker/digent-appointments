@@ -10,11 +10,11 @@ class DGAP_Customers_Table extends WP_List_Table {
 	public function get_columns() {
 		return [
 			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Customer Name', 'digent-appointments' ),
-			'email'  => __( 'Email', 'digent-appointments' ),
-			'phone'  => __( 'Phone', 'digent-appointments' ),
-			'status' => __( 'Status', 'digent-appointments' ),
-			'actions'=> __( 'Actions', 'digent-appointments' ),
+			'name'   => esc_html__( 'Customer Name', 'digent-appointments' ),
+			'email'  => esc_html__( 'Email', 'digent-appointments' ),
+			'phone'  => esc_html__( 'Phone', 'digent-appointments' ),
+			'status' => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'=> esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -51,10 +51,10 @@ class DGAP_Customers_Table extends WP_List_Table {
 
 	public function column_status( $item ) {
 		if ( (int) $item['status'] === 1 ) {
-			return '<span class="dgap-badge dgap-badge-active">' . __( 'Active', 'digent-appointments' ) . '</span>';
+			return '<span class="dgap-badge dgap-badge-active">' . esc_html__( 'Active', 'digent-appointments' ) . '</span>';
 		}
 
-		return '<span class="dgap-badge dgap-badge-inactive">' . __( 'Inactive', 'digent-appointments' ) . '</span>';
+		return '<span class="dgap-badge dgap-badge-inactive">' . esc_html__( 'Inactive', 'digent-appointments' ) . '</span>';
 	}
 
 	public function column_actions( $item ) {
@@ -69,9 +69,9 @@ class DGAP_Customers_Table extends WP_List_Table {
 				class="button button-small button-secondary dgap-delete"
 				data-id="%1$d">%3$s</button>',
 			$item['id'],
-			__( 'Edit', 'digent-appointments' ),
-			__( 'Delete', 'digent-appointments' ),
-			__( 'Edit Customer', 'digent-appointments' )
+			esc_html__( 'Edit', 'digent-appointments' ),
+			esc_html__( 'Delete', 'digent-appointments' ),
+			esc_attr__( 'Edit Customer', 'digent-appointments' )
 		);
 	}
 

@@ -10,13 +10,13 @@ class DGAP_Bookings_Table extends WP_List_Table {
 	public function get_columns() {
 		return [
 			'cb'           => '<input type="checkbox" />',
-			'booking'      => __( 'Booking', 'digent-appointments' ),
-			'customer'     => __( 'Customer', 'digent-appointments' ),
-			'service'      => __( 'Service', 'digent-appointments' ),
-			'date_time'    => __( 'Date & Time', 'digent-appointments' ),
-			'price'        => __( 'Price', 'digent-appointments' ),
-			'status'       => __( 'Status', 'digent-appointments' ),
-			'actions'      => __( 'Actions', 'digent-appointments' ),
+			'booking'      => esc_html__( 'Booking', 'digent-appointments' ),
+			'customer'     => esc_html__( 'Customer', 'digent-appointments' ),
+			'service'      => esc_html__( 'Service', 'digent-appointments' ),
+			'date_time'    => esc_html__( 'Date & Time', 'digent-appointments' ),
+			'price'        => esc_html__( 'Price', 'digent-appointments' ),
+			'status'       => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'      => esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -110,8 +110,8 @@ class DGAP_Bookings_Table extends WP_List_Table {
 			'<button class="button button-small dgap-edit" data-entity="booking" data-id="%1$d">%2$s</button>
 			 <button class="button button-small button-secondary dgap-delete" data-entity="booking" data-id="%1$d">%3$s</button>',
 			$item['id'],
-			__( 'Edit', 'digent-appointments' ),
-			__( 'Delete', 'digent-appointments' )
+			esc_html__( 'Edit', 'digent-appointments' ),
+			esc_html__( 'Delete', 'digent-appointments' )
 		);
 	}
 

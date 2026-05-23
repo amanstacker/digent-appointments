@@ -10,11 +10,11 @@ class DGAP_Forms_Table extends WP_List_Table {
 	public function get_columns() {
 		return [
 			'cb'        => '<input type="checkbox" />',
-			'name'      => __( 'Form Name', 'digent-appointments' ),
-			'layout'    => __( 'Layout', 'digent-appointments' ),
-			'shortcode' => __( 'Shortcode', 'digent-appointments' ),
-			'status'    => __( 'Status', 'digent-appointments' ),
-			'actions'   => __( 'Actions', 'digent-appointments' ),
+			'name'      => esc_html__( 'Form Name', 'digent-appointments' ),
+			'layout'    => esc_html__( 'Layout', 'digent-appointments' ),
+			'shortcode' => esc_html__( 'Shortcode', 'digent-appointments' ),
+			'status'    => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'   => esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -45,10 +45,10 @@ class DGAP_Forms_Table extends WP_List_Table {
 
 	public function column_status( $item ) {
 		if ( (int) $item['status'] === 1 ) {
-			return '<span class="dgap-badge dgap-badge-active">Active</span>';
+			return '<span class="dgap-badge dgap-badge-active">' . esc_html__( 'Active', 'digent-appointments' ) . '</span>';
 		}
 
-		return '<span class="dgap-badge dgap-badge-inactive">Inactive</span>';
+		return '<span class="dgap-badge dgap-badge-inactive">' . esc_html__( 'Inactive', 'digent-appointments' ) . '</span>';
 	}
 
 	public function column_actions( $item ) {
@@ -58,9 +58,9 @@ class DGAP_Forms_Table extends WP_List_Table {
 			'<a href="%1$s" class="button button-small">%2$s</a>
 			 <button class="button button-small button-secondary dgap-delete" data-entity="form" data-id="%3$d">%4$s</button>',
 			esc_url( $edit_url ),
-			__( 'Edit', 'digent-appointments' ),
+			esc_html__( 'Edit', 'digent-appointments' ),
 			$item['id'],
-			__( 'Delete', 'digent-appointments' )
+			esc_html__( 'Delete', 'digent-appointments' )
 		);
 	}
 

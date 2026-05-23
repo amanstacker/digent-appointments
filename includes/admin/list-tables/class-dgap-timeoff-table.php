@@ -12,11 +12,11 @@ class DGAP_Timeoff_Table extends WP_List_Table {
 	public function get_columns() {
 		return [
 			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Time Off', 'digent-appointments' ),
-			'type'   => __( 'Applied On', 'digent-appointments' ),
-			'dates'  => __( 'Dates', 'digent-appointments' ),
-			'status' => __( 'Status', 'digent-appointments' ),
-			'actions'=> __( 'Actions', 'digent-appointments' ),
+			'name'   => esc_html__( 'Time Off', 'digent-appointments' ),
+			'type'   => esc_html__( 'Applied On', 'digent-appointments' ),
+			'dates'  => esc_html__( 'Dates', 'digent-appointments' ),
+			'status' => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'=> esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -54,16 +54,16 @@ class DGAP_Timeoff_Table extends WP_List_Table {
 		return sprintf(
 			'<span class="dgap-muted">%d %s</span>',
 			$count,
-			$count === 1 ? __( 'day', 'digent-appointments' ) : __( 'days', 'digent-appointments' )
+			$count === 1 ? esc_html__( 'day', 'digent-appointments' ) : esc_html__( 'days', 'digent-appointments' )
 		);
 	}
 
 	public function column_status( $item ) {
 		if ( (int) $item['status'] === 1 ) {
-			return '<span class="dgap-badge dgap-badge-active">' . __( 'Active', 'digent-appointments' ) . '</span>';
+			return '<span class="dgap-badge dgap-badge-active">' . esc_html__( 'Active', 'digent-appointments' ) . '</span>';
 		}
 
-		return '<span class="dgap-badge dgap-badge-inactive">' . __( 'Inactive', 'digent-appointments' ) . '</span>';
+		return '<span class="dgap-badge dgap-badge-inactive">' . esc_html__( 'Inactive', 'digent-appointments' ) . '</span>';
 	}
 
 	public function column_actions( $item ) {
@@ -83,8 +83,8 @@ class DGAP_Timeoff_Table extends WP_List_Table {
 			</button>',
 			(int) $item['id'],
 			esc_attr__( 'Edit Time Off', 'digent-appointments' ),
-			__( 'Edit', 'digent-appointments' ),
-			__( 'Delete', 'digent-appointments' )
+			esc_html__( 'Edit', 'digent-appointments' ),
+			esc_html__( 'Delete', 'digent-appointments' )
 		);
 	}
 
