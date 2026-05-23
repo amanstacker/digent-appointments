@@ -8,83 +8,83 @@ class DGAP_Settings_Render {
 	private function get_tabs() {
 		return [
 			'general' => [
-				'label'    => __( 'General', 'digent-appointments' ),
+				'label'    => esc_html__( 'General', 'digent-appointments' ),
 				'sections' => [
-					'booking' => __( 'Booking', 'digent-appointments' ),
-					'limits'  => __( 'Limits', 'digent-appointments' ),					
+					'booking' => esc_html__( 'Booking', 'digent-appointments' ),
+					'limits'  => esc_html__( 'Limits', 'digent-appointments' ),					
 				],
 			],
 
 			'notifications' => [
-				'label'    => __( 'Notifications', 'digent-appointments' ),
+				'label'    => esc_html__( 'Notifications', 'digent-appointments' ),
 				'sections' => [
-					'general'  => __( 'General', 'digent-appointments' ),
-					'admin_email'    => __( 'Admin Email', 'digent-appointments' ),
-					'employee_email'    => __( 'Employee Email', 'digent-appointments' ),
-					'customer_email'    => __( 'Customer Email', 'digent-appointments' ),
-					'sms'      => __( 'SMS', 'digent-appointments' ),
-					'whatsapp' => __( 'WhatsApp', 'digent-appointments' ),
-					'telegram' => __( 'Telegram', 'digent-appointments' ),
+					'general'  => esc_html__( 'General', 'digent-appointments' ),
+					'admin_email'    => esc_html__( 'Admin Email', 'digent-appointments' ),
+					'employee_email'    => esc_html__( 'Employee Email', 'digent-appointments' ),
+					'customer_email'    => esc_html__( 'Customer Email', 'digent-appointments' ),
+					'sms'      => esc_html__( 'SMS', 'digent-appointments' ),
+					'whatsapp' => esc_html__( 'WhatsApp', 'digent-appointments' ),
+					'telegram' => esc_html__( 'Telegram', 'digent-appointments' ),
 				],
 			],
 
 			'payments' => [
-				'label'    => __( 'Payments', 'digent-appointments' ),
+				'label'    => esc_html__( 'Payments', 'digent-appointments' ),
 				'sections' => [
-					'general' => __( 'General', 'digent-appointments' ),
-					'paypal'  => __( 'PayPal', 'digent-appointments' ),
-					'stripe'  => __( 'Stripe', 'digent-appointments' ),
-					'authorize_net' => __( 'Authorize.Net', 'digent-appointments' ),
-					'fastspring' => __( 'FastSpring', 'digent-appointments' ),
-					'2checkout' => __( '2Checkout', 'digent-appointments' ),
+					'general' => esc_html__( 'General', 'digent-appointments' ),
+					'paypal'  => esc_html__( 'PayPal', 'digent-appointments' ),
+					'stripe'  => esc_html__( 'Stripe', 'digent-appointments' ),
+					'authorize_net' => esc_html__( 'Authorize.Net', 'digent-appointments' ),
+					'fastspring' => esc_html__( 'FastSpring', 'digent-appointments' ),
+					'2checkout' => esc_html__( '2Checkout', 'digent-appointments' ),
 
 				],
 			],
 
 			'calendar' => [
-				'label'    => __( 'Calendar Sync', 'digent-appointments' ),
+				'label'    => esc_html__( 'Calendar Sync', 'digent-appointments' ),
 				'sections' => [
-					'general' => __( 'General', 'digent-appointments' ),
-					'google'  => __( 'Google Calendar', 'digent-appointments' ),
-					'apple'   => __( 'Apple Calendar', 'digent-appointments' ),
-					'outlook' => __( 'Outlook', 'digent-appointments' ),
-					'ics'     => __( 'ICS Feed / Export', 'digent-appointments' ),
+					'general' => esc_html__( 'General', 'digent-appointments' ),
+					'google'  => esc_html__( 'Google Calendar', 'digent-appointments' ),
+					'apple'   => esc_html__( 'Apple Calendar', 'digent-appointments' ),
+					'outlook' => esc_html__( 'Outlook', 'digent-appointments' ),
+					'ics'     => esc_html__( 'ICS Feed / Export', 'digent-appointments' ),
 				],
 			],
 
 			'tools' => [
-				'label'    => __( 'Tools', 'digent-appointments' ),
+				'label'    => esc_html__( 'Tools', 'digent-appointments' ),
 				'sections' => [
-					'import_export' => __( 'Import / Export', 'digent-appointments' ),
-					'logs'          => __( 'Logs & Activity', 'digent-appointments' ),
-					'debug'         => __( 'Debug', 'digent-appointments' ),
-					'data_cleanup'  => __( 'Data Cleanup', 'digent-appointments' ),
-					'migration'  => __( 'Migration', 'digent-appointments' ),
-					'reset'  => __( 'Reset', 'digent-appointments' ),
+					'import_export' => esc_html__( 'Import / Export', 'digent-appointments' ),
+					'logs'          => esc_html__( 'Logs & Activity', 'digent-appointments' ),
+					'debug'         => esc_html__( 'Debug', 'digent-appointments' ),
+					'data_cleanup'  => esc_html__( 'Data Cleanup', 'digent-appointments' ),
+					'migration'  => esc_html__( 'Migration', 'digent-appointments' ),
+					'reset'  => esc_html__( 'Reset', 'digent-appointments' ),
 				],
 			],
 			'advanced' => [
-				'label'    => __( 'Advanced', 'digent-appointments' ),
+				'label'    => esc_html__( 'Advanced', 'digent-appointments' ),
 				'sections' => [					
-					'recaptcha'  => __( 'Google reCAPTCHA', 'digent-appointments' ),
-					'gdpr'  => __( 'GDPR', 'digent-appointments' ),					
-					'roles_permissions' => __( 'Roles & Permissions', 'digent-appointments' ),
+					'recaptcha'  => esc_html__( 'Google reCAPTCHA', 'digent-appointments' ),
+					'gdpr'  => esc_html__( 'GDPR', 'digent-appointments' ),					
+					'roles_permissions' => esc_html__( 'Roles & Permissions', 'digent-appointments' ),
 				],
 			],
 			'api_webhooks' => [
-				'label'    => __( 'Webhooks & API', 'digent-appointments' ),
+				'label'    => esc_html__( 'Webhooks & API', 'digent-appointments' ),
 				'sections' => [
-					'webhooks'   => __( 'Webhooks', 'digent-appointments' ),
-					'api_keys'   => __( 'API Keys', 'digent-appointments' ),
-					'endpoints'  => __( 'API Endpoints', 'digent-appointments' ),
-					'logs'       => __( 'Logs', 'digent-appointments' ),
-					'debug'      => __( 'Debug Tools', 'digent-appointments' ),
+					'webhooks'   => esc_html__( 'Webhooks', 'digent-appointments' ),
+					'api_keys'   => esc_html__( 'API Keys', 'digent-appointments' ),
+					'endpoints'  => esc_html__( 'API Endpoints', 'digent-appointments' ),
+					'logs'       => esc_html__( 'Logs', 'digent-appointments' ),
+					'debug'      => esc_html__( 'Debug Tools', 'digent-appointments' ),
 				],
 			],
 			'help' => [
-				'label'    => __( 'Help', 'digent-appointments' ),
+				'label'    => esc_html__( 'Help', 'digent-appointments' ),
 				'sections' => [
-					'contact' => __( 'Contact Support', 'digent-appointments' ),
+					'contact' => esc_html__( 'Contact Support', 'digent-appointments' ),
 				],
 			],
 		];
