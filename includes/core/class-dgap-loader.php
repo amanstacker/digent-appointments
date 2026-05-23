@@ -51,14 +51,7 @@ class DGAP_Loader {
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/customer-email.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/sms.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/telegram.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/whatsapp.php';
-
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/payments/general.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/payments/2checkout.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/payments/authorizenet.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/payments/fastspring.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/payments/paypal.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/payments/stripe.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/whatsapp.php';		
 		
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/class-dgap-settings-fields.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/class-dgap-settings.php';
