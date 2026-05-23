@@ -21,13 +21,9 @@ class DGAP_Settings_Render {
 					'general'  => esc_html__( 'General', 'digent-appointments' ),
 					'admin_email'    => esc_html__( 'Admin Email', 'digent-appointments' ),
 					'employee_email'    => esc_html__( 'Employee Email', 'digent-appointments' ),
-					'customer_email'    => esc_html__( 'Customer Email', 'digent-appointments' ),
-					'sms'      => esc_html__( 'SMS', 'digent-appointments' ),
-					'whatsapp' => esc_html__( 'WhatsApp', 'digent-appointments' ),
-					'telegram' => esc_html__( 'Telegram', 'digent-appointments' ),
+					'customer_email'    => esc_html__( 'Customer Email', 'digent-appointments' ),					
 				],
 			],
-
 			'payments' => [
 				'label'    => esc_html__( 'Payments', 'digent-appointments' ),
 				'sections' => [

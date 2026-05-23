@@ -48,10 +48,7 @@ class DGAP_Loader {
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/general.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/admin-email.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/employee-email.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/customer-email.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/sms.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/telegram.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/whatsapp.php';		
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/notifications/customer-email.php';		
 		
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/class-dgap-settings-fields.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/class-dgap-settings.php';
@@ -129,15 +126,8 @@ class DGAP_Loader {
 		/* ===============================
 		* Notifications
 		* =============================== */
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/notifications/class-dgap-email-notification.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/notifications/class-dgap-sms-notification.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/notifications/class-dgap-whatsapp-notification.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/notifications/class-dgap-telegram-notification.php';
-
-		new DGAP_Email_Notification();
-		new DGAP_SMS_Notification();
-		new DGAP_WhatsApp_Notification();
-		new DGAP_Telegram_Notification();
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/notifications/class-dgap-email-notification.php';		
+		new DGAP_Email_Notification();		
 
 	}
 

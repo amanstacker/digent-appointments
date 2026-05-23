@@ -18,11 +18,11 @@ add_action( 'admin_init', 'dgap_register_admin_email_notifications_section' );
 function dgap_admin_email_notifications_section_callback() {
 
 	$statuses = [
-        'reserved'    => __( 'Reserved', 'digent-appointments' ),
-        'pending'     => __( 'Pending', 'digent-appointments' ),
-		'confirmed'   => __( 'Confirmed', 'digent-appointments' ),				
-		'cancelled'   => __( 'Cancelled', 'digent-appointments' ),
-        'reminder'    => __( 'Reminder', 'digent-appointments' ),		
+        'reserved'    => esc_html__( 'Reserved', 'digent-appointments' ),
+        'pending'     => esc_html__( 'Pending', 'digent-appointments' ),
+		'confirmed'   => esc_html__( 'Confirmed', 'digent-appointments' ),				
+		'cancelled'   => esc_html__( 'Cancelled', 'digent-appointments' ),
+        'reminder'    => esc_html__( 'Reminder', 'digent-appointments' ),		
 	];
 
 	$options = get_option( 'dgap_notifications_settings', [] );
