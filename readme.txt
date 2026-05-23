@@ -63,6 +63,23 @@ Documentation will be available soon.
 4. Configure your services, staff, and schedules.
 5. Add the booking shortcode to any page.
 
+== Credits ==
+
+Digent Appointments uses the following third-party libraries:
+
+1. **FullCalendar** - A JavaScript library for showing calendar data
+   - Link: https://github.com/fullcalendar/fullcalendar
+   - License: MIT
+
+1. **Select2** - A JavaScript library to make select type more advanced
+   - Link: https://github.com/select2/select2
+   - License: MIT
+
+1. **Flatpickr** - Lightweight, powerful javascript datetimepicker with no dependencies
+   - Link: https://github.com/flatpickr/flatpickr
+   - License: MIT
+
+
 == Frequently Asked Questions ==
 
 = Is Digent Appointments free? =
