@@ -9,7 +9,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A modern and flexible appointment booking plugin for WordPress that helps businesses manage appointments, schedules, services, and customer bookings with ease.
+A modern and flexible appointment booking plugin that helps businesses manage appointments, schedules, services, and customer bookings with ease.
 
 == Description ==
 

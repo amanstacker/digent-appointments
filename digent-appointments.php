@@ -6,7 +6,7 @@ Version: 1.0.0
 Text Domain: digent-appointments
 Author: amanstacker
 Author URI: https://profiles.wordpress.org/amanstacker/
-License: GPLv3 or later
+License: GPLv2 or later
  */
 
 // Exit if accessed directly.
