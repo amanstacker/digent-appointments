@@ -3,6 +3,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Sanitize business hour breaks.
+ *
+ * @param array $breaks Raw breaks array.
+ * @return array
+ */
+function dgap_sanitize_breaks( $breaks ) {
+	
+	$sanitized_breaks = [];
+
+	if ( ! is_array( $breaks ) ) {
+		return $sanitized_breaks;
+	}
+
+	foreach ( $breaks as $break ) {
+		if ( ! is_array( $break ) ) {
+			continue;
+		}
+
+		$start = sanitize_text_field( $break['start'] ?? '' );
+		$end   = sanitize_text_field( $break['end'] ?? '' );
+
+		// Skip empty values.
+		if ( empty( $start ) || empty( $end ) ) {
+			continue;
+		}
+
+		$sanitized_breaks[] = [
+			'start' => $start,
+			'end'   => $end,
+		];
+	}
+
+	return array_values( $sanitized_breaks );
+}
+
 function dgap_get_form_default_settings() {
 		
 	$default_fields 	=	[

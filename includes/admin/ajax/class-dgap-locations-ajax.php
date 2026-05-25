@@ -78,14 +78,14 @@ class DGAP_Locations_Ajax {
 				}
 
 				$has_open_day = true;
-
+		
 				$business_hours[ $day ] = [
 					'status' => 'open',
 					'open'   => sanitize_text_field( $open ),
 					'close'  => sanitize_text_field( $close ),
-					'breaks' => array_values( $data['breaks'] ?? [] )
+					'breaks' => dgap_sanitize_breaks( $data['breaks'] ?? [] )
 				];
-
+				
 			} else {
 				$business_hours[ $day ] = [
 					'status' => 'closed',
