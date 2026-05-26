@@ -23,8 +23,7 @@ class DGAP_Form_Ajax {
 	    parse_str( $_POST['form_data'], $form_data );
 
 	    // Verify nonce
-	    if ( ! isset( $form_data['_dgap_nonce'] ) 
-	         || ! wp_verify_nonce( $form_data['_dgap_nonce'], 'dgap_render_preview' ) ) {
+	    if ( ! isset( $form_data['_dgap_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $form_data['_dgap_nonce'] ) ), 'dgap_render_preview' ) ) {
 	        wp_send_json_error( ['message' => esc_html__( 'Security check failed', 'digent-appointments' ) ] );
 	    }
 
