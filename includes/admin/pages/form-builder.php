@@ -1,11 +1,11 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-$id     	=	isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+$dgap_id     	=	isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-$action 	= 	isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'new';
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-$dgap_is_new 	=	$action === 'new';
+$dgap_action 	= 	isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'new';
+
+$dgap_is_new 	=	$dgap_action === 'new';
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $form 		= [
@@ -15,9 +15,9 @@ $form 		= [
 	'custom_fields' => [],
 ];
 
-if ( ! $dgap_is_new && $id ) {
+if ( ! $dgap_is_new && $dgap_id ) {
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-	$form = DGAP_Form_Repo::get( $id );
+	$form = DGAP_Form_Repo::get( $dgap_id );
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 	$form['settings'] 		=	maybe_unserialize( $form['settings'] ) ?: [];
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
@@ -27,14 +27,14 @@ if ( ! $dgap_is_new && $id ) {
 
 <form id="dgap-form-builder" novalidate>
 
-	<input type="hidden" name="id" value="<?php echo esc_attr($id); ?>">
+	<input type="hidden" name="id" value="<?php echo esc_attr($dgap_id); ?>">
     <?php wp_nonce_field( 'dgap_render_preview', '_dgap_nonce' ); ?>
 
     <!-- FORM NAME — independent, outside both panels -->
-	<div id="titlediv" class="dgap-form-name-bar">
-		<div id="titlewrap">
-			<label class="" id="title-prompt-text" for="title"></label>
-			<input type="text" name="name" size="30" id="title" value="<?php echo esc_attr($form['name']); ?>" spellcheck="true" autocomplete="off" placeholder="<?php echo esc_html__( 'Add Title', 'digent-appointments' ); ?>">
+	<div id="dgap-titlediv" class="dgap-form-name-bar">
+		<div id="dgap-titlewrap">
+			<label class="" id="dgap-title-prompt-text" for="title"></label>
+			<input type="text" name="name" size="30" id="dgap-title" value="<?php echo esc_attr($form['name']); ?>" spellcheck="true" autocomplete="off" placeholder="<?php echo esc_attr__( 'Add Title', 'digent-appointments' ); ?>">
 		</div>
 	</div>
 
@@ -102,13 +102,13 @@ if ( ! $dgap_is_new && $id ) {
 
 					        <div id="dgap-custom-fields-container">
 					            <?php
-					            if ( ! $dgap_is_new && $id ) {
+					            if ( ! $dgap_is_new && $dgap_id ) {
 					                require_once DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/forms/custom-fields.php';
 					            }
 					            ?>
 					        </div>
 
-					        <button type="button" id="add-field" class="dgap-add-field-btn">
+					        <button type="button" id="dgap-add-field" class="dgap-add-field-btn">
 					            <span class="dashicons dashicons-plus-alt2"></span>
 					            <?php echo esc_html__( 'Add Field', 'digent-appointments' ); ?>
 					        </button>
@@ -293,10 +293,10 @@ if ( ! $dgap_is_new && $id ) {
 					    <div class="dgap-accordion-header"><?php echo esc_html__( 'Shortcode', 'digent-appointments' ); ?></div>
 					    <div class="dgap-accordion-body">
 
-					        <?php if ( ! $dgap_is_new && $id ) : ?>
+					        <?php if ( ! $dgap_is_new && $dgap_id ) : ?>
 
 					            <div class="dgap-shortcode-wrap">
-					                <code id="dgap-shortcode-text">[dgap_booking_form id="<?php echo esc_html( $id ); ?>"]</code>
+					                <code id="dgap-shortcode-text">[dgap_booking_form id="<?php echo esc_html( $dgap_id ); ?>"]</code>
 					                <button type="button" class="dgap-shortcode-copy" data-clipboard="#dgap-shortcode-text" title="<?php esc_attr_e( 'Copy to clipboard', 'digent-appointments' ); ?>">
 					                    <span class="dashicons dashicons-clipboard"></span>
 					                </button>

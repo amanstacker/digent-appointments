@@ -23,8 +23,7 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-custo
 </div>
 
 <div class="wrap dgap-admin-wrap">
-	<?php
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+	<?php	
 	$dgap_table = new DGAP_Customers_Table();
 	$dgap_table->prepare_items();
 	$dgap_table->display();

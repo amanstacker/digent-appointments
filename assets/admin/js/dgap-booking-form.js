@@ -133,7 +133,7 @@ jQuery(function ($) {
     /* ================================================
         ADD CUSTOM FIELD
     ================================================ */
-    $(document).on('click', '#add-field', function () {
+    $(document).on('click', '#dgap-add-field', function () {
         customFields.push({
             name:       'custom_' + Date.now(),
             label:      '',

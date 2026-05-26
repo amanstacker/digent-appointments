@@ -19,8 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 </div>
 
-<div class="wrap dgap-admin-wrap">
-	
+<div class="wrap dgap-admin-wrap">	
 	<div id="dgap-calendar"></div>
 </div>
 

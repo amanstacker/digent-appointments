@@ -4,12 +4,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-forms-table.php';
 require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+$dgap_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 
 /**
  * If Edit or New → Load Builder Page
  */
-if ( in_array( $action, ['edit', 'new'] ) ) {
+if ( in_array( $dgap_action, ['edit', 'new'] ) ) {
 	include DGAP_PLUGIN_DIR_PATH . 'includes/admin/pages/form-builder.php';
 	return;
 }
@@ -32,8 +32,7 @@ if ( in_array( $action, ['edit', 'new'] ) ) {
 </div>
 
 <div class="wrap dgap-admin-wrap">
-	<?php
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+	<?php	
 	$dgap_table = new DGAP_Forms_Table();
 	$dgap_table->prepare_items();
 	$dgap_table->display();

@@ -2,7 +2,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $dgap_extensions = [
 	[
 		'title'       => esc_html__( 'Advanced Payments', 'digent-appointments' ),
