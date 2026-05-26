@@ -82,25 +82,25 @@ $dgap_extensions = [
 ?>
 
 <!-- =========================
-			     Top Strip Header
-			========================== -->
-			<div class="dgap-header-strip">
-				<div class="dgap-header-left">
-					<h1><?php esc_html_e( 'Digent Extensions', 'digent-appointments' ); ?></h1>
-					<p class="description">
-						<?php esc_html_e( 'Extend digent with powerful premium features. Enable only what you need.', 'digent-appointments' ); ?>
-					</p>
-				</div>
+		Top Strip Header
+========================== -->
+<div class="dgap-header-strip">
+	<div class="dgap-header-left">
+		<h1><?php esc_html_e( 'Digent Extensions', 'digent-appointments' ); ?></h1>
+		<p class="description">
+			<?php esc_html_e( 'Extend digent with powerful premium features. Enable only what you need.', 'digent-appointments' ); ?>
+		</p>
+	</div>
 
-				<div class="dgap-header-right">
-					<a href="#" class="button button-secondary">
-						<?php esc_html_e( 'Documentation', 'digent-appointments' ); ?>
-					</a>
-					<a href="#" class="button button-secondary">
-						<?php esc_html_e( 'Support', 'digent-appointments' ); ?>
-					</a>
-				</div>
-			</div>
+	<div class="dgap-header-right">
+		<a href="#" class="button button-secondary">
+			<?php esc_html_e( 'Documentation', 'digent-appointments' ); ?>
+		</a>
+		<a href="#" class="button button-secondary">
+			<?php esc_html_e( 'Support', 'digent-appointments' ); ?>
+		</a>
+	</div>
+</div>
 <div class="wrap dgap-extensions">
 	
 	<div class="dgap-extensions-grid">

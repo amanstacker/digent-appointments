@@ -43,13 +43,13 @@
 				<div class="dgap-days-grid">
 					<?php
 					$dgap_days = [
-						'mon' => 'Mon',
-						'tue' => 'Tue',
-						'wed' => 'Wed',
-						'thu' => 'Thu',
-						'fri' => 'Fri',
-						'sat' => 'Sat',
-						'sun' => 'Sun',
+						'mon' => esc_html__( 'Mon', 'digent-appointments' ),
+						'tue' => esc_html__( 'Tue', 'digent-appointments' ),
+						'wed' => esc_html__( 'Wed', 'digent-appointments' ),
+						'thu' => esc_html__( 'Thu', 'digent-appointments' ),
+						'fri' => esc_html__( 'Fri', 'digent-appointments' ),
+						'sat' => esc_html__( 'Sat', 'digent-appointments' ),
+						'sun' => esc_html__( 'Sun', 'digent-appointments' ),
 					];
 
 					foreach ( $dgap_days as $dgap_key => $dgap_label ) :

@@ -6,8 +6,8 @@ class DGAP_Menu {
 
 	public function register() {
 		add_menu_page(
-			'Digent Appointments',
-			'Digent Appointments',
+			__( 'Digent Appointments', 'digent-appointments' ),
+			__( 'Digent Appointments', 'digent-appointments' ),
 			'manage_options',
 			'digent-appointments',
 			[ $this, 'dashboard' ],
@@ -25,16 +25,16 @@ class DGAP_Menu {
 	private function submenus() {
 
 		$menus = [
-			'bookings'  => 'Bookings',
-			'locations' => 'Locations',
-			'services'  => 'Services',
-			'staff'     => 'Staff Members',
-			'schedules' => 'Schedules',
-			'timeoff'   => 'Time Off',
-			'forms'     => 'Booking Forms',
-			'customers' => 'Customers',
-			'settings'  => 'Settings',
-			'extensions'=> 'Extensions',
+			'bookings'  => esc_html__( 'Bookings', 'digent-appointments' ),
+			'locations' => esc_html__( 'Locations', 'digent-appointments' ),
+			'services'  => esc_html__( 'Services', 'digent-appointments' ),
+			'staff'     => esc_html__( 'Staff Members', 'digent-appointments' ),
+			'schedules' => esc_html__( 'Schedules', 'digent-appointments' ),
+			'timeoff'   => esc_html__( 'Time Off', 'digent-appointments' ),
+			'forms'     => esc_html__( 'Booking Forms', 'digent-appointments' ),
+			'customers' => esc_html__( 'Customers', 'digent-appointments' ),
+			'settings'  => esc_html__( 'Settings', 'digent-appointments' ),
+			'extensions'=> esc_html__( 'Extensions', 'digent-appointments' ),
 		];
 
 		foreach ( $menus as $slug => $title ) {

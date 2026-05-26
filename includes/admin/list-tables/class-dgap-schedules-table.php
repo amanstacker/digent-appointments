@@ -59,13 +59,13 @@ class DGAP_Schedules_Table extends WP_List_Table {
 		}
 
 		$labels = [
-			'monday'    => __( 'Mon', 'digent-appointments' ),
-			'tuesday'   => __( 'Tue', 'digent-appointments' ),
-			'wednesday' => __( 'Wed', 'digent-appointments' ),
-			'thursday'  => __( 'Thu', 'digent-appointments' ),
-			'friday'    => __( 'Fri', 'digent-appointments' ),
-			'saturday'  => __( 'Sat', 'digent-appointments' ),
-			'sunday'    => __( 'Sun', 'digent-appointments' ),
+			'monday'    => esc_html__( 'Mon', 'digent-appointments' ),
+			'tuesday'   => esc_html__( 'Tue', 'digent-appointments' ),
+			'wednesday' => esc_html__( 'Wed', 'digent-appointments' ),
+			'thursday'  => esc_html__( 'Thu', 'digent-appointments' ),
+			'friday'    => esc_html__( 'Fri', 'digent-appointments' ),
+			'saturday'  => esc_html__( 'Sat', 'digent-appointments' ),
+			'sunday'    => esc_html__( 'Sun', 'digent-appointments' ),
 		];
 
 		$output = [];
