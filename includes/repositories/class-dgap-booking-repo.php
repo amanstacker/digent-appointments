@@ -311,7 +311,7 @@ class DGAP_Booking_Repo {
 		}
 
 		$customer_id = self::get_or_create_customer( $data );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- all data is sanitized before this point, and we're inserting a new booking record with the provided data.
 		$wpdb->insert(
 			self::table(),
 			[

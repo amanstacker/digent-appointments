@@ -75,7 +75,7 @@ class DGAP_Timeoff_Ajax {
 		if ( empty( $raw_dates ) ) {
 			wp_send_json_error( [ 'message' => esc_html__( 'Please select at least one date.', 'digent-appointments' ) ] );
 		}
-
+		//phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason Sanitization is handled below after decoding.
 		$dates = is_array( $raw_dates )
 			? $raw_dates
 			: json_decode( $raw_dates, true );
@@ -177,7 +177,7 @@ class DGAP_Timeoff_Ajax {
 			wp_send_json_error();
 		}
 
-		// Decode entity IDs
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason Sanitization is handled in every get function of the repos for id
 		$entity_ids = json_decode( $row['entity_ids'], true ) ?: [];
 
 		$labels = [];

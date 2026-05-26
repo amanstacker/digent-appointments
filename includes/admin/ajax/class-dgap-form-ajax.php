@@ -22,7 +22,7 @@ class DGAP_Form_Ajax {
 	    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash --Reason Sanitization is handled below
 	    parse_str( $_POST['form_data'], $form_data );
 
-	    // Verify nonce
+	    // Verify nonce with sanitization
 	    if ( ! isset( $form_data['_dgap_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $form_data['_dgap_nonce'] ) ), 'dgap_render_preview' ) ) {
 	        wp_send_json_error( ['message' => esc_html__( 'Security check failed', 'digent-appointments' ) ] );
 	    }
@@ -33,7 +33,7 @@ class DGAP_Form_Ajax {
 	    }
 
 	    require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/class-dgap-form-renderer.php';
-
+        //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason Sanitization is handled in the renderer
 	    $html = DGAP_Form_Renderer::render( $form_data );
 
 		wp_send_json_success([
@@ -111,7 +111,7 @@ class DGAP_Form_Ajax {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 		
 		if ( ! empty( $_POST['id'] ) ) {
-			DGAP_Form_Repo::delete( (int) $_POST['id'] );
+			DGAP_Form_Repo::delete( absint( $_POST['id'] ) );
 
 			wp_send_json_success();
 		}

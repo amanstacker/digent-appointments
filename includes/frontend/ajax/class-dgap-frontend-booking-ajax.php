@@ -195,8 +195,12 @@ class DGAP_Frontend_Booking_Ajax {
 			if ( strpos( $key, '_dgap_form_' ) !== 0 ) {
 				continue;
 			}
+			// Skip arrays/objects.
+			if ( ! is_scalar( $value ) ) {
+				continue;
+			}
 
-			$custom_fields[ $key ] = sanitize_text_field(
+			$custom_fields[ sanitize_key( wp_unslash( $key ) ) ] = sanitize_text_field(
 				wp_unslash( $value )
 			);
 		}
@@ -235,7 +239,7 @@ class DGAP_Frontend_Booking_Ajax {
 		wp_send_json_success(
 			[
 				'message'    => esc_html__( 'Booking confirmed', 'digent-appointments' ),
-				'booking_id' => (int) $result,
+				'booking_id' => absint ( $result ), 
 			]
 		);
 	}
