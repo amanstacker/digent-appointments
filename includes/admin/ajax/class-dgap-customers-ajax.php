@@ -33,7 +33,7 @@ class DGAP_Customers_Ajax {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason Sanitization is handled below
 		parse_str( wp_unslash( $_POST['data'] ), $data );
 
-		$id              = (int) ( $data['id'] ?? 0 );
+		$id              = absint( $data['id'] ?? 0 );
 		$first_name      = sanitize_text_field( $data['first_name'] ?? '' );
 		$last_name       = sanitize_text_field( $data['last_name'] ?? '' );
 		$email           = sanitize_email( $data['email'] ?? '' );

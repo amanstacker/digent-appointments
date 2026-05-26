@@ -76,7 +76,7 @@ class DGAP_Services_Ajax {
 
 		if ( ! empty( $data['id'] ) ) {
 
-			$result = DGAP_Service_Repo::update( (int) $data['id'], $payload );
+			$result = DGAP_Service_Repo::update( absint( $data['id'] ), $payload );
 
 		} else {
 

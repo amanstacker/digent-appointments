@@ -153,7 +153,7 @@ class DGAP_Timeoff_Ajax {
 		* Save
 		* ===================================================== */
 		if ( ! empty( $data['id'] ) ) {
-			DGAP_Timeoff_Repo::update( (int) $data['id'], $payload );
+			DGAP_Timeoff_Repo::update( absint( $data['id'] ), $payload );
 		} else {
 			DGAP_Timeoff_Repo::insert( $payload );
 		}
@@ -186,7 +186,7 @@ class DGAP_Timeoff_Ajax {
 		if ( $row['type'] === 'staff' ) {
 
 			foreach ( $entity_ids as $eid ) {
-				$staff = DGAP_Staff_Repo::get( $eid );
+				$staff = DGAP_Staff_Repo::get( absint( $eid ) );
 				if ( $staff ) {
 					$labels[] = [
 						'id'   => $eid,
@@ -198,7 +198,7 @@ class DGAP_Timeoff_Ajax {
 		} else {
 
 			foreach ( $entity_ids as $eid ) {
-				$service = DGAP_Service_Repo::get( $eid );
+				$service = DGAP_Service_Repo::get( absint( $eid ) );
 				if ( $service ) {
 					$labels[] = [
 						'id'   => $eid,

@@ -28,9 +28,9 @@ class DGAP_Schedules_Ajax {
 		* BASIC REQUIRED VALIDATION
 		* =============================== */
 
-		$location_id = isset( $data['location_id'] ) ? (int) $data['location_id'] : 0;
-		$service_id  = isset( $data['service_id'] ) ? (int) $data['service_id'] : 0;
-		$staff_id    = isset( $data['staff_id'] ) ? (int) $data['staff_id'] : 0;
+		$location_id = isset( $data['location_id'] ) ? absint( $data['location_id'] ) : 0;
+		$service_id  = isset( $data['service_id'] ) ? absint( $data['service_id'] ) : 0;
+		$staff_id    = isset( $data['staff_id'] ) ? absint( $data['staff_id'] ) : 0;
 
 		if ( $location_id <= 0 ) {
 			wp_send_json_error(
@@ -136,7 +136,7 @@ class DGAP_Schedules_Ajax {
 					'status' => 'open',
 					'open'   => sanitize_text_field( $data['availability']['start_time'] ),
 					'close'  => sanitize_text_field( $data['availability']['end_time'] ),
-					'breaks' => array_values( $data['breaks'] ?? [] ),
+					'breaks' => dgap_sanitize_breaks( $data['breaks'] ?? [] )
 				];
 			} else {
 				$availability[ $day ] = [
@@ -156,10 +156,10 @@ class DGAP_Schedules_Ajax {
 			'location_id'      => $location_id,
 			'service_id'       => $service_id,
 			'staff_id'         => $staff_id,
-			'capacity'         => (int) $data['capacity_per_slot'],
+			'capacity'         => absint( $data['capacity_per_slot'] ),
 			'availability'     => wp_json_encode( $availability ),
 			'recurrence_type'  => 'weekly',
-			'repeat_interval'  => (int) $data['repeat_interval'],
+			'repeat_interval'  => absint( $data['repeat_interval'] ),
 			'date_start'       => sanitize_text_field( $data['date_start'] ),
 			'date_end'         => $is_infinite ? null : sanitize_text_field( $data['date_end'] ),
 			'is_infinite'      => $is_infinite ? 1 : 0,
@@ -167,7 +167,7 @@ class DGAP_Schedules_Ajax {
 		];
 
 		if ( ! empty( $data['id'] ) ) {
-			$result = DGAP_Schedules_Repo::update( (int) $data['id'], $payload );
+			$result = DGAP_Schedules_Repo::update( absint( $data['id'] ), $payload );
 		} else {
 			$result = DGAP_Schedules_Repo::insert( $payload );
 		}

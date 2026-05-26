@@ -121,7 +121,7 @@ class DGAP_Staff_Ajax {
 		];
 
 		if ( ! empty( $data['id'] ) ) {
-			$result = DGAP_Staff_Repo::update( (int) $data['id'], $payload );
+			$result = DGAP_Staff_Repo::update( absint( $data['id'] ), $payload );
 		} else {
 			$result = DGAP_Staff_Repo::insert( $payload );
 		}
