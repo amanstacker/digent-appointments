@@ -21,7 +21,7 @@ class DGAP_Customers_Table extends WP_List_Table {
 	protected function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="ids[]" value="%d" />',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
@@ -68,7 +68,7 @@ class DGAP_Customers_Table extends WP_List_Table {
 				data-entity="customer"
 				class="button button-small button-secondary dgap-delete"
 				data-id="%1$d">%3$s</button>',
-			$item['id'],
+			esc_attr( $item['id'] ),
 			esc_html__( 'Edit', 'digent-appointments' ),
 			esc_html__( 'Delete', 'digent-appointments' ),
 			esc_attr__( 'Edit Customer', 'digent-appointments' )

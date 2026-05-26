@@ -20,7 +20,7 @@ class DGAP_Locations_Table extends WP_List_Table {
 	protected function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="ids[]" value="%d" />',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
@@ -47,7 +47,7 @@ class DGAP_Locations_Table extends WP_List_Table {
 		return sprintf(
 			'<button data-title="Edit Location" data-entity="location" class="button button-small dgap-edit" data-id="%1$d">%2$s</button>
 			 <button data-entity="location" class="button button-small button-secondary dgap-delete" data-id="%1$d">%3$s</button>',
-			$item['id'],
+			esc_attr( $item['id'] ),
 			esc_html__( 'Edit', 'digent-appointments' ),
 			esc_html__( 'Delete', 'digent-appointments' )
 		);

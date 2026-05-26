@@ -23,7 +23,7 @@ class DGAP_Staff_Table extends WP_List_Table {
 	protected function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="ids[]" value="%d" />',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
@@ -75,7 +75,7 @@ class DGAP_Staff_Table extends WP_List_Table {
 		return sprintf(
 			'<button data-title="' . esc_attr__( 'Edit Staff', 'digent-appointments' ) . '" data-entity="staff" class="button button-small dgap-edit" data-id="%1$d">' . esc_html__( 'Edit', 'digent-appointments' ) . '</button>
 			 <button data-entity="staff" class="button button-small button-secondary dgap-delete" data-id="%1$d">' . esc_html__( 'Delete', 'digent-appointments' ) . '</button>',
-			$item['id'],
+			esc_attr( $item['id'] ),
 			esc_html__( 'Edit', 'digent-appointments' ),
 			esc_html__( 'Delete', 'digent-appointments' )
 		);

@@ -23,14 +23,14 @@ class DGAP_Bookings_Table extends WP_List_Table {
 	protected function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="ids[]" value="%d" />',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
 	public function column_booking( $item ) {
 		return sprintf(
 			'<strong>#%d</strong><br><span class="dgap-muted">%s</span>',
-			$item['id'],
+			esc_html( $item['id'] ),
 			esc_html( $item['location_name'] ?? '' )
 		);
 	}
@@ -53,7 +53,7 @@ class DGAP_Bookings_Table extends WP_List_Table {
 	}
 
 	public function column_price( $item ) {
-		return $item['price'];
+		return esc_html( $item['price'] );
 	}
 
 	public function column_status( $item ) {
@@ -109,7 +109,7 @@ class DGAP_Bookings_Table extends WP_List_Table {
 		return sprintf(
 			'<button class="button button-small dgap-edit" data-entity="booking" data-id="%1$d">%2$s</button>
 			 <button class="button button-small button-secondary dgap-delete" data-entity="booking" data-id="%1$d">%3$s</button>',
-			$item['id'],
+			esc_attr( $item['id'] ),
 			esc_html__( 'Edit', 'digent-appointments' ),
 			esc_html__( 'Delete', 'digent-appointments' )
 		);

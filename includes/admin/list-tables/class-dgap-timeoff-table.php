@@ -81,7 +81,7 @@ class DGAP_Timeoff_Table extends WP_List_Table {
 				data-id="%1$d">
 				%4$s
 			</button>',
-			(int) $item['id'],
+			esc_attr( $item['id'] ),
 			esc_attr__( 'Edit Time Off', 'digent-appointments' ),
 			esc_html__( 'Edit', 'digent-appointments' ),
 			esc_html__( 'Delete', 'digent-appointments' )

@@ -21,7 +21,7 @@ class DGAP_Forms_Table extends WP_List_Table {
 	protected function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="ids[]" value="%d" />',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
@@ -39,7 +39,7 @@ class DGAP_Forms_Table extends WP_List_Table {
 	public function column_shortcode( $item ) {
 		return sprintf(
 			'<code>[dgap_booking_form id="%d"]</code>',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
@@ -52,6 +52,7 @@ class DGAP_Forms_Table extends WP_List_Table {
 	}
 
 	public function column_actions( $item ) {
+		
 		$edit_url = admin_url( 'admin.php?page=digent-appointments-forms&action=edit&id=' . $item['id'] );
 
 		return sprintf(
@@ -59,7 +60,7 @@ class DGAP_Forms_Table extends WP_List_Table {
 			 <button class="button button-small button-secondary dgap-delete" data-entity="form" data-id="%3$d">%4$s</button>',
 			esc_url( $edit_url ),
 			esc_html__( 'Edit', 'digent-appointments' ),
-			$item['id'],
+			esc_attr( $item['id'] ),
 			esc_html__( 'Delete', 'digent-appointments' )
 		);
 	}

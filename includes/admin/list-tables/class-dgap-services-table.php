@@ -21,7 +21,7 @@ class DGAP_Services_Table extends WP_List_Table {
 	protected function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" value="%d" />',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
@@ -47,7 +47,7 @@ class DGAP_Services_Table extends WP_List_Table {
 		return sprintf(
 			'<button data-title="' . esc_attr__( 'Edit Service', 'digent-appointments' ) . '" data-entity="service" class="button button-small dgap-edit" data-id="%1$d">' . esc_html__( 'Edit', 'digent-appointments' ) . '</button>
 			 <button data-entity="service" class="button button-small dgap-delete" data-id="%1$d">' . esc_html__( 'Delete', 'digent-appointments' ) . '</button>',
-			$item['id']
+			esc_attr( $item['id'] )
 		);
 	}
 
