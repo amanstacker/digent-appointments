@@ -55,7 +55,7 @@ class DGAP_Email_Notification {
             $to         =   $data['email'];
         } else if ( $type === 'employee' ) {
             if ( ! empty( $data['staff_id'] ) ) {
-                $staff_data             =   DGAP_Staff_Repo::get( $data['staff_id'] );
+                $staff_data             =   DGAP_Staff_Repo::get( absint( $data['staff_id'] ) );
                 if ( ! empty( $staff_data ) && is_array( $staff_data ) && ! empty( $staff_data['email'] ) ) {
                     $to              =   $staff_data['email'];
                 }
@@ -92,7 +92,7 @@ class DGAP_Email_Notification {
         $location_name              =   'NA';
 
         if ( ! empty( $data['service_id'] ) ) {
-            $service_data           =   DGAP_Service_Repo::get( $data['service_id'] );
+            $service_data           =   DGAP_Service_Repo::get( absint( $data['service_id'] ) );
             if ( ! empty( $service_data ) && is_array( $service_data ) ) {
                 if ( isset( $service_data['name'] ) ) {
                     $service        =   $service_data['name'];
@@ -104,7 +104,7 @@ class DGAP_Email_Notification {
         }
 
         if ( ! empty( $data['staff_id'] ) ) { 
-            $staff_data             =   DGAP_Staff_Repo::get( $data['staff_id'] );
+            $staff_data             =   DGAP_Staff_Repo::get( absint( $data['staff_id'] ) );
             if ( ! empty( $staff_data ) && is_array( $staff_data ) ) {
                 $staff_name         =   '';
                 if ( isset( $staff_data['first_name'] ) ) {
@@ -117,7 +117,7 @@ class DGAP_Email_Notification {
         }
 
         if ( ! empty( $data['location_id'] ) ) { 
-            $location_data             =   DGAP_Location_Repo::get( $data['location_id'] );
+            $location_data             =   DGAP_Location_Repo::get( absint( $data['location_id'] ) );
             if ( ! empty( $location_data ) && is_array( $location_data ) ) {
                 $location_name         =   '';
                 if ( isset( $location_data['name'] ) ) {
@@ -162,31 +162,37 @@ class DGAP_Email_Notification {
     private static function parse_tags( $template, $data ) {
 
         $tags = [
-            '{booking_id}'      => isset( $data['booking_id'] ) ? $data['booking_id'] : '',
-            '{customer_name}'   => isset( $data['customer_name'] ) ? $data['customer_name'] : '',
-            '{customer_email}'  => isset( $data['customer_email'] ) ? $data['customer_email'] : '',
-            '{service_name}'    => isset( $data['service_name'] ) ? $data['service_name'] : '',
-            '{service_price}'   => isset( $data['service_price'] ) ? $data['service_price'] : '',
-            '{staff_name}'      => isset( $data['staff_name'] ) ? $data['staff_name'] : '',
-            '{booking_date}'    => isset( $data['booking_date'] ) ? $data['booking_date'] : '',
-            '{booking_time}'    => isset( $data['booking_time'] ) ? $data['booking_time'] : '',
-            '{booking_status}'  => isset( $data['booking_status'] ) ? $data['booking_status'] : '',
-            '{payment_status}'  => isset( $data['payment_status'] ) ? $data['payment_status'] : '',
-            '{location}'        => isset( $data['location'] ) ? $data['location'] : '',
-            '{meeting_link}'    => isset( $data['meeting_link'] ) ? $data['meeting_link'] : '',
-            '{reschedule_link}' => isset( $data['reschedule_link'] ) ? $data['reschedule_link'] : '',
-            '{confirm_link}'    => isset( $data['confirm_link'] ) ? $data['confirm_link'] : '',
-            '{cancel_link}'     => isset( $data['cancel_link'] ) ? $data['cancel_link'] : '',
-            '{site_name}'       => get_bloginfo('name'),
+            '{booking_id}'      => esc_html( $data['booking_id'] ?? '' ),
+            '{customer_name}'   => esc_html( $data['customer_name'] ?? '' ),
+            '{customer_email}'  => esc_html( $data['customer_email'] ?? '' ),
+            '{service_name}'    => esc_html( $data['service_name'] ?? '' ),
+            '{service_price}'   => esc_html( $data['service_price'] ?? '' ),
+            '{staff_name}'      => esc_html( $data['staff_name'] ?? '' ),
+            '{booking_date}'    => esc_html( $data['booking_date'] ?? '' ),
+            '{booking_time}'    => esc_html( $data['booking_time'] ?? '' ),
+            '{booking_status}'  => esc_html( $data['booking_status'] ?? '' ),
+            '{payment_status}'  => esc_html( $data['payment_status'] ?? '' ),
+            '{location}'        => esc_html( $data['location'] ?? '' ),
+
+            // URL fields.
+            '{meeting_link}'    => esc_url( $data['meeting_link'] ?? '' ),
+            '{reschedule_link}' => esc_url( $data['reschedule_link'] ?? '' ),
+            '{confirm_link}'    => esc_url( $data['confirm_link'] ?? '' ),
+            '{cancel_link}'     => esc_url( $data['cancel_link'] ?? '' ),
+
+            '{site_name}'       => esc_html( get_bloginfo( 'name' ) ),
         ];
 
+        $template = str_replace(
+            array_keys( $tags ),
+            array_values( $tags ),
+            $template
+        );
 
-        $template   =   str_replace( array_keys( $tags ), array_values( $tags ), $template );
+        // Filter hook to modify the email template.
+        $template = apply_filters( 'dgap_modify_email_template', $template );
 
-        // FIlter hook to modify the email template
-        $template   =   apply_filters( 'dgap_modify_email_template', $template );
-
-        return $template;
+        return  $template;
     }
 
     /**

@@ -45,6 +45,8 @@ class DGAP_Settings {
 		
 		foreach ( (array) $input as $key => $value ) {
 
+			$key = sanitize_key( $key );
+
 			switch ( $key ) {
 
 				case 'enable_notifications':

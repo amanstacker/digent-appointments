@@ -49,11 +49,9 @@ class DGAP_Booking_Shortcode {
             'settings' 		=> $form['settings'],
         ];
 
-        ob_start();
-        
-        echo '<div class="dgap-form-wrap" data-form-id="' . esc_attr( $id ) . '">';
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --Reason: Escaping is handled in render function
-        echo DGAP_Form_Renderer::render( $form );
+        ob_start();        
+        echo '<div class="dgap-form-wrap" data-form-id="' . esc_attr( $id ) . '">';        
+        DGAP_Form_Renderer::render( $form );
         echo '</div>';
         return ob_get_clean();
 

@@ -6,8 +6,8 @@ class DGAP_Menu {
 
 	public function register() {
 		add_menu_page(
-			__( 'Digent Appointments', 'digent-appointments' ),
-			__( 'Digent Appointments', 'digent-appointments' ),
+			esc_html__( 'Digent Appointments', 'digent-appointments' ),
+			esc_html__( 'Digent Appointments', 'digent-appointments' ),
 			'manage_options',
 			'digent-appointments',
 			[ $this, 'dashboard' ],
