@@ -198,10 +198,7 @@ class DGAP_Bookings_Ajax {
 			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
 		}
 
-		$start = sanitize_text_field( wp_unslash( $_POST['start']  ?? '' ) );
-		$end   = sanitize_text_field( wp_unslash( $_POST['end'] ?? '' ) );
-
-		$bookings = DGAP_Booking_Repo::get_for_calendar( $start, $end );
+		$bookings = DGAP_Booking_Repo::get_for_calendar();
 
 		$events = [];
 

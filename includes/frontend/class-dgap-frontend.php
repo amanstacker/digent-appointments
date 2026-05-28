@@ -46,42 +46,42 @@ class DGAP_Frontend {
 	 */
 	public function enqueue_assets() {
 		// CSS
-		wp_enqueue_style(
+		wp_register_style(
 		    'dgap-forms-shared',
 		    DGAP_PLUGIN_DIR_URL . 'assets/shared/css/dgap-forms.css',
 		    [],
 		    DGAP_VERSION
 		);
 
-		wp_enqueue_style(
-			'dgap-frontend',
-			DGAP_PLUGIN_DIR_URL . 'assets/frontend/css/dgap-frontend.css',
-			['dgap-forms-shared'],
-			DGAP_VERSION
+		wp_register_style(
+		    'dgap-frontend',
+		    DGAP_PLUGIN_DIR_URL . 'assets/frontend/css/dgap-frontend.css',
+		    ['dgap-forms-shared'],
+		    DGAP_VERSION
 		);
 
-		// Flatpickr (calendar)
-		wp_enqueue_style(
-			'dgap-flatpickr-css',
-			DGAP_PLUGIN_DIR_URL . 'assets/admin/css/flatpickr.min.css',
-			[],
-			DGAP_VERSION
-		);
-		wp_enqueue_script(
-			'dgap-flatpickr',
-			DGAP_PLUGIN_DIR_URL . 'assets/admin/js/flatpickr.min.js',
-			[],
-			DGAP_VERSION,
-			true
+		wp_register_style(
+		    'dgap-flatpickr-css',
+		    DGAP_PLUGIN_DIR_URL . 'assets/admin/css/flatpickr.min.css',
+		    [],
+		    DGAP_VERSION
 		);
 
-		// JS
-		wp_enqueue_script(
-			'dgap-frontend',
-			DGAP_PLUGIN_DIR_URL . 'assets/frontend/js/dgap-frontend.js',
-			[ 'jquery', 'dgap-flatpickr', 'wp-i18n' ],
-			DGAP_VERSION,
-			true
+		// Register scripts
+		wp_register_script(
+		    'dgap-flatpickr',
+		    DGAP_PLUGIN_DIR_URL . 'assets/admin/js/flatpickr.min.js',
+		    [],
+		    DGAP_VERSION,
+		    true
+		);
+
+		wp_register_script(
+		    'dgap-frontend',
+		    DGAP_PLUGIN_DIR_URL . 'assets/frontend/js/dgap-frontend.js',
+		    [ 'jquery', 'dgap-flatpickr', 'wp-i18n' ],
+		    DGAP_VERSION,
+		    true
 		);
 
 		// Localize AJAX URL

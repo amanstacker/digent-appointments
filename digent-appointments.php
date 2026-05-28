@@ -3,6 +3,8 @@
 Plugin Name: Digent Appointments
 Description: Advanced appointment scheduling plugin for WordPress Sites.
 Version: 1.0.0
+Requires at least: 6.7
+Requires PHP: 7.4
 Text Domain: digent-appointments
 Author: amanstacker
 Author URI: https://profiles.wordpress.org/amanstacker/

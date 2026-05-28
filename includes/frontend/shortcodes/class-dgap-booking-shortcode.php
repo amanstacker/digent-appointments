@@ -25,6 +25,14 @@ class DGAP_Booking_Shortcode {
             return '<p>' . esc_html__( 'No form ID specified.', 'digent-appointments' ) . '</p>';
         }
 
+        // enqueue frontend scripts and styles
+        wp_enqueue_style('dgap-forms-shared');
+		wp_enqueue_style('dgap-frontend');
+		wp_enqueue_style('dgap-flatpickr-css');
+
+		wp_enqueue_script('dgap-flatpickr');
+		wp_enqueue_script('dgap-frontend');
+
         // Load repos needed for rendering
         require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-location-repo.php';
         require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';

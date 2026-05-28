@@ -205,29 +205,29 @@ class DGAP_Email_Notification {
 
         $subjects = [
             'admin' => [
-                'confirmed' => 'Appointment Confirmed',
-                'pending'   => 'Appointment Pending',
-                'reserved'  => 'Appointment Reserved',
-                'cancelled' => 'Appointment Cancelled',
-                'reminder'  => 'Appointment Reminder',
+                'confirmed' => esc_html__( 'Appointment Confirmed', 'digent-appointments' ),
+                'pending'   => esc_html__( 'Appointment Pending', 'digent-appointments' ),
+                'reserved'  => esc_html__( 'Appointment Reserved', 'digent-appointments' ),
+                'cancelled' => esc_html__( 'Appointment Cancelled', 'digent-appointments' ),
+                'reminder'  => esc_html__( 'Appointment Reminder', 'digent-appointments' ),
             ],
             'customer' => [
-                'confirmed' => 'Your Appointment Confirmed',
-                'pending'   => 'Your Appointment Pending',
-                'reserved'  => 'Your Appointment Reserved',
-                'cancelled' => 'Your Appointment Cancelled',
-                'reminder'  => 'Your Appointment Reminder',
+                'confirmed' => esc_html__( 'Your Appointment Confirmed', 'digent-appointments' ),
+                'pending'   => esc_html__( 'Your Appointment Pending', 'digent-appointments' ),
+                'reserved'  => esc_html__( 'Your Appointment Reserved', 'digent-appointments' ),
+                'cancelled' => esc_html__( 'Your Appointment Cancelled', 'digent-appointments' ),
+                'reminder'  => esc_html__( 'Your Appointment Reminder', 'digent-appointments' ),
             ],
             'employee' => [
-                'confirmed' => 'New Appointment Confirmed',
-                'pending'   => 'Appointment Pending',
-                'reserved'  => 'Appointment Reserved',
-                'cancelled' => 'Appointment Cancelled',
-                'reminder'  => 'Appointment Reminder',
+                'confirmed' => esc_html__( 'New Appointment Confirmed', 'digent-appointments' ),
+                'pending'   => esc_html__( 'Appointment Pending', 'digent-appointments' ),
+                'reserved'  => esc_html__( 'Appointment Reserved', 'digent-appointments' ),
+                'cancelled' => esc_html__( 'Appointment Cancelled', 'digent-appointments' ),
+                'reminder'  => esc_html__( 'Appointment Reminder', 'digent-appointments' ),
             ]
         ];
 
-        return isset( $subjects[$type][$status] ) ? $subjects[$type][$status] : 'Appointment Update';
+        return isset( $subjects[$type][$status] ) ? $subjects[$type][$status] : esc_html__( 'Appointment Update', 'digent-appointments');
     }
 
 }

@@ -166,7 +166,7 @@ class DGAP_Booking_Repo {
 		return (int) $result;
 	}
 
-	public static function get_for_calendar( $start = '', $end = '' ) {
+	public static function get_for_calendar() {
 
 		global $wpdb;
 		
@@ -307,7 +307,7 @@ class DGAP_Booking_Repo {
 			$data['start_time'],
 			$data['end_time']
 		) ) {
-			return new WP_Error( 'slot_taken', 'Slot already booked' );
+			return new WP_Error( 'slot_taken', esc_html__( 'Slot already booked', 'digent-appointments' ) );
 		}
 
 		$customer_id = self::get_or_create_customer( $data );
