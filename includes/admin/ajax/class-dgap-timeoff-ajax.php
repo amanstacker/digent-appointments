@@ -143,7 +143,7 @@ class DGAP_Timeoff_Ajax {
 		* ===================================================== */
 		$payload = [
 			'name'       => sanitize_text_field( $data['name'] ),
-			'type'       => sanitize_text_field( $data['type'] ),
+			'type'       => sanitize_text_field( $data['type'] ?? '' ),
 			'entity_ids' => array_values( $entity_ids ), // 👈 deduped
 			'dates'      => $validated_dates,             // 👈 validated format
 			'status'     => ! empty( $data['status'] ) ? 1 : 0,

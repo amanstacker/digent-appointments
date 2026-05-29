@@ -9,24 +9,24 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 global $wpdb;
 
-// Table names
-$dgap_bookings_table 		=	$wpdb->prefix . 'dgap_bookings';
-$dgap_customers_table 		=	$wpdb->prefix . 'dgap_customers';
-$dgap_forms_table 			=	$wpdb->prefix . 'dgap_forms';
-$dgap_locations_table 		=	$wpdb->prefix . 'dgap_locations';
-$dgap_schedules_table 		=	$wpdb->prefix . 'dgap_schedules';
-$dgap_services_table 		=	$wpdb->prefix . 'dgap_services';
-$dgap_staff_table 			=	$wpdb->prefix . 'dgap_staff';
-$dgap_timeoff_table 		=	$wpdb->prefix . 'dgap_timeoff';
+// Define plugin tables
+$dgap_tables = [
+	$wpdb->prefix . 'dgap_bookings',
+	$wpdb->prefix . 'dgap_customers',
+	$wpdb->prefix . 'dgap_forms',
+	$wpdb->prefix . 'dgap_locations',
+	$wpdb->prefix . 'dgap_schedules',
+	$wpdb->prefix . 'dgap_services',
+	$wpdb->prefix . 'dgap_staff',
+	$wpdb->prefix . 'dgap_timeoff',
+];
 
-$wpdb->query( "DROP TABLE IF EXISTS {$dgap_bookings_table}" );
-$wpdb->query( "DROP TABLE IF EXISTS {$dgap_customers_table}" );
-$wpdb->query( "DROP TABLE IF EXISTS {$dgap_forms_table}" );
-$wpdb->query( "DROP TABLE IF EXISTS {$dgap_locations_table}" );
-$wpdb->query( "DROP TABLE IF EXISTS {$dgap_schedules_table}" );
-$wpdb->query( "DROP TABLE IF EXISTS {$dgap_services_table}" );
-$wpdb->query( "DROP TABLE IF EXISTS {$dgap_staff_table}" );
-$wpdb->query( "DROP TABLE IF EXISTS {$dgap_timeoff_table}" );
+// Drop tables safely using %i identifier placeholder
+foreach ( $dgap_tables as $dgap_table ) {
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+	$wpdb->query( "DROP TABLE IF EXISTS {$dgap_table}" );
+
+}
 
 // Delete options
 $dgap_option_tabs = [ 'general', 'notifications', 'payments', 'calendar', 'tootls', 'advanced', 'api_webhooks' ];

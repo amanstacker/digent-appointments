@@ -162,14 +162,14 @@ class DGAP_Frontend_Booking_Ajax {
 		// ------------------------------
 		$missing = [];
 
-		if ( ! $data['first_name'] )   $missing[] = 'First Name';
-		if ( ! $data['email'] )        $missing[] = 'Email';
-		if ( ! $data['location_id'] )  $missing[] = 'Location';
-		if ( ! $data['service_id'] )   $missing[] = 'Service';
-		if ( ! $data['staff_id'] )     $missing[] = 'Staff';
-		if ( ! $data['booking_date'] ) $missing[] = 'Booking Date';
-		if ( ! $data['start_time'] )   $missing[] = 'Start Time';
-		if ( ! $data['end_time'] )     $missing[] = 'End Time';
+		if ( ! $data['first_name'] )   $missing[] = esc_html__( 'First Name', 'digent-appointments');
+		if ( ! $data['email'] )        $missing[] = esc_html__( 'Email', 'digent-appointments');
+		if ( ! $data['location_id'] )  $missing[] = esc_html__( 'Location', 'digent-appointments');
+		if ( ! $data['service_id'] )   $missing[] = esc_html__( 'Service', 'digent-appointments');
+		if ( ! $data['staff_id'] )     $missing[] = esc_html__( 'Staff', 'digent-appointments');
+		if ( ! $data['booking_date'] ) $missing[] = esc_html__( 'Booking Date', 'digent-appointments');
+		if ( ! $data['start_time'] )   $missing[] = esc_html__( 'Start Time', 'digent-appointments');
+		if ( ! $data['end_time'] )     $missing[] = esc_html__( 'End Time', 'digent-appointments');
 
 		if ( ! empty( $missing ) ) {
 			wp_send_json_error(

@@ -26,8 +26,13 @@
 		</div>
 
 		<div class="dgap-calendar-weekdays">
-			<span>Mon</span><span>Tue</span><span>Wed</span>
-			<span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+			<span><?php echo esc_html__( 'Mon', 'digent-appointments' ); ?></span>
+			<span><?php echo esc_html__( 'Tue', 'digent-appointments' ); ?></span>
+			<span><?php echo esc_html__( 'Wed', 'digent-appointments' ); ?></span>
+			<span><?php echo esc_html__( 'Thu', 'digent-appointments' ); ?></span>
+			<span><?php echo esc_html__( 'Fri', 'digent-appointments' ); ?></span>
+			<span><?php echo esc_html__( 'Sat', 'digent-appointments' ); ?></span>
+			<span><?php echo esc_html__( 'Sun', 'digent-appointments' ); ?></span>
 		</div>
 
 		<div class="dgap-calendar-days"></div>
@@ -63,7 +68,7 @@
 				<input type="text" id="dgap-phone-dial-code" name="phone_dial_code" value="+1" required>
 				
 				<!-- Phone Number (numeric only) -->
-				<input type="number" id="dgap-phone" name="phone" required placeholder="Enter 10-digit number" min="1000000000" max="9999999999">
+				<input type="number" id="dgap-phone" name="phone" required placeholder="<?php esc_attr_e( 'Enter 10-digit number', 'digent-appointments' );?> " min="1000000000" max="9999999999">
 			</div>
 		</div>
 

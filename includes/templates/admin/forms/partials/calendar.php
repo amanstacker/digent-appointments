@@ -12,8 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<div class="dgap-calendar-weekdays">
-		<span>Mon</span><span>Tue</span><span>Wed</span>
-		<span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+		<span><?php echo esc_html__( 'Mon', 'digent-appointments' ); ?></span>
+		<span><?php echo esc_html__( 'Tue', 'digent-appointments' ); ?></span>
+		<span><?php echo esc_html__( 'Wed', 'digent-appointments' ); ?></span>
+		<span><?php echo esc_html__( 'Thu', 'digent-appointments' ); ?></span>
+		<span><?php echo esc_html__( 'Fri', 'digent-appointments' ); ?></span>
+		<span><?php echo esc_html__( 'Sat', 'digent-appointments' ); ?></span>
+		<span><?php echo esc_html__( 'Sun', 'digent-appointments' ); ?></span>
 	</div>
 
 	<div class="dgap-calendar-days">
