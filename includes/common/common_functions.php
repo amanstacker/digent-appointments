@@ -78,9 +78,12 @@ function dgap_get_form_default_settings() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( ! empty( $_GET['page'] ) && ! empty( $_GET['id'] ) ) {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( $_GET['page'] === 'digent-appointments-forms' && $_GET['id'] > 0 ) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$saved_settings = DGAP_Form_Repo::get( absint( $_GET['id'] ) );	
+		$page = sanitize_key( wp_unslash( $_GET['page'] ?? '' ) );
+		$id   = absint( $_GET['id'] ?? 0 );
+
+		if ( $page === 'digent-appointments-forms' && $id > 0 ) {
+			
+			$saved_settings = DGAP_Form_Repo::get( $id );	
 			
 			if ( ! empty( $saved_settings['settings'] ) ) {
 				$default_settings['settings'] 	=	maybe_unserialize( $saved_settings['settings'] );

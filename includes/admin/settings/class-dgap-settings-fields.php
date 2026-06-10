@@ -7,7 +7,7 @@ class DGAP_Settings_Fields {
 
 	private static function get_option_key() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$active_tab = sanitize_key( $_GET['tab'] ?? 'general' );
+		$active_tab = sanitize_key( wp_unslash( $_GET['tab'] ?? 'general' ) );
 
 		return "dgap_{$active_tab}_settings";
 	}

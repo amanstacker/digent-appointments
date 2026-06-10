@@ -90,10 +90,11 @@ class DGAP_Settings_Render {
 
 		$tabs = $this->get_tabs();
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$active_tab = sanitize_key( $_GET['tab'] ?? 'general' );
+		$active_tab = sanitize_key( wp_unslash( $_GET['tab'] ?? 'general' ) );
 		$sections   = $tabs[ $active_tab ]['sections'] ?? [];
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$active_section = sanitize_key( $_GET['section'] ?? array_key_first( $sections ) );
+		$active_section = sanitize_key( wp_unslash( $_GET['section'] ?? array_key_first( $sections ) ) );
+		
 		?>
 
 	<div class="dgap-settings">
