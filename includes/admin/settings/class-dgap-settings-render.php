@@ -120,9 +120,11 @@ class DGAP_Settings_Render {
 
 				<!-- TOP TABS -->
 				<div class="dgap-tabs">
-					<?php foreach ( $tabs as $tab_id => $tab ) : ?>
+					<?php foreach ( $tabs as $tab_id => $tab ) : 
+						$class = ( $active_tab === $tab_id ) ? 'active' : '';
+						?>
 						<a href="<?php echo esc_url(add_query_arg(['tab' => $tab_id, 'section' => false])); ?>"
-						   class="<?php echo esc_attr( $active_tab === $tab_id ? 'active' : '' ); ?>"
+						   class="<?php echo esc_attr( $class ); ?>">
 							<?php echo esc_html( $tab['label'] ); ?>
 						</a>
 					<?php endforeach; ?>
@@ -133,7 +135,7 @@ class DGAP_Settings_Render {
 					<div class="dgap-subtabs">
 						<?php foreach ( $sections as $section_id => $label ) : ?>
 							<a href="<?php echo esc_url(add_query_arg(['tab'=>$active_tab,'section'=>$section_id])); ?>"
-							   class="<?php echo $active_section === $section_id ? 'active' : ''; ?>">
+							   class="<?php echo esc_attr( $active_section === $section_id ? 'active' : '' ); ?>">
 								<?php echo esc_html( $label ); ?>
 							</a>
 						<?php endforeach; ?>
