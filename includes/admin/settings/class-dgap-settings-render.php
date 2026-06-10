@@ -122,7 +122,7 @@ class DGAP_Settings_Render {
 				<div class="dgap-tabs">
 					<?php foreach ( $tabs as $tab_id => $tab ) : ?>
 						<a href="<?php echo esc_url(add_query_arg(['tab' => $tab_id, 'section' => false])); ?>"
-						   class="<?php echo $active_tab === $tab_id ? 'active' : ''; ?>">
+						   class="<?php echo esc_attr( $active_tab === $tab_id ? 'active' : '' ); ?>"
 							<?php echo esc_html( $tab['label'] ); ?>
 						</a>
 					<?php endforeach; ?>

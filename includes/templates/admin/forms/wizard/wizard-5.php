@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             ];
             foreach ( $dgap_steps as $dgap_num => $dgap_step ) :
             ?>
-            <div class="dgap-boxed-step <?php echo $dgap_num === 1 ? 'active' : ''; ?>" data-step="<?php echo esc_attr( $dgap_num ); ?>">
+            <div class="dgap-boxed-step <?php echo esc_attr( $dgap_num === 1 ? 'active' : '' ); ?>" data-step="<?php echo esc_attr( $dgap_num ); ?>">
                 <div class="dgap-boxed-icon"><?php echo esc_html( $dgap_step['icon'] ); ?></div>
                 <span class="dgap-boxed-label"><?php echo esc_html( $dgap_step['label'] ); ?></span>
             </div>

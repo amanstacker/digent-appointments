@@ -74,14 +74,14 @@ if ( ! $dgap_is_new && $dgap_id ) {
 					                $dgap_current_design = $form['settings']['design'] ?? 'flat'; ?>
 
 					                <!-- Flat layouts -->
-					                <optgroup label="<?php esc_attr_e( 'Flat', 'digent-appointments' ); ?>" class="dgap-opt-flat" <?php echo $dgap_current_design === 'wizard' ? 'hidden' : ''; ?>>
+					                <optgroup label="<?php esc_attr_e( 'Flat', 'digent-appointments' ); ?>" class="dgap-opt-flat" <?php echo esc_attr( $dgap_current_design === 'wizard' ? 'hidden' : '' ); ?>>
 					                    <option value="layout-1" <?php selected( $form['layout'], 'layout-1' ); ?>><?php esc_html_e( 'Layout 1', 'digent-appointments' ); ?></option>
 					                    <option value="layout-2" <?php selected( $form['layout'], 'layout-2' ); ?>><?php esc_html_e( 'Layout 2', 'digent-appointments' ); ?></option>
 					                    <option value="layout-3" <?php selected( $form['layout'], 'layout-3' ); ?>><?php esc_html_e( 'Layout 3', 'digent-appointments' ); ?></option>
 					                </optgroup>
 
 					                <!-- Wizard layouts -->
-					                <optgroup label="<?php esc_attr_e( 'Wizard', 'digent-appointments' ); ?>" class="dgap-opt-wizard" <?php echo $dgap_current_design === 'flat' ? 'hidden' : ''; ?>>
+					                <optgroup label="<?php esc_attr_e( 'Wizard', 'digent-appointments' ); ?>" class="dgap-opt-wizard" <?php echo esc_attr( $dgap_current_design === 'flat' ? 'hidden' : '' ); ?>>
 					                    <option value="wizard-1" <?php selected( $form['layout'], 'wizard-1' ); ?>><?php esc_html_e( 'Wizard 1 — Classic + Sidebar', 'digent-appointments' ); ?></option>
 					                    <option value="wizard-2" <?php selected( $form['layout'], 'wizard-2' ); ?>><?php esc_html_e( 'Wizard 2 — Full Width',         'digent-appointments' ); ?></option>
 					                    <option value="wizard-3" <?php selected( $form['layout'], 'wizard-3' ); ?>><?php esc_html_e( 'Wizard 3 — Top Tabs',       'digent-appointments' ); ?></option>

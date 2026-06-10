@@ -77,8 +77,8 @@ class DGAP_Form_Ajax {
         $data = [
             'name'          => $name,
             'layout'        => $layout,
-            'settings'      => serialize( $settings ),
-            'custom_fields' => serialize( $custom_fields ),
+            'settings'      => serialize( $settings ), // It has been sanitized above, so we can safely serialize it here
+            'custom_fields' => serialize( $custom_fields ), // It has been sanitized above, so we can safely serialize it here
         ];
 
         if ( $id ) {

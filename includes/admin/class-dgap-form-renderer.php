@@ -82,7 +82,7 @@ class DGAP_Form_Renderer {
 		// Wizard layouts live in a separate folder.
 		$layout = sanitize_file_name( $form['layout'] );
 
-		if ( $design === 'wizard' ) {
+		if ( 'wizard' === $design ) {
 			$layout_file = DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/forms/wizard/' . $layout . '.php';
 		} else {
 			$layout_file = DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/forms/' . $layout . '.php';

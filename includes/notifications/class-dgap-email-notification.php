@@ -49,11 +49,11 @@ class DGAP_Email_Notification {
         $email_body =   self::parse_tags( $template, $data );
 
         $to         =   '';
-        if ( $type  === 'admin' ) {
+        if ( 'admin' === $type ) {
             $to         =   get_option( 'admin_email');
-        }else if( $type === 'customer' ) {
+        }else if( 'customer' === $type ) {
             $to         =   $data['email'];
-        } else if ( $type === 'employee' ) {
+        } else if ( 'employee' === $type ) {
             if ( ! empty( $data['staff_id'] ) ) {
                 $staff_data             =   DGAP_Staff_Repo::get( absint( $data['staff_id'] ) );
                 if ( ! empty( $staff_data ) && is_array( $staff_data ) && ! empty( $staff_data['email'] ) ) {

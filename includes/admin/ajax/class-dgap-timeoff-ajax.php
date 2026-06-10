@@ -23,7 +23,7 @@ class DGAP_Timeoff_Ajax {
 		$search = sanitize_text_field( wp_unslash( $_POST['search'] ?? '' ) );
 		$page   = absint( $_POST['page'] ?? 1 );
 
-		if ( $type === 'staff' ) {
+		if ( 'staff' === $type ) {
 			$result = DGAP_Staff_Repo::search_for_timeoff( $search, $page );
 		} else {
 			$result = DGAP_Service_Repo::search_for_timeoff( $search, $page );
@@ -113,7 +113,7 @@ class DGAP_Timeoff_Ajax {
 			$time_start = '00:00';
 			$time_end   = '00:00';
 
-			if ( $mode === 'time' ) {
+			if ( 'time' === $mode ) {
 
 				if ( empty( $item['time_start'] ) || empty( $item['time_end'] ) ) {
 					wp_send_json_error( [ 'message' => esc_html__( 'Time range is required for time-based mode.', 'digent-appointments' ) ] );
