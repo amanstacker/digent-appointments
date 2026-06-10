@@ -75,11 +75,12 @@ function dgap_get_form_default_settings() {
 	$default_settings 					=	[];
 	$default_settings['layout'] 		=	'layout-1';
 	$default_settings['custom_fields'] 	=	$default_fields;
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reason: We are only reading values here, no saving is happening, so nonce verification is not necessary.
 	if ( ! empty( $_GET['page'] ) && ! empty( $_GET['id'] ) ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reason: We are only reading values here, no saving is happening, so nonce verification is not necessary.		
 		$page = sanitize_key( wp_unslash( $_GET['page'] ?? '' ) );
-		$id   = absint( $_GET['id'] ?? 0 );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reason: We are only reading values here, no saving is happening, so nonce verification is not necessary.
+		$id   = absint( wp_unslash( $_GET['id'] ?? 0 ) );
 
 		if ( $page === 'digent-appointments-forms' && $id > 0 ) {
 			
