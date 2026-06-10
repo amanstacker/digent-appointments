@@ -45,7 +45,7 @@ function dgap_delete_plugin_data() {
 		'notifications',
 		'payments',
 		'calendar',
-		'tootls',
+		'tools',
 		'advanced',
 		'api_webhooks',
 	];
