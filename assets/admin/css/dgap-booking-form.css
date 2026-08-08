@@ -19,9 +19,11 @@
 }
 
 .dgap-builder-settings {
-    width:         30%;
+    width:       30%;
     padding-right: 20px;
+    box-sizing:  border-box;
 }
+
 
 /* ================================================
    FORM NAME BAR
@@ -29,6 +31,16 @@
 .dgap-form-name-bar {
     margin: 10px 0;
 }
+
+#dgap-title {
+    width:         100%;
+    box-sizing:    border-box;
+    font-size:     22px;
+    font-weight:   600;
+    padding:       8px 12px;
+    border-radius: 6px;
+}
+
 
 /* ================================================
    ACCORDION

@@ -287,7 +287,7 @@ jQuery(function ($) {
         formState.location = $('#dgap-location').val();
         formState.service  = $('#dgap-service').val();
         formState.staff    = $('#dgap-staff').val();
-        formState.date     = $('.day.active').data('date') || '';
+        formState.date     = $('.dgap-day.active').data('date') || '';
 
         formState.slots = [];
         $('.dgap-slot.selected').each(function () {
@@ -321,7 +321,7 @@ jQuery(function ($) {
                 }
                 setTimeout(() => {
                     if (formState.date) {
-                        $(`.day[data-date="${formState.date}"]`).addClass('active').trigger('click');
+                        $(`.dgap-day[data-date="${formState.date}"]`).addClass('active').trigger('click');
                     }
                     setTimeout(() => {
                         if (formState.slots && formState.slots.length) {

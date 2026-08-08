@@ -242,7 +242,7 @@ jQuery(function ($) {
     /* ------------------------------
         DATE CLICK → LOAD SLOTS
     -------------------------------- */
-    $(document).on('click', '.dgap-calendar:not(.disabled) .day:not(.empty)', function () {
+    $(document).on('click', '.dgap-calendar:not(.disabled) .dgap-day:not(.empty)', function () {
 
         const date        = $(this).data('date');
         const location_id = $('#dgap-location').val();
@@ -251,7 +251,7 @@ jQuery(function ($) {
 
         selectedDate = date;
 
-        $('.day').removeClass('active');
+        $('.dgap-day').removeClass('active');
         $(this).addClass('active');
 
         $('.dgap-slots').html('<p>Loading slots...</p>');

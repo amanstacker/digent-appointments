@@ -88,10 +88,12 @@ class DGAP_Form_Renderer {
 			$layout_file = DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/forms/' . $layout . '.php';
 		}
 
+		ob_start();
 		if ( file_exists( $layout_file ) ) {
 			include $layout_file;
 		} else {
 			echo '<p>' . esc_html__( 'Layout not found', 'digent-appointments' ) . '</p>';
 		}
+		return ob_get_clean();
 	}
 }

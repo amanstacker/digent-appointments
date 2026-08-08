@@ -25,6 +25,7 @@ if ( ! $dgap_is_new && $dgap_id ) {
 }
 ?>
 
+<div class="wrap dgap-form-builder-wrap">
 <form id="dgap-form-builder" novalidate>
 
 	<input type="hidden" name="id" value="<?php echo esc_attr($dgap_id); ?>">
@@ -325,3 +326,4 @@ if ( ! $dgap_is_new && $dgap_id ) {
 	</div>
 
 </form>
+</div><!-- .wrap -->
