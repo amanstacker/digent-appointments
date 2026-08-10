@@ -1,92 +1,52 @@
-.dgap-calendar {
-	border: 1px solid #ddd;
-	padding: 10px;
-	margin-top: 20px;
+/* =======================================================
+   FRONTEND BOOKING FORM — dgap-frontend.css
+   Base calendar/slot styles live in dgap-forms.css.
+   This file contains frontend-specific overrides only.
+======================================================= */
+
+/* Container reset */
+.dgap-form-wrap {
+    box-sizing:  border-box;
+    font-family: inherit;
+    width:       100%;
 }
 
-.dgap-calendar.disabled {
-	opacity: 0.4;
-	pointer-events: none;
+.dgap-form-wrap * {
+    box-sizing: border-box;
 }
 
-.dgap-calendar-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 10px;
+/* ── Calendar ── */
+.dgap-form-wrap .dgap-day.active {
+    background: var(--dgap-primary-color, #4f46e5) !important;
+    color:      #fff !important;
 }
 
-.dgap-calendar-weekdays,
-.dgap-calendar-days {
-	display: grid;
-	grid-template-columns: repeat(7, 1fr);
-	text-align: center;
+/* ── Slots ── */
+.dgap-form-wrap .dgap-slot {
+    border-color: var(--dgap-primary-color, #4f46e5);
+    color:        var(--dgap-primary-color, #4f46e5);
 }
 
-.dgap-day {
-	padding: 10px;
-	cursor: pointer;
-	border-radius: 4px;
+.dgap-form-wrap .dgap-slot:hover {
+    background: var(--dgap-primary-color, #4f46e5);
+    color:      #fff;
 }
 
-.dgap-day:hover {
-	background: #f1f1f1;
+.dgap-form-wrap .dgap-slot.active,
+.dgap-form-wrap .dgap-slot.selected {
+    background:   var(--dgap-primary-color, #4f46e5) !important;
+    color:        #fff !important;
+    border-color: var(--dgap-primary-color, #4f46e5) !important;
 }
 
-.dgap-day.active {
-	background: #2271b1;
-	color: #fff;
-}
-
-.dgap-day.empty {
-	cursor: default;
-	background: none;
-}
-
-.dgap-slots {
-	margin-top: 10px;
-}
-
-.dgap-slots-row {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-}
-
-.dgap-slot {
-	padding: 6px 10px;
-	border: 1px solid #2271b1;
-	background: #fff;
-	cursor: pointer;
-	border-radius: 4px;
-}
-
-.dgap-slot:hover {
-	background: #2271b1;
-	color: #fff;
-}
-.dgap-slot {
-	border: 1px solid #ccc;
-	background: #fff;
-	cursor: pointer;
-}
-
-.dgap-slot.active {
-	background: #2271b1;
-	color: #fff;
-	border-color: #2271b1;
-}
-
-.dgap-slot.selected {
-	opacity: 0.9;
-}
-
+/* ── Validation ── */
 .dgap-error {
-	border-color: #dc2626 !important;
+    border-color: #dc2626 !important;
 }
 
 .dgap-error-message {
-	color: #dc2626;
-	font-size: 12px;
-	margin-top: 4px;
+    color:      #dc2626;
+    font-size:  12px;
+    margin-top: 4px;
 }
+

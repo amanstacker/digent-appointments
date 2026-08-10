@@ -189,12 +189,12 @@ jQuery(function ($) {
     /* ================================================
         MONTH NAVIGATION
     ================================================ */
-    $(document).on('click', '.prev-month', function () {
+    $(document).on('click', '.dgap-prev-month', function () {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         renderCalendar();
     });
 
-    $(document).on('click', '.next-month', function () {
+    $(document).on('click', '.dgap-next-month', function () {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         renderCalendar();
     });
@@ -302,13 +302,27 @@ jQuery(function ($) {
         const service_id  = $('#dgap-service').val();
         const staff_id    = $('#dgap-staff').val();
         const ajax        = getAjax();
+        const $calendar   = $(this).closest('.dgap-calendar');
+        const isInline    = $calendar.hasClass('dgap-calendar-style-inline');
 
         selectedDate = date;
 
         getWrap().find('.dgap-day').removeClass('active');
         $(this).addClass('active');
 
-        getWrap().find('.dgap-slots').html('<p>Loading slots...</p>');
+        // Remove any existing inline slot containers
+        getWrap().find('.dgap-inline-slots-container').remove();
+
+        if (isInline) {
+            const $days = $calendar.find('.dgap-calendar-days .dgap-day');
+            const clickedIdx = $days.index(this);
+            const row = Math.floor(clickedIdx / 7);
+            const endOfRowIdx = Math.min($days.length - 1, (row * 7) + 6);
+            $days.eq(endOfRowIdx).after('<div class="dgap-inline-slots-container"><p>Loading slots...</p></div>');
+            getWrap().find('.dgap-slots').empty();
+        } else {
+            getWrap().find('.dgap-slots').html('<p>Loading slots...</p>');
+        }
 
         if (!location_id || !service_id || !staff_id) return;
 
@@ -321,23 +335,40 @@ jQuery(function ($) {
             _dgap_nonce: ajax.nonce
         }, function (res) {
 
-            let html = '<div class="dgap-slots-row">';
-
-            if (res.success && res.data.length) {
-                $.each(res.data, function (_, slot) {
-                    html += `
-                        <button type="button" class="dgap-slot"
-                            data-start="${slot.start}"
-                            data-end="${slot.end}">
-                            ${slot.label}
-                        </button>`;
-                });
+            if (isInline) {
+                let html = '<p class="dgap-inline-title">Available Time Slots</p>';
+                html += '<div class="dgap-inline-slots-grid">';
+                if (res.success && res.data.length) {
+                    $.each(res.data, function (_, slot) {
+                        html += `
+                            <button type="button" class="dgap-slot"
+                                data-start="${slot.start}"
+                                data-end="${slot.end}">
+                                ${slot.label}
+                            </button>`;
+                    });
+                } else {
+                    html += '<p>No slots available</p>';
+                }
+                html += '</div>';
+                getWrap().find('.dgap-inline-slots-container').html(html);
             } else {
-                html += '<p>No slots available</p>';
+                let html = '<div class="dgap-slots-row">';
+                if (res.success && res.data.length) {
+                    $.each(res.data, function (_, slot) {
+                        html += `
+                            <button type="button" class="dgap-slot"
+                                data-start="${slot.start}"
+                                data-end="${slot.end}">
+                                ${slot.label}
+                            </button>`;
+                    });
+                } else {
+                    html += '<p>No slots available</p>';
+                }
+                html += '</div>';
+                getWrap().find('.dgap-slots').html(html);
             }
-
-            html += '</div>';
-            getWrap().find('.dgap-slots').html(html);
         });
     });
 

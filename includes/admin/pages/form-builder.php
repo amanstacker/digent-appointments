@@ -93,6 +93,16 @@ if ( ! $dgap_is_new && $dgap_id ) {
 					            </select>
 					        </div>
 
+					        <div class="dgap-field-row">
+					            <label><?php echo esc_html__( 'Calendar Style', 'digent-appointments' ); ?></label>
+					            <select name="settings[calendar_style]" id="dgap-calendar-style-select">
+					                <option value="modern"   <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'modern' );   ?>><?php esc_html_e( 'Modern (Circle)', 'digent-appointments' ); ?></option>
+					                <option value="classic"  <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'classic' );  ?>><?php esc_html_e( 'Classic (Square Grid)', 'digent-appointments' ); ?></option>
+					                <option value="minimal"  <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'minimal' );  ?>><?php esc_html_e( 'Minimal (Clean Grid)', 'digent-appointments' ); ?></option>
+					                <option value="inline"   <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'inline' );   ?>><?php esc_html_e( 'Inline Expandable Grid', 'digent-appointments' ); ?></option>
+					            </select>
+					        </div>
+
 					    </div>
 					</div>
 

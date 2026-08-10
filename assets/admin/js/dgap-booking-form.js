@@ -84,6 +84,11 @@ jQuery(function ($) {
         loadPreview();
     });
 
+    $(document).on('change', '#dgap-calendar-style-select', function () {
+        loadPreview();
+    });
+
+
     /* ================================================
         APPEARANCE LIVE UPDATE
     ================================================ */

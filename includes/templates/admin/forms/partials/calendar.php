@@ -4,7 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<div class="dgap-calendar disabled">
+<?php
+$calendar_style = $form['settings']['calendar_style'] ?? 'modern';
+?>
+<div class="dgap-calendar disabled dgap-calendar-style-<?php echo esc_attr( $calendar_style ); ?>">
 	<div class="dgap-calendar-header">
 		<button type="button" class="dgap-prev-month" type="button">&lsaquo;</button>
 		<span class="dgap-month-label"></span>
