@@ -171,6 +171,12 @@ jQuery(function ($) {
             html += `<div class="dgap-day" data-date="${dateStr}">${d}</div>`;
         }
 
+        const totalRendered = startDay + daysInMonth;
+        const trailingEmpty = (7 - (totalRendered % 7)) % 7;
+        for (let i = 0; i < trailingEmpty; i++) {
+            html += '<div class="dgap-day empty"></div>';
+        }
+
         getWrap().find('.dgap-calendar-days').html(html);
     }
 
@@ -348,7 +354,7 @@ jQuery(function ($) {
                             </button>`;
                     });
                 } else {
-                    html += '<p>No slots available</p>';
+                    html += '<p class="dgap-no-slots">No slots available</p>';
                 }
                 html += '</div>';
                 getWrap().find('.dgap-inline-slots-container').html(html);
@@ -364,7 +370,7 @@ jQuery(function ($) {
                             </button>`;
                     });
                 } else {
-                    html += '<p>No slots available</p>';
+                    html += '<p class="dgap-no-slots">No slots available</p>';
                 }
                 html += '</div>';
                 getWrap().find('.dgap-slots').html(html);

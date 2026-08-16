@@ -412,10 +412,13 @@
 }
 
 .dgap-preview-wrap .dgap-calendar-style-classic .dgap-day {
-    border-radius: 0;
-    border-right: 1px solid #e2e8f0;
+    width:         100% !important;
+    height:        auto !important;
+    margin:        0 !important;
+    border-radius: 0 !important;
+    border-right:  1px solid #e2e8f0;
     border-bottom: 1px solid #e2e8f0;
-    aspect-ratio: 1.1;
+    aspect-ratio:  1.1 !important;
 }
 
 .dgap-preview-wrap .dgap-calendar-style-classic .dgap-day:hover {
@@ -499,11 +502,14 @@
 }
 
 .dgap-preview-wrap .dgap-calendar-style-inline .dgap-day {
-    border-radius: 0;
-    border-right: 1px solid #e2e8f0;
+    width:         100% !important;
+    height:        auto !important;
+    margin:        0 !important;
+    border-radius: 0 !important;
+    border-right:  1px solid #e2e8f0;
     border-bottom: 1px solid #e2e8f0;
-    aspect-ratio: 1.1;
-    font-weight: 500;
+    aspect-ratio:  1.1 !important;
+    font-weight:   500;
 }
 
 .dgap-preview-wrap .dgap-calendar-style-inline .dgap-day:hover {
@@ -668,6 +674,20 @@
     .dgap-preview-wrap .dgap-slots-row {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+.dgap-preview-wrap .dgap-no-slots {
+    grid-column:    1 / -1;
+    text-align:     center;
+    padding:        16px;
+    margin:         8px auto;
+    background:     #f8fafc;
+    border:         1px dashed #cbd5e1;
+    border-radius:  6px;
+    color:          #64748b;
+    font-size:      13px;
+    font-weight:    500;
+    width:          100%;
+    box-sizing:     border-box;
 }
 
 
@@ -959,17 +979,18 @@
     border-bottom: none;
 }
 
-.dgap-wizard-sidebar .dgap-summary-item label,
-.dgap-wizard-sidebar .dgap-label {
-    color:          rgba(255,255,255,0.65) !important;
+.dgap-preview-wrap .dgap-wizard-sidebar .dgap-summary-item label,
+.dgap-preview-wrap .dgap-wizard-sidebar .dgap-label {
+    color:          rgba(255,255,255,0.7) !important;
     font-size:      10px                  !important;
     font-weight:    600                   !important;
     text-transform: uppercase;
     letter-spacing: 0.6px;
 }
 
-.dgap-wizard-sidebar .dgap-value {
-    color:       #fff !important;
+.dgap-preview-wrap .dgap-wizard-sidebar .dgap-value,
+.dgap-preview-wrap .dgap-wizard-sidebar .dgap-summary-wrapper span {
+    color:       #ffffff !important;
     font-weight: 600;
     font-size:   13px;
 }

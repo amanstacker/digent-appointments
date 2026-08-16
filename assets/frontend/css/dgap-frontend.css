@@ -1,45 +1,22 @@
 /* =======================================================
    FRONTEND BOOKING FORM — dgap-frontend.css
-   Base calendar/slot styles live in dgap-forms.css.
-   This file contains frontend-specific overrides only.
+   All calendar, slot, card and layout styles are loaded
+   from dgap-forms.css. This file handles container bounds.
 ======================================================= */
 
-/* Container reset */
 .dgap-form-wrap {
-    box-sizing:  border-box;
-    font-family: inherit;
-    width:       100%;
+    box-sizing: border-box;
+    width:      100%;
+    /* Respect the form width but cap it at 1000px for a clean widescreen presentation */
+    max-width:  min(1000px, var(--dgap-form-width, 100%));
+    margin:     0 auto;
 }
 
 .dgap-form-wrap * {
     box-sizing: border-box;
 }
 
-/* ── Calendar ── */
-.dgap-form-wrap .dgap-day.active {
-    background: var(--dgap-primary-color, #4f46e5) !important;
-    color:      #fff !important;
-}
-
-/* ── Slots ── */
-.dgap-form-wrap .dgap-slot {
-    border-color: var(--dgap-primary-color, #4f46e5);
-    color:        var(--dgap-primary-color, #4f46e5);
-}
-
-.dgap-form-wrap .dgap-slot:hover {
-    background: var(--dgap-primary-color, #4f46e5);
-    color:      #fff;
-}
-
-.dgap-form-wrap .dgap-slot.active,
-.dgap-form-wrap .dgap-slot.selected {
-    background:   var(--dgap-primary-color, #4f46e5) !important;
-    color:        #fff !important;
-    border-color: var(--dgap-primary-color, #4f46e5) !important;
-}
-
-/* ── Validation ── */
+/* ── Validation Errors ── */
 .dgap-error {
     border-color: #dc2626 !important;
 }
@@ -49,4 +26,5 @@
     font-size:  12px;
     margin-top: 4px;
 }
+
 
