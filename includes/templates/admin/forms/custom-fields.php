@@ -18,7 +18,7 @@ if ( is_array( $dgap_custom_fields ) && ! empty( $dgap_custom_fields ) ) {
 		$dgap_is_default 		=	! empty( $dgap_field['is_default'] ) ?  true : false;
 
 	?>
-		<div class="dgap-field-item" data-index="${dgap_fieldIndex}">
+		<div class="dgap-field-item" data-index="<?php echo esc_attr( $dgap_fieldIndex ); ?>">
 			
 			<input type="text" name="<?php echo esc_attr( $dgap_label_name ); ?>" value="<?php echo esc_attr( $dgap_field['label'] ); ?>"  placeholder="<?php echo esc_attr__( 'Field Label', 'digent-appointments' ); ?>" />
 

@@ -1,80 +1,378 @@
 /* ================================================
+   TOP STRIP & HEADER
+================================================ */
+.dgap-top-strip {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    margin: -10px -20px 20px -20px;
+    padding: 16px 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.dgap-strip-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.dgap-strip-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dgap-strip-breadcrumb {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.dgap-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0073aa;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.dgap-back-link:hover {
+    color: #005177;
+}
+
+.dgap-back-link .dashicons {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+}
+
+.dgap-strip-left h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #23282d;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.dgap-strip-left span,
+.dgap-strip-left .dgap-muted {
+    font-size: 13px;
+    color: #646970;
+    display: block;
+    margin-top: 3px;
+}
+
+.dgap-strip-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dgap-shortcode-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f6f7f7;
+    border: 1px solid #ccd0d4;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.dgap-shortcode-pill code {
+    font-size: 12px;
+    color: #2c3338;
+    background: none;
+    padding: 0;
+    user-select: all;
+    font-family: monospace;
+}
+
+.dgap-shortcode-pill .dgap-shortcode-copy {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    color: #646970;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.15s;
+}
+
+.dgap-shortcode-pill .dgap-shortcode-copy:hover {
+    color: #0073aa;
+}
+
+.dgap-shortcode-pill .dgap-shortcode-copy.copied {
+    color: #0a7b42;
+}
+
+/* ================================================
+   NOTICES (Matching Location Panel Messages)
+================================================ */
+.dgap-builder-notice {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.dgap-notice-success {
+    background: #e6f6ee;
+    color: #0a7b42;
+    border: 1px solid #b7e1c9;
+    border-left: 4px solid #0a7b42;
+}
+
+.dgap-notice-error {
+    background: #fbeaea;
+    color: #b32d2e;
+    border: 1px solid #f5c2c7;
+    border-left: 4px solid #b32d2e;
+}
+
+.dgap-builder-notice.is-visible {
+    display: flex;
+}
+
+/* ================================================
+   FORM TITLE CARD (Matching Location Section Card)
+================================================ */
+.dgap-title-card {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.dgap-title-card-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.dgap-title-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+    color: #0073aa;
+    flex-shrink: 0;
+}
+
+.dgap-title-input-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dgap-title-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+    margin: 0;
+}
+
+.dgap-required {
+    color: #b32d2e;
+}
+
+.dgap-form-title-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dgap-form-title-input:focus {
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+/* ================================================
    BUILDER LAYOUT
 ================================================ */
+.dgap-form-builder-wrap {
+    max-width: 1600px;
+}
+
 .dgap-builder {
-    display:    flex;
-    gap:        20px;
-    margin-top: 20px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
 }
 
 .dgap-builder-preview {
-    width:         70%;
-    background:    #fff;
-    padding:       20px;
-    border-radius: 12px;
-    box-shadow:    0 2px 10px rgba(0,0,0,0.05);
-    min-height:    600px;
-    position:      sticky;
-    top:           20px;
+    flex: 1;
+    min-width: 0;
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    min-height: 600px;
+    position: sticky;
+    top: 32px;
+    overflow: hidden;
+}
+
+.dgap-preview-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 20px;
+    background: #f7f7f7;
+    border-bottom: 1px solid #eee;
+}
+
+.dgap-preview-header-bar .dgap-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dgap-preview-header-bar .dgap-panel-title h2,
+.dgap-preview-header-bar .dgap-panel-title h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.dgap-preview-header-bar .dgap-panel-title .dashicons {
+    color: #0073aa;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.dgap-preview-header-bar .dgap-muted {
+    font-size: 12px;
+    color: #646970;
+    margin-left: 6px;
+}
+
+.dgap-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dgap-badge-active {
+    background: #e6f6ee;
+    color: #0a7b42;
+}
+
+#dgap-live-preview {
+    padding: 20px;
+}
+
+.dgap-preview-hint {
+    font-size: 12px;
+    color: #8c8f94;
 }
 
 .dgap-builder-settings {
-    width:       30%;
-    padding-right: 20px;
-    box-sizing:  border-box;
+    width: 380px;
+    flex-shrink: 0;
 }
-
 
 /* ================================================
-   FORM NAME BAR
-================================================ */
-.dgap-form-name-bar {
-    margin: 10px 0;
-}
-
-#dgap-title {
-    width:         100%;
-    box-sizing:    border-box;
-    font-size:     22px;
-    font-weight:   600;
-    padding:       8px 12px;
-    border-radius: 6px;
-}
-
-
-/* ================================================
-   ACCORDION
+   ACCORDION (Matching Location Panel & Admin Sections)
 ================================================ */
 .dgap-accordion-item {
-    background:    #fff;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    overflow:      hidden;
-    box-shadow:    0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    transition: border-color 0.2s ease;
 }
 
 .dgap-accordion-header {
-    padding:     12px 15px;
-    cursor:      pointer;
+    padding: 12px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f7f7f7;
+    user-select: none;
+    transition: background-color 0.15s ease;
+}
+
+.dgap-accordion-header:hover {
+    background: #f0f0f1;
+}
+
+.dgap-accordion-header .dgap-panel-title,
+.dgap-acc-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dgap-acc-title-wrap span,
+.dgap-acc-title-wrap h3 {
+    font-size: 15px;
     font-weight: 600;
-    background:  #f9f9f9;
+    color: #0073aa;
+    margin: 0;
+}
+
+.dgap-acc-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #0073aa;
+}
+
+.dgap-acc-arrow {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #0073aa;
+    transition: transform 0.25s ease;
+}
+
+.dgap-accordion-item.active .dgap-acc-arrow {
+    transform: rotate(180deg);
+}
+
+.dgap-accordion-item.active .dgap-accordion-header {
+    border-bottom: 1px solid #eee;
+    background: #f7f7f7;
 }
 
 .dgap-accordion-body {
     display: none;
-    padding: 15px;
+    padding: 16px 18px;
+    background: #fff;
 }
 
 .dgap-accordion-item.active .dgap-accordion-body {
     display: block;
-}
-
-/* ================================================
-   BUILDER FOOTER
-================================================ */
-.dgap-builder-footer {
-    margin-top: 20px;
-    text-align: right;
 }
 
 /* ================================================
@@ -85,7 +383,7 @@
     align-items:     center;
     justify-content: space-between;
     gap:             12px;
-    padding:         10px 12px;
+    padding:         9px 0;
     border-bottom:   1px solid #f0f0f1;
     margin:          0;
 }
@@ -97,7 +395,7 @@
 .dgap-field-row > label {
     font-size:   13px;
     color:       #1d2327;
-    font-weight: 400;
+    font-weight: 600;
     flex-shrink: 0;
     margin:      0;
 }
@@ -105,26 +403,63 @@
 .dgap-field-row > select,
 .dgap-field-row > input[type="text"],
 .dgap-field-row > input[type="number"] {
-    flex:      1;
-    max-width: 160px;
+    flex:        1;
+    max-width:   170px;
+    height:      34px;
+    padding:     6px 10px;
+    border:      1px solid #ccd0d4;
+    border-radius: 4px;
+    font-size:   13px;
+    color:       #2c3338;
+    background-color: #fff;
+    box-sizing:  border-box;
+    transition:  border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dgap-field-row > select:focus,
+.dgap-field-row > input[type="text"]:focus,
+.dgap-field-row > input[type="number"]:focus {
+    border-color: #0073aa;
+    outline:      none;
+    box-shadow:   0 0 0 1px #0073aa;
 }
 
 .dgap-field-row .dgap-input-group {
-    display:   flex;
-    align-items: center;
-    gap:       6px;
-    flex:      1;
-    max-width: 160px;
+    display:       flex;
+    align-items:   center;
+    flex:          1;
+    max-width:     170px;
+    border:        1px solid #ccd0d4;
+    border-radius: 4px;
+    background:    #fff;
+    overflow:      hidden;
+    transition:    border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dgap-field-row .dgap-input-group:focus-within {
+    border-color: #0073aa;
+    box-shadow:   0 0 0 1px #0073aa;
 }
 
 .dgap-field-row .dgap-input-group input {
-    flex:      1;
-    min-width: 0;
+    flex:        1;
+    min-width:   0;
+    height:      32px;
+    padding:     4px 8px;
+    border:      none !important;
+    outline:     none !important;
+    box-shadow:  none !important;
+    font-size:   13px;
 }
 
 .dgap-unit-label {
     font-size:   12px;
-    color:       #787c82;
+    color:       #646970;
+    background:  #f6f7f7;
+    border-left: 1px solid #ccd0d4;
+    padding:     0 8px;
+    height:      32px;
+    line-height: 32px;
     flex-shrink: 0;
 }
 
@@ -133,33 +468,46 @@
     align-items: center;
     gap:         8px;
     flex:        1;
-    max-width:   160px;
+    max-width:   170px;
 }
 
 .dgap-field-row .dgap-color-row input[type="color"] {
-    width:        36px;
-    height:       32px;
+    width:        38px;
+    height:       34px;
     padding:      2px;
-    border:       1px solid #dcdcde;
+    border:       1px solid #ccd0d4;
     border-radius: 4px;
     cursor:       pointer;
+    background:   #fff;
     flex-shrink:  0;
 }
 
 .dgap-field-row .dgap-color-row input[type="text"] {
-    flex:      1;
-    min-width: 0;
-    font-size: 12px;
+    flex:        1;
+    min-width:   0;
+    height:      34px;
+    padding:     4px 8px;
+    font-size:   12px;
+    font-family: monospace;
+    border:      1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
+.dgap-field-row .dgap-color-row input[type="text"]:focus {
+    border-color: #0073aa;
+    outline:      none;
+    box-shadow:   0 0 0 1px #0073aa;
 }
 
 /* ================================================
-   SETTINGS GROUP
+   SETTINGS GROUP (Matching Location Sections)
 ================================================ */
 .dgap-settings-group {
-    margin-bottom: 16px;
-    border:        1px solid #dcdcde;
+    margin-bottom: 14px;
+    border:        1px solid #e2e4e7;
     border-radius: 6px;
     overflow:      hidden;
+    background:    #fff;
 }
 
 .dgap-settings-group:last-child {
@@ -167,18 +515,18 @@
 }
 
 .dgap-settings-group-title {
-    font-size:      11px;
+    font-size:      12px;
     font-weight:    600;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color:          #787c82;
-    background:     #f6f7f7;
+    letter-spacing: 0.5px;
+    color:          #0073aa;
+    background:     #f7f7f7;
     padding:        8px 12px;
-    border-bottom:  1px solid #dcdcde;
+    border-bottom:  1px solid #eee;
 }
 
 .dgap-settings-group .dgap-field-row {
-    padding: 10px 12px;
+    padding: 8px 12px;
 }
 
 /* ================================================
@@ -188,7 +536,7 @@
     --dgap-font-size:      14px;
     --dgap-font-weight:    400;
     --dgap-font-color:     #333333;
-    --dgap-primary-color:  #4f46e5;
+    --dgap-primary-color:  #0073aa;
     --dgap-bg-color:       #ffffff;
     --dgap-border-radius:  8px;
     --dgap-heading-size:   16px;
@@ -229,31 +577,33 @@
 ================================================ */
 .dgap-field-item {
     background:    #fff;
-    border:        1px solid #dcdcde;
+    border:        1px solid #e2e4e7;
     border-radius: 6px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     overflow:      hidden;
+    box-shadow:    0 1px 2px rgba(0,0,0,0.02);
+    transition:    border-color 0.2s ease;
 }
 
 .dgap-field-item.is-default {
-    border-color: #c3c4c7;
-    background:   #f9f9f9;
+    border-color: #ccd0d4;
+    background:   #fafafa;
 }
 
 .dgap-field-item-header {
     display:       flex;
     align-items:   center;
     gap:           8px;
-    padding:       9px 12px;
-    background:    #f6f7f7;
-    border-bottom: 1px solid #dcdcde;
+    padding:       10px 14px;
+    background:    #f7f7f7;
+    border-bottom: 1px solid #eee;
     cursor:        pointer;
 }
 
 .dgap-field-item-name {
     flex:        1;
     font-size:   13px;
-    font-weight: 500;
+    font-weight: 600;
     color:       #1d2327;
 }
 
@@ -264,14 +614,14 @@
 }
 
 .dgap-field-item-default-badge {
-    font-size:      10px;
+    font-size:      11px;
     font-weight:    600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color:          #787c82;
-    background:     #e0e0e0;
-    padding:        2px 7px;
-    border-radius:  10px;
+    color:          #646970;
+    background:     #e2e4e7;
+    padding:        2px 8px;
+    border-radius:  4px;
     flex-shrink:    0;
 }
 
@@ -280,7 +630,7 @@
     border:      none;
     cursor:      pointer;
     padding:     2px;
-    color:       #a7aaad;
+    color:       #646970;
     display:     flex;
     align-items: center;
     transition:  color 0.2s ease;
@@ -288,7 +638,7 @@
 }
 
 .dgap-field-item-remove:hover {
-    color: #d63638;
+    color: #b32d2e;
 }
 
 .dgap-field-item-remove .dashicons {
@@ -298,11 +648,11 @@
 }
 
 .dgap-field-item-body {
-    padding: 4px 0;
+    padding: 6px 14px;
 }
 
 .dgap-field-item-body .dgap-field-row {
-    padding:       8px 12px;
+    padding:       8px 0;
     border-bottom: 1px solid #f0f0f1;
     margin:        0;
 }
@@ -312,90 +662,117 @@
 }
 
 .dgap-field-item-body .dgap-field-row > label:first-child {
-    width:     70px;
-    font-size: 12px;
-    color:     #787c82;
+    width:       70px;
+    font-size:   13px;
+    font-weight: 600;
+    color:       #1d2327;
 }
 
 .dgap-field-item-body .dgap-field-row input[type="text"],
 .dgap-field-item-body .dgap-field-row select {
-    flex:      1;
-    max-width: none;
+    flex:        1;
+    max-width:   none;
+    height:      32px;
+    padding:     4px 8px;
+    border:      1px solid #ccd0d4;
+    border-radius: 4px;
+    font-size:   13px;
+}
+
+.dgap-field-item-body .dgap-field-row input[type="text"]:focus,
+.dgap-field-item-body .dgap-field-row select:focus {
+    border-color: #0073aa;
+    outline:      none;
+    box-shadow:   0 0 0 1px #0073aa;
 }
 
 /* ================================================
-   TOGGLE SWITCH
+   TOGGLE SWITCH (Matching Location Panel dgap-switch)
 ================================================ */
+.dgap-switch,
 .dgap-toggle {
-    position:    relative;
-    display:     inline-flex;
-    align-items: center;
-    width:       36px;
-    height:      20px;
-    cursor:      pointer;
-    margin:      0;
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin: 4px 0;
+    flex-shrink: 0;
 }
 
+.dgap-switch input,
 .dgap-toggle input {
-    opacity:  0;
-    width:    0;
-    height:   0;
+    display: none;
+    opacity: 0;
+    width: 0;
+    height: 0;
     position: absolute;
 }
 
+.dgap-slider,
 .dgap-toggle-slider {
-    position:      absolute;
-    inset:         0;
-    background:    #c3c4c7;
-    border-radius: 20px;
-    transition:    background 0.2s ease;
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #ccc;
+    transition: 0.3s ease;
+    border-radius: 24px;
 }
 
-.dgap-toggle-slider::before {
-    content:       '';
-    position:      absolute;
-    width:         14px;
-    height:        14px;
-    left:          3px;
-    top:           3px;
-    background:    #fff;
+.dgap-slider:before,
+.dgap-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #fff;
+    transition: 0.3s ease;
     border-radius: 50%;
-    transition:    transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
+.dgap-switch input:checked + .dgap-slider,
 .dgap-toggle input:checked + .dgap-toggle-slider {
-    background: #2271b1;
+    background-color: #0073aa;
 }
 
-.dgap-toggle input:checked + .dgap-toggle-slider::before {
-    transform: translateX(16px);
+.dgap-switch input:checked + .dgap-slider:before,
+.dgap-toggle input:checked + .dgap-toggle-slider:before {
+    transform: translateX(26px);
 }
 
 /* ================================================
-   ADD FIELD BUTTON
+   ADD FIELD BUTTON (Matching location panel style)
 ================================================ */
 .dgap-add-field-btn {
     display:         flex;
     align-items:     center;
     gap:             6px;
     margin-top:      12px;
-    padding:         7px 14px;
+    padding:         8px 14px;
     background:      #fff;
-    border:          1px dashed #2271b1;
+    border:          1px dashed #0073aa;
     border-radius:   6px;
-    color:           #2271b1;
+    color:           #0073aa;
     font-size:       13px;
-    font-weight:     500;
+    font-weight:     600;
     cursor:          pointer;
     width:           100%;
     justify-content: center;
-    transition:      background 0.2s ease, border-color 0.2s ease;
+    transition:      all 0.2s ease;
 }
 
 .dgap-add-field-btn:hover {
     background:   #f0f6fc;
-    border-color: #135e96;
-    color:        #135e96;
+    border-color: #005177;
+    color:        #005177;
+}
+
+.dgap-add-field-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 /* ================================================
@@ -432,8 +809,8 @@
     transition:  color 0.2s ease;
 }
 
-.dgap-shortcode-copy:hover { color: #2271b1; }
-.dgap-shortcode-copy.copied { color: #00a32a; }
+.dgap-shortcode-copy:hover { color: #0073aa; }
+.dgap-shortcode-copy.copied { color: #0a7b42; }
 
 .dgap-shortcode-copy .dashicons {
     font-size: 18px;
@@ -445,6 +822,42 @@
     font-size: 12px;
     color:     #787c82;
     margin:    8px 0 0 0;
+}
+
+/* ================================================
+   BUILDER FOOTER ACTIONS (Matching Location Panel Footer)
+================================================ */
+.dgap-builder-footer {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.dgap-builder-footer .dgap-footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dgap-builder-footer .button {
+    height: 36px;
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.dgap-builder-footer .button-primary {
+    background: #0073aa;
+    border-color: #0073aa;
+    color: #fff;
+}
+
+.dgap-builder-footer .button-primary:hover {
+    background: #005177;
+    border-color: #005177;
 }
 
 /* ================================================

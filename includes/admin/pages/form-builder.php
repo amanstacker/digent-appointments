@@ -25,17 +25,50 @@ if ( ! $dgap_is_new && $dgap_id ) {
 }
 ?>
 
+<!-- TOP STRIP (Consistent with Digent Core Theme) -->
+<div class="dgap-top-strip">
+	<div class="dgap-strip-inner">
+		<div class="dgap-strip-left">
+			<div class="dgap-strip-breadcrumb">
+				<a href="<?php echo esc_url( admin_url('admin.php?page=digent-appointments-forms') ); ?>" class="dgap-back-link">
+					<span class="dashicons dashicons-arrow-left-alt2"></span> <?php esc_html_e( 'Back to Forms', 'digent-appointments' ); ?>
+				</a>
+			</div>
+			<h1><?php echo $dgap_is_new ? esc_html__( 'New Booking Form', 'digent-appointments' ) : esc_html__( 'Edit Booking Form', 'digent-appointments' ); ?></h1>
+			<span><?php esc_html_e( 'Customize layout, form fields, and appearance with live preview', 'digent-appointments' ); ?></span>
+		</div>
+
+		<div class="dgap-strip-right">
+			<?php if ( ! $dgap_is_new && $dgap_id ) : ?>
+				<div class="dgap-shortcode-pill">
+					<code id="dgap-top-shortcode-text">[dgap_booking_form id="<?php echo esc_attr( $dgap_id ); ?>"]</code>
+					<button type="button" class="dgap-shortcode-copy button button-small" data-clipboard="#dgap-top-shortcode-text" title="<?php esc_attr_e( 'Copy to clipboard', 'digent-appointments' ); ?>">
+						<span class="dashicons dashicons-clipboard"></span>
+					</button>
+				</div>
+			<?php endif; ?>
+			<button type="submit" form="dgap-form-builder" class="dgap-btn button button-primary dgap-btn-save dgap-btn-save-top">
+				<span class="dashicons dashicons-saved"></span>
+				<span class="dgap-btn-text"><?php echo esc_html__( 'Save Form', 'digent-appointments' ); ?></span>
+			</button>
+		</div>
+	</div>
+</div>
+
 <div class="wrap dgap-form-builder-wrap">
 <form id="dgap-form-builder" novalidate>
 
 	<input type="hidden" name="id" value="<?php echo esc_attr($dgap_id); ?>">
     <?php wp_nonce_field( 'dgap_render_preview', '_dgap_nonce' ); ?>
 
-    <!-- FORM NAME — independent, outside both panels -->
-	<div id="dgap-titlediv" class="dgap-form-name-bar">
-		<div id="dgap-titlewrap">
-			<label class="" id="dgap-title-prompt-text" for="title"></label>
-			<input type="text" name="name" size="30" id="dgap-title" value="<?php echo esc_attr($form['name']); ?>" spellcheck="true" autocomplete="off" placeholder="<?php echo esc_attr__( 'Add Title', 'digent-appointments' ); ?>">
+    <!-- FORM NAME CARD -->
+	<div id="dgap-titlediv" class="dgap-title-card">
+		<div class="dgap-title-card-inner">
+			<span class="dashicons dashicons-feedback dgap-title-icon"></span>
+			<div class="dgap-title-input-wrap">
+				<label for="dgap-title" class="dgap-title-label"><?php esc_html_e( 'Form Title', 'digent-appointments' ); ?> <span class="dgap-required">*</span></label>
+				<input type="text" name="name" id="dgap-title" class="dgap-form-title-input" value="<?php echo esc_attr($form['name']); ?>" spellcheck="true" autocomplete="off" placeholder="<?php echo esc_attr__( 'e.g. Consultation Booking Form', 'digent-appointments' ); ?>">
+			</div>
 		</div>
 	</div>
 
@@ -43,6 +76,14 @@ if ( ! $dgap_is_new && $dgap_id ) {
 
 		<!-- LEFT: PREVIEW -->
 		<div class="dgap-builder-preview">
+			<div class="dgap-preview-header-bar dgap-panel-header">
+				<div class="dgap-panel-title">
+					<span class="dashicons dashicons-visibility"></span>
+					<h2><?php esc_html_e( 'Live Preview', 'digent-appointments' ); ?></h2>
+					<span class="dgap-muted"><?php esc_html_e( 'Interactive preview updates live as you customize', 'digent-appointments' ); ?></span>
+				</div>
+				<span class="dgap-badge dgap-badge-active"><?php esc_html_e( 'Active Preview', 'digent-appointments' ); ?></span>
+			</div>
 			<div id="dgap-live-preview">
 				<p><?php echo esc_html__( 'Loading preview...', 'digent-appointments' );?></p>
 			</div>
@@ -54,8 +95,14 @@ if ( ! $dgap_is_new && $dgap_id ) {
 				<div class="dgap-accordion">
 
 					<!-- Layout -->
-					<div class="dgap-accordion-item">
-					    <div class="dgap-accordion-header"><?php echo esc_html__( 'Layout', 'digent-appointments' ); ?></div>
+					<div class="dgap-accordion-item active">
+					    <div class="dgap-accordion-header">
+					    	<span class="dgap-acc-title-wrap">
+					    		<span class="dashicons dashicons-layout dgap-acc-icon"></span>
+					    		<span><?php echo esc_html__( 'Layout', 'digent-appointments' ); ?></span>
+					    	</span>
+					    	<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
+					    </div>
 					    <div class="dgap-accordion-body">
 
 					        <div class="dgap-field-row">
@@ -108,18 +155,18 @@ if ( ! $dgap_is_new && $dgap_id ) {
 
 					<!-- Custom Fields -->
 					<div class="dgap-accordion-item">
-					    <div class="dgap-accordion-header"><?php echo esc_html__( 'Custom Fields', 'digent-appointments' ); ?></div>
+					    <div class="dgap-accordion-header">
+					    	<span class="dgap-acc-title-wrap">
+					    		<span class="dashicons dashicons-forms dgap-acc-icon"></span>
+					    		<span><?php echo esc_html__( 'Custom Fields', 'digent-appointments' ); ?></span>
+					    	</span>
+					    	<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
+					    </div>
 					    <div class="dgap-accordion-body">
 
-					        <div id="dgap-custom-fields-container">
-					            <?php
-					            if ( ! $dgap_is_new && $dgap_id ) {
-					                require_once DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/forms/custom-fields.php';
-					            }
-					            ?>
-					        </div>
+					        <div id="dgap-custom-fields-container"></div>
 
-					        <button type="button" id="dgap-add-field" class="dgap-add-field-btn">
+					        <button type="button" id="dgap-add-field" class="dgap-add-field-btn button">
 					            <span class="dashicons dashicons-plus-alt2"></span>
 					            <?php echo esc_html__( 'Add Field', 'digent-appointments' ); ?>
 					        </button>
@@ -129,7 +176,13 @@ if ( ! $dgap_is_new && $dgap_id ) {
 
 					<!-- Field Labels -->
 					<div class="dgap-accordion-item">
-					    <div class="dgap-accordion-header"><?php echo esc_html__( 'Field Labels', 'digent-appointments' ); ?></div>
+					    <div class="dgap-accordion-header">
+					    	<span class="dgap-acc-title-wrap">
+					    		<span class="dashicons dashicons-translation dgap-acc-icon"></span>
+					    		<span><?php echo esc_html__( 'Field Labels', 'digent-appointments' ); ?></span>
+					    	</span>
+					    	<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
+					    </div>
 					    <div class="dgap-accordion-body">
 
 					        <div class="dgap-field-row">
@@ -158,7 +211,13 @@ if ( ! $dgap_is_new && $dgap_id ) {
 
 					<!-- Appearance -->
 					<div class="dgap-accordion-item">
-					    <div class="dgap-accordion-header"><?php echo esc_html__( 'Appearance', 'digent-appointments' ); ?></div>
+					    <div class="dgap-accordion-header">
+					    	<span class="dgap-acc-title-wrap">
+					    		<span class="dashicons dashicons-admin-appearance dgap-acc-icon"></span>
+					    		<span><?php echo esc_html__( 'Appearance', 'digent-appointments' ); ?></span>
+					    	</span>
+					    	<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
+					    </div>
 					    <div class="dgap-accordion-body">
 
 					        <!-- ── General ── -->
@@ -288,31 +347,47 @@ if ( ! $dgap_is_new && $dgap_id ) {
 
 					<!-- Misc -->
 					<div class="dgap-accordion-item">
-						<div class="dgap-accordion-header"><?php echo esc_html__( 'Misc', 'digent-appointments' );?></div>
+						<div class="dgap-accordion-header">
+							<span class="dgap-acc-title-wrap">
+								<span class="dashicons dashicons-admin-generic dgap-acc-icon"></span>
+								<span><?php echo esc_html__( 'Misc', 'digent-appointments' );?></span>
+							</span>
+							<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
+						</div>
 						<div class="dgap-accordion-body">
 
-							<label>
-								<input type="checkbox" name="settings[misc][captcha]" value="1">
-								<?php echo esc_html__( 'Enable reCAPTCHA', 'digent-appointments' );?>
-							</label>
+							<div class="dgap-field-row">
+								<label><?php echo esc_html__( 'Enable reCAPTCHA', 'digent-appointments' );?></label>
+								<label class="dgap-switch">
+									<input type="checkbox" name="settings[misc][captcha]" value="1" <?php checked( $form['settings']['misc']['captcha'] ?? '0', '1' ); ?>>
+									<span class="dgap-slider"></span>
+								</label>
+							</div>
 
 						</div>
 					</div>
 
 					<!-- Shortcode -->
 					<div class="dgap-accordion-item">
-					    <div class="dgap-accordion-header"><?php echo esc_html__( 'Shortcode', 'digent-appointments' ); ?></div>
+					    <div class="dgap-accordion-header">
+					    	<span class="dgap-acc-title-wrap">
+					    		<span class="dashicons dashicons-shortcode dgap-acc-icon"></span>
+					    		<span><?php echo esc_html__( 'Shortcode', 'digent-appointments' ); ?></span>
+					    	</span>
+					    	<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
+					    </div>
 					    <div class="dgap-accordion-body">
 
 					        <?php if ( ! $dgap_is_new && $dgap_id ) : ?>
 
 					            <div class="dgap-shortcode-wrap">
 					                <code id="dgap-shortcode-text">[dgap_booking_form id="<?php echo esc_html( $dgap_id ); ?>"]</code>
-					                <button type="button" class="dgap-shortcode-copy" data-clipboard="#dgap-shortcode-text" title="<?php esc_attr_e( 'Copy to clipboard', 'digent-appointments' ); ?>">
+					                <button type="button" class="dgap-shortcode-copy button" data-clipboard="#dgap-shortcode-text" title="<?php esc_attr_e( 'Copy to clipboard', 'digent-appointments' ); ?>">
 					                    <span class="dashicons dashicons-clipboard"></span>
+					                    <span><?php esc_html_e( 'Copy', 'digent-appointments' ); ?></span>
 					                </button>
 					            </div>
-					            <p class="dgap-shortcode-hint"><?php esc_html_e( 'Paste this shortcode into any page or post.', 'digent-appointments' ); ?></p>
+					            <p class="dgap-shortcode-hint"><?php esc_html_e( 'Paste this shortcode into any page, post, or widget to display the booking form.', 'digent-appointments' ); ?></p>
 
 					        <?php else : ?>
 
@@ -325,11 +400,18 @@ if ( ! $dgap_is_new && $dgap_id ) {
 
 				</div>
 
-				<!-- SAVE -->
-				<div class="dgap-builder-footer">
-					<button type="submit" class="button button-primary"><?php echo esc_html__( 'Save Form', 'digent-appointments' );?></button>
+				<!-- SAVE FOOTER -->
+				<div class="dgap-builder-footer dgap-panel-footer">
+					<div class="dgap-footer-actions">
+						<a href="<?php echo esc_url( admin_url('admin.php?page=digent-appointments-forms') ); ?>" class="button button-secondary dgap-btn">
+							<?php esc_html_e( 'Cancel', 'digent-appointments' ); ?>
+						</a>
+						<button type="submit" class="button button-primary dgap-btn dgap-btn-save dgap-btn-save-bottom">
+							<span class="dashicons dashicons-saved"></span>
+							<span class="dgap-btn-text"><?php echo esc_html__( 'Save Form', 'digent-appointments' );?></span>
+						</button>
+					</div>
 				</div>
-
 
 		</div>
 

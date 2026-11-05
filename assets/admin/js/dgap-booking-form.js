@@ -4,6 +4,11 @@
  */
 jQuery(function ($) {
 
+    // Only run on Form Builder page
+    if (!$('#dgap-form-builder').length) {
+        return;
+    }
+
     /* ================================================
         STATE
     ================================================ */
@@ -27,6 +32,28 @@ jQuery(function ($) {
     ================================================ */
     $(document).on('click', '.dgap-accordion-header', function () {
         $(this).parent().toggleClass('active');
+    });
+
+    /* ================================================
+        COLOR PICKER <-> HEX TEXT SYNC
+    ================================================ */
+    $(document).on('input change', 'input[type="color"]', function () {
+        const name = $(this).attr('name');
+        const val  = $(this).val();
+        $(`.dgap-color-text[data-target="${name}"]`).val(val);
+        applyAppearance();
+    });
+
+    $(document).on('input change', '.dgap-color-text', function () {
+        const targetName = $(this).data('target');
+        let val = $(this).val().trim();
+        if (val && !val.startsWith('#')) {
+            val = '#' + val;
+        }
+        if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+            $(`input[type="color"][name="${targetName}"]`).val(val);
+            applyAppearance();
+        }
     });
 
     /* ================================================
@@ -175,7 +202,7 @@ jQuery(function ($) {
         RENDER FIELD ITEMS (builder sidebar)
     ================================================ */
     function renderField(field, index) {
-        const isDefault = field.is_default;
+        const isDefault = Boolean(field.is_default && field.is_default !== '0' && field.is_default !== 0);
         
         return `
         <div class="dgap-field-item ${isDefault ? 'is-default' : ''}" data-index="${index}">
@@ -185,7 +212,7 @@ jQuery(function ($) {
 
             <div class="dgap-field-item-header">
                 <span class="dgap-field-item-name">${field.label || '<em>Untitled Field</em>'}</span>
-                ${isDefault == 0 ? `
+                ${!isDefault ? `
                     <button type="button" class="dgap-field-item-remove dgap-remove-field" title="Remove">
                         <span class="dashicons dashicons-trash"></span>
                     </button>
@@ -213,12 +240,12 @@ jQuery(function ($) {
                 </div>
                 <div class="dgap-field-row">
                     <label>Required</label>
-                    <label class="dgap-toggle">
+                    <label class="dgap-switch">
                         <input type="checkbox"
                             name="custom_fields[${index}][required]"
                             value="1"
-                            ${field.required == 1 ? 'checked' : ''}>
-                        <span class="dgap-toggle-slider"></span>
+                            ${(field.required == 1 || field.required === true || field.required === '1') ? 'checked' : ''}>
+                        <span class="dgap-slider"></span>
                     </label>
                 </div>
             </div>
@@ -365,13 +392,14 @@ jQuery(function ($) {
         // Validate form name
         const formName = $('input[name="name"]').val().trim();
         if (!formName) {
-            showFieldError($('input[name="name"]'), 'Form name is required.');
+            showFieldError($('input[name="name"]'), 'Form title is required.');
             isValid = false;
         }
 
         // Validate custom field labels
         customFields.forEach(function (field, index) {
-            if (field.is_default) return;
+            const isDefault = Boolean(field.is_default && field.is_default !== '0' && field.is_default !== 0);
+            if (isDefault) return;
             const $item  = $(`.dgap-field-item[data-index="${index}"]`);
             const $label = $item.find('input[name*="[label]"]');
             if (!field.label || !field.label.trim()) {
@@ -382,10 +410,11 @@ jQuery(function ($) {
 
         if (!isValid) return;
 
-        const $btn  = $(this).find('[type="submit"]');
+        const $btns = $('.dgap-btn-save');
         const $form = $(this);
 
-        $btn.prop('disabled', true).text('Saving...');
+        $btns.prop('disabled', true).addClass('is-loading');
+        $btns.find('.dgap-btn-text').text('Saving...');
 
         const postData = { action: 'dgap_save_form' };
         $.each($form.serializeArray(), function (_, field) {
@@ -393,31 +422,74 @@ jQuery(function ($) {
         });
 
         customFields.forEach(function (field, index) {
+            const isDefault = Boolean(field.is_default && field.is_default !== '0' && field.is_default !== 0);
             postData[`custom_fields[${index}][name]`]       = field.name       || '';
             postData[`custom_fields[${index}][label]`]      = field.label      || '';
             postData[`custom_fields[${index}][type]`]       = field.type       || 'text';
-            postData[`custom_fields[${index}][required]`]   = field.required   ? '1' : '0';
-            postData[`custom_fields[${index}][is_default]`] = field.is_default ? '1' : '0';
+            postData[`custom_fields[${index}][required]`]   = (field.required == 1 || field.required === true || field.required === '1') ? '1' : '0';
+            postData[`custom_fields[${index}][is_default]`] = isDefault ? '1' : '0';
         });
 
         $.post(dgap_booking_form.ajax_url, postData, function (res) {
             if (res.success) {
-                if (!$('input[name="id"]').val()) {
-                    $('input[name="id"]').val(res.data.id);
+                const savedId = res.data.id;
+                if (!$('input[name="id"]').val() && savedId) {
+                    $('input[name="id"]').val(savedId);
                     const newUrl = new URL(window.location.href);
                     newUrl.searchParams.set('action', 'edit');
-                    newUrl.searchParams.set('id', res.data.id);
+                    newUrl.searchParams.set('id', savedId);
                     window.history.replaceState({}, '', newUrl.toString());
+
+                    $('.dgap-strip-left h1').text('Edit Booking Form');
+
+                    // Add top shortcode pill if missing
+                    if (!$('#dgap-top-shortcode-text').length) {
+                        $('.dgap-btn-save-top').before(`
+                            <div class="dgap-shortcode-pill">
+                                <code id="dgap-top-shortcode-text">[dgap_booking_form id="${savedId}"]</code>
+                                <button type="button" class="dgap-shortcode-copy button button-small" data-clipboard="#dgap-top-shortcode-text" title="Copy to clipboard">
+                                    <span class="dashicons dashicons-clipboard"></span>
+                                </button>
+                            </div>
+                        `);
+                    }
+
+                    // Update shortcode in sidebar accordion
+                    const shortcodeAccordion = $('.dgap-accordion-item:has(.dashicons-shortcode) .dgap-accordion-body');
+                    if (shortcodeAccordion.length) {
+                        shortcodeAccordion.html(`
+                            <div class="dgap-shortcode-wrap">
+                                <code id="dgap-shortcode-text">[dgap_booking_form id="${savedId}"]</code>
+                                <button type="button" class="dgap-shortcode-copy button" data-clipboard="#dgap-shortcode-text" title="Copy to clipboard">
+                                    <span class="dashicons dashicons-clipboard"></span>
+                                    <span>Copy</span>
+                                </button>
+                            </div>
+                            <p class="dgap-shortcode-hint">Paste this shortcode into any page, post, or widget to display the booking form.</p>
+                        `);
+                    }
                 }
-                showNotice('success', res.data.message);
-                window.location.reload();
+
+                showNotice('success', res.data.message || 'Form saved successfully!');
+
+                $btns.removeClass('is-loading').addClass('is-success');
+                $btns.find('.dashicons').removeClass('dashicons-saved').addClass('dashicons-yes');
+                $btns.find('.dgap-btn-text').text('Saved!');
+
+                setTimeout(function () {
+                    $btns.removeClass('is-success').prop('disabled', false);
+                    $btns.find('.dashicons').removeClass('dashicons-yes').addClass('dashicons-saved');
+                    $btns.find('.dgap-btn-text').text('Save Form');
+                }, 2000);
             } else {
                 showNotice('error', res.data.message || 'Something went wrong');
+                $btns.removeClass('is-loading').prop('disabled', false);
+                $btns.find('.dgap-btn-text').text('Save Form');
             }
         }).fail(function () {
             showNotice('error', 'Request failed. Please try again.');
-        }).always(function () {
-            $btn.prop('disabled', false).text('Save Form');
+            $btns.removeClass('is-loading').prop('disabled', false);
+            $btns.find('.dgap-btn-text').text('Save Form');
         });
     });
 
@@ -445,27 +517,47 @@ jQuery(function ($) {
     });
 
     function showNotice(type, message) {
-        const cls     = type === 'success' ? 'notice-success' : 'notice-error';
-        const $notice = $('<div class="notice ' + cls + ' is-dismissible"><p>' + message + '</p></div>');
-        $('.dgap-form-name-bar').before($notice);
+        const cls     = type === 'success' ? 'dgap-notice-success' : 'dgap-notice-error';
+        const icon    = type === 'success' ? 'dashicons-yes-alt' : 'dashicons-warning';
+        const $notice = $(`
+            <div class="dgap-builder-notice ${cls}">
+                <span class="dashicons ${icon}"></span>
+                <span>${message}</span>
+            </div>
+        `);
+        $('.dgap-title-card').before($notice);
         setTimeout(function () {
             $notice.fadeOut(300, function () { $(this).remove(); });
-        }, 3000);
+        }, 4000);
     }
 
     /* ================================================
         SHORTCODE COPY
     ================================================ */
     $(document).on('click', '.dgap-shortcode-copy', function () {
-        const text = $($(this).data('clipboard')).text();
-        navigator.clipboard.writeText(text).then(function () {
-            const $btn  = $('.dgap-shortcode-copy');
+        const target = $(this).data('clipboard');
+        let text = '';
+        if (target && target.startsWith('#') && $(target).length) {
+            text = $(target).text().trim();
+        } else if (target) {
+            text = target;
+        } else {
+            text = $(this).siblings('code').text().trim();
+        }
+
+        if (!text) return;
+
+        navigator.clipboard.writeText(text).then(() => {
+            const $btn  = $(this);
             const $icon = $btn.find('.dashicons');
             $icon.removeClass('dashicons-clipboard').addClass('dashicons-yes');
             $btn.addClass('copied');
+            const $textSpan = $btn.find('span:not(.dashicons)');
+            if ($textSpan.length) $textSpan.text('Copied!');
             setTimeout(function () {
                 $icon.removeClass('dashicons-yes').addClass('dashicons-clipboard');
                 $btn.removeClass('copied');
+                if ($textSpan.length) $textSpan.text('Copy');
             }, 2000);
         });
     });
