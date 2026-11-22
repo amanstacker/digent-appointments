@@ -34,7 +34,7 @@ class DGAP_Menu {
 			'forms'     => esc_html__( 'Booking Forms', 'digent-appointments' ),
 			'customers' => esc_html__( 'Customers', 'digent-appointments' ),
 			'settings'  => esc_html__( 'Settings', 'digent-appointments' ),
-			'extensions'=> esc_html__( 'Extensions', 'digent-appointments' ),
+			'extensions'=> esc_html__( 'Premium Extensions', 'digent-appointments' ),
 		];
 
 		foreach ( $menus as $slug => $title ) {

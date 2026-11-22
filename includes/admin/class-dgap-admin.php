@@ -52,11 +52,13 @@ class DGAP_Admin {
         wp_enqueue_media();
         wp_enqueue_script( 'jquery-ui-datepicker' );
         
+        $ver = ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ? time() : DGAP_VERSION;
+        
         wp_enqueue_style(
             'dgap-admin',
             DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-admin.css',
             [],
-            DGAP_VERSION
+            $ver
         );
 
         wp_enqueue_script(

@@ -84,6 +84,8 @@ class DGAP_Settings_Render {
 				],
 			],
 		];
+
+		return apply_filters( 'dgap_settings_tabs', $tabs );
 	}
 
 	public function render() {
@@ -125,7 +127,7 @@ class DGAP_Settings_Render {
 						?>
 						<a href="<?php echo esc_url(add_query_arg(['tab' => $tab_id, 'section' => false])); ?>"
 						   class="<?php echo esc_attr( $class ); ?>">
-							<?php echo esc_html( $tab['label'] ); ?>
+							<?php echo wp_kses_post( $tab['label'] ); ?>
 						</a>
 					<?php endforeach; ?>
 				</div>
@@ -142,16 +144,20 @@ class DGAP_Settings_Render {
 					</div>
 				<?php endif; ?>
 
-				<form method="post" action="options.php">
-					<?php
+				<?php if ( 'license' === $active_tab ) : ?>
+					<?php do_action( 'dgap_settings_tab_content_license' ); ?>
+				<?php else : ?>
+					<form method="post" action="options.php">
+						<?php
 
-					settings_fields( "dgap_{$active_tab}_settings_group" );
-					
-					do_settings_sections( "dgap_{$active_tab}_{$active_section}" );
+						settings_fields( "dgap_{$active_tab}_settings_group" );
+						
+						do_settings_sections( "dgap_{$active_tab}_{$active_section}" );
 
-					submit_button();
-					?>
-				</form>
+						submit_button();
+						?>
+					</form>
+				<?php endif; ?>
 
 			</div>
 
