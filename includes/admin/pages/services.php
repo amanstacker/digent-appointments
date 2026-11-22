@@ -23,7 +23,18 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-servi
 	<?php	
 	$dgap_table = new DGAP_Services_Table();
 	$dgap_table->prepare_items();
-	$dgap_table->display();
+	if ( $dgap_table->has_items() ) {
+		$dgap_table->display();
+	} else {
+		dgap_render_empty_state( [
+			'icon'         => 'dashicons-admin-tools',
+			'title'        => __( 'No Services Created Yet', 'digent-appointments' ),
+			'desc'         => __( 'Create the services, treatments, or consultation packages you offer to clients along with their duration and pricing.', 'digent-appointments' ),
+			'button_text'  => __( 'Add Service', 'digent-appointments' ),
+			'button_title' => __( 'Add Service', 'digent-appointments' ),
+			'entity'       => 'service',
+		] );
+	}
 	?>
 </div>
 

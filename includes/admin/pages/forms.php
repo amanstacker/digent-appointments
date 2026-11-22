@@ -35,6 +35,16 @@ if ( in_array( $dgap_action, ['edit', 'new'] ) ) {
 	<?php	
 	$dgap_table = new DGAP_Forms_Table();
 	$dgap_table->prepare_items();
-	$dgap_table->display();
+	if ( $dgap_table->has_items() ) {
+		$dgap_table->display();
+	} else {
+		dgap_render_empty_state( [
+			'icon'        => 'dashicons-feedback',
+			'title'       => __( 'No Booking Forms Created Yet', 'digent-appointments' ),
+			'desc'        => __( 'Build custom booking forms with the form builder and embed them anywhere on your site using shortcodes.', 'digent-appointments' ),
+			'button_text' => __( 'Add Form', 'digent-appointments' ),
+			'action_url'  => admin_url( 'admin.php?page=digent-appointments-forms&action=new' ),
+		] );
+	}
 	?>
 </div>

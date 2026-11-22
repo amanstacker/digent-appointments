@@ -26,7 +26,18 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-staff
 	<?php	
 	$dgap_table = new DGAP_Staff_Table();
 	$dgap_table->prepare_items();
-	$dgap_table->display();
+	if ( $dgap_table->has_items() ) {
+		$dgap_table->display();
+	} else {
+		dgap_render_empty_state( [
+			'icon'         => 'dashicons-groups',
+			'title'        => __( 'No Staff Members Added Yet', 'digent-appointments' ),
+			'desc'         => __( 'Add team members, doctors, or specialists who deliver services and manage their individual availability.', 'digent-appointments' ),
+			'button_text'  => __( 'Add Staff', 'digent-appointments' ),
+			'button_title' => __( 'Add Staff Member', 'digent-appointments' ),
+			'entity'       => 'staff',
+		] );
+	}
 	?>
 </div>
 

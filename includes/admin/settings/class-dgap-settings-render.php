@@ -108,8 +108,8 @@ class DGAP_Settings_Render {
 				<p class="description"><?php esc_html_e( 'Manage appointment booking behavior and rules.', 'digent-appointments' ); ?></p>
 			</div>
 			<div class="dgap-header-right">
-				<a href="#" class="button button-secondary"><?php esc_html_e( 'Documentation', 'digent-appointments' ); ?></a>
-				<a href="#" class="button button-secondary"><?php esc_html_e( 'Support', 'digent-appointments' ); ?></a>
+				<a href="https://profiles.wordpress.org/amanstacker/" target="_blank" class="button button-secondary"><?php esc_html_e( 'Documentation', 'digent-appointments' ); ?></a>
+				<a href="https://profiles.wordpress.org/amanstacker/" target="_blank" class="button button-secondary"><?php esc_html_e( 'Support', 'digent-appointments' ); ?></a>
 			</div>
 		</div>
 

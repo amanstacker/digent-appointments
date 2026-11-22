@@ -107,3 +107,48 @@ function dgap_get_form_settings() {
 	return $default_settings;
 
 }
+
+/**
+ * Render a modern empty state card for list tables when no items exist.
+ *
+ * @param array $args Configuration array for empty state display.
+ */
+function dgap_render_empty_state( $args = [] ) {
+	$defaults = [
+		'icon'         => 'dashicons-info-outline',
+		'title'        => __( 'No items found', 'digent-appointments' ),
+		'desc'         => __( 'Get started by creating your first record.', 'digent-appointments' ),
+		'button_text'  => __( 'Add New', 'digent-appointments' ),
+		'button_title' => '',
+		'entity'       => '',
+		'action_url'   => '',
+	];
+
+	$args = wp_parse_args( $args, $defaults );
+
+	if ( empty( $args['button_title'] ) ) {
+		$args['button_title'] = $args['button_text'];
+	}
+	?>
+	<div class="dgap-empty-state">
+		<div class="dgap-empty-state-icon">
+			<span class="dashicons <?php echo esc_attr( $args['icon'] ); ?>"></span>
+		</div>
+		<h3 class="dgap-empty-state-title"><?php echo esc_html( $args['title'] ); ?></h3>
+		<p class="dgap-empty-state-desc"><?php echo esc_html( $args['desc'] ); ?></p>
+		<div class="dgap-empty-state-action">
+			<?php if ( ! empty( $args['action_url'] ) ) : ?>
+				<a href="<?php echo esc_url( $args['action_url'] ); ?>" class="dgap-btn button button-primary">
+					<span class="dashicons dashicons-plus-alt2"></span>
+					<span class="dgap-btn-text"><?php echo esc_html( $args['button_text'] ); ?></span>
+				</a>
+			<?php else : ?>
+				<button type="button" class="dgap-btn button button-primary dgap-add" data-entity="<?php echo esc_attr( $args['entity'] ); ?>" data-title="<?php echo esc_attr( $args['button_title'] ); ?>">
+					<span class="dashicons dashicons-plus-alt2"></span>
+					<span class="dgap-btn-text"><?php echo esc_html( $args['button_text'] ); ?></span>
+				</button>
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php
+}

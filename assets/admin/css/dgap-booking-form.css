@@ -37,13 +37,13 @@
     gap: 4px;
     font-size: 13px;
     font-weight: 500;
-    color: #0073aa;
+    color: #10b981;
     text-decoration: none;
     transition: color 0.15s ease;
 }
 
 .dgap-back-link:hover {
-    color: #005177;
+    color: #059669;
 }
 
 .dgap-back-link .dashicons {
@@ -105,7 +105,7 @@
 }
 
 .dgap-shortcode-pill .dgap-shortcode-copy:hover {
-    color: #0073aa;
+    color: #10b981;
 }
 
 .dgap-shortcode-pill .dgap-shortcode-copy.copied {
@@ -167,7 +167,7 @@
     font-size: 26px;
     width: 26px;
     height: 26px;
-    color: #0073aa;
+    color: var(--dgap-primary, #10b981);
     flex-shrink: 0;
 }
 
@@ -202,8 +202,8 @@
 }
 
 .dgap-form-title-input:focus {
-    border-color: #0073aa;
-    box-shadow: 0 0 0 1px #0073aa;
+    border-color: var(--dgap-primary, #10b981);
+    box-shadow: 0 0 0 1px var(--dgap-primary, #10b981);
 }
 
 /* ================================================
@@ -259,7 +259,7 @@
 }
 
 .dgap-preview-header-bar .dgap-panel-title .dashicons {
-    color: #0073aa;
+    color: var(--dgap-primary, #10b981);
     font-size: 18px;
     width: 18px;
     height: 18px;
@@ -337,7 +337,7 @@
 .dgap-acc-title-wrap h3 {
     font-size: 15px;
     font-weight: 600;
-    color: #0073aa;
+    color: var(--dgap-primary-hover, #059669);
     margin: 0;
 }
 
@@ -345,14 +345,14 @@
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: #0073aa;
+    color: var(--dgap-primary, #10b981);
 }
 
 .dgap-acc-arrow {
     font-size: 16px;
     width: 16px;
     height: 16px;
-    color: #0073aa;
+    color: var(--dgap-slate-400, #94a3b8);
     transition: transform 0.25s ease;
 }
 
@@ -419,9 +419,9 @@
 .dgap-field-row > select:focus,
 .dgap-field-row > input[type="text"]:focus,
 .dgap-field-row > input[type="number"]:focus {
-    border-color: #0073aa;
+    border-color: var(--dgap-primary, #10b981);
     outline:      none;
-    box-shadow:   0 0 0 1px #0073aa;
+    box-shadow:   0 0 0 1px var(--dgap-primary, #10b981);
 }
 
 .dgap-field-row .dgap-input-group {
@@ -437,8 +437,8 @@
 }
 
 .dgap-field-row .dgap-input-group:focus-within {
-    border-color: #0073aa;
-    box-shadow:   0 0 0 1px #0073aa;
+    border-color: var(--dgap-primary, #10b981);
+    box-shadow:   0 0 0 1px var(--dgap-primary, #10b981);
 }
 
 .dgap-field-row .dgap-input-group input {
@@ -494,9 +494,9 @@
 }
 
 .dgap-field-row .dgap-color-row input[type="text"]:focus {
-    border-color: #0073aa;
+    border-color: var(--dgap-primary, #10b981);
     outline:      none;
-    box-shadow:   0 0 0 1px #0073aa;
+    box-shadow:   0 0 0 1px var(--dgap-primary, #10b981);
 }
 
 /* ================================================
@@ -519,7 +519,7 @@
     font-weight:    600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color:          #0073aa;
+    color:          var(--dgap-primary-hover, #059669);
     background:     #f7f7f7;
     padding:        8px 12px;
     border-bottom:  1px solid #eee;
@@ -536,12 +536,12 @@
     --dgap-font-size:      14px;
     --dgap-font-weight:    400;
     --dgap-font-color:     #333333;
-    --dgap-primary-color:  #0073aa;
+    --dgap-primary-color:  #10b981;
     --dgap-bg-color:       #ffffff;
     --dgap-border-radius:  8px;
     --dgap-heading-size:   16px;
     --dgap-heading-weight: 600;
-    --dgap-heading-color:  #0073aa;
+    --dgap-heading-color:  #059669;
 }
 
 #dgap-live-preview .dgap-preview-wrap.btn-outline .dgap-btn-submit {
@@ -681,9 +681,9 @@
 
 .dgap-field-item-body .dgap-field-row input[type="text"]:focus,
 .dgap-field-item-body .dgap-field-row select:focus {
-    border-color: #0073aa;
+    border-color: var(--dgap-primary, #10b981);
     outline:      none;
-    box-shadow:   0 0 0 1px #0073aa;
+    box-shadow:   0 0 0 1px var(--dgap-primary, #10b981);
 }
 
 /* ================================================
@@ -734,7 +734,7 @@
 
 .dgap-switch input:checked + .dgap-slider,
 .dgap-toggle input:checked + .dgap-toggle-slider {
-    background-color: #0073aa;
+    background-color: var(--dgap-primary, #10b981);
 }
 
 .dgap-switch input:checked + .dgap-slider:before,
@@ -752,9 +752,9 @@
     margin-top:      12px;
     padding:         8px 14px;
     background:      #fff;
-    border:          1px dashed #0073aa;
+    border:          1px dashed var(--dgap-primary, #10b981);
     border-radius:   6px;
-    color:           #0073aa;
+    color:           var(--dgap-primary, #10b981);
     font-size:       13px;
     font-weight:     600;
     cursor:          pointer;
@@ -764,9 +764,9 @@
 }
 
 .dgap-add-field-btn:hover {
-    background:   #f0f6fc;
-    border-color: #005177;
-    color:        #005177;
+    background:   var(--dgap-primary-light, #ecfdf5);
+    border-color: var(--dgap-primary-hover, #059669);
+    color:        var(--dgap-primary-hover, #059669);
 }
 
 .dgap-add-field-btn .dashicons {
@@ -809,7 +809,7 @@
     transition:  color 0.2s ease;
 }
 
-.dgap-shortcode-copy:hover { color: #0073aa; }
+.dgap-shortcode-copy:hover { color: var(--dgap-primary, #10b981); }
 .dgap-shortcode-copy.copied { color: #0a7b42; }
 
 .dgap-shortcode-copy .dashicons {
@@ -850,14 +850,14 @@
 }
 
 .dgap-builder-footer .button-primary {
-    background: #0073aa;
-    border-color: #0073aa;
+    background: var(--dgap-primary, #10b981);
+    border-color: var(--dgap-primary-hover, #059669);
     color: #fff;
 }
 
 .dgap-builder-footer .button-primary:hover {
-    background: #005177;
-    border-color: #005177;
+    background: var(--dgap-primary-hover, #059669);
+    border-color: var(--dgap-primary-active, #047857);
 }
 
 /* ================================================

@@ -26,7 +26,18 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-sched
 	<?php	
 	$dgap_table = new DGAP_Schedules_Table();
 	$dgap_table->prepare_items();
-	$dgap_table->display();
+	if ( $dgap_table->has_items() ) {
+		$dgap_table->display();
+	} else {
+		dgap_render_empty_state( [
+			'icon'         => 'dashicons-clock',
+			'title'        => __( 'No Schedules Configured Yet', 'digent-appointments' ),
+			'desc'         => __( 'Configure working hours, shifts, and business availability across locations and team members.', 'digent-appointments' ),
+			'button_text'  => __( 'Add Schedule', 'digent-appointments' ),
+			'button_title' => __( 'Add Schedule', 'digent-appointments' ),
+			'entity'       => 'schedule',
+		] );
+	}
 	?>
 </div>
 

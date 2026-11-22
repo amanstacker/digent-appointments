@@ -26,7 +26,18 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-custo
 	<?php	
 	$dgap_table = new DGAP_Customers_Table();
 	$dgap_table->prepare_items();
-	$dgap_table->display();
+	if ( $dgap_table->has_items() ) {
+		$dgap_table->display();
+	} else {
+		dgap_render_empty_state( [
+			'icon'         => 'dashicons-businessman',
+			'title'        => __( 'No Customers Registered Yet', 'digent-appointments' ),
+			'desc'         => __( 'Your client database will be listed here. You can also add customer profiles manually.', 'digent-appointments' ),
+			'button_text'  => __( 'Add Customer', 'digent-appointments' ),
+			'button_title' => __( 'Add Customer', 'digent-appointments' ),
+			'entity'       => 'customer',
+		] );
+	}
 	?>
 </div>
 

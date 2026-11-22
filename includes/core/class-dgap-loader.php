@@ -121,6 +121,7 @@ class DGAP_Loader {
 		/* ===============================
 		* Helpers / Utilities
 		* =============================== */
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/common/common_functions.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/helpers/class-dgap-slot-generator.php';	
 		
 		/* ===============================

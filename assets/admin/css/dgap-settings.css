@@ -1,24 +1,31 @@
+/* ============================================================
+   DIGENT APPOINTMENTS - SETTINGS PAGE STYLES (EMERALD THEME)
+   ============================================================ */
+
 /* ---------- Top Strip ---------- */
 .dgap-header-strip {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background: #fff;
-	padding: 14px 20px;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 20px;
+	background: #ffffff;
+	padding: 16px 24px;
+	border-bottom: 1px solid var(--dgap-slate-200, #e2e8f0);
+	margin-bottom: 24px;
 	margin-left: -20px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .dgap-header-left h1 {
 	margin: 0;
 	font-size: 24px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
 	line-height: 1.2;
 }
 
 .dgap-header-left .description {
 	margin: 5px 0 0 0;
-	color: #555;
+	color: var(--dgap-slate-500, #64748b);
 	font-size: 13px;
 }
 
@@ -29,47 +36,69 @@
 /* ---------- Settings Layout ---------- */
 .dgap-settings-layout {
 	display: flex;
-	gap: 20px;
+	gap: 24px;
 	margin-right: 20px;
 }
 
 /* LEFT COLUMN */
 .dgap-settings-main {
 	flex: 3;
-	background: #fff;	
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	background: #ffffff;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: var(--dgap-card-radius, 8px);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
+
 .dgap-settings-main form {
-	padding-left: 20px;
-	padding-right: 20px;
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-bottom: 16px;
 }
 
 /* RIGHT COLUMN */
 .dgap-settings-sidebar {
 	flex: 1;
-	background: #fff;
-	padding: 20px;
-	border: 1px solid #fff;
-	border-radius: 4px;
+	background: transparent;
+	padding: 0;
+	border: none;
 }
 
 /* ---------- Boxes in Sidebar ---------- */
 .dgap-box {
-	background: #fff;
-	border: 1px solid #ddd;
-	padding: 15px 20px;
+	background: #ffffff;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	padding: 18px 22px;
 	margin-bottom: 20px;
-	border-radius: 4px;
-	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	border-radius: var(--dgap-card-radius, 8px);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 .dgap-box h3 {
 	margin-top: 0;
-	margin-bottom: 10px;
-	font-size: 16px;
+	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
 }
+
+.dgap-box ul {
+	margin: 0;
+	padding-left: 18px;
+}
+
+.dgap-box ul li {
+	margin-bottom: 8px;
+	font-size: 13px;
+	color: var(--dgap-slate-600, #475569);
+	line-height: 1.45;
+}
+
+.dgap-box p {
+	margin: 6px 0;
+	font-size: 13px;
+	color: var(--dgap-slate-600, #475569);
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
 	.dgap-settings-layout {
@@ -81,34 +110,40 @@
 .dgap-tabs {
 	display: flex;
 	gap: 24px;
-	border-bottom: 1px solid #dcdcde;
+	border-bottom: 1px solid var(--dgap-slate-200, #e2e8f0);
 	margin-bottom: 20px;
-	padding-left: 20px;
-	padding-right: 20px;
+	padding-left: 24px;
+	padding-right: 24px;
+	overflow-x: auto;
 }
 
 .dgap-tabs a {
-	font-size: 16px;
+	font-size: 15px;
 	font-weight: 500;
-	color: #1d2327;
+	color: var(--dgap-slate-600, #475569);
 	text-decoration: none;
-	padding: 13px 0;
-	margin-bottom: -1px; /* important */
+	padding: 14px 0;
+	margin-bottom: -1px;
 	border-bottom: 3px solid transparent;
+	transition: all 0.15s ease;
+	white-space: nowrap;
 }
 
 .dgap-tabs a:hover {
-	border-bottom-color: #8c8f94;
+	color: var(--dgap-slate-900, #0f172a);
+	border-bottom-color: var(--dgap-slate-300, #cbd5e1);
 }
 
 .dgap-tabs a.active {
-	color: #2271b1;
-	border-bottom-color: #2271b1;
+	color: var(--dgap-primary-hover, #059669) !important;
+	border-bottom-color: var(--dgap-primary, #10b981) !important;
+	font-weight: 600;
 }
+
 .dgap-tabs a,
 .dgap-subtabs a {
-	outline: none;        /* remove default focus outline */
-	box-shadow: none;     /* remove any focus shadow */
+	outline: none;
+	box-shadow: none;
 }
 
 .dgap-tabs a:focus,
@@ -116,107 +151,175 @@
 	outline: none;
 	box-shadow: none;
 }
+
+/* Subtabs */
 .dgap-subtabs {
 	display: flex;
-	gap: 10px;
-	margin: 8px 0 20px;
-	padding-left: 20px;
+	gap: 8px;
+	margin: 8px 0 22px;
+	padding-left: 24px;
+	padding-right: 24px;
+	flex-wrap: wrap;
 }
 
-/* base = button for ALL */
 .dgap-subtabs a {
-	font-size: 13px;
+	font-size: 12.5px;
 	font-weight: 500;
-	color: #50575e;
+	color: var(--dgap-slate-600, #475569);
 	text-decoration: none;
-
-	/* 👇 height kam yahin se hogi */
-	padding: 3px 10px;
-
-	border-radius: 4px;
-	background: #f6f7f7;
-	border: 1px solid #dcdcde;
-
+	padding: 5px 12px;
+	border-radius: var(--dgap-btn-radius, 6px);
+	background: var(--dgap-slate-50, #f8fafc);
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
 	transition: all 0.15s ease;
 	outline: none;
 	box-shadow: none;
 }
 
-
-/* hover = slightly stronger */
 .dgap-subtabs a:hover {
-	background: #eef0f1;
-	border-color: #c3c4c7;
-	color: #1d2327;
+	background: var(--dgap-slate-100, #f1f5f9);
+	border-color: var(--dgap-slate-300, #cbd5e1);
+	color: var(--dgap-slate-900, #0f172a);
 }
 
-/* active = primary button */
 .dgap-subtabs a.active {
-	background: #6c7b86;
-	border-color: #6c7b86;
-	color: #fff;
+	background: var(--dgap-primary-light, #ecfdf5) !important;
+	border-color: var(--dgap-primary-border, #a7f3d0) !important;
+	color: var(--dgap-primary-text, #065f46) !important;
+	font-weight: 600;
+	box-shadow: 0 1px 2px rgba(16, 185, 129, 0.1);
 }
 
-/* focus cleanup (WP default hatane ke liye) */
-.dgap-subtabs a:focus {
-	outline: none;
-	box-shadow: none;
+/* Form inputs & tables inside Settings */
+.dgap-settings-main .form-table th {
+	font-weight: 600;
+	color: var(--dgap-slate-800, #1e293b);
+	font-size: 13.5px;
+	padding: 16px 12px 16px 0;
 }
 
-/* Modern Accordion Styles - Fixed Alignment */
+.dgap-settings-main .form-table td {
+	padding: 14px 10px;
+}
+
+.dgap-settings-main input[type="text"],
+.dgap-settings-main input[type="number"],
+.dgap-settings-main input[type="email"],
+.dgap-settings-main input[type="password"],
+.dgap-settings-main select,
+.dgap-settings-main textarea {
+	border: 1px solid var(--dgap-slate-300, #cbd5e1) !important;
+	border-radius: var(--dgap-btn-radius, 6px) !important;
+	padding: 7px 11px !important;
+	font-size: 13.5px !important;
+	color: var(--dgap-slate-900, #0f172a) !important;
+	transition: all 0.15s ease !important;
+}
+
+.dgap-settings-main input[type="text"]:focus,
+.dgap-settings-main input[type="number"]:focus,
+.dgap-settings-main input[type="email"]:focus,
+.dgap-settings-main input[type="password"]:focus,
+.dgap-settings-main select:focus,
+.dgap-settings-main textarea:focus {
+	border-color: var(--dgap-primary, #10b981) !important;
+	box-shadow: 0 0 0 3px var(--dgap-primary-focus, rgba(16, 185, 129, 0.15)) !important;
+	outline: none !important;
+}
+
+/* Settings Submit Button */
+.dgap-settings-main .submit {
+	padding-top: 14px;
+	border-top: 1px solid var(--dgap-slate-100, #f1f5f9);
+	margin-top: 20px;
+}
+
+.dgap-settings-main .submit .button-primary,
+.dgap-settings-main #submit {
+	background: var(--dgap-primary, #10b981) !important;
+	border-color: var(--dgap-primary-hover, #059669) !important;
+	color: #ffffff !important;
+	font-weight: 600 !important;
+	padding: 7px 20px !important;
+	height: auto !important;
+	font-size: 14px !important;
+	border-radius: var(--dgap-btn-radius, 6px) !important;
+	box-shadow: 0 1px 2px var(--dgap-primary-shadow, rgba(16, 185, 129, 0.2)) !important;
+	text-shadow: none !important;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.dgap-settings-main .submit .button-primary:hover,
+.dgap-settings-main #submit:hover {
+	background: var(--dgap-primary-hover, #059669) !important;
+	border-color: var(--dgap-primary-active, #047857) !important;
+	box-shadow: 0 2px 5px var(--dgap-primary-shadow, rgba(16, 185, 129, 0.25)) !important;
+}
+
+/* Modern Accordion Styles */
 .dgap-accordion {
-	margin-bottom: 10px;
-	border: 1px solid #ccd0d4;
-	border-radius: 4px;
-	background: #fff;	
+	margin-bottom: 12px;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: var(--dgap-card-radius, 8px);
+	background: #ffffff;
 	overflow: hidden;
+	transition: all 0.15s ease;
 }
 
 .dgap-accordion-title {
-	padding: 10px 12px;
+	padding: 12px 16px;
 	font-weight: 600;
+	font-size: 13.5px;
 	cursor: pointer;
-	background: #f1f1f1;
-	border-radius: 4px 4px 0 0;
-	/* Flex to align title left and arrow right */
+	background: var(--dgap-slate-50, #f8fafc);
+	color: var(--dgap-slate-800, #1e293b);
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	margin: auto;
+	transition: all 0.15s ease;
 }
 
 .dgap-accordion-title:hover {
-	background: #eaeaea;
+	background: var(--dgap-primary-light, #ecfdf5);
+	color: var(--dgap-primary-hover, #059669);
 }
 
 .dgap-accordion-title::before {
-	content: "\25BC"; /* Down arrow */
-	font-size: 12px;
-	transition: transform 0.3s ease;
+	content: "\25BC";
+	font-size: 10px;
+	color: var(--dgap-slate-400, #94a3b8);
+	transition: transform 0.25s ease;
+}
+
+.dgap-accordion-title.active {
+	background: #ffffff;
+	color: var(--dgap-primary-hover, #059669);
+	border-left: 3px solid var(--dgap-primary, #10b981);
 }
 
 .dgap-accordion-title.active::before {
 	transform: rotate(180deg);
+	color: var(--dgap-primary, #10b981);
 }
 
 .dgap-accordion-content {
 	display: none;
-	padding: 10px 12px;
-	background: #fff;
-	border-top: 1px solid #d1d1d1;
-	animation: fadeIn 0.2s ease-in;
+	padding: 16px;
+	background: #ffffff;
+	border-top: 1px solid var(--dgap-slate-100, #f1f5f9);
+	animation: dgapFadeIn 0.2s ease-in;
 }
 
-@keyframes fadeIn {
+@keyframes dgapFadeIn {
 	from { opacity: 0; }
-	to { opacity: 1; }
+	to   { opacity: 1; }
 }
 
-/* Optional: smooth editor styling inside accordion */
 .dgap-accordion-content .wp-editor-container {
 	margin-top: 10px;
 }
 
-.dgap-email-labels{
+.dgap-email-labels {
 	margin-left: auto;
 }

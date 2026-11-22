@@ -26,7 +26,18 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-locat
 	<?php	
 	$dgap_table = new DGAP_Locations_Table();
 	$dgap_table->prepare_items();
-	$dgap_table->display();
+	if ( $dgap_table->has_items() ) {
+		$dgap_table->display();
+	} else {
+		dgap_render_empty_state( [
+			'icon'         => 'dashicons-location-alt',
+			'title'        => __( 'No Locations Added Yet', 'digent-appointments' ),
+			'desc'         => __( 'Set up your physical clinic, salon, or office branches so clients know where appointments take place.', 'digent-appointments' ),
+			'button_text'  => __( 'Add Location', 'digent-appointments' ),
+			'button_title' => __( 'Add Location', 'digent-appointments' ),
+			'entity'       => 'location',
+		] );
+	}
 	?>
 </div>
 

@@ -30,7 +30,18 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-timeo
 	<?php	
 	$dgap_table = new DGAP_Timeoff_Table();
 	$dgap_table->prepare_items();
-	$dgap_table->display();
+	if ( $dgap_table->has_items() ) {
+		$dgap_table->display();
+	} else {
+		dgap_render_empty_state( [
+			'icon'         => 'dashicons-palmtree',
+			'title'        => __( 'No Time Off Scheduled Yet', 'digent-appointments' ),
+			'desc'         => __( 'Manage holidays, vacations, or sick leave for staff members and specific services to prevent booking conflicts.', 'digent-appointments' ),
+			'button_text'  => __( 'Add Time Off', 'digent-appointments' ),
+			'button_title' => __( 'Add Time Off', 'digent-appointments' ),
+			'entity'       => 'timeoff',
+		] );
+	}
 	?>
 </div>
 

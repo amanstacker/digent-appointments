@@ -101,7 +101,8 @@
 
 #dgap-timeoff-calendar .ui-datepicker-prev:hover,
 #dgap-timeoff-calendar .ui-datepicker-next:hover {
-	background: #e5e7eb;
+	background: var(--dgap-primary-light, #ecfdf5);
+	color: var(--dgap-primary-hover, #059669);
 }
 
 /* Table */
@@ -140,7 +141,8 @@
 }
 
 #dgap-timeoff-calendar td a:hover {
-	background: #e5e7eb;
+	background: var(--dgap-primary-light, #ecfdf5);
+	color: var(--dgap-primary-hover, #059669);
 }
 
 /* ===============================
@@ -148,23 +150,23 @@
  * =============================== */
 
 #dgap-timeoff-calendar td.dgap-selected-day a {
-	background: #2563eb;
-	color: #fff;
+	background: var(--dgap-primary, #10b981) !important;
+	color: #fff !important;
 	border-radius: 6px;
 }
 
 /* TODAY */
 #dgap-timeoff-calendar .ui-datepicker-today a {
-	background: #e0e7ff;
-	color: #1e3a8a;
-	border: 1px solid #2563eb;
+	background: var(--dgap-primary-light, #ecfdf5) !important;
+	color: var(--dgap-primary-text, #065f46) !important;
+	border: 1px solid var(--dgap-primary, #10b981) !important;
 }
 
 /* TODAY + SELECTED → SELECTED WINS */
 #dgap-timeoff-calendar .ui-datepicker-today.dgap-selected-day a {
-	background: #2563eb;
-	color: #fff;
-	border-color: #2563eb;
+	background: var(--dgap-primary, #10b981) !important;
+	color: #fff !important;
+	border-color: var(--dgap-primary, #10b981) !important;
 }
 
 /* =========================================================
@@ -216,7 +218,19 @@
 
 .dgap-timeoff-time {
 	display: none;
-	margin-top:15px;	
+	margin-top: 15px;
+	gap: 8px;
+	align-items: center;
+}
+
+.dgap-timeoff-time input[type="time"] {
+	flex: 1;
+	width: auto;
+}
+
+.dgap-timeoff-time span {
+	font-weight: 600;
+	color: var(--dgap-slate-400, #94a3b8);
 }
 
 /* ===============================
@@ -239,8 +253,16 @@
 }
 .dgap-form .select2-selection{
 	padding: 4px 3px !important;
-    border: 1px solid #ccd0d4 !important;
+	border: 1px solid var(--dgap-slate-300, #cbd5e1) !important;
+	border-radius: var(--dgap-btn-radius, 6px) !important;
 	height: 43px !important;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.dgap-form .select2-container--default.select2-container--focus .select2-selection,
+.dgap-form .select2-container--default.select2-container--open .select2-selection {
+	border-color: var(--dgap-primary, #10b981) !important;
+	box-shadow: 0 0 0 3px var(--dgap-primary-focus, rgba(16, 185, 129, 0.2)) !important;
+	outline: none !important;
 }
 .dgap-form .select2-container .select2-search--inline .select2-search__field{
 	height: 25px !important;
