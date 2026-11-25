@@ -441,25 +441,53 @@
 	margin-top: 14px;
 }
 
-.dgap-admin-wrap .wp-list-table th {
+.dgap-admin-wrap .wp-list-table thead th,
+.dgap-admin-wrap .wp-list-table tfoot th {
 	font-weight: 600;
-	background: var(--dgap-slate-50);
+	background: var(--dgap-slate-50) !important;
 	color: var(--dgap-slate-600);
 	border-bottom: 1.5px solid var(--dgap-slate-200);
 	padding: 12px 10px;
 	font-size: 13px;
 }
 
-.dgap-admin-wrap .wp-list-table tr:hover {
-	background: var(--dgap-primary-subtle);
+.dgap-admin-wrap .wp-list-table tbody tr {
+	background: #ffffff !important;
+	transition: background-color 0.15s ease;
 }
 
-.dgap-admin-wrap .wp-list-table td {
+.dgap-admin-wrap .wp-list-table tbody tr:nth-child(even) {
+	background: #f8fafc !important;
+}
+
+.dgap-admin-wrap .wp-list-table tbody tr:hover {
+	background: #ecfdf5 !important;
+}
+
+.dgap-admin-wrap .wp-list-table tbody th,
+.dgap-admin-wrap .wp-list-table tbody td {
+	background: transparent !important;
 	border-bottom: 1px solid var(--dgap-slate-100);
 	padding: 12px 10px;
 	color: var(--dgap-slate-700);
 	font-size: 13px;
-	vertical-align: middle;
+	vertical-align: middle !important;
+}
+
+.dgap-admin-wrap .wp-list-table th.check-column,
+.dgap-admin-wrap .wp-list-table td.check-column {
+	width: 38px !important;
+	padding: 12px 8px 12px 14px !important;
+	vertical-align: middle !important;
+	text-align: center !important;
+	line-height: 0 !important;
+	font-size: 0 !important;
+}
+
+.dgap-admin-wrap .wp-list-table .check-column input[type="checkbox"] {
+	margin: 0 !important;
+	vertical-align: middle !important;
+	display: inline-block !important;
 }
 
 .dgap-admin-wrap .wp-list-table a.row-title,
@@ -487,9 +515,24 @@
 
 /* ================= Title ================= */
 .dgap-location-title {
+	display: inline-block;
 	font-size: 14px;
+	line-height: 1.4;
 	color: var(--dgap-slate-900);
 	font-weight: 600;
+	vertical-align: middle;
+}
+
+.dgap-booking-id {
+	font-size: 13.5px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
+}
+
+.dgap-booking-loc {
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--dgap-slate-700, #334155);
 }
 
 /* ================= Muted text ================= */

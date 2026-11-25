@@ -1150,9 +1150,10 @@ $(document).on('click', '.dgap-status-update', function (e) {
 
 		const ids = dgapGetSelectedBookingIds();
 		const count = ids.length;
+		const entityLabel = $bar.data('entity-label') || 'booking';
 
 		$('#dgap-bulk-count').text(count);
-		$('#dgap-bulk-label').text(count === 1 ? 'booking selected' : 'bookings selected');
+		$('#dgap-bulk-label').text(count === 1 ? entityLabel + ' selected' : entityLabel + 's selected');
 
 		if (count > 0) {
 			if (!$bar.is(':visible')) $bar.slideDown(160);
@@ -1209,12 +1210,14 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		const ids = dgapGetSelectedBookingIds();
 		if (!status || !ids.length) return;
 
+		const entityLabel = $('#dgap-bulk-bar').data('entity-label') || 'booking';
+
 		dgapOpenConfirmModal({
 			action: status,
 			ids: ids,
 			isDanger: false,
 			title: 'Confirm Status Update',
-			message: 'Are you sure you want to mark ' + ids.length + ' selected booking(s) as "' + statusLabel + '"?',
+			message: 'Are you sure you want to mark ' + ids.length + ' selected ' + entityLabel + '(s) as "' + statusLabel + '"?',
 			confirmText: 'Update Status'
 		});
 	});
@@ -1223,13 +1226,14 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		e.preventDefault();
 		const ids = dgapGetSelectedBookingIds();
 		if (!ids.length) return;
+		const entityLabel = $('#dgap-bulk-bar').data('entity-label') || 'booking';
 
 		dgapOpenConfirmModal({
 			action: 'delete',
 			ids: ids,
 			isDanger: true,
 			title: 'Confirm Bulk Delete',
-			message: 'Are you sure you want to permanently delete ' + ids.length + ' selected booking(s)? This action cannot be undone.',
+			message: 'Are you sure you want to permanently delete ' + ids.length + ' selected ' + entityLabel + '(s)? This action cannot be undone.',
 			confirmText: 'Yes, Delete Selected'
 		});
 	});
@@ -1279,8 +1283,10 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			return;
 		}
 
+		const bulkEndpoint = $('#dgap-bulk-bar').data('bulk-action') || 'dgap_bulk_action_bookings';
+
 		$.post(dgap_admin.ajax_url, {
-			action: 'dgap_bulk_action_bookings',
+			action: bulkEndpoint,
 			bulk_action: pendingBulkAction.action,
 			ids: pendingBulkAction.ids,
 			_dgap_nonce: dgap_admin.nonce

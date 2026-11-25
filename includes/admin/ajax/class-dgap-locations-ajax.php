@@ -9,6 +9,104 @@ class DGAP_Locations_Ajax {
 		add_action( 'wp_ajax_dgap_save_location', [ $this, 'save' ] );
 		add_action( 'wp_ajax_dgap_get_location', [ $this, 'get' ] );
 		add_action( 'wp_ajax_dgap_delete_location', [ $this, 'delete' ] );
+		add_action( 'wp_ajax_dgap_bulk_action_locations', [ $this, 'bulk_action' ] );
+		add_action( 'admin_post_dgap_export_locations', [ $this, 'export_csv' ] );
+	}
+
+	/**
+	 * Bulk activate, deactivate, or delete locations
+	 */
+	public function bulk_action() {
+		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 'digent-appointments' ) ], 403 );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$ids         = isset( $_POST['ids'] ) ? array_values( array_filter( array_map( 'absint', (array) $_POST['ids'] ) ) ) : [];
+		$bulk_action = isset( $_POST['bulk_action'] ) ? sanitize_key( wp_unslash( $_POST['bulk_action'] ) ) : '';
+
+		if ( empty( $ids ) || empty( $bulk_action ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'No locations or action selected.', 'digent-appointments' ) ] );
+		}
+
+		if ( 'delete' === $bulk_action ) {
+			$count = DGAP_Location_Repo::bulk_delete( $ids );
+			wp_send_json_success( [ 'count' => $count, 'action' => 'delete' ] );
+		}
+
+		if ( 'active' === $bulk_action || 'inactive' === $bulk_action ) {
+			$status = ( 'active' === $bulk_action ) ? 1 : 0;
+			$count  = DGAP_Location_Repo::bulk_update_status( $ids, $status );
+			wp_send_json_success( [ 'count' => $count, 'action' => $bulk_action ] );
+		}
+
+		wp_send_json_error( [ 'message' => esc_html__( 'Invalid bulk action.', 'digent-appointments' ) ] );
+	}
+
+	/**
+	 * Export all or filtered locations to CSV
+	 */
+	public function export_csv() {
+		check_admin_referer( 'dgap_export_locations', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Permission denied.', 'digent-appointments' ), 403 );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$filters = [
+			'status' => isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '',
+			's'      => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '',
+		];
+
+		$rows     = DGAP_Location_Repo::get_filtered( $filters );
+		$filename = 'digent-locations-' . current_time( 'Y-m-d' ) . '.csv';
+
+		// phpcs:ignore WordPress.PHP.IniSet.display_errors_Blacklisted, WordPress.PHP.NoSilencedErrors.Discouraged
+		@ini_set( 'display_errors', '0' );
+		while ( ob_get_level() > 0 ) {
+			ob_end_clean();
+		}
+
+		if ( ! headers_sent() ) {
+			nocache_headers();
+			header( 'Content-Type: text/csv; charset=utf-8' );
+			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		}
+
+		$out = fopen( 'php://output', 'w' );
+		fwrite( $out, "\xEF\xBB\xBF" );
+
+		fputcsv( $out, [ 'ID', 'Location Name', 'Address', 'Status', 'Created At' ], ',', '"', '\\' );
+
+		$safe_cell = static function ( $val ) {
+			$val = (string) $val;
+			if ( $val !== '' && in_array( $val[0], [ '=', '+', '-', '@' ], true ) ) {
+				return "'" . $val;
+			}
+			return $val;
+		};
+
+		foreach ( $rows as $r ) {
+			fputcsv(
+				$out,
+				[
+					(int) ( $r['id'] ?? 0 ),
+					$safe_cell( $r['name'] ?? '' ),
+					$safe_cell( $r['address'] ?? '' ),
+					( (int) ( $r['status'] ?? 0 ) === 1 ) ? 'Active' : 'Inactive',
+					$safe_cell( $r['created_at'] ?? '' ),
+				],
+				',',
+				'"',
+				'\\'
+			);
+		}
+
+		fclose( $out );
+		exit;
 	}
 
 	public function save() {
