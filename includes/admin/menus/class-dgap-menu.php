@@ -24,30 +24,133 @@ class DGAP_Menu {
 
 	private function submenus() {
 
-		$menus = [
-			'bookings'  => esc_html__( 'Bookings', 'digent-appointments' ),
-			'locations' => esc_html__( 'Locations', 'digent-appointments' ),
-			'services'  => esc_html__( 'Services', 'digent-appointments' ),
-			'staff'     => esc_html__( 'Staff Members', 'digent-appointments' ),
-			'schedules' => esc_html__( 'Schedules', 'digent-appointments' ),
-			'timeoff'   => esc_html__( 'Time Off', 'digent-appointments' ),
-			'forms'     => esc_html__( 'Booking Forms', 'digent-appointments' ),
-			'customers' => esc_html__( 'Customers', 'digent-appointments' ),
-			'settings'  => esc_html__( 'Settings', 'digent-appointments' ),
-			'extensions'=> esc_html__( 'Premium Extensions', 'digent-appointments' ),
+		// Default top-level item renamed to "Dashboard"
+		add_submenu_page(
+			'digent-appointments',
+			esc_html__( 'Dashboard', 'digent-appointments' ),
+			esc_html__( 'Dashboard', 'digent-appointments' ),
+			'manage_options',
+			'digent-appointments',
+			[ $this, 'dashboard' ]
+		);
+
+		$grouped_menus = [
+			// Group 1: Bookings
+			[
+				'type'  => 'heading',
+				'slug'  => '#dgap-heading-bookings',
+				'title' => esc_html__( 'Bookings', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'calendar-view',
+				'file'  => 'calendar',
+				'title' => esc_html__( 'Calendar View', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'list-view',
+				'file'  => 'bookings',
+				'title' => esc_html__( 'List View', 'digent-appointments' ),
+			],
+
+			// Group 2: Setup
+			[
+				'type'  => 'heading',
+				'slug'  => '#dgap-heading-setup',
+				'title' => esc_html__( 'Setup', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'locations',
+				'title' => esc_html__( '1. Locations', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'services',
+				'title' => esc_html__( '2. Services', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'staff',
+				'title' => esc_html__( '3. Staff Members', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'schedules',
+				'title' => esc_html__( '4. Schedules', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'forms',
+				'title' => esc_html__( '5. Booking Forms', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'vacations',
+				'file'  => 'timeoff',
+				'title' => esc_html__( 'Vacations', 'digent-appointments' ),
+			],
+
+			// Group 3: Settings & Tools
+			[
+				'type'  => 'heading',
+				'slug'  => '#dgap-heading-settings',
+				'title' => esc_html__( 'Settings & Tools', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'customers',
+				'title' => esc_html__( 'Customers', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'settings',
+				'title' => esc_html__( 'Settings', 'digent-appointments' ),
+			],
+			[
+				'type'  => 'item',
+				'slug'  => 'extensions',
+				'title' => esc_html__( 'Premium Extensions', 'digent-appointments' ),
+			],
 		];
 
-		foreach ( $menus as $slug => $title ) {
-			add_submenu_page(
-				'digent-appointments',
-				$title,
-				$title,
-				'manage_options',
-				"digent-appointments-$slug",
-				function () use ( $slug ) {
-					include DGAP_PLUGIN_DIR_PATH . "includes/admin/pages/$slug.php";
+		foreach ( $grouped_menus as $menu_item ) {
+			if ( $menu_item['type'] === 'heading' ) {
+				add_submenu_page(
+					'digent-appointments',
+					'',
+					'<span class="dgap-menu-heading">' . esc_html( $menu_item['title'] ) . '</span>',
+					'manage_options',
+					$menu_item['slug'],
+					'__return_null'
+				);
+			} else {
+				$slug  = $menu_item['slug'];
+				$file  = $menu_item['file'] ?? $slug;
+				$title = $menu_item['title'];
+				add_submenu_page(
+					'digent-appointments',
+					$title,
+					$title,
+					'manage_options',
+					"digent-appointments-$slug",
+					function () use ( $file ) {
+						include DGAP_PLUGIN_DIR_PATH . "includes/admin/pages/$file.php";
+					}
+				);
+			}
+		}
+
+		// Apply custom class to heading items in global submenu
+		global $submenu;
+		if ( ! empty( $submenu['digent-appointments'] ) ) {
+			foreach ( $submenu['digent-appointments'] as &$sub_item ) {
+				if ( isset( $sub_item[2] ) && strpos( $sub_item[2], '#dgap-heading' ) === 0 ) {
+					$sub_item[4] = 'dgap-menu-heading-item';
 				}
-			);
+			}
+			unset( $sub_item );
 		}
 	}
 }

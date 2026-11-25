@@ -31,6 +31,7 @@ class DGAP_Admin {
 
 	private function init_hooks() {
         add_action( 'admin_menu', [ $this, 'register_menu' ] );
+        add_action( 'admin_head', [ $this, 'menu_heading_styles' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_settings_assets' ] ); 
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_calendar_assets' ] );        
@@ -38,6 +39,45 @@ class DGAP_Admin {
                
     }
 
+	public function menu_heading_styles() {
+		?>
+		<style id="dgap-admin-menu-heading-styles">
+			#adminmenu .wp-submenu li.dgap-menu-heading-item,
+			#adminmenu .wp-submenu li:has(a[href*="#dgap-heading"]) {
+				cursor: default !important;
+				pointer-events: none !important;
+				margin: 8px 0 2px 0 !important;
+				padding: 0 !important;
+				border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+				list-style: none !important;
+				background: transparent !important;
+			}
+			#adminmenu .wp-submenu li.dgap-menu-heading-item > a,
+			#adminmenu .wp-submenu li.dgap-menu-heading-item > a:hover,
+			#adminmenu .wp-submenu li.dgap-menu-heading-item > a:focus,
+			#adminmenu .wp-submenu a[href*="#dgap-heading"],
+			#adminmenu .wp-submenu a[href*="#dgap-heading"]:hover,
+			#adminmenu .wp-submenu a[href*="#dgap-heading"]:focus {
+				display: block !important;
+				padding: 8px 12px 3px 12px !important;
+				font-size: 10px !important;
+				line-height: 1.3 !important;
+				font-weight: 700 !important;
+				letter-spacing: 0.08em !important;
+				text-transform: uppercase !important;
+				color: #10b981 !important;
+				background: transparent !important;
+				cursor: default !important;
+				pointer-events: none !important;
+				box-shadow: none !important;
+				user-select: none !important;
+			}
+			#adminmenu .wp-submenu li.dgap-menu-heading-item .dgap-menu-heading {
+				display: inline-block;
+			}
+		</style>
+		<?php
+	}
 
 	public function register_menu() {
 		( new DGAP_Menu() )->register();
@@ -73,7 +113,7 @@ class DGAP_Admin {
             'dgap-admin',
             DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-admin.js',
             ['jquery', 'dgap-admin-functions'],
-            DGAP_VERSION,
+            $ver,
             true
         );
                         
@@ -132,8 +172,8 @@ class DGAP_Admin {
 
     public function enqueue_calendar_assets( $hook ) {
         
-        // Load only on digent Bookings page
-        if ( 'toplevel_page_digent-appointments' !== $hook ) {
+        // Load only on digent Calendar page
+        if ( strpos( $hook, 'calendar-view' ) === false && strpos( $hook, 'digent-appointments-calendar' ) === false ) {
             return;
         }
 

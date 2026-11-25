@@ -9,14 +9,14 @@ class DGAP_Bookings_Table extends WP_List_Table {
 
 	public function get_columns() {
 		return [
-			'cb'           => '<input type="checkbox" />',
-			'booking'      => esc_html__( 'Booking', 'digent-appointments' ),
-			'customer'     => esc_html__( 'Customer', 'digent-appointments' ),
-			'service'      => esc_html__( 'Service', 'digent-appointments' ),
-			'date_time'    => esc_html__( 'Date & Time', 'digent-appointments' ),
-			'price'        => esc_html__( 'Price', 'digent-appointments' ),
-			'status'       => esc_html__( 'Status', 'digent-appointments' ),
-			'actions'      => esc_html__( 'Actions', 'digent-appointments' ),
+			'cb'        => '<input type="checkbox" />',
+			'booking'   => esc_html__( 'Booking', 'digent-appointments' ),
+			'customer'  => esc_html__( 'Customer', 'digent-appointments' ),
+			'service'   => esc_html__( 'Service & Staff', 'digent-appointments' ),
+			'date_time' => esc_html__( 'Date & Time', 'digent-appointments' ),
+			'price'     => esc_html__( 'Price', 'digent-appointments' ),
+			'status'    => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'   => esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -36,87 +36,133 @@ class DGAP_Bookings_Table extends WP_List_Table {
 	}
 
 	public function column_customer( $item ) {
-		return esc_html( $item['customer_name'] ?? '' );
+		$name  = esc_html( trim( $item['customer_name'] ?? '' ) ?: __( 'Guest', 'digent-appointments' ) );
+		$email = ! empty( $item['customer_email'] ) ? '<br><span class="dgap-muted">' . esc_html( $item['customer_email'] ) . '</span>' : '';
+		return '<strong>' . $name . '</strong>' . $email;
 	}
 
 	public function column_service( $item ) {
-		return esc_html( $item['service_name'] ?? '' );
+		$service = esc_html( $item['service_name'] ?? '' );
+		$staff   = ! empty( $item['staff_name'] ) ? '<br><span class="dgap-muted">' . esc_html( $item['staff_name'] ) . '</span>' : '';
+		return '<strong>' . $service . '</strong>' . $staff;
 	}
 
 	public function column_date_time( $item ) {
+		$date_str = ! empty( $item['booking_date'] ) ? date_i18n( 'M j, Y', strtotime( $item['booking_date'] ) ) : '';
+		$start    = ! empty( $item['start_time'] ) ? date_i18n( 'g:i A', strtotime( $item['start_time'] ) ) : '';
+		$end      = ! empty( $item['end_time'] ) ? date_i18n( 'g:i A', strtotime( $item['end_time'] ) ) : '';
+
 		return sprintf(
-			'%s<br><span class="dgap-muted">%s - %s</span>',
-			esc_html( $item['booking_date'] ),
-			esc_html( $item['start_time'] ),
-			esc_html( $item['end_time'] )
+			'<strong>%s</strong><br><span class="dgap-muted">%s – %s</span>',
+			esc_html( $date_str ),
+			esc_html( $start ),
+			esc_html( $end )
 		);
 	}
 
 	public function column_price( $item ) {
-		return esc_html( $item['price'] );
+		return '<strong>$' . esc_html( number_format( (float) $item['price'], 2 ) ) . '</strong>';
 	}
 
 	public function column_status( $item ) {
+		$map = [
+			'pending'   => 'warning',
+			'confirmed' => 'active',
+			'approved'  => 'active',
+			'cancelled' => 'inactive',
+			'completed' => 'success',
+		];
 
-	$map = [
-		'pending'   => 'warning',
-		'confirmed' => 'active',
-		'cancelled' => 'inactive',
-		'completed' => 'success',
-	];
+		$status_key = strtolower( $item['status'] ?? 'pending' );
+		$type       = $map[ $status_key ] ?? 'default';
 
-	$type = $map[ $item['status'] ] ?? 'default';
+		ob_start();
+		?>
+		<div class="dgap-status-wrap" data-id="<?php echo esc_attr( $item['id'] ); ?>">
 
-	ob_start();
-	?>
-	<div class="dgap-status-wrap" data-id="<?php echo esc_attr( $item['id'] ); ?>">
+			<span class="dgap-badge dgap-badge-<?php echo esc_attr( $type ); ?>" data-status="<?php echo esc_attr( $status_key ); ?>">
+				<?php echo esc_html( ucfirst( $status_key ) ); ?>
+			</span>
 
-		<span class="dgap-badge dgap-badge-<?php echo esc_attr( $type ); ?>" data-status="<?php echo esc_attr( $item['status'] ); ?>">
-			<?php echo esc_html( ucfirst( $item['status'] ) ); ?>
-		</span>
-
-		<button type="button" class="dgap-status-menu">
-			<span class="dashicons dashicons-ellipsis"></span>
-		</button>
-
-		<div class="dgap-status-popover" style="display:none;">
-			<strong><?php esc_html_e( 'Change Status', 'digent-appointments' ); ?></strong>
-
-			<select class="dgap-status-select">
-				<option value="pending"><?php echo esc_html__( 'Pending', 'digent-appointments' ); ?></option>
-				<option value="confirmed"><?php echo esc_html__( 'Confirmed', 'digent-appointments'); ?></option>
-				<option value="cancelled"><?php echo esc_html__( 'Cancelled', 'digent-appointments'); ?></option>
-				<option value="completed"><?php echo esc_html__( 'Completed', 'digent-appointments'); ?></option>
-			</select>
-					<hr>
-			<label class="dgap-notify">
-				<input type="checkbox" class="dgap-status-notify">
-				<?php esc_html_e( 'Notify customer', 'digent-appointments' ); ?>
-			</label>
-
-			<button class="button button-small button-primary dgap-status-update">
-				<?php esc_html_e( 'Update', 'digent-appointments' ); ?>
+			<button type="button" class="dgap-status-menu" title="<?php esc_attr_e( 'Change Status', 'digent-appointments' ); ?>">
+				<span class="dashicons dashicons-ellipsis"></span>
 			</button>
+
+			<div class="dgap-status-popover" style="display:none;">
+				<strong><?php esc_html_e( 'Change Status', 'digent-appointments' ); ?></strong>
+
+				<select class="dgap-status-select">
+					<option value="pending" <?php selected( $status_key, 'pending' ); ?>><?php esc_html_e( 'Pending', 'digent-appointments' ); ?></option>
+					<option value="confirmed" <?php selected( $status_key, 'confirmed' ); ?>><?php esc_html_e( 'Confirmed', 'digent-appointments' ); ?></option>
+					<option value="cancelled" <?php selected( $status_key, 'cancelled' ); ?>><?php esc_html_e( 'Cancelled', 'digent-appointments' ); ?></option>
+					<option value="completed" <?php selected( $status_key, 'completed' ); ?>><?php esc_html_e( 'Completed', 'digent-appointments' ); ?></option>
+				</select>
+				<hr>
+				<label class="dgap-notify">
+					<input type="checkbox" class="dgap-status-notify">
+					<?php esc_html_e( 'Notify customer', 'digent-appointments' ); ?>
+				</label>
+
+				<button type="button" class="button button-small button-primary dgap-status-update">
+					<?php esc_html_e( 'Update', 'digent-appointments' ); ?>
+				</button>
+			</div>
+
 		</div>
-
-	</div>
-	<?php
-	return ob_get_clean();
-}
-
+		<?php
+		return ob_get_clean();
+	}
 
 	public function column_actions( $item ) {
 		return sprintf(
-			'<button class="button button-small dgap-edit" data-entity="booking" data-id="%1$d">%2$s</button>
-			 <button class="button button-small button-secondary dgap-delete" data-entity="booking" data-id="%1$d">%3$s</button>',
+			'<div class="dgap-table-actions">
+				<button type="button" class="button button-small dgap-edit dgap-action-btn" data-entity="booking" data-id="%1$d" title="%2$s">
+					<span class="dashicons dashicons-edit"></span>
+					<span>%2$s</span>
+				</button>
+				<button type="button" class="button button-small button-secondary dgap-delete dgap-action-btn is-delete" data-entity="booking" data-id="%1$d" title="%3$s">
+					<span class="dashicons dashicons-trash"></span>
+					<span>%3$s</span>
+				</button>
+			</div>',
 			esc_attr( $item['id'] ),
 			esc_html__( 'Edit', 'digent-appointments' ),
 			esc_html__( 'Delete', 'digent-appointments' )
 		);
 	}
 
+	public function no_items() {
+		esc_html_e( 'No bookings match your current filter criteria.', 'digent-appointments' );
+	}
+
+	public function get_active_filters() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return [
+			'status'       => isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '',
+			'location_id'  => isset( $_GET['location_id'] ) ? absint( $_GET['location_id'] ) : 0,
+			'service_id'   => isset( $_GET['service_id'] ) ? absint( $_GET['service_id'] ) : 0,
+			'staff_id'  => isset( $_GET['staff_id'] ) ? absint( $_GET['staff_id'] ) : 0,
+			'date_from' => isset( $_GET['date_from'] ) ? sanitize_text_field( wp_unslash( $_GET['date_from'] ) ) : '',
+			'date_to'   => isset( $_GET['date_to'] ) ? sanitize_text_field( wp_unslash( $_GET['date_to'] ) ) : '',
+			's'         => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '',
+		];
+	}
+
 	public function prepare_items() {
-		$this->items = DGAP_Booking_Repo::get_all(); // join based data
+		$filters   = $this->get_active_filters();
+		$all_items = DGAP_Booking_Repo::get_filtered( $filters );
+
+		$per_page     = 20;
+		$current_page = $this->get_pagenum();
+		$total_items  = count( $all_items );
+
+		$this->set_pagination_args( [
+			'total_items' => $total_items,
+			'per_page'    => $per_page,
+			'total_pages' => ceil( $total_items / $per_page ),
+		] );
+
+		$this->items           = array_slice( $all_items, ( $current_page - 1 ) * $per_page, $per_page );
 		$this->_column_headers = [ $this->get_columns(), [], [] ];
 	}
 }

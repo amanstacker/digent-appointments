@@ -2,6 +2,44 @@ jQuery(function ($) {
 
 	let currentEntity = '';
 	let currentForm   = null;
+
+	/* ================= Reusable Button Loading Helper ================= */
+	function dgapSetBtnLoading($btn, isLoading, loadingText) {
+		if (!$btn || !$btn.length) return;
+		if (isLoading) {
+			if ($btn.hasClass('dgap-btn-loading')) return;
+			$btn.data('dgap-orig-html', $btn.html());
+			$btn.addClass('dgap-btn-loading');
+			if ($btn.is('button, input')) {
+				$btn.prop('disabled', true);
+			}
+			const label = loadingText || 'Loading...';
+			$btn.html('<span class="dgap-btn-spinner" aria-hidden="true"></span><span>' + label + '</span>');
+		} else {
+			const orig = $btn.data('dgap-orig-html');
+			if (orig !== undefined) {
+				$btn.html(orig);
+			}
+			$btn.removeClass('dgap-btn-loading');
+			if ($btn.is('button, input')) {
+				$btn.prop('disabled', false);
+			}
+		}
+	}
+
+	/* Filter Bar Submit & Reset Loading Feedback */
+	$(document).on('submit', '.dgap-filter-bar', function () {
+		const $btn = $(this).find('.dgap-filter-submit');
+		dgapSetBtnLoading($btn, true, 'Filtering...');
+	});
+
+	$(document).on('click', '.dgap-filter-reset', function () {
+		dgapSetBtnLoading($(this), true, 'Resetting...');
+	});
+
+	$(document).on('click', '.dgap-status-update', function () {
+		dgapSetBtnLoading($(this), true, 'Updating...');
+	});
 	
 	/* ================= Day Highlight ================= */
 	$(document).on('change', '.dgap-day-pill input', function () {
@@ -73,15 +111,24 @@ jQuery(function ($) {
 
 		if (!confirm('Are you sure?')) return;
 
-		const entity = $(this).data('entity');
-		const id     = $(this).data('id');
+		const $btn   = $(this);
+		const entity = $btn.data('entity');
+		const id     = $btn.data('id');
+
+		dgapSetBtnLoading($btn, true, 'Deleting...');
 
 		$.post(dgap_admin.ajax_url, {
 			action   : 'dgap_delete_' + entity,
 			id       : id,
 			_dgap_nonce : dgap_admin.nonce
 		}, function (res) {
-			if (res.success) location.reload();
+			if (res && res.success) {
+				location.reload();
+			} else {
+				dgapSetBtnLoading($btn, false);
+			}
+		}).fail(function () {
+			dgapSetBtnLoading($btn, false);
 		});
 	});
 	/* ================= Phone Dial Code Input Validation ================= */
@@ -924,7 +971,9 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			});
 		}
 
-		const payload = form.serializeArray().concat(extraData);
+		const payload   = form.serializeArray().concat(extraData);
+		const $submitBtn = form.find('button[type="submit"]');
+		dgapSetBtnLoading($submitBtn, true, 'Saving...');
 
 		$.ajax({
 			url: dgap_admin.ajax_url,
@@ -944,16 +993,91 @@ $(document).on('click', '.dgap-status-update', function (e) {
 				return;
 			}
 
+			dgapSetBtnLoading($submitBtn, false);
 			// ❌ show error
 			footerError
 				.text(res?.data?.message || 'Save failed.')
 				.fadeIn();
 		})
 		.fail(function (res) {
+			dgapSetBtnLoading($submitBtn, false);
 			footerError
 				.text(res?.data?.message || 'Server error. Please try again.')
 				.fadeIn();
 		});
+	});
+
+	/* ================= Onboarding Stepper Guide ================= */
+	$(document).on('click', '.dgap-toggle-onboarding', function (e) {
+		e.preventDefault();
+		const action = $(this).data('action');
+		const dismiss = (action === 'collapse' || action === 'dismiss') ? 1 : 0;
+
+		if (dismiss) {
+			$('#dgap-onboarding-card').slideUp(200);
+			$('#dgap-onboarding-minibar').slideDown(200);
+			$('#dgap-onboarding-wrapper').addClass('dgap-onboarding-collapsed');
+		} else {
+			$('#dgap-onboarding-card').slideDown(200);
+			$('#dgap-onboarding-minibar').slideUp(200);
+			$('#dgap-onboarding-wrapper').removeClass('dgap-onboarding-collapsed');
+		}
+
+		$.post(dgap_admin.ajax_url, {
+			action: 'dgap_toggle_onboarding_guide',
+			dismiss: dismiss,
+			_dgap_nonce: dgap_admin.nonce
+		});
+	});
+
+	/* ================= Collapsible Bookings Filter Bar ================= */
+	$(document).on('click', '.dgap-toggle-filters', function (e) {
+		e.preventDefault();
+		const action = $(this).data('action');
+
+		if (action === 'collapse') {
+			$('#dgap-filter-card').slideUp(200);
+			$('#dgap-filter-minibar').slideDown(200);
+			$('#dgap-filter-wrapper').addClass('is-collapsed');
+		} else {
+			$('#dgap-filter-card').slideDown(200);
+			$('#dgap-filter-minibar').slideUp(200);
+			$('#dgap-filter-wrapper').removeClass('is-collapsed');
+		}
+	});
+
+	/* ================= Copy Shortcode ================= */
+	$(document).on('click', '.dgap-copy-shortcode', function (e) {
+		e.preventDefault();
+		const $btn = $(this);
+		const shortcode = $btn.data('shortcode');
+
+		function showCopiedFeedback($el) {
+			const originalText = $el.html();
+			$el.addClass('is-copied').text('Copied!');
+			setTimeout(function () {
+				$el.removeClass('is-copied').html(originalText);
+			}, 2000);
+		}
+
+		function fallbackCopy(text, $el) {
+			const $temp = $('<input>');
+			$('body').append($temp);
+			$temp.val(text).select();
+			document.execCommand('copy');
+			$temp.remove();
+			showCopiedFeedback($el);
+		}
+
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(shortcode).then(function () {
+				showCopiedFeedback($btn);
+			}).catch(function () {
+				fallbackCopy(shortcode, $btn);
+			});
+		} else {
+			fallbackCopy(shortcode, $btn);
+		}
 	});
 
 });

@@ -5,13 +5,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
 require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-bookings-table.php';
+
+global $wpdb;
+$total_bookings = DGAP_Booking_Repo::count_all();
+$dgap_table          = new DGAP_Bookings_Table();
+$filters             = $dgap_table->get_active_filters();
+$has_filters         = ! empty( $filters['status'] ) || ! empty( $filters['location_id'] ) || ! empty( $filters['service_id'] ) || ! empty( $filters['staff_id'] ) || ! empty( $filters['date_from'] ) || ! empty( $filters['date_to'] ) || ! empty( $filters['s'] );
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$is_filter_submitted = isset( $_GET['s'] ) || isset( $_GET['status'] ) || isset( $_GET['location_id'] ) || isset( $_GET['service_id'] ) || isset( $_GET['staff_id'] ) || isset( $_GET['date_from'] ) || isset( $_GET['date_to'] );
+$is_expanded         = $has_filters || $is_filter_submitted;
+
+// Fetch filter dropdown options
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+$filter_locations = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}dgap_locations ORDER BY name ASC", ARRAY_A );
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+$filter_services  = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}dgap_services ORDER BY name ASC", ARRAY_A );
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+$filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {$wpdb->prefix}dgap_staff ORDER BY first_name ASC", ARRAY_A );
 ?>
 
 <div class="dgap-top-strip">
 	<div class="dgap-strip-inner">
 		<div class="dgap-strip-left">
 			<h1><?php esc_html_e( 'Bookings', 'digent-appointments' ); ?></h1>
-			<span><?php esc_html_e( 'Manage all customer bookings', 'digent-appointments' ); ?></span>
+			<span><?php esc_html_e( 'Manage, filter, and update all customer bookings', 'digent-appointments' ); ?></span>
 		</div>
 
 		<div class="dgap-strip-right">
@@ -27,12 +44,134 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-booki
 </div>
 
 <div class="wrap dgap-admin-wrap">
-	<?php	
-	$dgap_table = new DGAP_Bookings_Table();
-	$dgap_table->prepare_items();
-	if ( $dgap_table->has_items() ) {
+	<?php if ( $total_bookings > 0 || $is_expanded ) : ?>
+		<div class="dgap-filter-wrapper <?php echo ! $is_expanded ? 'is-collapsed' : ''; ?>" id="dgap-filter-wrapper">
+
+			<!-- Mini Bar (Default collapsed state) -->
+			<div class="dgap-onboarding-minibar dgap-filter-minibar" id="dgap-filter-minibar" <?php echo $is_expanded ? 'style="display:none;"' : ''; ?>>
+				<div class="dgap-minibar-left">
+					<span class="dashicons dashicons-filter"></span>
+					<strong><?php esc_html_e( 'Filter Bookings', 'digent-appointments' ); ?></strong>
+					<span class="dgap-minibar-progress"><?php esc_html_e( 'Filter by customer, status, location, service, staff, or date range', 'digent-appointments' ); ?></span>
+				</div>
+				<div class="dgap-minibar-right">
+					<button type="button" class="dgap-btn button button-secondary dgap-toggle-filters" data-action="expand">
+						<span><?php esc_html_e( 'Show Filters', 'digent-appointments' ); ?></span>
+						<span class="dashicons dashicons-arrow-down-alt2"></span>
+					</button>
+				</div>
+			</div>
+
+			<!-- Full Filter Card (Hidden by default unless URL has filter params) -->
+			<div class="dgap-filter-card" id="dgap-filter-card" <?php echo ! $is_expanded ? 'style="display:none;"' : ''; ?>>
+				<div class="dgap-filter-card-header">
+					<div class="dgap-filter-card-title">
+						<span class="dashicons dashicons-filter"></span>
+						<strong><?php esc_html_e( 'Filter Bookings', 'digent-appointments' ); ?></strong>
+					</div>
+					<button type="button" class="dgap-onboarding-dismiss-btn dgap-toggle-filters" data-action="collapse" title="<?php esc_attr_e( 'Hide Filters', 'digent-appointments' ); ?>">
+						<span class="dashicons dashicons-arrow-up-alt2"></span>
+					</button>
+				</div>
+
+				<form method="get" class="dgap-filter-bar">
+					<input type="hidden" name="page" value="digent-appointments-list-view" />
+
+					<div class="dgap-filter-fields">
+						<div class="dgap-filter-group dgap-filter-search">
+							<span class="dashicons dashicons-search"></span>
+							<input
+								type="search"
+								name="s"
+								value="<?php echo esc_attr( $filters['s'] ); ?>"
+								placeholder="<?php esc_attr_e( 'Search customer, service, or #ID...', 'digent-appointments' ); ?>"
+							/>
+						</div>
+
+						<div class="dgap-filter-group">
+							<select name="status">
+								<option value=""><?php esc_html_e( 'All Statuses', 'digent-appointments' ); ?></option>
+								<option value="pending" <?php selected( $filters['status'], 'pending' ); ?>><?php esc_html_e( 'Pending', 'digent-appointments' ); ?></option>
+								<option value="confirmed" <?php selected( $filters['status'], 'confirmed' ); ?>><?php esc_html_e( 'Confirmed', 'digent-appointments' ); ?></option>
+								<option value="completed" <?php selected( $filters['status'], 'completed' ); ?>><?php esc_html_e( 'Completed', 'digent-appointments' ); ?></option>
+								<option value="cancelled" <?php selected( $filters['status'], 'cancelled' ); ?>><?php esc_html_e( 'Cancelled', 'digent-appointments' ); ?></option>
+							</select>
+						</div>
+
+						<div class="dgap-filter-group">
+							<select name="location_id">
+								<option value="0"><?php esc_html_e( 'All Locations', 'digent-appointments' ); ?></option>
+								<?php foreach ( $filter_locations as $loc ) : ?>
+									<option value="<?php echo esc_attr( $loc['id'] ); ?>" <?php selected( $filters['location_id'], (int) $loc['id'] ); ?>>
+										<?php echo esc_html( $loc['name'] ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+
+						<div class="dgap-filter-group">
+							<select name="service_id">
+								<option value="0"><?php esc_html_e( 'All Services', 'digent-appointments' ); ?></option>
+								<?php foreach ( $filter_services as $srv ) : ?>
+									<option value="<?php echo esc_attr( $srv['id'] ); ?>" <?php selected( $filters['service_id'], (int) $srv['id'] ); ?>>
+										<?php echo esc_html( $srv['name'] ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+
+						<div class="dgap-filter-group">
+							<select name="staff_id">
+								<option value="0"><?php esc_html_e( 'All Staff', 'digent-appointments' ); ?></option>
+								<?php foreach ( $filter_staff as $st ) : ?>
+									<option value="<?php echo esc_attr( $st['id'] ); ?>" <?php selected( $filters['staff_id'], (int) $st['id'] ); ?>>
+										<?php echo esc_html( trim( $st['first_name'] . ' ' . $st['last_name'] ) ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+
+						<div class="dgap-filter-group dgap-filter-daterange">
+							<input
+								type="date"
+								name="date_from"
+								value="<?php echo esc_attr( $filters['date_from'] ); ?>"
+								title="<?php esc_attr_e( 'From Date', 'digent-appointments' ); ?>"
+								aria-label="<?php esc_attr_e( 'From Date', 'digent-appointments' ); ?>"
+							/>
+							<span class="dgap-filter-dash">&ndash;</span>
+							<input
+								type="date"
+								name="date_to"
+								value="<?php echo esc_attr( $filters['date_to'] ); ?>"
+								title="<?php esc_attr_e( 'To Date', 'digent-appointments' ); ?>"
+								aria-label="<?php esc_attr_e( 'To Date', 'digent-appointments' ); ?>"
+							/>
+						</div>
+					</div>
+
+					<div class="dgap-filter-actions">
+						<button type="submit" class="button button-primary dgap-filter-submit">
+							<span class="dashicons dashicons-filter"></span>
+							<span><?php esc_html_e( 'Filter', 'digent-appointments' ); ?></span>
+						</button>
+						<?php if ( $is_expanded ) : ?>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-list-view' ) ); ?>" class="button button-secondary dgap-filter-reset">
+								<span class="dashicons dashicons-image-rotate"></span>
+								<span><?php esc_html_e( 'Reset', 'digent-appointments' ); ?></span>
+							</a>
+						<?php endif; ?>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<?php
+		$dgap_table->prepare_items();
 		$dgap_table->display();
-	} else {
+		?>
+	<?php else : ?>
+		<?php
 		dgap_render_empty_state( [
 			'icon'         => 'dashicons-calendar-alt',
 			'title'        => __( 'No Bookings Recorded Yet', 'digent-appointments' ),
@@ -41,8 +180,8 @@ require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-booki
 			'button_title' => __( 'Add Booking', 'digent-appointments' ),
 			'entity'       => 'booking',
 		] );
-	}
-	?>
+		?>
+	<?php endif; ?>
 </div>
 
 <?php

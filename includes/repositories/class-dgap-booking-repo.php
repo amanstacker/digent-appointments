@@ -59,6 +59,85 @@ class DGAP_Booking_Repo {
 		return $result;
 	}
 
+	public static function count_all() {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dgap_bookings" );
+	}
+
+	public static function get_filtered( $filters = [] ) {
+		global $wpdb;
+
+		$where  = [ '1=1' ];
+		$params = [];
+
+		if ( ! empty( $filters['status'] ) ) {
+			$where[]  = 'b.status = %s';
+			$params[] = sanitize_text_field( $filters['status'] );
+		}
+
+		if ( ! empty( $filters['location_id'] ) ) {
+			$where[]  = 'b.location_id = %d';
+			$params[] = absint( $filters['location_id'] );
+		}
+
+		if ( ! empty( $filters['service_id'] ) ) {
+			$where[]  = 'b.service_id = %d';
+			$params[] = absint( $filters['service_id'] );
+		}
+
+		if ( ! empty( $filters['staff_id'] ) ) {
+			$where[]  = 'b.staff_id = %d';
+			$params[] = absint( $filters['staff_id'] );
+		}
+
+		if ( ! empty( $filters['date_from'] ) ) {
+			$where[]  = 'b.booking_date >= %s';
+			$params[] = sanitize_text_field( $filters['date_from'] );
+		}
+
+		if ( ! empty( $filters['date_to'] ) ) {
+			$where[]  = 'b.booking_date <= %s';
+			$params[] = sanitize_text_field( $filters['date_to'] );
+		}
+
+		if ( ! empty( $filters['s'] ) ) {
+			$search   = '%' . $wpdb->esc_like( sanitize_text_field( $filters['s'] ) ) . '%';
+			$where[]  = "(CONCAT_WS(' ', c.first_name, c.last_name) LIKE %s OR c.email LIKE %s OR s.name LIKE %s OR CAST(b.id AS CHAR) LIKE %s)";
+			$params[] = $search;
+			$params[] = $search;
+			$params[] = $search;
+			$params[] = $search;
+		}
+
+		$where_sql = implode( ' AND ', $where );
+
+		$sql = "
+			SELECT 
+				b.*,
+				CONCAT_WS(' ', c.first_name, c.last_name) AS customer_name,
+				c.email AS customer_email,
+				l.name AS location_name,
+				s.name AS service_name,
+				CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+			FROM {$wpdb->prefix}dgap_bookings b
+			LEFT JOIN {$wpdb->prefix}dgap_customers c ON c.id = b.customer_id
+			LEFT JOIN {$wpdb->prefix}dgap_locations l ON l.id = b.location_id
+			LEFT JOIN {$wpdb->prefix}dgap_services s ON s.id = b.service_id
+			LEFT JOIN {$wpdb->prefix}dgap_staff st ON st.id = b.staff_id
+			WHERE {$where_sql}
+			ORDER BY b.booking_date DESC, b.start_time DESC
+		";
+
+		if ( ! empty( $params ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			return $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A );
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_results( $sql, ARRAY_A );
+	}
+
 	public static function get( $id ) {
 
 		$cache_key = 'dgap_booking_' . $id;
