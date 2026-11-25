@@ -3393,6 +3393,220 @@
 	outline: none !important;
 }
 
+/* ==========================================================================
+   Contextual Bulk Action Bar & Custom Confirmation Modal
+   ========================================================================== */
+.dgap-bulk-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	flex-wrap: wrap;
+	background: #ecfdf5;
+	border: 1px solid #a7f3d0;
+	border-radius: 10px;
+	padding: 10px 16px;
+	margin-bottom: 12px;
+	box-shadow: 0 2px 6px rgba(16, 185, 129, 0.08);
+}
+
+.dgap-bulk-left {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.dgap-bulk-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #065f46;
+}
+
+.dgap-bulk-clear {
+	font-size: 12.5px !important;
+	color: #059669 !important;
+	text-decoration: underline !important;
+	cursor: pointer;
+}
+
+.dgap-bulk-right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.dgap-bulk-status-group {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.dgap-bulk-select {
+	height: 32px !important;
+	min-height: 32px !important;
+	border-radius: 6px !important;
+	border: 1px solid #a7f3d0 !important;
+	background: #ffffff !important;
+	font-size: 12.5px !important;
+	color: var(--dgap-slate-800, #1e293b) !important;
+	padding: 0 8px !important;
+}
+
+.dgap-bulk-select:focus {
+	border-color: var(--dgap-primary, #10b981) !important;
+	box-shadow: 0 0 0 2px var(--dgap-primary-focus) !important;
+	outline: none !important;
+}
+
+.dgap-bulk-apply,
+.dgap-bulk-delete-btn {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: 5px !important;
+	height: 32px !important;
+	min-height: 32px !important;
+	line-height: 1 !important;
+	padding: 0 12px !important;
+	font-size: 12.5px !important;
+	border-radius: 6px !important;
+}
+
+.dgap-bulk-apply .dashicons,
+.dgap-bulk-delete-btn .dashicons {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	font-size: 14px !important;
+	width: 14px !important;
+	height: 14px !important;
+	line-height: 1 !important;
+	margin: 0 !important;
+}
+
+.dgap-bulk-delete-btn {
+	border-color: #fecaca !important;
+	color: #dc2626 !important;
+	background: #ffffff !important;
+}
+
+.dgap-bulk-delete-btn:hover {
+	background: #fef2f2 !important;
+	border-color: #f87171 !important;
+	color: #b91c1c !important;
+}
+
+/* Custom Confirmation Modal */
+.dgap-confirm-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 999999;
+	background: rgba(15, 23, 42, 0.45);
+	backdrop-filter: blur(2px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+}
+
+.dgap-confirm-dialog {
+	width: 100%;
+	max-width: 420px;
+	background: #ffffff;
+	border-radius: 12px;
+	padding: 24px;
+	text-align: center;
+	box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	animation: dgap-popover-fade 0.16s ease-out;
+}
+
+.dgap-confirm-icon {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	margin: 0 auto 14px auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.dgap-confirm-icon.is-emerald {
+	background: #ecfdf5;
+	color: #10b981;
+	border: 1px solid #a7f3d0;
+}
+
+.dgap-confirm-icon.is-danger {
+	background: #fef2f2;
+	color: #dc2626;
+	border: 1px solid #fecaca;
+}
+
+.dgap-confirm-icon .dashicons {
+	font-size: 22px;
+	width: 22px;
+	height: 22px;
+	line-height: 22px;
+}
+
+.dgap-confirm-title {
+	margin: 0 0 8px 0;
+	font-size: 17px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
+}
+
+.dgap-confirm-message {
+	margin: 0 0 18px 0;
+	font-size: 13.5px;
+	color: var(--dgap-slate-600, #475569);
+	line-height: 1.5;
+}
+
+.dgap-confirm-error {
+	margin: 0 0 14px 0;
+	padding: 8px 12px;
+	border-radius: 6px;
+	background: #fef2f2;
+	border: 1px solid #fecaca;
+	color: #dc2626;
+	font-size: 12.5px;
+}
+
+.dgap-confirm-actions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.dgap-confirm-actions .button {
+	min-width: 120px;
+	height: 36px !important;
+	min-height: 36px !important;
+	line-height: 34px !important;
+	border-radius: 6px !important;
+	font-size: 13px !important;
+	font-weight: 600 !important;
+}
+
+.dgap-confirm-proceed.is-danger {
+	background: #dc2626 !important;
+	border-color: #b91c1c !important;
+	color: #ffffff !important;
+}
+
+.dgap-confirm-proceed.is-danger:hover {
+	background: #b91c1c !important;
+	border-color: #991b1b !important;
+}
+
+
 
 
 

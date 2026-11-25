@@ -245,6 +245,49 @@ class DGAP_Booking_Repo {
 		return (int) $result;
 	}
 
+	public static function bulk_update_status( $ids, $status ) {
+		global $wpdb;
+		$ids = array_values( array_filter( array_map( 'absint', (array) $ids ) ) );
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$params       = array_merge( [ sanitize_text_field( $status ) ], $ids );
+		$table        = self::table();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$updated = $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET status = %s WHERE id IN ({$placeholders})", $params ) );
+
+		wp_cache_delete( 'dgap_all_bookings', self::cache_group() );
+		foreach ( $ids as $id ) {
+			wp_cache_delete( 'dgap_booking_' . $id, self::cache_group() );
+		}
+
+		return (int) $updated;
+	}
+
+	public static function bulk_delete( $ids ) {
+		global $wpdb;
+		$ids = array_values( array_filter( array_map( 'absint', (array) $ids ) ) );
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$table        = self::table();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ({$placeholders})", $ids ) );
+
+		wp_cache_delete( 'dgap_all_bookings', self::cache_group() );
+		foreach ( $ids as $id ) {
+			wp_cache_delete( 'dgap_booking_' . $id, self::cache_group() );
+		}
+
+		return (int) $deleted;
+	}
+
 	public static function get_for_calendar() {
 
 		global $wpdb;

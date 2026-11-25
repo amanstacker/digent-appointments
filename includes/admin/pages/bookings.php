@@ -166,6 +166,40 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 			</div>
 		</div>
 
+		<!-- Contextual Bulk Action Bar (Shown when checkboxes are selected) -->
+		<div class="dgap-bulk-bar" id="dgap-bulk-bar" style="display:none;">
+			<div class="dgap-bulk-left">
+				<span class="dgap-bulk-badge">
+					<strong id="dgap-bulk-count">0</strong>
+					<span id="dgap-bulk-label"><?php esc_html_e( 'bookings selected', 'digent-appointments' ); ?></span>
+				</span>
+				<button type="button" class="button-link dgap-bulk-clear" id="dgap-bulk-clear">
+					<?php esc_html_e( 'Clear selection', 'digent-appointments' ); ?>
+				</button>
+			</div>
+
+			<div class="dgap-bulk-right">
+				<div class="dgap-bulk-status-group">
+					<select id="dgap-bulk-status" class="dgap-bulk-select">
+						<option value=""><?php esc_html_e( 'Change Status to...', 'digent-appointments' ); ?></option>
+						<option value="confirmed"><?php esc_html_e( 'Confirmed', 'digent-appointments' ); ?></option>
+						<option value="completed"><?php esc_html_e( 'Completed', 'digent-appointments' ); ?></option>
+						<option value="pending"><?php esc_html_e( 'Pending', 'digent-appointments' ); ?></option>
+						<option value="cancelled"><?php esc_html_e( 'Cancelled', 'digent-appointments' ); ?></option>
+					</select>
+					<button type="button" class="button button-primary dgap-bulk-apply" id="dgap-bulk-status-btn" disabled>
+						<span class="dashicons dashicons-yes"></span>
+						<span><?php esc_html_e( 'Apply', 'digent-appointments' ); ?></span>
+					</button>
+				</div>
+
+				<button type="button" class="button button-secondary dgap-bulk-delete-btn" id="dgap-bulk-delete-btn">
+					<span class="dashicons dashicons-trash"></span>
+					<span><?php esc_html_e( 'Delete Selected', 'digent-appointments' ); ?></span>
+				</button>
+			</div>
+		</div>
+
 		<?php
 		$dgap_table->prepare_items();
 		$dgap_table->display();
@@ -186,3 +220,24 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 
 <?php
 include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/booking-slide-panel.php';
+?>
+
+<!-- Custom Confirmation Modal for Bulk Actions -->
+<div class="dgap-confirm-overlay" id="dgap-confirm-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="dgap-confirm-title">
+	<div class="dgap-confirm-dialog">
+		<div class="dgap-confirm-icon" id="dgap-confirm-icon">
+			<span class="dashicons dashicons-warning"></span>
+		</div>
+		<h3 class="dgap-confirm-title" id="dgap-confirm-title"><?php esc_html_e( 'Confirm Action', 'digent-appointments' ); ?></h3>
+		<p class="dgap-confirm-message" id="dgap-confirm-message"></p>
+		<div class="dgap-confirm-error" id="dgap-confirm-error" style="display:none;"></div>
+		<div class="dgap-confirm-actions">
+			<button type="button" class="button button-secondary dgap-confirm-cancel" id="dgap-confirm-cancel">
+				<?php esc_html_e( 'Cancel', 'digent-appointments' ); ?>
+			</button>
+			<button type="button" class="button button-primary dgap-confirm-proceed" id="dgap-confirm-proceed">
+				<?php esc_html_e( 'Confirm & Proceed', 'digent-appointments' ); ?>
+			</button>
+		</div>
+	</div>
+</div>

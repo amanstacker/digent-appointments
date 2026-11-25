@@ -1080,4 +1080,150 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		}
 	});
 
+	/* ================= Bookings Contextual Bulk Actions & Confirm Modal ================= */
+	let pendingBulkAction = null;
+
+	function dgapGetSelectedBookingIds() {
+		const ids = [];
+		$('.dgap-admin-wrap .wp-list-table tbody input[name="ids[]"]:checked').each(function () {
+			const val = parseInt($(this).val(), 10);
+			if (val > 0) ids.push(val);
+		});
+		return ids;
+	}
+
+	function dgapSyncBulkBar() {
+		const $bar = $('#dgap-bulk-bar');
+		if (!$bar.length) return;
+
+		const ids = dgapGetSelectedBookingIds();
+		const count = ids.length;
+
+		$('#dgap-bulk-count').text(count);
+		$('#dgap-bulk-label').text(count === 1 ? 'booking selected' : 'bookings selected');
+
+		if (count > 0) {
+			if (!$bar.is(':visible')) $bar.slideDown(160);
+		} else {
+			if ($bar.is(':visible')) $bar.slideUp(160);
+		}
+	}
+
+	$(document).on('change', '.dgap-admin-wrap .wp-list-table input[type="checkbox"]', function () {
+		// Wait a tick for WP core's select-all handler to toggle row checkboxes
+		setTimeout(dgapSyncBulkBar, 10);
+	});
+
+	$(document).on('click', '#dgap-bulk-clear', function (e) {
+		e.preventDefault();
+		$('.dgap-admin-wrap .wp-list-table input[type="checkbox"]').prop('checked', false);
+		dgapSyncBulkBar();
+	});
+
+	$(document).on('change', '#dgap-bulk-status', function () {
+		$('#dgap-bulk-status-btn').prop('disabled', !$(this).val());
+	});
+
+	function dgapOpenConfirmModal(options) {
+		pendingBulkAction = options;
+		const $modal   = $('#dgap-confirm-modal');
+		const $icon    = $('#dgap-confirm-icon');
+		const $proceed = $('#dgap-confirm-proceed');
+
+		$('#dgap-confirm-error').hide().text('');
+		$('#dgap-confirm-title').text(options.title);
+		$('#dgap-confirm-message').text(options.message);
+
+		$icon.removeClass('is-danger is-emerald').addClass(options.isDanger ? 'is-danger' : 'is-emerald');
+		$icon.find('.dashicons')
+			.removeClass('dashicons-warning dashicons-trash dashicons-yes-alt')
+			.addClass(options.isDanger ? 'dashicons-trash' : 'dashicons-yes-alt');
+
+		$proceed.removeClass('is-danger').addClass(options.isDanger ? 'is-danger' : '');
+		$proceed.text(options.confirmText || 'Confirm & Proceed');
+
+		$modal.fadeIn(140);
+	}
+
+	function dgapCloseConfirmModal() {
+		pendingBulkAction = null;
+		$('#dgap-confirm-modal').fadeOut(120);
+	}
+
+	$(document).on('click', '#dgap-bulk-status-btn', function (e) {
+		e.preventDefault();
+		const status = $('#dgap-bulk-status').val();
+		const statusLabel = $('#dgap-bulk-status option:selected').text();
+		const ids = dgapGetSelectedBookingIds();
+		if (!status || !ids.length) return;
+
+		dgapOpenConfirmModal({
+			action: status,
+			ids: ids,
+			isDanger: false,
+			title: 'Confirm Status Update',
+			message: 'Are you sure you want to mark ' + ids.length + ' selected booking(s) as "' + statusLabel + '"?',
+			confirmText: 'Update Status'
+		});
+	});
+
+	$(document).on('click', '#dgap-bulk-delete-btn', function (e) {
+		e.preventDefault();
+		const ids = dgapGetSelectedBookingIds();
+		if (!ids.length) return;
+
+		dgapOpenConfirmModal({
+			action: 'delete',
+			ids: ids,
+			isDanger: true,
+			title: 'Confirm Bulk Delete',
+			message: 'Are you sure you want to permanently delete ' + ids.length + ' selected booking(s)? This action cannot be undone.',
+			confirmText: 'Yes, Delete Selected'
+		});
+	});
+
+	$(document).on('click', '#dgap-confirm-cancel', function () {
+		dgapCloseConfirmModal();
+	});
+
+	$(document).on('click', '#dgap-confirm-modal', function (e) {
+		if (e.target === this) {
+			dgapCloseConfirmModal();
+		}
+	});
+
+	$(document).on('keydown', function (e) {
+		if (e.key === 'Escape' && $('#dgap-confirm-modal').is(':visible')) {
+			dgapCloseConfirmModal();
+		}
+	});
+
+	$(document).on('click', '#dgap-confirm-proceed', function () {
+		if (!pendingBulkAction) return;
+		const $btn = $(this);
+		const $err = $('#dgap-confirm-error');
+		$err.hide().text('');
+
+		dgapSetBtnLoading($btn, true, pendingBulkAction.isDanger ? 'Deleting...' : 'Updating...');
+
+		$.post(dgap_admin.ajax_url, {
+			action: 'dgap_bulk_action_bookings',
+			bulk_action: pendingBulkAction.action,
+			ids: pendingBulkAction.ids,
+			_dgap_nonce: dgap_admin.nonce
+		})
+		.done(function (res) {
+			if (res && res.success) {
+				location.reload();
+			} else {
+				dgapSetBtnLoading($btn, false);
+				$err.text(res?.data?.message || 'Action failed.').fadeIn();
+			}
+		})
+		.fail(function () {
+			dgapSetBtnLoading($btn, false);
+			$err.text('Server error. Please try again.').fadeIn();
+		});
+	});
+
 });

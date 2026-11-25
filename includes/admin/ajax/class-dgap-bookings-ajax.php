@@ -18,7 +18,40 @@ class DGAP_Bookings_Ajax {
 		add_action( 'wp_ajax_dgap_get_slots', [ $this, 'get_slots' ] );	
 
 		add_action( 'wp_ajax_dgap_update_booking_status', [ $this, 'update_booking_status' ] );		
+		add_action( 'wp_ajax_dgap_bulk_action_bookings', [ $this, 'bulk_action' ] );
 
+	}
+
+	/**
+	 * Bulk status update or delete for selected bookings
+	 */
+	public function bulk_action() {
+		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 'digent-appointments' ) ], 403 );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$ids         = isset( $_POST['ids'] ) ? array_values( array_filter( array_map( 'absint', (array) $_POST['ids'] ) ) ) : [];
+		$bulk_action = isset( $_POST['bulk_action'] ) ? sanitize_key( wp_unslash( $_POST['bulk_action'] ) ) : '';
+
+		if ( empty( $ids ) || empty( $bulk_action ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'No bookings or action selected.', 'digent-appointments' ) ] );
+		}
+
+		if ( 'delete' === $bulk_action ) {
+			$count = DGAP_Booking_Repo::bulk_delete( $ids );
+			wp_send_json_success( [ 'count' => $count, 'action' => 'delete' ] );
+		}
+
+		$allowed_statuses = [ 'pending', 'confirmed', 'completed', 'cancelled' ];
+		if ( in_array( $bulk_action, $allowed_statuses, true ) ) {
+			$count = DGAP_Booking_Repo::bulk_update_status( $ids, $bulk_action );
+			wp_send_json_success( [ 'count' => $count, 'action' => $bulk_action ] );
+		}
+
+		wp_send_json_error( [ 'message' => esc_html__( 'Invalid bulk action.', 'digent-appointments' ) ] );
 	}
 
 		/**
