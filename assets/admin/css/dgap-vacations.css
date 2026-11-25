@@ -1,9 +1,8 @@
-
 /* =========================================================
- * TIME OFF – CARD LAYOUT
+ * VACATIONS – CARD LAYOUT
  * ========================================================= */
 
-.dgap-timeoff-card {
+.dgap-vacation-card {
 	display: flex;
 	align-items: flex-start;
 	gap: 10px;
@@ -14,13 +13,13 @@
 }
 
 /* LEFT: Calendar */
-.dgap-timeoff-left {
+.dgap-vacation-left {
 	flex: 1 1 auto;
 	min-width: 0;
 }
 
 /* RIGHT: Selected dates */
-.dgap-timeoff-right {
+.dgap-vacation-right {
 	width: 100px;
 	flex-shrink: 0;
 	display: flex;
@@ -32,11 +31,11 @@
  * DATEPICKER – CUSTOM
  * ========================================================= */
 
-#dgap-timeoff-calendar {
+#dgap-vacation-calendar {
 	width: 100%;
 }
 
-#dgap-timeoff-calendar .ui-datepicker {
+#dgap-vacation-calendar .ui-datepicker {
 	width: 100%;
 	border: none;
 	background: transparent;
@@ -45,7 +44,7 @@
 }
 
 /* Header */
-#dgap-timeoff-calendar .ui-datepicker-header {
+#dgap-vacation-calendar .ui-datepicker-header {
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -56,15 +55,15 @@
 	border-radius: 6px;
 }
 
-#dgap-timeoff-calendar .ui-datepicker-title {
+#dgap-vacation-calendar .ui-datepicker-title {
 	font-weight: 600;
 	font-size: 14px;
 	color: #111827;
 }
 
 /* Nav */
-#dgap-timeoff-calendar .ui-datepicker-prev,
-#dgap-timeoff-calendar .ui-datepicker-next {
+#dgap-vacation-calendar .ui-datepicker-prev,
+#dgap-vacation-calendar .ui-datepicker-next {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
@@ -77,42 +76,42 @@
 	cursor: pointer;
 }
 
-#dgap-timeoff-calendar .ui-datepicker-prev { left: 6px; }
-#dgap-timeoff-calendar .ui-datepicker-next { right: 6px; }
+#dgap-vacation-calendar .ui-datepicker-prev { left: 6px; }
+#dgap-vacation-calendar .ui-datepicker-next { right: 6px; }
 
-#dgap-timeoff-calendar .ui-icon {
+#dgap-vacation-calendar .ui-icon {
 	display: none !important;
 }
 
-#dgap-timeoff-calendar .ui-datepicker-prev::before,
-#dgap-timeoff-calendar .ui-datepicker-next::before {
+#dgap-vacation-calendar .ui-datepicker-prev::before,
+#dgap-vacation-calendar .ui-datepicker-next::before {
 	font-family: dashicons;
 	font-size: 16px;
 	color: #374151;
 }
 
-#dgap-timeoff-calendar .ui-datepicker-prev::before {
+#dgap-vacation-calendar .ui-datepicker-prev::before {
 	content: "\f341";
 }
 
-#dgap-timeoff-calendar .ui-datepicker-next::before {
+#dgap-vacation-calendar .ui-datepicker-next::before {
 	content: "\f345";
 }
 
-#dgap-timeoff-calendar .ui-datepicker-prev:hover,
-#dgap-timeoff-calendar .ui-datepicker-next:hover {
+#dgap-vacation-calendar .ui-datepicker-prev:hover,
+#dgap-vacation-calendar .ui-datepicker-next:hover {
 	background: var(--dgap-primary-light, #ecfdf5);
 	color: var(--dgap-primary-hover, #059669);
 }
 
 /* Table */
-#dgap-timeoff-calendar table {
+#dgap-vacation-calendar table {
 	width: 100%;
 	table-layout: fixed;
 	border-collapse: collapse;
 }
 
-#dgap-timeoff-calendar th {
+#dgap-vacation-calendar th {
 	padding: 6px 0;
 	font-size: 12px;
 	font-weight: 600;
@@ -120,13 +119,13 @@
 	text-align: center;
 }
 
-#dgap-timeoff-calendar td {
+#dgap-vacation-calendar td {
 	width: 32px;
 	height: 32px;
 	padding: 0;
 }
 
-#dgap-timeoff-calendar td a {
+#dgap-vacation-calendar td a {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -140,7 +139,7 @@
 	transition: background .15s ease, color .15s ease;
 }
 
-#dgap-timeoff-calendar td a:hover {
+#dgap-vacation-calendar td a:hover {
 	background: var(--dgap-primary-light, #ecfdf5);
 	color: var(--dgap-primary-hover, #059669);
 }
@@ -149,21 +148,21 @@
  * SELECTED DAY (FIXED)
  * =============================== */
 
-#dgap-timeoff-calendar td.dgap-selected-day a {
+#dgap-vacation-calendar td.dgap-selected-day a {
 	background: var(--dgap-primary, #10b981) !important;
 	color: #fff !important;
 	border-radius: 6px;
 }
 
 /* TODAY */
-#dgap-timeoff-calendar .ui-datepicker-today a {
+#dgap-vacation-calendar .ui-datepicker-today a {
 	background: var(--dgap-primary-light, #ecfdf5) !important;
 	color: var(--dgap-primary-text, #065f46) !important;
 	border: 1px solid var(--dgap-primary, #10b981) !important;
 }
 
 /* TODAY + SELECTED → SELECTED WINS */
-#dgap-timeoff-calendar .ui-datepicker-today.dgap-selected-day a {
+#dgap-vacation-calendar .ui-datepicker-today.dgap-selected-day a {
 	background: var(--dgap-primary, #10b981) !important;
 	color: #fff !important;
 	border-color: var(--dgap-primary, #10b981) !important;
@@ -173,7 +172,7 @@
  * SELECTED DATES (RIGHT)
  * ========================================================= */
 
-#dgap-timeoff-dates {
+#dgap-vacation-dates {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -184,7 +183,7 @@
 	overflow-y: auto;
 }
 
-#dgap-timeoff-dates li {
+#dgap-vacation-dates li {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -195,11 +194,11 @@
 	font-size: 12px;
 }
 
-#dgap-timeoff-dates li:hover {
+#dgap-vacation-dates li:hover {
 	background: #e5e7eb;
 }
 
-#dgap-timeoff-dates button {
+#dgap-vacation-dates button {
 	background: none;
 	border: none;
 	padding: 0;
@@ -208,7 +207,7 @@
 	color: #dc2626;
 }
 
-#dgap-timeoff-dates button:hover {
+#dgap-vacation-dates button:hover {
 	color: #b91c1c;
 }
 
@@ -216,19 +215,19 @@
  * MODE (FULL DAY / TIME)
  * ========================================================= */
 
-.dgap-timeoff-time {
+.dgap-vacation-time {
 	display: none;
 	margin-top: 15px;
 	gap: 8px;
 	align-items: center;
 }
 
-.dgap-timeoff-time input[type="time"] {
+.dgap-vacation-time input[type="time"] {
 	flex: 1;
 	width: auto;
 }
 
-.dgap-timeoff-time span {
+.dgap-vacation-time span {
 	font-weight: 600;
 	color: var(--dgap-slate-400, #94a3b8);
 }
@@ -237,14 +236,14 @@
  * DISABLED PAST DAYS (CUSTOM)
  * =============================== */
 
-#dgap-timeoff-calendar td.dgap-disabled-day a {
+#dgap-vacation-calendar td.dgap-disabled-day a {
 	background: transparent;
 	color: #9ca3af;
 	pointer-events: none;
 	cursor: not-allowed;
 }
 
-#dgap-timeoff-calendar td.dgap-disabled-day a:hover {
+#dgap-vacation-calendar td.dgap-disabled-day a:hover {
 	background: transparent;
 }
 .dgap-form textarea{

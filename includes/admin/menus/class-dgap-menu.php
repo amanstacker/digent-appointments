@@ -88,7 +88,7 @@ class DGAP_Menu {
 			[
 				'type'  => 'item',
 				'slug'  => 'vacations',
-				'file'  => 'timeoff',
+				'file'  => 'vacations',
 				'title' => esc_html__( 'Vacations', 'digent-appointments' ),
 			],
 

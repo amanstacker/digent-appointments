@@ -436,19 +436,29 @@
 	background: #ffffff;
 	border: 1px solid var(--dgap-slate-200);
 	border-radius: var(--dgap-card-radius);
+	border-collapse: separate;
+	border-spacing: 0;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-	overflow: visible;
+	overflow: hidden;
 	margin-top: 14px;
 }
 
 .dgap-admin-wrap .wp-list-table thead th,
-.dgap-admin-wrap .wp-list-table tfoot th {
+.dgap-admin-wrap .wp-list-table thead td,
+.dgap-admin-wrap .wp-list-table tfoot th,
+.dgap-admin-wrap .wp-list-table tfoot td {
 	font-weight: 600;
 	background: var(--dgap-slate-50) !important;
 	color: var(--dgap-slate-600);
 	border-bottom: 1.5px solid var(--dgap-slate-200);
 	padding: 12px 10px;
 	font-size: 13px;
+}
+
+.dgap-admin-wrap .wp-list-table tfoot th,
+.dgap-admin-wrap .wp-list-table tfoot td {
+	border-bottom: none;
+	border-top: 1.5px solid var(--dgap-slate-200);
 }
 
 .dgap-admin-wrap .wp-list-table tbody tr {
@@ -3354,14 +3364,13 @@
 	color: #dc2626 !important;
 }
 
-/* Right-Pinned Vertical Stack: Filter on Top, Reset Directly Below */
+/* Right-Pinned Inline Actions: Filter & Reset Side by Side */
 .dgap-filter-actions {
 	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-	gap: 6px;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
 	flex-shrink: 0;
-	min-width: 98px;
 }
 
 .dgap-filter-submit,
@@ -3369,7 +3378,7 @@
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
-	width: 100% !important;
+	width: auto !important;
 	gap: 6px !important;
 	height: 34px !important;
 	min-height: 34px !important;
@@ -3381,6 +3390,7 @@
 	box-sizing: border-box !important;
 	text-align: center !important;
 	text-decoration: none !important;
+	white-space: nowrap !important;
 }
 
 @media (max-width: 768px) {
@@ -3390,6 +3400,10 @@
 	}
 	.dgap-filter-actions {
 		width: 100%;
+	}
+	.dgap-filter-submit,
+	.dgap-filter-reset {
+		flex: 1;
 	}
 }
 

@@ -7,14 +7,14 @@
 		<div class="dgap-panel-title">
 			<span class="dashicons dashicons-calendar-alt"></span>
 			<h2 id="dgap-panel-title">
-				<?php esc_html_e( 'Add Time Off', 'digent-appointments' ); ?>
+				<?php esc_html_e( 'Add Vacation', 'digent-appointments' ); ?>
 			</h2>
 		</div>
 		<button class="dgap-close dashicons dashicons-no-alt"></button>
 	</div>
 
 	<!-- ================= Form ================= -->
-	<form id="dgap-timeoff-form" class="dgap-form">
+	<form id="dgap-vacation-form" class="dgap-form">
 
 		<input type="hidden" name="id" value="">
 		<?php wp_nonce_field( 'dgap_admin_action', '_dgap_nonce' ); ?>
@@ -26,13 +26,13 @@
 				<h3><?php esc_html_e( 'General Information', 'digent-appointments' ); ?></h3>
 
 				<p>
-					<label><?php esc_html_e( 'Time Off Name', 'digent-appointments' ); ?></label>
+					<label><?php esc_html_e( 'Vacation Name', 'digent-appointments' ); ?></label>
 					<input type="text" name="name" required>
 				</p>
 
 				<p>
 					<label><?php esc_html_e( 'Type', 'digent-appointments' ); ?></label>
-					<select name="type" id="dgap-timeoff-type">
+					<select name="type" id="dgap-vacation-type">
 						<option value="staff"><?php esc_html_e( 'Staff', 'digent-appointments' ); ?></option>
 						<option value="service"><?php esc_html_e( 'Service', 'digent-appointments' ); ?></option>
 					</select>
@@ -40,7 +40,7 @@
 
 				<p>
 					<label><?php esc_html_e( 'Select', 'digent-appointments' ); ?></label>
-					<select name="entity_ids[]" id="timeoff-entity" multiple="multiple"></select>
+					<select name="entity_ids[]" id="vacation-entity" multiple="multiple"></select>
 				</p>
 			</div>
 
@@ -48,37 +48,37 @@
 			<div class="dgap-section">
 				<h3><?php esc_html_e( 'Dates', 'digent-appointments' ); ?></h3>
 
-				<div class="dgap-timeoff-card">
+				<div class="dgap-vacation-card">
 
-					<div class="dgap-timeoff-left">
-						<div id="dgap-timeoff-calendar"></div>
+					<div class="dgap-vacation-left">
+						<div id="dgap-vacation-calendar"></div>
 					</div>
 
-					<div class="dgap-timeoff-right">
+					<div class="dgap-vacation-right">
 
-						<ul id="dgap-timeoff-dates"></ul>
+						<ul id="dgap-vacation-dates"></ul>
 
 					</div>
 				</div>
 			</div>
 
-			<!-- ================= Status ================= -->
+			<!-- ================= Mode ================= -->
 			<div class="dgap-section">
 				<h3><?php esc_html_e( 'Mode', 'digent-appointments' ); ?></h3>
 
-				<div class="dgap-timeoff-mode">
+				<div class="dgap-vacation-mode">
 					<label><?php esc_html_e( 'Mode', 'digent-appointments' ); ?></label>
-					<select name="timeoff_mode" id="timeoff_mode_select">
+					<select name="vacation_mode" id="vacation_mode_select">
 						<option value="full"><?php esc_html_e( 'Full Day', 'digent-appointments' ); ?></option>
 						<option value="time"><?php esc_html_e( 'Time Based', 'digent-appointments' ); ?></option>
 					</select>
 				</div>
 
 				<!-- Time range -->
-				<div class="dgap-timeoff-time">
-					<input type="time" name="timeoff_start">
+				<div class="dgap-vacation-time">
+					<input type="time" name="vacation_start">
 					<span>–</span>
-					<input type="time" name="timeoff_end">
+					<input type="time" name="vacation_end">
 				</div>
 			</div>
 
@@ -104,7 +104,7 @@
 				</button>
 
 				<button type="submit" class="button button-primary dgap-btn">
-					<?php esc_html_e( 'Save Time Off', 'digent-appointments' ); ?>
+					<?php esc_html_e( 'Save Vacation', 'digent-appointments' ); ?>
 				</button>
 			</div>
 		</div>

@@ -124,8 +124,8 @@ class DGAP_Admin {
             DGAP_VERSION
         );
         wp_enqueue_style(
-            'dgap-timeoff',
-            DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-timeoff.css',
+            'dgap-vacations',
+            DGAP_PLUGIN_DIR_URL . 'assets/admin/css/dgap-vacations.css',
             [],
             DGAP_VERSION
         );

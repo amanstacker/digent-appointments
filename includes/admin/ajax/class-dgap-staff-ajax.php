@@ -9,6 +9,39 @@ class DGAP_Staff_Ajax {
 		add_action( 'wp_ajax_dgap_save_staff', [ $this, 'save' ] );
 		add_action( 'wp_ajax_dgap_get_staff', [ $this, 'get' ] );
 		add_action( 'wp_ajax_dgap_delete_staff', [ $this, 'delete' ] );
+		add_action( 'wp_ajax_dgap_bulk_action_staff', [ $this, 'bulk_action' ] );
+	}
+
+	/**
+	 * Bulk activate, deactivate, or delete staff members
+	 */
+	public function bulk_action() {
+		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Permission denied.', 'digent-appointments' ) ], 403 );
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$ids         = isset( $_POST['ids'] ) ? array_values( array_filter( array_map( 'absint', (array) $_POST['ids'] ) ) ) : [];
+		$bulk_action = isset( $_POST['bulk_action'] ) ? sanitize_key( wp_unslash( $_POST['bulk_action'] ) ) : '';
+
+		if ( empty( $ids ) || empty( $bulk_action ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'No staff members or action selected.', 'digent-appointments' ) ] );
+		}
+
+		if ( 'delete' === $bulk_action ) {
+			$count = DGAP_Staff_Repo::bulk_delete( $ids );
+			wp_send_json_success( [ 'count' => $count, 'action' => 'delete' ] );
+		}
+
+		if ( 'active' === $bulk_action || 'inactive' === $bulk_action ) {
+			$status = ( 'active' === $bulk_action ) ? 1 : 0;
+			$count  = DGAP_Staff_Repo::bulk_update_status( $ids, $status );
+			wp_send_json_success( [ 'count' => $count, 'action' => $bulk_action ] );
+		}
+
+		wp_send_json_error( [ 'message' => esc_html__( 'Invalid bulk action.', 'digent-appointments' ) ] );
 	}
 
 	public function save() {

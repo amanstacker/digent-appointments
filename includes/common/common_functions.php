@@ -369,8 +369,8 @@ function dgap_get_dashboard_overview() {
 	);
 
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$active_timeoffs = $wpdb->get_results(
-		"SELECT id, name, type, entity_ids, dates FROM {$wpdb->prefix}dgap_timeoff WHERE status = 1",
+	$active_vacations = $wpdb->get_results(
+		"SELECT id, name, type, entity_ids, dates FROM {$wpdb->prefix}dgap_vacations WHERE status = 1",
 		ARRAY_A
 	);
 
@@ -392,7 +392,7 @@ function dgap_get_dashboard_overview() {
 	$vacation_staff_ids = [];
 	$upcoming_vacations = [];
 
-	foreach ( $active_timeoffs as $to ) {
+	foreach ( $active_vacations as $to ) {
 		$dates = json_decode( $to['dates'] ?? '[]', true );
 		$ids   = maybe_unserialize( $to['entity_ids'] );
 		if ( ! is_array( $ids ) ) {

@@ -59,9 +59,9 @@ jQuery(function ($) {
 		currentForm.find('.dgap-image-preview').attr('src', dgap_admin.default_avatar);
 
 		setTimeout(function () {
-			const texts = dgap.timeoff.getEntityTexts();
-			$('#timeoff-entity').closest('p').find('label').text(texts.label);
-			initTimeoffSelect2();
+			const texts = dgap.vacation.getEntityTexts();
+			$('#vacation-entity').closest('p').find('label').text(texts.label);
+			initVacationSelect2();
 		}, 100);
 
 	});
@@ -500,7 +500,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 	});
 	
 	/* =========================================================
-	 * Timeoff js starts here
+	 * Vacation js starts here
 	 * ========================================================= */	
 
 	let entityPreloaded = false;
@@ -518,8 +518,8 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				action: 'dgap_get_timeoff_entities',
-				type: $('#dgap-timeoff-type').val(),
+				action: 'dgap_get_vacation_entities',
+				type: $('#dgap-vacation-type').val(),
 				search: '',
 				page: 1,
 				_dgap_nonce: dgap_admin.nonce
@@ -540,9 +540,9 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		});
 	}
 
-	function initTimeoffSelect2() {
+	function initVacationSelect2() {
 
-		const $select = $('#timeoff-entity');
+		const $select = $('#vacation-entity');
 
 		if ( ! $select.length ) {
 			return;
@@ -554,7 +554,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 
 		$select.select2({
 			width: '100%',
-			placeholder: dgap.timeoff.getEntityTexts().placeholder,
+			placeholder: dgap.vacation.getEntityTexts().placeholder,
 			allowClear: true,
 			minimumInputLength: 0, // 👈 required for initial display
 			dropdownParent: $('#dgap-slide-panel'),
@@ -572,8 +572,8 @@ $(document).on('click', '.dgap-status-update', function (e) {
 					}
 
 					return {
-						action: 'dgap_get_timeoff_entities',
-						type: $('#dgap-timeoff-type').val(),
+						action: 'dgap_get_vacation_entities',
+						type: $('#dgap-vacation-type').val(),
 						search: params.term || '',
 						page: params.page || 1,
 						_dgap_nonce: dgap_admin.nonce
@@ -600,17 +600,17 @@ $(document).on('click', '.dgap-status-update', function (e) {
 	 * Type change → FULL reset + preload again
 	 * ========================================================= */
 
-	$(document).on('change', '#dgap-timeoff-type', function () {
+	$(document).on('change', '#dgap-vacation-type', function () {
 
-		const $select = $('#timeoff-entity');
-		const texts   = dgap.timeoff.getEntityTexts();
+		const $select = $('#vacation-entity');
+		const texts   = dgap.vacation.getEntityTexts();
 
 		$select.closest('p').find('label').text(texts.label);		
 
 		$select.empty();
 		entityPreloaded = false;
 
-		initTimeoffSelect2();
+		initVacationSelect2();
 	});
 	
 	/* =========================================================
@@ -620,7 +620,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 	let selectedDates = [];
 
 	function renderDates() {
-		const $list = $('#dgap-timeoff-dates').empty();
+		const $list = $('#dgap-vacation-dates').empty();
 
 		selectedDates.forEach(function (date) {
 			$list.append(
@@ -632,7 +632,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		});
 	}
 
-	$('#dgap-timeoff-calendar').datepicker({
+	$('#dgap-vacation-calendar').datepicker({
 		dateFormat: 'yy-mm-dd',
 		beforeShowDay: function (date) {
 
@@ -674,26 +674,26 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		}
 	});
 
-	$(document).on('click', '#dgap-timeoff-dates button', function () {
+	$(document).on('click', '#dgap-vacation-dates button', function () {
 
 		const date = $(this).closest('li').data('date');
 
 		selectedDates = selectedDates.filter(d => d !== date);
 
 		renderDates();
-		$('#dgap-timeoff-calendar').datepicker('refresh');
+		$('#dgap-vacation-calendar').datepicker('refresh');
 	});
 
 	/* =========================================================
 	 * Mode toggle
 	 * ========================================================= */
 
-	$(document).on('change', '#timeoff_mode_select', function () {
+	$(document).on('change', '#vacation_mode_select', function () {
 
 		if ( $(this).val() === 'time' ) {
-			$('.dgap-timeoff-time').slideDown(150);
+			$('.dgap-vacation-time').slideDown(150);
 		} else {
-			$('.dgap-timeoff-time').slideUp(150);
+			$('.dgap-vacation-time').slideUp(150);
 		}
 	});
 
@@ -708,7 +708,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		dgap.panel.close(currentForm)
 	});
 /* =========================================================
-	 * Timeoff js ends here
+	 * Vacation js ends here
 	 * ========================================================= */
 
 	/* ================= Edit ================= */
@@ -749,13 +749,13 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			});
 
 					/* ==================================================
-			* Timeoff: Restore Select2 entities
+			* Vacation: Restore Select2 entities
 			* ================================================== */
-			if ( currentEntity === 'timeoff' && res.data.entity_labels ) {
+			if ( currentEntity === 'vacation' && res.data.entity_labels ) {
 
-				const $select = $('#timeoff-entity');
+				const $select = $('#vacation-entity');
 
-				initTimeoffSelect2();
+				initVacationSelect2();
 
 				$select.empty();
 
@@ -768,9 +768,9 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			}
 
 			/* ==================================================
-			* Timeoff: Restore calendar dates
+			* Vacation: Restore calendar dates
 			* ================================================== */
-			if ( currentEntity === 'timeoff' && res.data.dates ) {
+			if ( currentEntity === 'vacation' && res.data.dates ) {
 
 				let parsed = [];
 
@@ -784,13 +784,13 @@ $(document).on('click', '.dgap-status-update', function (e) {
 				});
 
 				renderDates();
-				$('#dgap-timeoff-calendar').datepicker('refresh');
+				$('#dgap-vacation-calendar').datepicker('refresh');
 			}
 
 			/* ==================================================
-			* Timeoff: Restore mode & time
+			* Vacation: Restore mode & time
 			* ================================================== */
-			if ( currentEntity === 'timeoff' && res.data.dates ) {
+			if ( currentEntity === 'vacation' && res.data.dates ) {
 
 				let parsed = [];
 
@@ -802,11 +802,11 @@ $(document).on('click', '.dgap-status-update', function (e) {
 
 				const mode = first.mode || 'full';
 
-				$('#timeoff_mode_select').val(mode).trigger('change');
+				$('#vacation_mode_select').val(mode).trigger('change');
 
 				if ( mode === 'time' ) {
-					$('[name="timeoff_start"]').val(first.time_start || '00:00');
-					$('[name="timeoff_end"]').val(first.time_end || '00:00');
+					$('[name="vacation_start"]').val(first.time_start || '00:00');
+					$('[name="vacation_end"]').val(first.time_end || '00:00');
 				}
 			}
 
@@ -981,11 +981,11 @@ $(document).on('click', '.dgap-status-update', function (e) {
 
 		let extraData = [];
 
-		if ( entity === 'timeoff' && typeof selectedDates !== 'undefined' ) {
+		if ( entity === 'vacation' && typeof selectedDates !== 'undefined' ) {
 
-			const mode = $('#timeoff_mode_select').val() || 'full';
-			const timeStart = $('[name="timeoff_start"]').val() || '00:00';
-			const timeEnd   = $('[name="timeoff_end"]').val() || '00:00';
+			const mode = $('#vacation_mode_select').val() || 'full';
+			const timeStart = $('[name="vacation_start"]').val() || '00:00';
+			const timeEnd   = $('[name="vacation_end"]').val() || '00:00';
 
 			const datesPayload = selectedDates.map(function (date) {
 				return {
@@ -1003,7 +1003,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			});
 
 			// entity ids (same as before)
-			const entities = $('#timeoff-entity').val() || [];
+			const entities = $('#vacation-entity').val() || [];
 			entities.forEach(function (id) {
 				extraData.push({
 					name  : 'entity_ids[]',

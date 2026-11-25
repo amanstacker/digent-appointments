@@ -12,11 +12,11 @@
 		overlay = $('#dgap-overlay');
 	}
 
-	/* ================= Timeoff Helpers ================= */
-	dgap.timeoff = {
+	/* ================= Vacation Helpers ================= */
+	dgap.vacation = {
 
 		getEntityTexts() {
-			const type = $('#dgap-timeoff-type').val();
+			const type = $('#dgap-vacation-type').val();
 
 			if ( type === 'service' ) {
 				return {
@@ -66,10 +66,10 @@
 					currentForm.find('.dgap-break-row:not(:first)').remove();
 					currentForm.find('.dgap-day-pill span').removeClass('selected');
 					currentForm.find('.dgap-break-row').remove();	
-					$('#dgap-timeoff-calendar').datepicker('refresh');
-					$('.dgap-timeoff-time').hide();	
+					$('#dgap-vacation-calendar').datepicker('refresh');
+					$('.dgap-vacation-time').hide();	
 					
-					const $select = $('#timeoff-entity');					
+					const $select = $('#vacation-entity');					
 					$select.empty();
 
 				}

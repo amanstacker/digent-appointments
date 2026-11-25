@@ -33,6 +33,70 @@ class DGAP_Schedules_Repo {
 		return $result;
 	}
 
+	public static function count_all() {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::table() );
+	}
+
+	public static function get_filtered( $filters = [] ) {
+		global $wpdb;
+
+		$where  = [ '1=1' ];
+		$params = [];
+
+		if ( isset( $filters['status'] ) && $filters['status'] !== '' ) {
+			$where[]  = 's.status = %d';
+			$params[] = absint( $filters['status'] );
+		}
+
+		if ( ! empty( $filters['location_id'] ) ) {
+			$where[]  = 's.location_id = %d';
+			$params[] = absint( $filters['location_id'] );
+		}
+
+		if ( ! empty( $filters['service_id'] ) ) {
+			$where[]  = 's.service_id = %d';
+			$params[] = absint( $filters['service_id'] );
+		}
+
+		if ( ! empty( $filters['staff_id'] ) ) {
+			$where[]  = 's.staff_id = %d';
+			$params[] = absint( $filters['staff_id'] );
+		}
+
+		if ( ! empty( $filters['s'] ) ) {
+			$search   = '%' . $wpdb->esc_like( sanitize_text_field( $filters['s'] ) ) . '%';
+			$where[]  = "(l.name LIKE %s OR srv.name LIKE %s OR CONCAT_WS(' ', st.first_name, st.last_name) LIKE %s)";
+			$params[] = $search;
+			$params[] = $search;
+			$params[] = $search;
+		}
+
+		$where_sql = implode( ' AND ', $where );
+		$sql       = "
+			SELECT
+				s.*,
+				l.name AS location_name,
+				srv.name AS service_name,
+				CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+			FROM " . self::table() . " s
+			LEFT JOIN {$wpdb->prefix}dgap_locations l ON s.location_id = l.id
+			LEFT JOIN {$wpdb->prefix}dgap_services srv ON s.service_id = srv.id
+			LEFT JOIN {$wpdb->prefix}dgap_staff st ON s.staff_id = st.id
+			WHERE {$where_sql}
+			ORDER BY s.id DESC
+		";
+
+		if ( ! empty( $params ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			return $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A );
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		return $wpdb->get_results( $sql, ARRAY_A );
+	}
+
 	public static function get( $id ) {
 		$cache_key = 'dgap_schedule_' . $id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
@@ -145,6 +209,49 @@ class DGAP_Schedules_Repo {
 		wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
 
 		return (int) $result;
+	}
+
+	public static function bulk_update_status( $ids, $status ) {
+		global $wpdb;
+		$ids = array_values( array_filter( array_map( 'absint', (array) $ids ) ) );
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$params       = array_merge( [ absint( $status ) ], $ids );
+		$table        = self::table();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$updated = $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET status = %d WHERE id IN ({$placeholders})", $params ) );
+
+		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
+		foreach ( $ids as $id ) {
+			wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
+		}
+
+		return (int) $updated;
+	}
+
+	public static function bulk_delete( $ids ) {
+		global $wpdb;
+		$ids = array_values( array_filter( array_map( 'absint', (array) $ids ) ) );
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$table        = self::table();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ({$placeholders})", $ids ) );
+
+		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
+		foreach ( $ids as $id ) {
+			wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
+		}
+
+		return (int) $deleted;
 	}
 
 		/**

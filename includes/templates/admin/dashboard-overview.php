@@ -252,12 +252,12 @@ foreach ( $top_services as $srv ) {
 				</div>
 			</div>
 
-			<!-- Upcoming Vacations & Time Off -->
+			<!-- Upcoming Vacations -->
 			<div class="dgap-dash-card">
 				<div class="dgap-dash-card-header">
 					<div>
 						<h3><?php esc_html_e( 'Upcoming Vacations', 'digent-appointments' ); ?></h3>
-						<span class="dgap-dash-card-sub"><?php esc_html_e( 'Scheduled staff & service time off', 'digent-appointments' ); ?></span>
+						<span class="dgap-dash-card-sub"><?php esc_html_e( 'Scheduled staff & service vacations', 'digent-appointments' ); ?></span>
 					</div>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-vacations' ) ); ?>" class="dgap-link-pill is-secondary">
 						+ <?php esc_html_e( 'Add', 'digent-appointments' ); ?>
@@ -297,7 +297,7 @@ foreach ( $top_services as $srv ) {
 					<?php else : ?>
 						<div class="dgap-dash-empty is-compact">
 							<span class="dashicons dashicons-palmtree"></span>
-							<p><?php esc_html_e( 'No upcoming vacations or time off scheduled.', 'digent-appointments' ); ?></p>
+							<p><?php esc_html_e( 'No upcoming vacations scheduled.', 'digent-appointments' ); ?></p>
 						</div>
 					<?php endif; ?>
 				</div>

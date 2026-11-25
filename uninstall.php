@@ -29,7 +29,7 @@ function dgap_delete_plugin_data() {
 		$wpdb->prefix . 'dgap_schedules',
 		$wpdb->prefix . 'dgap_services',
 		$wpdb->prefix . 'dgap_staff',
-		$wpdb->prefix . 'dgap_timeoff',
+		$wpdb->prefix . 'dgap_vacations',
 	];
 
 	// Drop plugin tables.

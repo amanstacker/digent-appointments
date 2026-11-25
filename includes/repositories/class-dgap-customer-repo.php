@@ -16,6 +16,96 @@ class DGAP_Customer_Repo {
 
 	/* ================= Get ================= */
 
+	public static function count_all() {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		return (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . self::table() );
+	}
+
+	public static function get_filtered( $args = [] ) {
+		global $wpdb;
+
+		$table  = self::table();
+		$where  = [ '1=1' ];
+		$params = [];
+
+		if ( isset( $args['status'] ) && $args['status'] !== '' ) {
+			$where[]  = 'status = %d';
+			$params[] = (int) $args['status'];
+		}
+
+		if ( ! empty( $args['s'] ) ) {
+			$like     = '%' . $wpdb->esc_like( sanitize_text_field( $args['s'] ) ) . '%';
+			$where[]  = "( first_name LIKE %s OR last_name LIKE %s OR CONCAT_WS(' ', first_name, last_name) LIKE %s OR email LIKE %s OR phone LIKE %s )";
+			$params[] = $like;
+			$params[] = $like;
+			$params[] = $like;
+			$params[] = $like;
+			$params[] = $like;
+		}
+
+		$where_sql = implode( ' AND ', $where );
+
+		if ( ! empty( $args['count'] ) ) {
+			$sql = "SELECT COUNT(*) FROM {$table} WHERE {$where_sql}";
+			if ( ! empty( $params ) ) {
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+				return (int) $wpdb->get_var( $wpdb->prepare( $sql, $params ) );
+			}
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+			return (int) $wpdb->get_var( $sql );
+		}
+
+		$limit  = isset( $args['limit'] ) ? max( 1, (int) $args['limit'] ) : 20;
+		$offset = isset( $args['offset'] ) ? max( 0, (int) $args['offset'] ) : 0;
+
+		$sql      = "SELECT *, CONCAT_WS(' ', first_name, last_name) AS name FROM {$table} WHERE {$where_sql} ORDER BY id DESC LIMIT %d OFFSET %d";
+		$params[] = $limit;
+		$params[] = $offset;
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		return $wpdb->get_results( $wpdb->prepare( $sql, $params ), ARRAY_A );
+	}
+
+	public static function bulk_update_status( array $ids, $status ) {
+		global $wpdb;
+		$ids = array_values( array_filter( array_map( 'absint', $ids ) ) );
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$params       = array_merge( [ (int) $status ], $ids );
+		$sql          = 'UPDATE ' . self::table() . " SET status = %d WHERE id IN ({$placeholders})";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$updated = (int) $wpdb->query( $wpdb->prepare( $sql, $params ) );
+
+		wp_cache_delete( 'all_customers', self::cache_group() );
+		foreach ( $ids as $id ) {
+			wp_cache_delete( 'customer_' . $id, self::cache_group() );
+		}
+
+		return $updated;
+	}
+
+	public static function bulk_delete( array $ids ) {
+		global $wpdb;
+		$ids = array_values( array_filter( array_map( 'absint', $ids ) ) );
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$sql          = 'DELETE FROM ' . self::table() . " WHERE id IN ({$placeholders})";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$deleted = (int) $wpdb->query( $wpdb->prepare( $sql, $ids ) );
+
+		wp_cache_delete( 'all_customers', self::cache_group() );
+		foreach ( $ids as $id ) {
+			wp_cache_delete( 'customer_' . $id, self::cache_group() );
+		}
+
+		return $deleted;
+	}
+
 	public static function get_all() {
 		$cache_key = 'all_customers';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
@@ -86,7 +176,7 @@ class DGAP_Customer_Repo {
 				'image_id'       => $data['image_id'] ?? null, // added image_id
 				'status'         => $data['status'],
 			],
-			[ '%d','%s','%s','%s','%s','%s','%d','%d' ] // image_id is integer
+			[ '%d','%s','%s','%s','%s','%s','%s','%d','%d' ] // image_id is integer
 		);
 
 		if ( false === $result ) {

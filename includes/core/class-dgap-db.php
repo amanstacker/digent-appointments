@@ -43,7 +43,7 @@ class DGAP_DB {
 			PRIMARY KEY (id)
 		) $charset;";
 
-		$tables['timeoff'] = "CREATE TABLE {$wpdb->prefix}dgap_timeoff (
+		$tables['vacations'] = "CREATE TABLE {$wpdb->prefix}dgap_vacations (
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 			name VARCHAR(255) NOT NULL,
 			type ENUM('staff','service') NOT NULL,
