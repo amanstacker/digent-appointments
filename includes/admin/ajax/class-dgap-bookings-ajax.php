@@ -19,7 +19,106 @@ class DGAP_Bookings_Ajax {
 
 		add_action( 'wp_ajax_dgap_update_booking_status', [ $this, 'update_booking_status' ] );		
 		add_action( 'wp_ajax_dgap_bulk_action_bookings', [ $this, 'bulk_action' ] );
+		add_action( 'admin_post_dgap_export_bookings', [ $this, 'export_csv' ] );
 
+	}
+
+	/**
+	 * Export all or filtered bookings to CSV
+	 */
+	public function export_csv() {
+		check_admin_referer( 'dgap_export_bookings', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Permission denied.', 'digent-appointments' ), 403 );
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$filters = [
+			'status'      => isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '',
+			'location_id' => isset( $_GET['location_id'] ) ? absint( $_GET['location_id'] ) : 0,
+			'service_id'  => isset( $_GET['service_id'] ) ? absint( $_GET['service_id'] ) : 0,
+			'staff_id'    => isset( $_GET['staff_id'] ) ? absint( $_GET['staff_id'] ) : 0,
+			'date_from'   => isset( $_GET['date_from'] ) ? sanitize_text_field( wp_unslash( $_GET['date_from'] ) ) : '',
+			'date_to'     => isset( $_GET['date_to'] ) ? sanitize_text_field( wp_unslash( $_GET['date_to'] ) ) : '',
+			's'           => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '',
+		];
+
+		$rows = DGAP_Booking_Repo::get_filtered( $filters );
+
+		$filename = 'digent-bookings-' . current_time( 'Y-m-d' ) . '.csv';
+
+		// Prevent any stray warnings/buffered output from corrupting the CSV stream
+		// phpcs:ignore WordPress.PHP.IniSet.display_errors_Blacklisted, WordPress.PHP.NoSilencedErrors.Discouraged
+		@ini_set( 'display_errors', '0' );
+		while ( ob_get_level() > 0 ) {
+			ob_end_clean();
+		}
+
+		if ( ! headers_sent() ) {
+			nocache_headers();
+			header( 'Content-Type: text/csv; charset=utf-8' );
+			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		}
+
+		$out = fopen( 'php://output', 'w' );
+		// UTF-8 BOM for Excel compatibility
+		fwrite( $out, "\xEF\xBB\xBF" );
+
+		fputcsv(
+			$out,
+			[
+				'Booking ID',
+				'Date',
+				'Start Time',
+				'End Time',
+				'Customer',
+				'Email',
+				'Location',
+				'Service',
+				'Staff',
+				'Price',
+				'Status',
+				'Notes',
+			],
+			',',
+			'"',
+			'\\'
+		);
+
+		$safe_cell = static function ( $val ) {
+			$val = (string) $val;
+			if ( $val !== '' && in_array( $val[0], [ '=', '+', '-', '@' ], true ) ) {
+				return "'" . $val;
+			}
+			return $val;
+		};
+
+		foreach ( $rows as $r ) {
+			fputcsv(
+				$out,
+				[
+					(int) ( $r['id'] ?? 0 ),
+					$safe_cell( $r['booking_date'] ?? '' ),
+					$safe_cell( $r['start_time'] ?? '' ),
+					$safe_cell( $r['end_time'] ?? '' ),
+					$safe_cell( trim( (string) ( $r['customer_name'] ?? '' ) ) ),
+					$safe_cell( $r['customer_email'] ?? '' ),
+					$safe_cell( $r['location_name'] ?? '' ),
+					$safe_cell( $r['service_name'] ?? '' ),
+					$safe_cell( trim( (string) ( $r['staff_name'] ?? '' ) ) ),
+					number_format( (float) ( $r['price'] ?? 0 ), 2, '.', '' ),
+					$safe_cell( ucfirst( (string) ( $r['status'] ?? '' ) ) ),
+					$safe_cell( $r['booking_note'] ?? '' ),
+				],
+				',',
+				'"',
+				'\\'
+			);
+		}
+
+		fclose( $out );
+		exit;
 	}
 
 	/**

@@ -2,6 +2,10 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
+$total_bookings = DGAP_Booking_Repo::count_all();
+$export_url     = wp_nonce_url( admin_url( 'admin-post.php?action=dgap_export_bookings' ), 'dgap_export_bookings', '_dgap_nonce' );
 ?>
 
 <div class="dgap-top-strip">
@@ -12,6 +16,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<div class="dgap-strip-right">
+			<?php if ( $total_bookings > 0 ) : ?>
+				<a
+					href="<?php echo esc_url( $export_url ); ?>"
+					class="dgap-btn button button-secondary dgap-export-btn"
+					title="<?php esc_attr_e( 'Export all bookings as CSV', 'digent-appointments' ); ?>"
+				>
+					<span class="dashicons dashicons-download"></span>
+					<span><?php esc_html_e( 'Export CSV', 'digent-appointments' ); ?></span>
+				</a>
+			<?php endif; ?>
 			<button class="dgap-btn button button-primary dgap-add" data-entity="booking" data-title="<?php esc_attr_e( 'Add Booking', 'digent-appointments' ); ?>">
 				<?php esc_html_e( 'Add Booking', 'digent-appointments' ); ?>
 			</button>

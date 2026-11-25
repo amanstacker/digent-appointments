@@ -32,6 +32,19 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 		</div>
 
 		<div class="dgap-strip-right">
+			<?php if ( $total_bookings > 0 ) :
+				$export_args = array_merge( [ 'action' => 'dgap_export_bookings' ], array_filter( $filters ) );
+				$export_url  = wp_nonce_url( add_query_arg( $export_args, admin_url( 'admin-post.php' ) ), 'dgap_export_bookings', '_dgap_nonce' );
+			?>
+				<a
+					href="<?php echo esc_url( $export_url ); ?>"
+					class="dgap-btn button button-secondary dgap-export-btn"
+					title="<?php echo $has_filters ? esc_attr__( 'Export filtered bookings as CSV', 'digent-appointments' ) : esc_attr__( 'Export all bookings as CSV', 'digent-appointments' ); ?>"
+				>
+					<span class="dashicons dashicons-download"></span>
+					<span><?php echo $has_filters ? esc_html__( 'Export Filtered', 'digent-appointments' ) : esc_html__( 'Export CSV', 'digent-appointments' ); ?></span>
+				</a>
+			<?php endif; ?>
 			<button
 				class="dgap-btn button button-primary dgap-add"
 				data-entity="booking"

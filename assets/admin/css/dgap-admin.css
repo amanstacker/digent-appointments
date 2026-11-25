@@ -3765,6 +3765,17 @@
 	border-color: #991b1b !important;
 }
 
+.dgap-export-btn .dashicons {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	font-size: 15px !important;
+	width: 15px !important;
+	height: 15px !important;
+	line-height: 1 !important;
+	margin: 0 !important;
+}
+
 
 
 
