@@ -311,7 +311,7 @@ function dgap_get_dashboard_overview() {
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$monthly_revenue = (float) $wpdb->get_var(
 		$wpdb->prepare(
-			"SELECT COALESCE(SUM(price), 0) FROM {$wpdb->prefix}dgap_bookings WHERE status IN ('confirmed', 'approved', 'completed') AND booking_date >= %s",
+			"SELECT COALESCE(SUM(price), 0) FROM {$wpdb->prefix}dgap_bookings WHERE status IN ('confirmed', 'completed') AND booking_date >= %s",
 			$month_start
 		)
 	);

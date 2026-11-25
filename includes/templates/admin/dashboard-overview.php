@@ -110,7 +110,6 @@ foreach ( $top_services as $srv ) {
 								$status_map = [
 									'pending'   => 'is-warning',
 									'confirmed' => 'is-success',
-									'approved'  => 'is-success',
 									'completed' => 'is-success',
 									'cancelled' => 'is-danger',
 								];

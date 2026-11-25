@@ -68,7 +68,6 @@ class DGAP_Bookings_Table extends WP_List_Table {
 		$map = [
 			'pending'   => 'warning',
 			'confirmed' => 'active',
-			'approved'  => 'active',
 			'cancelled' => 'inactive',
 			'completed' => 'success',
 		];
@@ -116,18 +115,16 @@ class DGAP_Bookings_Table extends WP_List_Table {
 	public function column_actions( $item ) {
 		return sprintf(
 			'<div class="dgap-table-actions">
-				<button type="button" class="button button-small dgap-edit dgap-action-btn" data-entity="booking" data-id="%1$d" title="%2$s">
+				<button type="button" class="button button-small dgap-edit dgap-action-btn" data-entity="booking" data-id="%1$d" title="%2$s" aria-label="%2$s">
 					<span class="dashicons dashicons-edit"></span>
-					<span>%2$s</span>
 				</button>
-				<button type="button" class="button button-small button-secondary dgap-delete dgap-action-btn is-delete" data-entity="booking" data-id="%1$d" title="%3$s">
+				<button type="button" class="button button-small button-secondary dgap-delete dgap-action-btn is-delete" data-entity="booking" data-id="%1$d" title="%3$s" aria-label="%3$s">
 					<span class="dashicons dashicons-trash"></span>
-					<span>%3$s</span>
 				</button>
 			</div>',
 			esc_attr( $item['id'] ),
-			esc_html__( 'Edit', 'digent-appointments' ),
-			esc_html__( 'Delete', 'digent-appointments' )
+			esc_attr__( 'Edit', 'digent-appointments' ),
+			esc_attr__( 'Delete', 'digent-appointments' )
 		);
 	}
 

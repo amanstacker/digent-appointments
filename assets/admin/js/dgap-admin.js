@@ -109,13 +109,27 @@ jQuery(function ($) {
 	$(document).on('click', '.dgap-delete', function (e) {
 		e.preventDefault();
 
-		if (!confirm('Are you sure?')) return;
-
 		const $btn   = $(this);
 		const entity = $btn.data('entity');
 		const id     = $btn.data('id');
 
-		dgapSetBtnLoading($btn, true, 'Deleting...');
+		// Use custom confirmation modal if present on the page
+		if ($('#dgap-confirm-modal').length) {
+			dgapOpenConfirmModal({
+				type: 'single_delete',
+				entity: entity,
+				id: id,
+				isDanger: true,
+				title: 'Confirm Delete',
+				message: 'Are you sure you want to permanently delete this ' + entity + '? This action cannot be undone.',
+				confirmText: 'Yes, Delete'
+			});
+			return;
+		}
+
+		if (!confirm('Are you sure?')) return;
+
+		dgapSetBtnLoading($btn, true, '');
 
 		$.post(dgap_admin.ajax_url, {
 			action   : 'dgap_delete_' + entity,
@@ -380,24 +394,45 @@ if ( bookingForm.length ) {
 		completed:'success'
 	};
 
-// Toggle popover + keep current status selected
+// Toggle popover + keep current status selected + smart viewport positioning
 $(document).on('click', '.dgap-status-menu', function (e) {
 	e.stopPropagation();
 
-	const wrap    = $(this).closest('.dgap-status-wrap');
+	const $btn    = $(this);
+	const wrap    = $btn.closest('.dgap-status-wrap');
 	const popover = wrap.find('.dgap-status-popover');
 	const select  = wrap.find('.dgap-status-select');
 	const badge   = wrap.find('.dgap-badge');
 
 	// Close other popovers
-	$('.dgap-status-popover').not(popover).hide();
+	$('.dgap-status-popover').not(popover).hide().removeClass('is-dropup is-dropdown');
 
-	// 🔑 Set current status from data-status
+	// Set current status from data-status
 	const currentStatus = badge.data('status');
 	select.val(currentStatus);
 
-	// Toggle this popover
-	popover.toggle();
+	// Reset update button if needed
+	dgapSetBtnLoading(wrap.find('.dgap-status-update'), false);
+
+	if (popover.is(':visible')) {
+		popover.hide();
+		return;
+	}
+
+	// Measure and auto-position upward if near bottom of viewport
+	popover.removeClass('is-dropup is-dropdown').css({ visibility: 'hidden', display: 'block' });
+	const btnRect = $btn[0].getBoundingClientRect();
+	const popHeight = popover.outerHeight() || 220;
+	const spaceBelow = window.innerHeight - btnRect.bottom;
+	const spaceAbove = btnRect.top;
+
+	if (spaceBelow < popHeight + 20 && spaceAbove > spaceBelow) {
+		popover.addClass('is-dropup');
+	} else {
+		popover.addClass('is-dropdown');
+	}
+
+	popover.css({ visibility: 'visible' }).hide().fadeIn(120);
 });
 
 // Keep popover open on click
@@ -414,12 +449,15 @@ $(document).on('click', function () {
 $(document).on('click', '.dgap-status-update', function (e) {
 	e.preventDefault();
 
-	const wrap   = $(this).closest('.dgap-status-wrap');
+	const $updateBtn = $(this);
+	const wrap   = $updateBtn.closest('.dgap-status-wrap');
 	const id     = wrap.data('id');
 	const status = wrap.find('.dgap-status-select').val();
 	const notify = wrap.find('.dgap-status-notify').is(':checked');
 
 	const badge  = wrap.find('.dgap-badge');
+
+	dgapSetBtnLoading($updateBtn, true, 'Updating...');
 
 	$.post(ajaxurl, {
 		action:   'dgap_update_booking_status',
@@ -428,6 +466,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		status:   status,
 		notify:   notify
 	}, function (res) {
+		dgapSetBtnLoading($updateBtn, false);
 
 		if ( ! res || ! res.success ) {
 			return;
@@ -449,6 +488,8 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		// 4️⃣ Reset checkbox & close popover
 		wrap.find('.dgap-status-notify').prop('checked', false);
 		wrap.find('.dgap-status-popover').hide();
+	}).fail(function () {
+		dgapSetBtnLoading($updateBtn, false);
 	});
 });
 	// Close popover on ESC key
@@ -1205,6 +1246,27 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		$err.hide().text('');
 
 		dgapSetBtnLoading($btn, true, pendingBulkAction.isDanger ? 'Deleting...' : 'Updating...');
+
+		if (pendingBulkAction.type === 'single_delete') {
+			$.post(dgap_admin.ajax_url, {
+				action: 'dgap_delete_' + pendingBulkAction.entity,
+				id: pendingBulkAction.id,
+				_dgap_nonce: dgap_admin.nonce
+			})
+			.done(function (res) {
+				if (res && res.success) {
+					location.reload();
+				} else {
+					dgapSetBtnLoading($btn, false);
+					$err.text(res?.data?.message || 'Delete failed.').fadeIn();
+				}
+			})
+			.fail(function () {
+				dgapSetBtnLoading($btn, false);
+				$err.text('Server error. Please try again.').fadeIn();
+			});
+			return;
+		}
 
 		$.post(dgap_admin.ajax_url, {
 			action: 'dgap_bulk_action_bookings',

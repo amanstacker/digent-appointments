@@ -234,49 +234,68 @@
 	color: #ffffff !important;
 }
 
-/* ================= Checkboxes & Radios in Popups ================= */
+/* ================= Checkboxes & Radios (Global Emerald Theme) ================= */
 #dgap-slide-panel input[type="checkbox"],
 #dgap-slide-panel input[type="radio"],
 .dgap-form input[type="checkbox"],
-.dgap-form input[type="radio"] {
+.dgap-form input[type="radio"],
+.dgap-admin-wrap input[type="checkbox"],
+.dgap-admin-wrap input[type="radio"] {
 	border-color: var(--dgap-slate-300);
 	border-radius: 4px;
 	transition: var(--dgap-transition);
 }
 
 #dgap-slide-panel input[type="radio"],
-.dgap-form input[type="radio"] {
+.dgap-form input[type="radio"],
+.dgap-admin-wrap input[type="radio"] {
 	border-radius: 50%;
 }
 
 #dgap-slide-panel input[type="checkbox"]:focus,
 #dgap-slide-panel input[type="radio"]:focus,
 .dgap-form input[type="checkbox"]:focus,
-.dgap-form input[type="radio"]:focus {
+.dgap-form input[type="radio"]:focus,
+.dgap-admin-wrap input[type="checkbox"]:focus,
+.dgap-admin-wrap input[type="radio"]:focus {
 	border-color: var(--dgap-primary) !important;
 	box-shadow: 0 0 0 2px var(--dgap-primary-focus) !important;
 	outline: none !important;
 }
 
 #dgap-slide-panel input[type="checkbox"]:checked,
-#dgap-slide-panel input[type="radio"]:checked,
 .dgap-form input[type="checkbox"]:checked,
-.dgap-form input[type="radio"]:checked {
+.dgap-admin-wrap input[type="checkbox"]:checked {
+	background-color: var(--dgap-primary) !important;
+	border-color: var(--dgap-primary) !important;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M3.5 8.5l3 3 6-6.5'/%3E%3C/svg%3E") !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+	background-size: 12px 12px !important;
+}
+
+#dgap-slide-panel input[type="radio"]:checked,
+.dgap-form input[type="radio"]:checked,
+.dgap-admin-wrap input[type="radio"]:checked {
 	background-color: var(--dgap-primary) !important;
 	border-color: var(--dgap-primary) !important;
 }
 
 #dgap-slide-panel input[type="checkbox"]:checked::before,
-.dgap-form input[type="checkbox"]:checked::before {
-	content: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cpath%20d%3D%27M14.83%204.89l1.34.94-9.9%2014.13-5.26-4.63%201.32-1.49%203.95%203.47%208.55-12.42z%27%20fill%3D%27%23ffffff%27%2F%3E%3C%2Fsvg%3E") !important;
-	margin: -0.1875rem 0 0 -0.25rem !important;
-	height: 1.3125rem !important;
-	width: 1.3125rem !important;
+.dgap-form input[type="checkbox"]:checked::before,
+.dgap-admin-wrap input[type="checkbox"]:checked::before {
+	content: none !important;
+	display: none !important;
 }
 
 #dgap-slide-panel input[type="radio"]:checked::before,
-.dgap-form input[type="radio"]:checked::before {
+.dgap-form input[type="radio"]:checked::before,
+.dgap-admin-wrap input[type="radio"]:checked::before {
 	background-color: #ffffff !important;
+}
+
+.dgap-admin-wrap .wp-list-table tbody tr:has(input[name="ids[]"]:checked) {
+	background-color: #f0fdf4 !important;
 }
 
 /* ================= Toggle Switch ================= */
@@ -1178,75 +1197,83 @@
 	background: #f0f0f1;
 }
 
-/* ===== Popover Card (LEFT SIDE, CENTERED) ===== */
+/* ===== Popover Card (Smart Auto-Flip Left Side) ===== */
 .dgap-status-popover {
 	position: absolute;
-
-	top: 50%;
+	top: -8px;
 	right: calc(100% + 10px);
-	transform: translateY(-50%);
+	transform: none;
+	z-index: 99999;
 
-	z-index: 1000;
-
-	width: 260px;
-	padding: 14px;
+	width: 248px;
+	padding: 16px;
 
 	background: #ffffff;
-	border: 1px solid #e2e4e7;
-	border-radius: 5px;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: 10px;
 
-	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+	box-shadow: 0 14px 34px rgba(15, 23, 42, 0.16);
+}
 
-	animation: dgap-popover-fade 0.15s ease-out;
+.dgap-status-popover.is-dropup {
+	top: auto;
+	bottom: -8px;
 }
 
 /* ===== Arrow (points to 3-dot) ===== */
 .dgap-status-popover::before {
 	content: '';
 	position: absolute;
+	top: 16px;
+	right: -7px;
+	width: 12px;
+	height: 12px;
+	background: #ffffff;
+	border-top: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-right: 1px solid var(--dgap-slate-200, #e2e8f0);
+	transform: rotate(45deg);
+}
 
-	top: 50%;
-	right: -8px;
-	transform: translateY(-50%);
-
-	width: 0;
-	height: 0;
-
-	border-top: 8px solid transparent;
-	border-bottom: 8px solid transparent;
-	border-left: 8px solid #ffffff;
+.dgap-status-popover.is-dropup::before {
+	top: auto;
+	bottom: 16px;
 }
 
 /* ===== Header ===== */
 .dgap-status-popover strong {
 	display: block;
-	font-size: 14px;
-	font-weight: 600;
+	font-size: 13.5px;
+	font-weight: 700;
 	margin-bottom: 10px;
-	color: #1d2327;
+	color: var(--dgap-slate-900, #0f172a);
 }
 
 /* ===== Divider ===== */
 .dgap-status-popover hr {
 	border: none;
-	border-top: 1px solid #ececec;
-	margin: 10px 0;
+	border-top: 1px solid var(--dgap-slate-100, #f1f5f9);
+	margin: 12px 0;
 }
 
 /* ===== Select ===== */
 .dgap-status-popover select {
 	width: 100%;
 	height: 36px;
-	padding: 6px 10px;
+	min-height: 36px;
+	padding: 0 10px;
 	font-size: 13px;
-	border-radius: 6px;
-	border: 1px solid var(--dgap-slate-300);
+	font-weight: 500;
+	color: var(--dgap-slate-800, #1e293b);
+	border-radius: 7px;
+	border: 1px solid var(--dgap-slate-300, #cbd5e1);
 	background: #ffffff;
+	box-sizing: border-box;
+	cursor: pointer;
 }
 
 .dgap-status-popover select:focus {
-	border-color: var(--dgap-primary);
-	box-shadow: 0 0 0 2px var(--dgap-primary-focus);
+	border-color: var(--dgap-primary, #10b981);
+	box-shadow: 0 0 0 2px var(--dgap-primary-focus, rgba(16, 185, 129, 0.2));
 	outline: none;
 }
 
@@ -1254,18 +1281,36 @@
 .dgap-notify {
 	display: flex;
 	align-items: center;
-	gap: 6px;
-	margin: 12px 0;
-	font-size: 13px;
-	color: #444;
+	gap: 8px;
+	margin: 0 0 12px 0;
+	padding: 8px 10px;
+	border-radius: 6px;
+	background: var(--dgap-slate-50, #f8fafc);
+	border: 1px solid var(--dgap-slate-100, #f1f5f9);
+	font-size: 12.5px;
+	font-weight: 500;
+	color: var(--dgap-slate-700, #334155);
+	cursor: pointer;
+}
+
+.dgap-notify input[type="checkbox"] {
+	margin: 0;
+	accent-color: var(--dgap-primary, #10b981);
 }
 
 /* ===== Action Button ===== */
 .dgap-status-update {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: 6px !important;
 	width: 100%;
-	height: 36px;
-	border-radius: 6px;
-	font-weight: 600;
+	height: 34px !important;
+	min-height: 34px !important;
+	line-height: 1 !important;
+	border-radius: 6px !important;
+	font-size: 13px !important;
+	font-weight: 600 !important;
 }
 
 /* ===============================
@@ -2102,8 +2147,8 @@
 	line-height: 1.4;
 }
 
-/* Badges */
-.dgap-badge {
+/* Badges (Scoped to Onboarding Stepper & Guard Card) */
+.dgap-onboarding-step .dgap-badge {
 	display: inline-block;
 	font-size: 10px;
 	font-weight: 600;
@@ -2114,22 +2159,22 @@
 	letter-spacing: 0.02em;
 }
 
-.dgap-badge-active {
+.dgap-onboarding-step .dgap-badge-active {
 	background: #dcfce7;
 	color: #15803d;
 }
 
-.dgap-badge-pending {
+.dgap-onboarding-step .dgap-badge-pending {
 	background: #fef3c7;
 	color: #b45309;
 }
 
-.dgap-badge-locked {
+.dgap-onboarding-step .dgap-badge-locked {
 	background: #f1f5f9;
 	color: #64748b;
 }
 
-.dgap-badge-success {
+.dgap-guard-card .dgap-badge-success {
 	background: #dcfce7;
 	color: #166534;
 	font-size: 11.5px;
@@ -2944,20 +2989,49 @@
    List View: Filter Bar, Status Badges & Action Icons
    ========================================================================== */
 
-/* Missing Status Badges for Bookings Table */
-.dgap-badge-warning {
+/* Consistent Status Badges for All List Tables */
+.dgap-admin-wrap .wp-list-table .dgap-badge {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	min-width: 88px !important;
+	height: 24px !important;
+	padding: 0 10px !important;
+	border-radius: 9999px !important;
+	font-size: 11.5px !important;
+	font-weight: 600 !important;
+	letter-spacing: 0.02em !important;
+	text-transform: capitalize !important;
+	line-height: 1 !important;
+	box-sizing: border-box !important;
+	white-space: nowrap !important;
+}
+
+.dgap-admin-wrap .wp-list-table .dgap-badge-active {
+	background: var(--dgap-status-active-bg, #ecfdf5) !important;
+	color: var(--dgap-status-active-text, #059669) !important;
+	border: 1px solid var(--dgap-status-active-border, #a7f3d0) !important;
+}
+
+.dgap-admin-wrap .wp-list-table .dgap-badge-warning {
 	background: var(--dgap-status-warning-bg, #fffbeb) !important;
 	color: var(--dgap-status-warning-text, #d97706) !important;
 	border: 1px solid var(--dgap-status-warning-border, #fde68a) !important;
 }
 
-.dgap-badge-success {
-	background: #ecfdf5 !important;
-	color: #047857 !important;
-	border: 1px solid #a7f3d0 !important;
+.dgap-admin-wrap .wp-list-table .dgap-badge-success {
+	background: #eff6ff !important;
+	color: #1d4ed8 !important;
+	border: 1px solid #bfdbfe !important;
 }
 
-.dgap-badge-default {
+.dgap-admin-wrap .wp-list-table .dgap-badge-inactive {
+	background: var(--dgap-status-inactive-bg, #fef2f2) !important;
+	color: var(--dgap-status-inactive-text, #dc2626) !important;
+	border: 1px solid var(--dgap-status-inactive-border, #fecaca) !important;
+}
+
+.dgap-admin-wrap .wp-list-table .dgap-badge-default {
 	background: var(--dgap-slate-100, #f1f5f9) !important;
 	color: var(--dgap-slate-600, #475569) !important;
 	border: 1px solid var(--dgap-slate-200, #e2e8f0) !important;
@@ -2966,8 +3040,32 @@
 /* Clean Status Wrap & 3-Dot Menu */
 .dgap-status-wrap {
 	justify-content: flex-start !important;
-	gap: 8px !important;
-	min-width: 130px !important;
+	gap: 6px !important;
+	min-width: 120px !important;
+}
+
+/* Compact Right-Side Columns so Left Text Columns Get More Space */
+.dgap-admin-wrap .wp-list-table th.column-price,
+.dgap-admin-wrap .wp-list-table td.column-price {
+	width: 82px;
+	white-space: nowrap;
+}
+
+.dgap-admin-wrap .wp-list-table th.column-status,
+.dgap-admin-wrap .wp-list-table td.column-status {
+	width: 140px;
+	white-space: nowrap;
+}
+
+.dgap-admin-wrap .wp-list-table th.column-actions,
+.dgap-admin-wrap .wp-list-table td.column-actions {
+	width: 92px;
+	white-space: nowrap;
+}
+
+.dgap-admin-wrap .wp-list-table th.column-date_time,
+.dgap-admin-wrap .wp-list-table td.column-date_time {
+	min-width: 145px;
 }
 
 .dgap-status-menu {
@@ -3007,18 +3105,16 @@
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
-	gap: 4px !important;
-	height: 28px !important;
-	min-height: 28px !important;
-	line-height: 26px !important;
-	padding: 0 9px !important;
+	width: 30px !important;
+	height: 30px !important;
+	min-height: 30px !important;
+	line-height: 1 !important;
+	padding: 0 !important;
 	margin: 0 !important;
 	border-radius: 6px !important;
-	font-size: 12px !important;
-	font-weight: 500 !important;
 	background: #ffffff !important;
 	border: 1px solid var(--dgap-slate-300, #cbd5e1) !important;
-	color: var(--dgap-slate-700, #334155) !important;
+	color: var(--dgap-slate-600, #475569) !important;
 	transition: all 0.15s ease !important;
 }
 
