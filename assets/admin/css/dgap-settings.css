@@ -699,3 +699,187 @@
 		flex: 1 1 100%;
 	}
 }
+
+
+/* ---------- Tools Tab Cards & Health Badges ---------- */
+.dgap-tools-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 4px 0 16px;
+}
+
+.dgap-tool-card {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin: 0;
+	padding: 18px 20px;
+	background: #f8fafc;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: 8px;
+}
+
+.dgap-tool-card.is-danger {
+	background: #fef2f2;
+	border-color: #fecaca;
+}
+
+.dgap-tool-card-info {
+	flex: 1 1 320px;
+	min-width: 0;
+}
+
+.dgap-tool-card-info h4 {
+	margin: 0 0 4px;
+	font-size: 14.5px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
+}
+
+.dgap-tool-card-info p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--dgap-slate-600, #475569);
+}
+
+.dgap-tool-inline-form {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 0;
+	padding: 0 !important;
+	flex-shrink: 0;
+}
+
+.dgap-tool-file-input {
+	display: inline-block;
+	vertical-align: middle;
+	height: 36px;
+	padding: 2px 14px 4px 6px;
+	background: #ffffff;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: 6px;
+	font-size: 13px;
+	line-height: 26px;
+	color: var(--dgap-slate-600, #475569);
+	max-width: 100%;
+	cursor: pointer;
+	box-sizing: border-box;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dgap-tool-file-input:hover {
+	border-color: #cbd5e1;
+}
+
+.dgap-tool-file-input:focus {
+	outline: none;
+	border-color: var(--dgap-primary, #10b981);
+	box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+}
+
+.dgap-tool-file-input::file-selector-button {
+	height: 26px;
+	padding: 0 12px;
+	margin: 0 10px 2px 3px;
+	vertical-align: middle;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: 4px;
+	background: #f1f5f9;
+	color: var(--dgap-slate-900, #0f172a);
+	font-size: 12.5px;
+	font-weight: 600;
+	line-height: 24px;
+	cursor: pointer;
+	transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.dgap-tool-file-input::file-selector-button:hover {
+	background: #e2e8f0;
+	border-color: #cbd5e1;
+}
+
+.dgap-tool-btn {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: 6px !important;
+	height: 36px !important;
+	min-height: 36px !important;
+	line-height: 1 !important;
+	padding: 0 16px !important;
+	border-radius: 6px !important;
+	font-weight: 600 !important;
+	text-decoration: none !important;
+	flex-shrink: 0;
+}
+
+.dgap-tool-btn.button-primary {
+	background: var(--dgap-primary, #10b981) !important;
+	border-color: var(--dgap-primary, #10b981) !important;
+}
+
+.dgap-tool-btn.button-primary:hover {
+	background: var(--dgap-primary-hover, #059669) !important;
+	border-color: var(--dgap-primary-hover, #059669) !important;
+}
+
+.dgap-tool-btn.button-secondary {
+	background: #ffffff !important;
+	border-color: var(--dgap-primary, #10b981) !important;
+	color: var(--dgap-primary-hover, #059669) !important;
+	box-shadow: none !important;
+}
+
+.dgap-tool-btn.button-secondary:hover,
+.dgap-tool-btn.button-secondary:focus {
+	background: #ecfdf5 !important;
+	border-color: var(--dgap-primary-hover, #059669) !important;
+	color: #047857 !important;
+	box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.12) !important;
+}
+
+.dgap-tool-btn .dashicons {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	font-size: 15px !important;
+	width: 15px !important;
+	height: 15px !important;
+	line-height: 15px !important;
+	margin: 0 !important;
+}
+
+.dgap-tool-btn-danger {
+	color: #dc2626 !important;
+	border-color: #fca5a5 !important;
+	background: #ffffff !important;
+}
+
+.dgap-tool-btn-danger:hover {
+	background: #dc2626 !important;
+	border-color: #dc2626 !important;
+	color: #ffffff !important;
+}
+
+.dgap-health-badge {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 9999px;
+	font-size: 11px;
+	font-weight: 700;
+}
+
+.dgap-health-badge.is-ok {
+	background: #dcfce7;
+	color: #166534;
+}
+
+.dgap-health-badge.is-missing {
+	background: #fee2e2;
+	color: #991b1b;
+}

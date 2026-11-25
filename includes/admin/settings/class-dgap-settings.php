@@ -14,7 +14,7 @@ class DGAP_Settings {
 			'notifications',
 			'tools',
 			'advanced',
-			'help',
+			'support',
 		];
 
 		$tabs = apply_filters( 'dgap_settings_registered_tabs', $tabs );

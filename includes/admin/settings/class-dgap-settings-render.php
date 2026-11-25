@@ -28,6 +28,8 @@ class DGAP_Settings_Render {
 				'label'    => esc_html__( 'Tools', 'digent-appointments' ),
 				'sections' => [
 					'import_export' => esc_html__( 'Import / Export', 'digent-appointments' ),
+					'system_status' => esc_html__( 'System Status', 'digent-appointments' ),
+					'maintenance'   => esc_html__( 'Database & Cache', 'digent-appointments' ),
 					'data_cleanup'  => esc_html__( 'Data Cleanup', 'digent-appointments' ),
 					'reset'         => esc_html__( 'Reset', 'digent-appointments' ),
 				],
@@ -40,8 +42,8 @@ class DGAP_Settings_Render {
 					'roles_permissions' => esc_html__( 'Access & CSS', 'digent-appointments' ),
 				],
 			],
-			'help' => [
-				'label'    => esc_html__( 'Help', 'digent-appointments' ),
+			'support' => [
+				'label'    => esc_html__( 'Support', 'digent-appointments' ),
 				'sections' => [
 					'contact' => esc_html__( 'Contact Support', 'digent-appointments' ),
 				],
@@ -74,7 +76,7 @@ class DGAP_Settings_Render {
 				</div>
 				<div class="dgap-header-right">
 					<a href="https://profiles.wordpress.org/amanstacker/" target="_blank" class="button button-secondary"><?php esc_html_e( 'Documentation', 'digent-appointments' ); ?></a>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-settings&tab=help' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Support', 'digent-appointments' ); ?></a>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-settings&tab=support' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Support', 'digent-appointments' ); ?></a>
 				</div>
 			</div>
 

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<div class="dgap-strip-right">
 			<a href="https://profiles.wordpress.org/amanstacker/" target="_blank" class="dgap-btn button button-secondary"><?php esc_html_e( 'Documentation', 'digent-appointments' ); ?></a>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-settings&tab=help' ) ); ?>" class="dgap-btn button button-secondary"><?php esc_html_e( 'Support', 'digent-appointments' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-settings&tab=support' ) ); ?>" class="dgap-btn button button-secondary"><?php esc_html_e( 'Support', 'digent-appointments' ); ?></a>
 			<?php dgap_render_upgrade_button( 'primary' ); ?>
 		</div>
 	</div>
