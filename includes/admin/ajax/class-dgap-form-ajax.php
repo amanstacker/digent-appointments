@@ -10,6 +10,7 @@ class DGAP_Form_Ajax {
 		add_action( 'wp_ajax_dgap_render_preview', [ $this, 'render_preview' ] );
 		add_action( 'wp_ajax_dgap_save_form', [ $this, 'save_form' ] );
 		add_action( 'wp_ajax_dgap_delete_form', [ $this, 'delete' ] );
+		add_action( 'wp_ajax_dgap_bulk_action_forms', [ $this, 'bulk_action' ] );
 
 	}
 
@@ -119,6 +120,43 @@ class DGAP_Form_Ajax {
 
 			wp_send_json_success();
 		}
+	}
+
+	/**
+	 * Bulk Actions (Activate, Deactivate, Delete)
+	 */
+	public function bulk_action() {
+		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Unauthorized', 'digent-appointments' ) ], 403 );
+		}
+
+		$action = sanitize_text_field( wp_unslash( $_POST['bulk_action'] ?? '' ) );
+		$ids    = isset( $_POST['ids'] ) && is_array( $_POST['ids'] )
+			? array_values( array_filter( array_map( 'absint', $_POST['ids'] ) ) )
+			: [];
+
+		if ( empty( $ids ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'No items selected.', 'digent-appointments' ) ] );
+		}
+
+		if ( 'status_active' === $action ) {
+			DGAP_Form_Repo::bulk_update_status( $ids, 1 );
+			wp_send_json_success( [ 'message' => esc_html__( 'Selected forms activated.', 'digent-appointments' ) ] );
+		}
+
+		if ( 'status_inactive' === $action ) {
+			DGAP_Form_Repo::bulk_update_status( $ids, 0 );
+			wp_send_json_success( [ 'message' => esc_html__( 'Selected forms deactivated.', 'digent-appointments' ) ] );
+		}
+
+		if ( 'delete' === $action ) {
+			DGAP_Form_Repo::bulk_delete( $ids );
+			wp_send_json_success( [ 'message' => esc_html__( 'Selected forms deleted.', 'digent-appointments' ) ] );
+		}
+
+		wp_send_json_error( [ 'message' => esc_html__( 'Invalid bulk action.', 'digent-appointments' ) ] );
 	}
 
 }

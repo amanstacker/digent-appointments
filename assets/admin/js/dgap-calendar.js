@@ -140,6 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    const loaderEl = document.getElementById('dgap-calendar-loader');
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         editable: false,
@@ -222,4 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calendar.render();
+    if (loaderEl) {
+        loaderEl.style.display = 'none';
+    }
 });

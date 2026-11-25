@@ -44,6 +44,7 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 			<button class="dgap-btn button button-primary dgap-add" data-entity="customer" data-title="<?php esc_attr_e( 'Add Customer', 'digent-appointments' ); ?>">
 				<?php esc_html_e( 'Add Customer', 'digent-appointments' ); ?>
 			</button>
+			<?php dgap_render_upgrade_button(); ?>
 		</div>
 	</div>
 </div>

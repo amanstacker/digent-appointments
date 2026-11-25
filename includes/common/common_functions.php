@@ -539,3 +539,24 @@ function dgap_get_dashboard_overview() {
 }
 
 
+
+/**
+ * Render the Upgrade to Premium header CTA button when Premium is not active.
+ *
+ * @param string $variant 'primary' or 'secondary'.
+ */
+function dgap_render_upgrade_button( $variant = 'secondary' ) {
+	if ( ! apply_filters( 'dgap_show_upgrade_banner', ! defined( 'DGAPP_VERSION' ) ) ) {
+		return;
+	}
+
+	$btn_class = ( 'primary' === $variant )
+		? 'dgap-btn button button-primary dgap-header-upgrade-btn'
+		: 'dgap-btn button button-secondary dgap-header-upgrade-btn is-outline';
+	?>
+	<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-extensions' ) ); ?>" class="<?php echo esc_attr( $btn_class ); ?>">
+		<span class="dashicons dashicons-star-filled" style="font-size:14px;width:14px;height:14px;line-height:14px;"></span>
+		<span><?php esc_html_e( 'Upgrade to Premium', 'digent-appointments' ); ?></span>
+	</a>
+	<?php
+}

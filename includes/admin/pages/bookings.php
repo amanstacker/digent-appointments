@@ -52,6 +52,7 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 			>
 				<?php esc_html_e( 'Add Booking', 'digent-appointments' ); ?>
 			</button>
+			<?php dgap_render_upgrade_button(); ?>
 		</div>
 	</div>
 </div>

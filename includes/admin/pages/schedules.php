@@ -49,6 +49,7 @@ if ( $total_schedules > 0 || $is_expanded ) {
 					<?php esc_html_e( 'Add Schedule', 'digent-appointments' ); ?>
 				</button>
 			<?php endif; ?>
+			<?php dgap_render_upgrade_button(); ?>
 		</div>
 	</div>
 </div>

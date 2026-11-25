@@ -1055,14 +1055,13 @@
 	line-height: 1.5;
 }
 
-/* PRO Badge in Free version */
+/* PREMIUM Badge in Free version */
 .dgap-badge-pro {
 	font-size: 10px;
 	font-weight: 700;
-	padding: 2px 0;
-	width: 48px;
+	padding: 2px 10px;
+	width: auto;
 	min-width: 48px;
-	max-width: 48px;
 	height: 20px;
 	border-radius: 10px;
 	text-transform: uppercase;
@@ -1071,6 +1070,7 @@
 	align-items: center;
 	justify-content: center;
 	text-align: center;
+	white-space: nowrap;
 	flex-shrink: 0;
 	box-sizing: border-box;
 	background: #dcfce7;
@@ -1383,6 +1383,8 @@
 	border: 1px solid var(--dgap-slate-200, #e2e8f0);
 	border-radius: 12px;
 	padding: 20px 24px;
+	min-height: 620px;
+	box-sizing: border-box;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 	--fc-border-color: var(--dgap-slate-200, #e2e8f0);
 	--fc-button-text-color: #ffffff;
@@ -3839,3 +3841,65 @@
 
 
 
+
+
+/* ================= Calendar AJAX Loader ================= */
+.dgap-calendar-wrap {
+	position: relative;
+	min-height: 480px;
+}
+
+.dgap-calendar-loader {
+	position: absolute;
+	inset: 0;
+	z-index: 20;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	background: rgba(255, 255, 255, 0.78);
+	backdrop-filter: blur(2px);
+	border-radius: var(--dgap-card-radius, 8px);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--dgap-slate-700, #334155);
+}
+
+.dgap-calendar-spinner {
+	width: 34px;
+	height: 34px;
+	border: 3px solid #d1fae5;
+	border-top-color: var(--dgap-primary, #10b981);
+	border-radius: 50%;
+	animation: dgapCalSpin 0.75s linear infinite;
+}
+
+@keyframes dgapCalSpin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+
+/* ================= Header Upgrade to Premium Button ================= */
+.dgap-header-upgrade-btn.is-outline {
+	border-color: #a7f3d0 !important;
+	background: #ecfdf5 !important;
+	color: #065f46 !important;
+	font-weight: 600 !important;
+}
+
+.dgap-header-upgrade-btn.is-outline:hover {
+	border-color: #10b981 !important;
+	background: #d1fae5 !important;
+	color: #047857 !important;
+}
+
+.dgap-header-upgrade-btn .dashicons {
+	color: #f59e0b;
+}
+
+.dgap-header-upgrade-btn.button-primary .dashicons {
+	color: #fde68a;
+}

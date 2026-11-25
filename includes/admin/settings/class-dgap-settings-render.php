@@ -74,7 +74,7 @@ class DGAP_Settings_Render {
 				</div>
 				<div class="dgap-header-right">
 					<a href="https://profiles.wordpress.org/amanstacker/" target="_blank" class="button button-secondary"><?php esc_html_e( 'Documentation', 'digent-appointments' ); ?></a>
-					<a href="https://profiles.wordpress.org/amanstacker/" target="_blank" class="button button-secondary"><?php esc_html_e( 'Support', 'digent-appointments' ); ?></a>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-settings&tab=help' ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Support', 'digent-appointments' ); ?></a>
 				</div>
 			</div>
 

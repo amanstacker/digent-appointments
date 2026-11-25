@@ -29,12 +29,19 @@ $export_url     = wp_nonce_url( admin_url( 'admin-post.php?action=dgap_export_bo
 			<button class="dgap-btn button button-primary dgap-add" data-entity="booking" data-title="<?php esc_attr_e( 'Add Booking', 'digent-appointments' ); ?>">
 				<?php esc_html_e( 'Add Booking', 'digent-appointments' ); ?>
 			</button>
+			<?php dgap_render_upgrade_button(); ?>
 		</div>
 	</div>
 </div>
 
 <div class="wrap dgap-admin-wrap">	
-	<div id="dgap-calendar"></div>
+	<div class="dgap-calendar-wrap">
+		<div id="dgap-calendar-loader" class="dgap-calendar-loader" aria-live="polite">
+			<div class="dgap-calendar-spinner"></div>
+			<span><?php esc_html_e( 'Loading bookings...', 'digent-appointments' ); ?></span>
+		</div>
+		<div id="dgap-calendar"></div>
+	</div>
 </div>
 
 <?php

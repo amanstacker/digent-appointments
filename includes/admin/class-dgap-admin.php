@@ -191,7 +191,7 @@ class DGAP_Admin {
             'dgap-calendar',
             DGAP_PLUGIN_DIR_URL . 'assets/admin/js/dgap-calendar.js',
             [ 'jquery', 'dgap-fullcalendar' ],
-            DGAP_VERSION,
+            filemtime( DGAP_PLUGIN_DIR_PATH . 'assets/admin/js/dgap-calendar.js' ),
             true
         );
         

@@ -51,6 +51,7 @@ if ( ! $dgap_is_new && $dgap_id ) {
 				<span class="dashicons dashicons-saved"></span>
 				<span class="dgap-btn-text"><?php echo esc_html__( 'Save Form', 'digent-appointments' ); ?></span>
 			</button>
+			<?php dgap_render_upgrade_button(); ?>
 		</div>
 	</div>
 </div>
