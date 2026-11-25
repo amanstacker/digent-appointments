@@ -1071,7 +1071,18 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		});
 	});
 
-	/* ================= Collapsible Bookings Filter Bar ================= */
+	/* ================= Collapsible Bookings Filter Bar & Searchable Select2 ================= */
+	if ($.fn.select2 && $('.dgap-filter-select2').length) {
+		$('.dgap-filter-select2').each(function () {
+			const $el = $(this);
+			$el.select2({
+				placeholder: $el.data('placeholder') || 'Select...',
+				allowClear: true,
+				width: '100%'
+			});
+		});
+	}
+
 	$(document).on('click', '.dgap-toggle-filters', function (e) {
 		e.preventDefault();
 		const action = $(this).data('action');

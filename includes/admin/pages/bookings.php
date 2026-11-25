@@ -98,9 +98,9 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 							</select>
 						</div>
 
-						<div class="dgap-filter-group">
-							<select name="location_id">
-								<option value="0"><?php esc_html_e( 'All Locations', 'digent-appointments' ); ?></option>
+						<div class="dgap-filter-group dgap-filter-select-wrap">
+							<select name="location_id" class="dgap-filter-select2" data-placeholder="<?php esc_attr_e( 'All Locations', 'digent-appointments' ); ?>">
+								<option value=""><?php esc_html_e( 'All Locations', 'digent-appointments' ); ?></option>
 								<?php foreach ( $filter_locations as $loc ) : ?>
 									<option value="<?php echo esc_attr( $loc['id'] ); ?>" <?php selected( $filters['location_id'], (int) $loc['id'] ); ?>>
 										<?php echo esc_html( $loc['name'] ); ?>
@@ -109,9 +109,9 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 							</select>
 						</div>
 
-						<div class="dgap-filter-group">
-							<select name="service_id">
-								<option value="0"><?php esc_html_e( 'All Services', 'digent-appointments' ); ?></option>
+						<div class="dgap-filter-group dgap-filter-select-wrap">
+							<select name="service_id" class="dgap-filter-select2" data-placeholder="<?php esc_attr_e( 'All Services', 'digent-appointments' ); ?>">
+								<option value=""><?php esc_html_e( 'All Services', 'digent-appointments' ); ?></option>
 								<?php foreach ( $filter_services as $srv ) : ?>
 									<option value="<?php echo esc_attr( $srv['id'] ); ?>" <?php selected( $filters['service_id'], (int) $srv['id'] ); ?>>
 										<?php echo esc_html( $srv['name'] ); ?>
@@ -120,9 +120,9 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 							</select>
 						</div>
 
-						<div class="dgap-filter-group">
-							<select name="staff_id">
-								<option value="0"><?php esc_html_e( 'All Staff', 'digent-appointments' ); ?></option>
+						<div class="dgap-filter-group dgap-filter-select-wrap">
+							<select name="staff_id" class="dgap-filter-select2" data-placeholder="<?php esc_attr_e( 'All Staff', 'digent-appointments' ); ?>">
+								<option value=""><?php esc_html_e( 'All Staff', 'digent-appointments' ); ?></option>
 								<?php foreach ( $filter_staff as $st ) : ?>
 									<option value="<?php echo esc_attr( $st['id'] ); ?>" <?php selected( $filters['staff_id'], (int) $st['id'] ); ?>>
 										<?php echo esc_html( trim( $st['first_name'] . ' ' . $st['last_name'] ) ); ?>
