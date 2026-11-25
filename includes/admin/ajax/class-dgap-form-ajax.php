@@ -56,8 +56,13 @@ class DGAP_Form_Ajax {
         }
 
         $id            = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
-        $name          = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '(no-title)';
+        $name          = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
         $layout        = isset( $_POST['layout'] ) ? sanitize_text_field( wp_unslash( $_POST['layout'] ) ) : 'layout-1';
+        $status        = isset( $_POST['status'] ) ? absint( $_POST['status'] ) : 0;
+
+        if ( '' === $name ) {
+            wp_send_json_error( [ 'message' => esc_html__( 'Form title is required.', 'digent-appointments' ) ] );
+        }
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason: Sanitization and escaping is done below.
         $settings      = isset( $_POST['settings'] ) ? $_POST['settings'] : [];
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason: Sanitization and escaping is done below.
@@ -78,6 +83,7 @@ class DGAP_Form_Ajax {
         $data = [
             'name'          => $name,
             'layout'        => $layout,
+            'status'        => $status ? 1 : 0,
             'settings'      => serialize( $settings ), // It has been sanitized above, so we can safely serialize it here
             'custom_fields' => serialize( $custom_fields ), // It has been sanitized above, so we can safely serialize it here
         ];
@@ -85,10 +91,16 @@ class DGAP_Form_Ajax {
         if ( $id ) {
             // Update
             $result = DGAP_Form_Repo::update( $id, $data );
+            if ( is_wp_error( $result ) ) {
+                wp_send_json_error( [ 'message' => esc_html( $result->get_error_message() ) ] );
+            }
             wp_send_json_success( [ 'id' => $id, 'message' => esc_html__( 'Form updated successfully', 'digent-appointments' ) ] );
         } else {
             // Insert
             $new_id = DGAP_Form_Repo::insert( $data );
+            if ( is_wp_error( $new_id ) ) {
+                wp_send_json_error( [ 'message' => esc_html( $new_id->get_error_message() ) ] );
+            }
             if ( $new_id ) {
                 wp_send_json_success( [ 'id' => absint( $new_id ), 'message' => esc_html__( 'Form saved successfully', 'digent-appointments' ) ] );
             } else {

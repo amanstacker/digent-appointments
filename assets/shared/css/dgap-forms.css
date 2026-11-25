@@ -5,13 +5,17 @@
 .dgap-form-wrap .dgap-preview-wrap {
     --dgap-font-size:      14px;
     --dgap-font-weight:    400;
-    --dgap-font-color:     #333333;
+    --dgap-font-color:     #334155;
     --dgap-primary-color:  #10b981;
     --dgap-bg-color:       #ffffff;
     --dgap-border-radius:  8px;
+    --dgap-form-width:     100%;
     --dgap-heading-size:   16px;
     --dgap-heading-weight: 600;
-    --dgap-heading-color:  #059669;
+    --dgap-heading-color:  #0f172a;
+    max-width: var(--dgap-form-width, 100%);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .dgap-preview-wrap,
@@ -81,14 +85,25 @@
 .dgap-preview-wrap .dgap-field-vertical input,
 .dgap-preview-wrap .dgap-field-vertical textarea {
     width:         100%;
-    padding:       8px 10px;
+    max-width:     none;
+    padding:       0 12px;
     border:        1px solid #cbd5e1;
-    border-radius: var(--dgap-border-radius);
-    font-size:     var(--dgap-font-size);
+    border-radius: var(--dgap-border-radius, 8px);
+    font-size:     var(--dgap-font-size, 14px);
     box-sizing:    border-box;
     background:    #fff;
     color:         #1e293b;
     transition:    border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dgap-preview-wrap .dgap-field input,
+.dgap-preview-wrap .dgap-field-vertical input {
+    height:     40px;
+    min-height: 40px;
+}
+
+.dgap-preview-wrap .dgap-field-vertical textarea {
+    padding:    10px 12px;
 }
 
 .dgap-preview-wrap .dgap-field input:focus,
@@ -99,30 +114,37 @@
     outline:      none;
 }
 
-.dgap-preview-wrap .dgap-field select {
-    width:               100%;
-    padding:             8px 32px 8px 12px;
-    border:              1px solid #cbd5e1;
-    border-radius:       var(--dgap-border-radius);
-    font-size:           var(--dgap-font-size);
-    box-sizing:          border-box;
-    background-color:    #fff;
-    color:               #1e293b;
+.dgap-preview-wrap .dgap-field select,
+.dgap-preview-wrap .dgap-field-vertical select {
+    width:               100% !important;
+    max-width:           none !important;
+    height:              40px !important;
+    min-height:          40px !important;
+    line-height:         1.4 !important;
+    padding:             0 34px 0 12px !important;
+    border:              1px solid #cbd5e1 !important;
+    border-radius:       var(--dgap-border-radius, 8px) !important;
+    font-size:           var(--dgap-font-size, 14px) !important;
+    box-sizing:          border-box !important;
+    background-color:    #fff !important;
+    color:               #1e293b !important;
     cursor:              pointer;
-    -webkit-appearance:  none;
-    -moz-appearance:     none;
-    appearance:          none;
-    background-image:    url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%201%201-6%206-6-6%201-1z%22%20fill%3D%22%23475569%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat:   no-repeat;
-    background-position: right 10px top 50%;
-    background-size:     16px 16px;
+    -webkit-appearance:  none !important;
+    -moz-appearance:     none !important;
+    appearance:          none !important;
+    background-image:    url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%201%201-6%206-6-6%201-1z%22%20fill%3D%22%23475569%22%2F%3E%3C%2Fsvg%3E") !important;
+    background-repeat:   no-repeat !important;
+    background-position: right 10px center !important;
+    background-size:     16px 16px !important;
+    box-shadow:          none !important;
     transition:          border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.dgap-preview-wrap .dgap-field select:focus {
-    border-color: var(--dgap-primary-color, #10b981);
-    box-shadow:   0 0 0 3px rgba(16, 185, 129, 0.2);
-    outline:      none;
+.dgap-preview-wrap .dgap-field select:focus,
+.dgap-preview-wrap .dgap-field-vertical select:focus {
+    border-color: var(--dgap-primary-color, #10b981) !important;
+    box-shadow:   0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+    outline:      none !important;
 }
 
 

@@ -129,6 +129,9 @@ jQuery(function ($) {
 
         const wrap = $wrap[0];
 
+        const formWidth = $('input[name="settings[appearance][form_width]"]').val();
+        const formUnit  = $('select[name="settings[appearance][form_width_unit]"]').val() || '%';
+
         const map = {
             '--dgap-font-size':      $('input[name="settings[appearance][font_size]"]').val()                         ? $('input[name="settings[appearance][font_size]"]').val() + 'px' : null,
             '--dgap-font-weight':    $('select[name="settings[appearance][font_weight]"]').val()                      || null,
@@ -136,6 +139,7 @@ jQuery(function ($) {
             '--dgap-primary-color':  $('input[type="color"][name="settings[appearance][primary_color]"]').val()       || null,
             '--dgap-bg-color':       $('input[type="color"][name="settings[appearance][bg_color]"]').val()            || null,
             '--dgap-border-radius':  $('input[name="settings[appearance][border_radius]"]').val()                     ? $('input[name="settings[appearance][border_radius]"]').val() + 'px' : null,
+            '--dgap-form-width':     formWidth ? formWidth + formUnit : null,
             '--dgap-heading-size':   $('input[name="settings[appearance][heading_font_size]"]').val()                 ? $('input[name="settings[appearance][heading_font_size]"]').val() + 'px' : null,
             '--dgap-heading-weight': $('select[name="settings[appearance][heading_font_weight]"]').val()              || null,
             '--dgap-heading-color':  $('input[type="color"][name="settings[appearance][heading_font_color]"]').val()  || null,
@@ -268,7 +272,9 @@ jQuery(function ($) {
         captureFormState();
 
         const formData = $('#dgap-form-builder').serialize();
-        $('#dgap-live-preview').html('<p>Loading preview...</p>');
+        $('#dgap-live-preview').html(
+            '<div class="dgap-preview-loader"><div class="dgap-calendar-spinner"></div><span>Loading preview...</span></div>'
+        );
 
         $.ajax({
             url:  dgap_booking_form.ajax_url,
@@ -416,9 +422,14 @@ jQuery(function ($) {
         $btns.prop('disabled', true).addClass('is-loading');
         $btns.find('.dgap-btn-text').text('Saving...');
 
-        const postData = { action: 'dgap_save_form' };
+        const postData = {
+            action: 'dgap_save_form',
+            status: $('input[name="status"]').is(':checked') ? '1' : '0'
+        };
         $.each($form.serializeArray(), function (_, field) {
-            postData[field.name] = field.value;
+            if (field.name !== 'status') {
+                postData[field.name] = field.value;
+            }
         });
 
         customFields.forEach(function (field, index) {
@@ -520,16 +531,29 @@ jQuery(function ($) {
         const cls     = type === 'success' ? 'dgap-notice-success' : 'dgap-notice-error';
         const icon    = type === 'success' ? 'dashicons-yes-alt' : 'dashicons-warning';
         const $notice = $(`
-            <div class="dgap-builder-notice ${cls}">
-                <span class="dashicons ${icon}"></span>
-                <span>${message}</span>
+            <div class="dgap-builder-notice ${cls}" style="display:flex;">
+                <span style="display:inline-flex;align-items:center;gap:8px;"><span class="dashicons ${icon}"></span><span>${message}</span></span>
             </div>
         `);
-        $('.dgap-title-card').before($notice);
+        $('#dgap-builder-notice-area').html($notice);
         setTimeout(function () {
             $notice.fadeOut(300, function () { $(this).remove(); });
         }, 4000);
     }
+
+    /* ================================================
+        PREVIEW DEVICE & REFRESH CONTROLS
+    ================================================ */
+    $(document).on('click', '.dgap-preview-device-btn', function () {
+        const device = $(this).data('device');
+        $('.dgap-preview-device-btn').removeClass('is-active');
+        $(this).addClass('is-active');
+        $('#dgap-live-preview').toggleClass('is-mobile', device === 'mobile');
+    });
+
+    $(document).on('click', '#dgap-refresh-preview', function () {
+        loadPreview();
+    });
 
     /* ================================================
         SHORTCODE COPY

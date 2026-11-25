@@ -30,7 +30,7 @@ class DGAP_Form_Renderer {
 
 		$primary_color = ! empty( $appearance['primary_color'] )
 			? esc_attr( $appearance['primary_color'] )
-			: '#4f46e5';
+			: '#10b981';
 
 		$bg_color      = ! empty( $appearance['bg_color'] )
 			? esc_attr( $appearance['bg_color'] )
@@ -54,7 +54,7 @@ class DGAP_Form_Renderer {
 
 		$heading_color = ! empty( $appearance['heading_font_color'] )
 			? esc_attr( $appearance['heading_font_color'] )
-			: '#1d2327';
+			: '#0f172a';
 
 		$form_width = ! empty( $appearance['form_width'] )
 			? esc_attr( $appearance['form_width'] )
@@ -94,6 +94,8 @@ class DGAP_Form_Renderer {
 		} else {
 			echo '<p>' . esc_html__( 'Layout not found', 'digent-appointments' ) . '</p>';
 		}
-		return ob_get_clean();
+		$html = ob_get_clean();
+
+		return str_replace( 'class="dgap-preview-wrap', 'class="dgap-preview-wrap btn-' . esc_attr( $button_style ), $html );
 	}
 }

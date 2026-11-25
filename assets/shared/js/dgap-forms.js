@@ -123,7 +123,7 @@ jQuery(function ($) {
                 case 'text':
                 case 'email':
                 case 'phone':
-                    inputHtml = `<input type="${field.type}" name="${field.name}" class="dgap-custom-field" ${field.required ? 'required' : ''}>`;
+                    inputHtml = `<input type="${field.type === 'phone' ? 'tel' : field.type}" name="${field.name}" class="dgap-custom-field" ${field.required ? 'required' : ''}>`;
                     break;
                 case 'textarea':
                     inputHtml = `<textarea name="${field.name}" class="dgap-custom-field" rows="3" ${field.required ? 'required' : ''}></textarea>`;
