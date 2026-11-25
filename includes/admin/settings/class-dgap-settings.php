@@ -12,13 +12,12 @@ class DGAP_Settings {
 		$tabs = [
 			'general',
 			'notifications',
-			'payments',
-			'calendar',
 			'tools',
 			'advanced',
-			'api_webhooks',
 			'help',
 		];
+
+		$tabs = apply_filters( 'dgap_settings_registered_tabs', $tabs );
 
 		foreach ( $tabs as $tab ) {
 
@@ -58,18 +57,6 @@ class DGAP_Settings {
 					$clean[ $key ] = absint( $value );
 					break;
 
-				case 'default_sms_provider':
-					$clean[ $key ] = sanitize_text_field( $value );
-					break;
-
-				case preg_match( '/^sms_.*_config$/', $key ) ? $key : null:
-					$clean[ $key ] = [
-						'api_key'    => sanitize_text_field( $value['api_key'] ?? '' ),
-						'auth_token' => sanitize_text_field( $value['auth_token'] ?? '' ),
-						'sender'     => sanitize_text_field( $value['sender'] ?? '' ),
-					];
-					break;
-
 				default:
 					if ( strpos( $key, 'email_template_' ) !== false ) {
 						$clean[ $key ] = wp_kses_post( $value );
@@ -83,6 +70,6 @@ class DGAP_Settings {
 			}
 		}
 		
-		return $clean;
+		return apply_filters( 'dgap_sanitize_settings', $clean, $input, $option_name );
 	}
 }

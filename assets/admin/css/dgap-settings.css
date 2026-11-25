@@ -42,7 +42,9 @@
 
 /* LEFT COLUMN */
 .dgap-settings-main {
-	flex: 3;
+	flex: 1;
+	width: 100%;
+	min-width: 0;
 	background: #ffffff;
 	border: 1px solid var(--dgap-slate-200, #e2e8f0);
 	border-radius: var(--dgap-card-radius, 8px);
@@ -109,6 +111,7 @@
 /* Tabs */
 .dgap-tabs {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 24px;
 	border-bottom: 1px solid var(--dgap-slate-200, #e2e8f0);
 	margin-bottom: 20px;
