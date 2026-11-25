@@ -1479,6 +1479,40 @@
     .dgap-wizard-tabs .dgap-tabs-header {
         flex-wrap: wrap;
         gap: 6px;
+        padding: 8px;
+    }
+    .dgap-tab-arrow {
+        display: none;
+    }
+    .dgap-tab {
+        flex: 1 1 calc(50% - 6px);
+        padding: 8px 10px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        margin-bottom: 0;
+        background: #fff;
+    }
+    .dgap-tab.active {
+        border-color: var(--dgap-primary-color, #10b981);
+    }
+    .dgap-wizard-tabs .dgap-tabs-body,
+    .dgap-wizard-boxed .dgap-boxed-body {
+        padding: 16px;
+    }
+    .dgap-preview-wrap .dgap-day {
+        width: 32px;
+        height: 32px;
+        font-size: 12.5px;
+    }
+    .dgap-preview-wrap .dgap-calendar-days {
+        padding: 8px;
+        gap: 2px;
+    }
+    .dgap-preview-wrap .dgap-calendar-weekdays {
+        padding: 6px 8px;
+    }
+    .dgap-preview-wrap .dgap-calendar-weekdays span {
+        font-size: 10px;
     }
     .dgap-boxed-steps {
         flex-wrap: nowrap;
@@ -1558,8 +1592,54 @@
 }
 
 .dgap-live-preview.is-mobile .dgap-wizard-tabs .dgap-tabs-header {
-    flex-wrap: wrap;
-    gap: 6px;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 8px !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-tab-arrow {
+    display: none !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-tab {
+    flex: 1 1 calc(50% - 6px) !important;
+    padding: 8px 10px !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    margin-bottom: 0 !important;
+    background: #fff !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-tab.active {
+    border-color: var(--dgap-primary-color, #10b981) !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-wizard-tabs .dgap-tabs-body,
+.dgap-live-preview.is-mobile .dgap-wizard-boxed .dgap-boxed-body {
+    padding: 16px !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-wizard-sidebar {
+    padding: 16px !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-preview-wrap .dgap-day {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 12.5px !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-preview-wrap .dgap-calendar-days {
+    padding: 8px !important;
+    gap: 2px !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-preview-wrap .dgap-calendar-weekdays {
+    padding: 6px 8px !important;
+}
+
+.dgap-live-preview.is-mobile .dgap-preview-wrap .dgap-calendar-weekdays span {
+    font-size: 10px !important;
 }
 
 .dgap-live-preview.is-mobile .dgap-boxed-steps {
