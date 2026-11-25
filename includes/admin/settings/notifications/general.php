@@ -39,6 +39,49 @@ function dgap_register_general_notifications_section() {
 		[ 'id' => 'notification_retry', 'min' => 0, 'step' => 1 ]
 	);
 
+	add_settings_field(
+		'from_name',
+		esc_html__( 'From Name', 'digent-appointments' ),
+		[ 'DGAP_Settings_Fields', 'text' ],
+		'dgap_notifications_general',
+		'dgap_notifications_general',
+		[
+			'id'          => 'from_name',
+			'tab'         => 'notifications',
+			'default'     => get_bloginfo( 'name' ),
+			'placeholder' => get_bloginfo( 'name' ),
+		]
+	);
+
+	add_settings_field(
+		'from_email',
+		esc_html__( 'From Email', 'digent-appointments' ),
+		[ 'DGAP_Settings_Fields', 'text' ],
+		'dgap_notifications_general',
+		'dgap_notifications_general',
+		[
+			'id'          => 'from_email',
+			'tab'         => 'notifications',
+			'type'        => 'email',
+			'default'     => get_option( 'admin_email' ),
+			'placeholder' => get_option( 'admin_email' ),
+		]
+	);
+
+	add_settings_field(
+		'reply_to_email',
+		esc_html__( 'Reply-To Email', 'digent-appointments' ),
+		[ 'DGAP_Settings_Fields', 'text' ],
+		'dgap_notifications_general',
+		'dgap_notifications_general',
+		[
+			'id'          => 'reply_to_email',
+			'tab'         => 'notifications',
+			'type'        => 'email',
+			'placeholder' => get_option( 'admin_email' ),
+		]
+	);
+
 }
 
 add_action( 'admin_init', 'dgap_register_general_notifications_section' );

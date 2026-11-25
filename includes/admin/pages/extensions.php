@@ -134,7 +134,7 @@ $dgap_extensions = apply_filters( 'dgap_extensions_list', $dgap_extensions );
 			<h1>
 				<?php esc_html_e( 'Premium Extensions', 'digent-appointments' ); ?>
 				<?php if ( $is_pro_active ) : ?>
-					<span class="dgapp-pro-badge"><?php esc_html_e( 'PRO ACTIVE', 'digent-appointments' ); ?></span>
+					<span class="dgapp-pro-badge"><?php esc_html_e( 'PREMIUM ACTIVE', 'digent-appointments' ); ?></span>
 				<?php endif; ?>
 			</h1>
 			<span><?php esc_html_e( 'Extend digent with powerful premium features. Enable only what you need.', 'digent-appointments' ); ?></span>
@@ -300,7 +300,7 @@ $dgap_extensions = apply_filters( 'dgap_extensions_list', $dgap_extensions );
 									</span>
 								<?php else : ?>
 									<span class="dgap-badge-pro">
-										<?php esc_html_e( 'PRO', 'digent-appointments' ); ?>
+										<?php esc_html_e( 'PREMIUM', 'digent-appointments' ); ?>
 									</span>
 								<?php endif; ?>
 							</div>

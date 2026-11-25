@@ -29,8 +29,34 @@
 	font-size: 13px;
 }
 
-.dgap-header-right .button {
-	margin-left: 10px;
+.dgap-header-right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+}
+
+.dgap-header-right .button-secondary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 36px;
+	padding: 0 16px;
+	margin: 0;
+	font-size: 13px;
+	font-weight: 500;
+	border-radius: var(--dgap-btn-radius, 6px);
+	background: #ffffff !important;
+	border-color: var(--dgap-slate-300, #cbd5e1) !important;
+	color: var(--dgap-slate-700, #334155) !important;
+	box-shadow: none !important;
+	transition: all 0.15s ease;
+}
+
+.dgap-header-right .button-secondary:hover {
+	background: var(--dgap-slate-50, #f8fafc) !important;
+	border-color: var(--dgap-slate-400, #94a3b8) !important;
+	color: var(--dgap-slate-900, #0f172a) !important;
 }
 
 /* ---------- Settings Layout ---------- */
@@ -59,10 +85,110 @@
 
 /* RIGHT COLUMN */
 .dgap-settings-sidebar {
-	flex: 1;
+	width: 300px;
+	flex-shrink: 0;
 	background: transparent;
 	padding: 0;
 	border: none;
+}
+
+.dgap-upgrade-card {
+	background: linear-gradient(160deg, #ffffff 0%, #f0fdf4 100%);
+	border: 1px solid #bbf7d0;
+	border-radius: var(--dgap-card-radius, 8px);
+	padding: 20px;
+	box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+}
+
+.dgap-upgrade-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	background: #d1fae5;
+	color: #065f46;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	padding: 4px 10px;
+	border-radius: 9999px;
+	margin-bottom: 12px;
+}
+
+.dgap-upgrade-badge .dashicons {
+	font-size: 13px;
+	width: 13px;
+	height: 13px;
+	line-height: 13px;
+}
+
+.dgap-upgrade-card h3 {
+	margin: 0 0 8px;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
+	line-height: 1.35;
+}
+
+.dgap-upgrade-desc {
+	margin: 0 0 14px;
+	font-size: 13px;
+	color: var(--dgap-slate-600, #475569);
+	line-height: 1.5;
+}
+
+.dgap-upgrade-features {
+	list-style: none;
+	margin: 0 0 18px;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+}
+
+.dgap-upgrade-features li {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	font-size: 13px;
+	color: var(--dgap-slate-700, #334155);
+	line-height: 1.4;
+}
+
+.dgap-upgrade-features li .dashicons {
+	color: var(--dgap-primary, #10b981);
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+	margin-top: 1px;
+}
+
+.dgap-upgrade-btn {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: 6px !important;
+	width: 100% !important;
+	height: 38px !important;
+	font-size: 13px !important;
+	font-weight: 600 !important;
+	border-radius: 6px !important;
+	background: var(--dgap-primary, #10b981) !important;
+	border-color: var(--dgap-primary, #10b981) !important;
+	color: #ffffff !important;
+	box-sizing: border-box !important;
+}
+
+.dgap-upgrade-btn:hover {
+	background: var(--dgap-primary-hover, #059669) !important;
+	border-color: var(--dgap-primary-hover, #059669) !important;
+}
+
+.dgap-upgrade-btn .dashicons {
+	font-size: 15px;
+	width: 15px;
+	height: 15px;
+	line-height: 15px;
 }
 
 /* ---------- Boxes in Sidebar ---------- */
@@ -106,6 +232,9 @@
 	.dgap-settings-layout {
 		flex-direction: column;
 	}
+	.dgap-settings-sidebar {
+		width: 100%;
+	}
 }
 
 /* Tabs */
@@ -115,9 +244,10 @@
 	gap: 24px;
 	border-bottom: 1px solid var(--dgap-slate-200, #e2e8f0);
 	margin-bottom: 20px;
-	padding-left: 24px;
-	padding-right: 24px;
-	overflow-x: auto;
+	padding: 0 24px;
+	background: var(--dgap-slate-50, #f8fafc);
+	border-top-left-radius: var(--dgap-card-radius, 8px);
+	border-top-right-radius: var(--dgap-card-radius, 8px);
 }
 
 .dgap-tabs a {
@@ -209,20 +339,42 @@
 .dgap-settings-main input[type="number"],
 .dgap-settings-main input[type="email"],
 .dgap-settings-main input[type="password"],
+.dgap-settings-main input[type="url"],
 .dgap-settings-main select,
 .dgap-settings-main textarea {
 	border: 1px solid var(--dgap-slate-300, #cbd5e1) !important;
 	border-radius: var(--dgap-btn-radius, 6px) !important;
-	padding: 7px 11px !important;
 	font-size: 13.5px !important;
 	color: var(--dgap-slate-900, #0f172a) !important;
+	box-sizing: border-box !important;
 	transition: all 0.15s ease !important;
+}
+
+.dgap-settings-main input[type="text"],
+.dgap-settings-main input[type="number"],
+.dgap-settings-main input[type="email"],
+.dgap-settings-main input[type="password"],
+.dgap-settings-main input[type="url"],
+.dgap-settings-main select {
+	height: 38px !important;
+	min-height: 38px !important;
+	line-height: 1.4 !important;
+	padding: 0 12px !important;
+}
+
+.dgap-settings-main select {
+	padding-right: 28px !important;
+}
+
+.dgap-settings-main textarea {
+	padding: 8px 12px !important;
 }
 
 .dgap-settings-main input[type="text"]:focus,
 .dgap-settings-main input[type="number"]:focus,
 .dgap-settings-main input[type="email"]:focus,
 .dgap-settings-main input[type="password"]:focus,
+.dgap-settings-main input[type="url"]:focus,
 .dgap-settings-main select:focus,
 .dgap-settings-main textarea:focus {
 	border-color: var(--dgap-primary, #10b981) !important;
@@ -243,9 +395,11 @@
 	border-color: var(--dgap-primary-hover, #059669) !important;
 	color: #ffffff !important;
 	font-weight: 600 !important;
-	padding: 7px 20px !important;
-	height: auto !important;
-	font-size: 14px !important;
+	padding: 0 18px !important;
+	height: 36px !important;
+	min-height: 36px !important;
+	line-height: 34px !important;
+	font-size: 13px !important;
 	border-radius: var(--dgap-btn-radius, 6px) !important;
 	box-shadow: 0 1px 2px var(--dgap-primary-shadow, rgba(16, 185, 129, 0.2)) !important;
 	text-shadow: none !important;
@@ -325,4 +479,223 @@
 
 .dgap-email-labels {
 	margin-left: auto;
+}
+
+
+/* ---------- Help / Support Form (Hyper PWA Style) ---------- */
+.dgap-support-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 24px;
+	align-items: flex-start;
+	padding-bottom: 16px;
+}
+
+.dgap-support-main {
+	flex: 1 1 380px;
+	min-width: 0;
+}
+
+.dgap-support-side {
+	flex: 0 0 340px;
+	max-width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.dgap-support-email-card {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 16px 18px;
+	background: linear-gradient(135deg, #ecfdf5 0%, #f8fafc 100%);
+	border: 1px solid #a7f3d0;
+	border-radius: 8px;
+	margin-bottom: 20px;
+}
+
+.dgap-support-card-icon {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
+	color: var(--dgap-primary, #10b981);
+	flex-shrink: 0;
+}
+
+.dgap-support-email-card h4 {
+	margin: 0 0 4px;
+	font-size: 14px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
+}
+
+.dgap-support-email-card p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--dgap-slate-600, #475569);
+}
+
+.dgap-support-email-card a {
+	color: var(--dgap-primary-hover, #059669);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.dgap-support-form {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.dgap-support-field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.dgap-support-field label {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--dgap-slate-800, #1e293b);
+}
+
+.dgap-support-field input,
+.dgap-support-field textarea {
+	width: 100%;
+	padding: 8px 12px;
+	border: 1px solid var(--dgap-slate-300, #cbd5e1);
+	border-radius: 6px;
+	font-size: 13px;
+	box-sizing: border-box;
+}
+
+.dgap-support-field input:focus,
+.dgap-support-field textarea:focus {
+	border-color: var(--dgap-primary, #10b981);
+	box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+	outline: none;
+}
+
+.dgap-support-actions {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+	margin-top: 4px;
+}
+
+.dgap-support-submit-btn {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: 6px !important;
+	height: 38px !important;
+	line-height: 1 !important;
+	padding: 0 18px !important;
+	border-radius: 6px !important;
+	background: var(--dgap-primary, #10b981) !important;
+	border-color: var(--dgap-primary, #10b981) !important;
+	font-weight: 600 !important;
+}
+
+.dgap-support-submit-btn:hover {
+	background: var(--dgap-primary-hover, #059669) !important;
+	border-color: var(--dgap-primary-hover, #059669) !important;
+}
+
+.dgap-support-submit-btn .dashicons {
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	font-size: 16px !important;
+	width: 16px !important;
+	height: 16px !important;
+	line-height: 16px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	vertical-align: middle !important;
+}
+
+.dgap-ticket-message {
+	flex: 1;
+	padding: 8px 12px;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.dgap-ticket-message.is-success {
+	background: #ecfdf5;
+	color: #065f46;
+	border: 1px solid #a7f3d0;
+}
+
+.dgap-ticket-message.is-error {
+	background: #fef2f2;
+	color: #991b1b;
+	border: 1px solid #fecaca;
+}
+
+.dgap-support-side-card {
+	background: #f8fafc;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: 8px;
+	padding: 16px;
+}
+
+.dgap-support-side-card h4 {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 0 12px;
+	font-size: 14px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
+}
+
+.dgap-support-links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.dgap-support-links li a {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 9px 12px;
+	background: #ffffff;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: 6px;
+	text-decoration: none;
+	color: var(--dgap-slate-700, #334155);
+	font-size: 13px;
+	font-weight: 500;
+	transition: all 0.15s ease;
+}
+
+.dgap-support-links li a:hover {
+	border-color: var(--dgap-primary, #10b981);
+	color: var(--dgap-primary-hover, #059669);
+}
+
+.dgap-support-links li a span:first-child {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.dgap-system-info-table td {
+	font-size: 12.5px;
+	padding: 8px 10px !important;
+}
+
+@media (max-width: 900px) {
+	.dgap-support-side {
+		flex: 1 1 100%;
+	}
 }

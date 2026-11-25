@@ -52,9 +52,12 @@ class DGAP_Loader {
 		
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/class-dgap-settings-fields.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/class-dgap-settings.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/class-dgap-settings-sections.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/class-dgap-settings-render.php';
 
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/settings/email-templates/notification-emails.php';
+
+		( new DGAP_Settings_Sections() )->init();
 
 		add_action(
 			'admin_init',
