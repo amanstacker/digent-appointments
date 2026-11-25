@@ -24,22 +24,20 @@ class DGAP_Settings_Render {
 					'customer_email' => esc_html__( 'Customer Email', 'digent-appointments' ),
 				],
 			],
-			'tools' => [
-				'label'    => esc_html__( 'Tools', 'digent-appointments' ),
-				'sections' => [
-					'import_export' => esc_html__( 'Import / Export', 'digent-appointments' ),
-					'system_status' => esc_html__( 'System Status', 'digent-appointments' ),
-					'maintenance'   => esc_html__( 'Database & Cache', 'digent-appointments' ),
-					'data_cleanup'  => esc_html__( 'Data Cleanup', 'digent-appointments' ),
-					'reset'         => esc_html__( 'Reset', 'digent-appointments' ),
-				],
-			],
 			'advanced' => [
 				'label'    => esc_html__( 'Advanced', 'digent-appointments' ),
 				'sections' => [
 					'recaptcha'         => esc_html__( 'Google reCAPTCHA', 'digent-appointments' ),
 					'gdpr'              => esc_html__( 'GDPR', 'digent-appointments' ),
 					'roles_permissions' => esc_html__( 'Access & CSS', 'digent-appointments' ),
+				],
+			],
+			'tools' => [
+				'label'    => esc_html__( 'Tools', 'digent-appointments' ),
+				'sections' => [
+					'import_export' => esc_html__( 'Import / Export', 'digent-appointments' ),
+					'maintenance'   => esc_html__( 'Data Cleanup', 'digent-appointments' ),
+					'reset'         => esc_html__( 'Reset', 'digent-appointments' ),
 				],
 			],
 			'support' => [

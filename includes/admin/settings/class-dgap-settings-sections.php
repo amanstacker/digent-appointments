@@ -16,6 +16,7 @@ class DGAP_Settings_Sections {
 		add_action( 'admin_post_dgap_export_settings', [ $this, 'handle_export_settings' ] );
 		add_action( 'admin_post_dgap_import_settings', [ $this, 'handle_import_settings' ] );
 		add_action( 'admin_post_dgap_reset_settings', [ $this, 'handle_reset_settings' ] );
+		add_action( 'admin_post_dgap_factory_reset', [ $this, 'handle_factory_reset' ] );
 		add_action( 'admin_post_dgap_flush_cache', [ $this, 'handle_flush_cache' ] );
 		add_action( 'admin_post_dgap_repair_tables', [ $this, 'handle_repair_tables' ] );
 		add_action( 'wp_ajax_dgap_submit_support_ticket', [ $this, 'handle_support_ticket' ] );
@@ -26,7 +27,7 @@ class DGAP_Settings_Sections {
 		if ( 'support' === $tab ) {
 			return false;
 		}
-		if ( 'tools' === $tab && in_array( $section, [ 'import_export', 'system_status', 'maintenance', 'reset' ], true ) ) {
+		if ( 'tools' === $tab && in_array( $section, [ 'import_export', 'reset' ], true ) ) {
 			return false;
 		}
 		return $show;
@@ -456,15 +457,7 @@ class DGAP_Settings_Sections {
 			'dgap_tools_import_export'
 		);
 
-		// 2. System Status
-		add_settings_section(
-			'dgap_tools_system_status',
-			'',
-			[ $this, 'render_system_status_section' ],
-			'dgap_tools_system_status'
-		);
-
-		// 3. Database & Cache
+		// 2. Database & Data
 		add_settings_section(
 			'dgap_tools_maintenance',
 			'',
@@ -472,31 +465,7 @@ class DGAP_Settings_Sections {
 			'dgap_tools_maintenance'
 		);
 
-		// 4. Data Cleanup
-		add_settings_section(
-			'dgap_tools_data_cleanup',
-			esc_html__( 'Uninstall Data Cleanup', 'digent-appointments' ),
-			static function () {
-				echo '<p>' . esc_html__( 'Choose whether plugin tables and options are removed when deleting the plugin.', 'digent-appointments' ) . '</p>';
-			},
-			'dgap_tools_data_cleanup'
-		);
-
-		add_settings_field(
-			'delete_data_on_uninstall',
-			esc_html__( 'Delete All Data on Uninstall', 'digent-appointments' ),
-			[ 'DGAP_Settings_Fields', 'toggle' ],
-			'dgap_tools_data_cleanup',
-			'dgap_tools_data_cleanup',
-			[
-				'id'          => 'delete_data_on_uninstall',
-				'tab'         => 'tools',
-				'default'     => 0,
-				'description' => __( 'Warning: Permanently deletes all bookings, locations, services, staff, customers, and settings when uninstalled.', 'digent-appointments' ),
-			]
-		);
-
-		// 5. Reset
+		// 3. Reset
 		add_settings_section(
 			'dgap_tools_reset',
 			'',
@@ -559,105 +528,11 @@ class DGAP_Settings_Sections {
 		<?php
 	}
 
-	public function render_system_status_section() {
-		global $wpdb, $wp_version;
-		$tables = [
-			'dgap_locations' => __( 'Locations', 'digent-appointments' ),
-			'dgap_services'  => __( 'Services', 'digent-appointments' ),
-			'dgap_staff'     => __( 'Staff Members', 'digent-appointments' ),
-			'dgap_schedules' => __( 'Schedules', 'digent-appointments' ),
-			'dgap_vacations' => __( 'Vacations', 'digent-appointments' ),
-			'dgap_customers' => __( 'Customers', 'digent-appointments' ),
-			'dgap_bookings'  => __( 'Bookings', 'digent-appointments' ),
-			'dgap_forms'     => __( 'Booking Forms', 'digent-appointments' ),
-		];
-
-		$report_lines = [
-			'Plugin Version: ' . ( defined( 'DGAP_VERSION' ) ? DGAP_VERSION : '-' ),
-			'WordPress Version: ' . $wp_version,
-			'PHP Version: ' . PHP_VERSION,
-			'MySQL Version: ' . $wpdb->db_version(),
-			'Timezone: ' . wp_timezone_string(),
-			'Date / Time Format: ' . get_option( 'date_format' ) . ' / ' . get_option( 'time_format' ),
-		];
-		?>
-		<div class="dgap-tools-stack">
-			<div class="dgap-tool-card">
-				<div class="dgap-tool-card-info">
-					<h4><?php esc_html_e( 'Environment & Database Health', 'digent-appointments' ); ?></h4>
-					<p><?php esc_html_e( 'Overview of your WordPress environment and Digent Appointments database tables.', 'digent-appointments' ); ?></p>
-				</div>
-				<button type="button" id="dgap-copy-system-report" class="button button-secondary dgap-tool-btn">
-					<span class="dashicons dashicons-clipboard"></span>
-					<span><?php esc_html_e( 'Copy System Report', 'digent-appointments' ); ?></span>
-				</button>
-			</div>
-
-			<table class="widefat striped dgap-system-info-table">
-				<tbody>
-					<tr><td><strong><?php esc_html_e( 'Plugin Version', 'digent-appointments' ); ?></strong></td><td><?php echo esc_html( defined( 'DGAP_VERSION' ) ? DGAP_VERSION : '-' ); ?></td></tr>
-					<tr><td><strong><?php esc_html_e( 'WordPress Version', 'digent-appointments' ); ?></strong></td><td><?php echo esc_html( $wp_version ); ?></td></tr>
-					<tr><td><strong><?php esc_html_e( 'PHP Version', 'digent-appointments' ); ?></strong></td><td><?php echo esc_html( PHP_VERSION ); ?></td></tr>
-					<tr><td><strong><?php esc_html_e( 'MySQL Version', 'digent-appointments' ); ?></strong></td><td><?php echo esc_html( $wpdb->db_version() ); ?></td></tr>
-					<tr><td><strong><?php esc_html_e( 'Timezone', 'digent-appointments' ); ?></strong></td><td><?php echo esc_html( wp_timezone_string() ); ?></td></tr>
-					<tr><td><strong><?php esc_html_e( 'Date / Time Format', 'digent-appointments' ); ?></strong></td><td><?php echo esc_html( get_option( 'date_format' ) . ' / ' . get_option( 'time_format' ) ); ?></td></tr>
-				</tbody>
-			</table>
-
-			<table class="widefat striped dgap-system-info-table">
-				<thead>
-					<tr>
-						<th><?php esc_html_e( 'Table', 'digent-appointments' ); ?></th>
-						<th><?php esc_html_e( 'Status', 'digent-appointments' ); ?></th>
-						<th><?php esc_html_e( 'Records', 'digent-appointments' ); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ( $tables as $slug => $label ) :
-						$full_table = $wpdb->prefix . $slug;
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-						$exists = ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $full_table ) ) === $full_table );
-						// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-						$count = $exists ? (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$full_table}`" ) : 0;
-						$report_lines[] = "{$full_table}: " . ( $exists ? "OK ({$count} rows)" : 'MISSING' );
-					?>
-						<tr>
-							<td><strong><?php echo esc_html( $label ); ?></strong> <code style="font-size:11px;"><?php echo esc_html( $full_table ); ?></code></td>
-							<td>
-								<?php if ( $exists ) : ?>
-									<span class="dgap-health-badge is-ok"><?php esc_html_e( 'OK', 'digent-appointments' ); ?></span>
-								<?php else : ?>
-									<span class="dgap-health-badge is-missing"><?php esc_html_e( 'Missing', 'digent-appointments' ); ?></span>
-								<?php endif; ?>
-							</td>
-							<td><?php echo esc_html( $count ); ?></td>
-						</tr>
-					<?php endforeach; ?>
-				</tbody>
-			</table>
-		</div>
-		<textarea id="dgap-system-report-text" style="position:absolute;left:-9999px;" readonly><?php echo esc_textarea( implode( "\n", $report_lines ) ); ?></textarea>
-		<script>
-		(function ($) {
-			$(document).on('click', '#dgap-copy-system-report', function () {
-				const text = $('#dgap-system-report-text').val();
-				const $btn = $(this);
-				navigator.clipboard.writeText(text).then(function () {
-					const $lbl = $btn.find('span:last');
-					$lbl.text('<?php echo esc_js( __( 'Copied!', 'digent-appointments' ) ); ?>');
-					setTimeout(function () {
-						$lbl.text('<?php echo esc_js( __( 'Copy System Report', 'digent-appointments' ) ); ?>');
-					}, 2000);
-				});
-			});
-		})(jQuery);
-		</script>
-		<?php
-	}
-
 	public function render_maintenance_section() {
-		$flush_url = wp_nonce_url( admin_url( 'admin-post.php?action=dgap_flush_cache' ), 'dgap_flush_cache', '_dgap_nonce' );
+		$flush_url  = wp_nonce_url( admin_url( 'admin-post.php?action=dgap_flush_cache' ), 'dgap_flush_cache', '_dgap_nonce' );
 		$repair_url = wp_nonce_url( admin_url( 'admin-post.php?action=dgap_repair_tables' ), 'dgap_repair_tables', '_dgap_nonce' );
+		$tools_opts = get_option( 'dgap_tools_settings', [] );
+		$is_enabled = ! empty( $tools_opts['delete_data_on_uninstall'] );
 		?>
 		<div class="dgap-tools-stack">
 			<div class="dgap-tool-card">
@@ -681,6 +556,24 @@ class DGAP_Settings_Sections {
 					<span><?php esc_html_e( 'Repair Tables', 'digent-appointments' ); ?></span>
 				</a>
 			</div>
+
+			<div class="dgap-tool-card<?php echo $is_enabled ? ' is-danger' : ''; ?>">
+				<div class="dgap-tool-card-info">
+					<h4><?php esc_html_e( 'Delete All Data on Uninstall', 'digent-appointments' ); ?></h4>
+					<p><?php esc_html_e( 'Warning: When enabled, deleting the Digent Appointments plugin will permanently erase all bookings, locations, services, staff, customers, forms, and settings.', 'digent-appointments' ); ?></p>
+				</div>
+				<div class="dgap-tool-toggle-wrap">
+					<?php
+					DGAP_Settings_Fields::toggle(
+						[
+							'id'      => 'delete_data_on_uninstall',
+							'tab'     => 'tools',
+							'default' => 0,
+						]
+					);
+					?>
+				</div>
+			</div>
 		</div>
 		<?php
 	}
@@ -691,19 +584,105 @@ class DGAP_Settings_Sections {
 			'dgap_reset_settings',
 			'_dgap_nonce'
 		);
+		$factory_reset_url = wp_nonce_url(
+			admin_url( 'admin-post.php?action=dgap_factory_reset' ),
+			'dgap_factory_reset',
+			'_dgap_nonce'
+		);
 		?>
 		<div class="dgap-tools-stack">
 			<div class="dgap-tool-card is-danger">
 				<div class="dgap-tool-card-info">
 					<h4><?php esc_html_e( 'Reset All Settings to Default', 'digent-appointments' ); ?></h4>
-					<p><?php esc_html_e( 'Reset all plugin settings back to their default values. Your bookings, services, staff, and locations will not be affected.', 'digent-appointments' ); ?></p>
+					<p><?php esc_html_e( 'Reset all plugin settings back to their default values. Your bookings, services, staff, locations, customers, and booking forms will not be affected.', 'digent-appointments' ); ?></p>
 				</div>
-				<a href="<?php echo esc_url( $reset_url ); ?>" class="button button-secondary dgap-tool-btn dgap-tool-btn-danger" onclick="return confirm('<?php echo esc_js( __( 'Are you sure you want to reset all settings to default?', 'digent-appointments' ) ); ?>');">
+				<a href="<?php echo esc_url( $reset_url ); ?>"
+					class="button button-secondary dgap-tool-btn dgap-tool-btn-danger dgap-reset-confirm-trigger"
+					data-confirm-title="<?php esc_attr_e( 'Reset All Settings', 'digent-appointments' ); ?>"
+					data-confirm-message="<?php esc_attr_e( 'Are you sure you want to reset all plugin settings back to their default values? Your bookings, services, staff, locations, customers, and booking forms will stay intact.', 'digent-appointments' ); ?>"
+					data-confirm-text="<?php esc_attr_e( 'Yes, Reset Settings', 'digent-appointments' ); ?>">
 					<span class="dashicons dashicons-image-rotate"></span>
 					<span><?php esc_html_e( 'Reset Settings', 'digent-appointments' ); ?></span>
 				</a>
 			</div>
+
+			<div class="dgap-tool-card is-danger">
+				<div class="dgap-tool-card-info">
+					<h4><?php esc_html_e( 'Full Factory Reset (Fresh Install State)', 'digent-appointments' ); ?></h4>
+					<p><?php esc_html_e( 'Permanently delete all bookings, locations, services, staff, schedules, vacations, customers, booking forms, and settings, restoring the plugin to its exact first-time install state.', 'digent-appointments' ); ?></p>
+				</div>
+				<a href="<?php echo esc_url( $factory_reset_url ); ?>"
+					class="button button-secondary dgap-tool-btn dgap-tool-btn-danger dgap-reset-confirm-trigger"
+					data-confirm-title="<?php esc_attr_e( 'Confirm Full Factory Reset', 'digent-appointments' ); ?>"
+					data-confirm-message="<?php esc_attr_e( 'This will permanently erase ALL Digent Appointments data (bookings, locations, services, staff, schedules, vacations, customers, forms, and settings) and reset the plugin to a fresh install state. This action cannot be undone.', 'digent-appointments' ); ?>"
+					data-confirm-text="<?php esc_attr_e( 'Yes, Factory Reset', 'digent-appointments' ); ?>">
+					<span class="dashicons dashicons-trash"></span>
+					<span><?php esc_html_e( 'Full Factory Reset', 'digent-appointments' ); ?></span>
+				</a>
+			</div>
 		</div>
+		<?php
+		$confirm_modal_path = DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/confirm-modal.php';
+		if ( file_exists( $confirm_modal_path ) ) {
+			include $confirm_modal_path;
+		}
+		?>
+		<script>
+		(function ($) {
+			let pendingResetUrl = null;
+
+			$(document).on('click', '.dgap-reset-confirm-trigger', function (e) {
+				e.preventDefault();
+				const $trigger = $(this);
+				pendingResetUrl = $trigger.attr('href');
+
+				const $modal   = $('#dgap-confirm-modal');
+				const $icon    = $('#dgap-confirm-icon');
+				const $proceed = $('#dgap-confirm-proceed');
+
+				$('#dgap-confirm-error').hide().text('');
+				$('#dgap-confirm-title').text($trigger.data('confirm-title') || '<?php echo esc_js( __( 'Confirm Action', 'digent-appointments' ) ); ?>');
+				$('#dgap-confirm-message').text($trigger.data('confirm-message') || '');
+
+				$icon.removeClass('is-emerald').addClass('is-danger');
+				$icon.find('.dashicons')
+					.removeClass('dashicons-yes-alt dashicons-trash')
+					.addClass('dashicons-warning');
+
+				$proceed.addClass('is-danger')
+					.prop('disabled', false)
+					.text($trigger.data('confirm-text') || '<?php echo esc_js( __( 'Confirm & Proceed', 'digent-appointments' ) ); ?>');
+
+				$modal.fadeIn(140);
+			});
+
+			$(document).on('click', '#dgap-confirm-proceed', function () {
+				if (!pendingResetUrl) {
+					return;
+				}
+				const targetUrl = pendingResetUrl;
+				pendingResetUrl = null;
+				$(this).prop('disabled', true).text('<?php echo esc_js( __( 'Processing...', 'digent-appointments' ) ); ?>');
+				window.location.href = targetUrl;
+			});
+
+			$(document).on('click', '#dgap-confirm-cancel', function () {
+				pendingResetUrl = null;
+			});
+
+			$(document).on('click', '#dgap-confirm-modal', function (e) {
+				if (e.target === this) {
+					pendingResetUrl = null;
+				}
+			});
+
+			$(document).on('keydown', function (e) {
+				if (e.key === 'Escape') {
+					pendingResetUrl = null;
+				}
+			});
+		})(jQuery);
+		</script>
 		<?php
 	}
 
@@ -877,6 +856,45 @@ class DGAP_Settings_Sections {
 		foreach ( $this->get_settings_option_keys() as $option_key ) {
 			delete_option( $option_key );
 		}
+
+		wp_safe_redirect( admin_url( 'admin.php?page=digent-appointments-settings&tab=tools&section=reset&settings-updated=true' ) );
+		exit;
+	}
+
+	public function handle_factory_reset() {
+		check_admin_referer( 'dgap_factory_reset', '_dgap_nonce' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Permission denied.', 'digent-appointments' ), 403 );
+		}
+
+		global $wpdb;
+		$table_slugs = [
+			'dgap_bookings',
+			'dgap_schedules',
+			'dgap_vacations',
+			'dgap_services',
+			'dgap_staff',
+			'dgap_locations',
+			'dgap_customers',
+			'dgap_forms',
+		];
+
+		foreach ( $table_slugs as $slug ) {
+			$full_table = $wpdb->prefix . $slug;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $full_table ) ) === $full_table ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->query( "TRUNCATE TABLE `{$full_table}`" );
+			}
+		}
+
+		foreach ( $this->get_settings_option_keys() as $option_key ) {
+			delete_option( $option_key );
+		}
+
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/core/class-dgap-activator.php';
+		DGAP_Activator::activate();
+		wp_cache_flush();
 
 		wp_safe_redirect( admin_url( 'admin.php?page=digent-appointments-settings&tab=tools&section=reset&settings-updated=true' ) );
 		exit;
