@@ -170,9 +170,35 @@ foreach ( $top_services as $srv ) {
 				</div>
 
 				<div class="dgap-dash-card-body">
-					<?php if ( ! empty( $booking_forms ) ) : ?>
+					<?php
+					$all_forms_for_dash = class_exists( 'DGAP_Form_Repo' ) ? ( DGAP_Form_Repo::get_all() ?: [] ) : $booking_forms;
+					$grouped_by_layout  = [];
+					foreach ( $all_forms_for_dash as $item ) {
+						if ( isset( $item['status'] ) && 0 === (int) $item['status'] ) {
+							continue;
+						}
+						$l_key = ! empty( $item['layout'] ) ? $item['layout'] : 'layout-1';
+						$grouped_by_layout[ $l_key ][] = $item;
+					}
+					$layout_order = [ 'layout-1', 'layout-2', 'layout-3', 'wizard-1', 'wizard-2', 'wizard-3', 'wizard-4', 'wizard-5' ];
+					uksort(
+						$grouped_by_layout,
+						static function ( $a, $b ) use ( $layout_order ) {
+							$pos_a = array_search( $a, $layout_order, true );
+							$pos_b = array_search( $b, $layout_order, true );
+							$pos_a = ( false === $pos_a ) ? 999 : $pos_a;
+							$pos_b = ( false === $pos_b ) ? 999 : $pos_b;
+							return $pos_a <=> $pos_b;
+						}
+					);
+					$display_forms = [];
+					foreach ( $grouped_by_layout as $group ) {
+						$display_forms[] = $group[ wp_rand( 0, count( $group ) - 1 ) ];
+					}
+					?>
+					<?php if ( ! empty( $display_forms ) ) : ?>
 						<div class="dgap-forms-embed-list">
-							<?php foreach ( $booking_forms as $f ) :
+							<?php foreach ( $display_forms as $f ) :
 								$sc = sprintf( '[dgap_booking_form id="%d"]', (int) $f['id'] );
 								$layout_label = ucfirst( str_replace( '-', ' ', $f['layout'] ?: 'layout-1' ) );
 							?>

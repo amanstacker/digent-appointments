@@ -239,8 +239,9 @@ function dgap_get_onboarding_status() {
 		}
 	}
 
-	$percent   = (int) round( ( $completed_count / 5 ) * 100 );
-	$is_ready  = ( $completed_count === 5 );
+	$total_steps = count( $steps );
+	$percent     = $total_steps > 0 ? (int) round( ( $completed_count / $total_steps ) * 100 ) : 0;
+	$is_ready    = ( $completed_count === $total_steps );
 	$dismissed = (bool) get_user_meta( get_current_user_id(), 'dgap_dismiss_onboarding', true );
 
 	$first_form_id = 0;
