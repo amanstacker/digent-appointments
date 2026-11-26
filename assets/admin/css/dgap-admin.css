@@ -2804,19 +2804,28 @@
 .dgap-copy-mini {
 	display: inline-flex !important;
 	align-items: center !important;
+	justify-content: center !important;
 	gap: 4px !important;
 	height: 28px !important;
 	min-height: 28px !important;
-	line-height: 26px !important;
+	line-height: 1 !important;
 	padding: 0 10px !important;
 	font-size: 12px !important;
+	white-space: nowrap !important;
 }
 
 .dgap-copy-mini .dashicons {
-	font-size: 14px;
-	width: 14px;
-	height: 14px;
-	line-height: 14px;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	font-size: 14px !important;
+	width: 14px !important;
+	height: 14px !important;
+	line-height: 1 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	vertical-align: middle !important;
+	flex-shrink: 0 !important;
 }
 
 .dgap-icon-edit {
@@ -3149,6 +3158,13 @@
 .dgap-admin-wrap .wp-list-table th.column-date_time,
 .dgap-admin-wrap .wp-list-table td.column-date_time {
 	min-width: 145px;
+}
+
+.dgap-admin-wrap .wp-list-table th.column-shortcode,
+.dgap-admin-wrap .wp-list-table td.column-shortcode {
+	width: 300px;
+	min-width: 280px;
+	white-space: nowrap;
 }
 
 .dgap-status-menu {

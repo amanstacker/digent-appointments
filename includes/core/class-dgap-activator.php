@@ -61,25 +61,21 @@ class DGAP_Activator {
 			],
 		];
 
-		$calendar_styles = [
-			'modern'  => 'Modern',
-			'classic' => 'Classic',
-			'minimal' => 'Minimal',
-			'inline'  => 'Inline',
-		];
+		$cal_keys = [ 'modern', 'classic', 'minimal', 'inline' ];
 
+		// Insert in reverse display order so ORDER BY id DESC lists Flat 1-3 at the top, followed by Wizard 1-5.
 		$designs = [
-			'flat'   => [
-				'layout-1' => 'Flat Layout 1',
-				'layout-2' => 'Flat Layout 2',
-				'layout-3' => 'Flat Layout 3',
-			],
 			'wizard' => [
-				'wizard-1' => 'Wizard 1 (Classic + Sidebar)',
-				'wizard-2' => 'Wizard 2 (Full Width)',
-				'wizard-3' => 'Wizard 3 (Top Tabs)',
-				'wizard-4' => 'Wizard 4 (Vertical Steps)',
 				'wizard-5' => 'Wizard 5 (Boxed Steps)',
+				'wizard-4' => 'Wizard 4 (Vertical Steps)',
+				'wizard-3' => 'Wizard 3 (Top Tabs)',
+				'wizard-2' => 'Wizard 2 (Full Width)',
+				'wizard-1' => 'Wizard 1 (Classic + Sidebar)',
+			],
+			'flat'   => [
+				'layout-3' => 'Flat Layout 3',
+				'layout-2' => 'Flat Layout 2',
+				'layout-1' => 'Flat Layout 1',
 			],
 		];
 
@@ -87,29 +83,28 @@ class DGAP_Activator {
 
 		foreach ( $designs as $design_key => $layouts ) {
 			foreach ( $layouts as $layout_key => $layout_label ) {
-				foreach ( $calendar_styles as $cal_key => $cal_label ) {
-					$settings = [
-						'design'         => $design_key,
-						'calendar_style' => $cal_key,
-						'labels'         => [
-							'location' => 'Location',
-							'service'  => 'Service',
-							'worker'   => 'Staff',
-						],
-					];
+				$cal_key  = $cal_keys[ wp_rand( 0, count( $cal_keys ) - 1 ) ];
+				$settings = [
+					'design'         => $design_key,
+					'calendar_style' => $cal_key,
+					'labels'         => [
+						'location' => 'Location',
+						'service'  => 'Service',
+						'worker'   => 'Staff',
+					],
+				];
 
-					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-					$wpdb->insert(
-						$table,
-						[
-							'name'          => $layout_label . ' — ' . $cal_label,
-							'layout'        => $layout_key,
-							'settings'      => maybe_serialize( $settings ),
-							'custom_fields' => $serialized_fields,
-							'status'        => 1,
-						]
-					);
-				}
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->insert(
+					$table,
+					[
+						'name'          => $layout_label,
+						'layout'        => $layout_key,
+						'settings'      => maybe_serialize( $settings ),
+						'custom_fields' => $serialized_fields,
+						'status'        => 1,
+					]
+				);
 			}
 		}
 

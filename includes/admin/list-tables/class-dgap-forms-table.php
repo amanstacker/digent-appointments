@@ -43,9 +43,20 @@ class DGAP_Forms_Table extends WP_List_Table {
 	}
 
 	public function column_shortcode( $item ) {
+		$shortcode = sprintf( '[dgap_booking_form id="%d"]', (int) $item['id'] );
+
 		return sprintf(
-			'<code>[dgap_booking_form id="%d"]</code>',
-			(int) $item['id']
+			'<div class="dgap-form-embed-actions">
+				<code class="dgap-shortcode-snippet">%1$s</code>
+				<button type="button" class="button button-secondary dgap-copy-shortcode dgap-copy-mini" data-shortcode="%2$s" title="%3$s" aria-label="%3$s">
+					<span class="dashicons dashicons-clipboard"></span>
+					<span>%4$s</span>
+				</button>
+			</div>',
+			esc_html( $shortcode ),
+			esc_attr( $shortcode ),
+			esc_attr__( 'Copy Shortcode', 'digent-appointments' ),
+			esc_html__( 'Copy', 'digent-appointments' )
 		);
 	}
 
