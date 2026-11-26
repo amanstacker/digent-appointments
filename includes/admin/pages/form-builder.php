@@ -30,6 +30,9 @@ if ( ! $dgap_is_new && $dgap_id ) {
 }
 
 $dgap_current_design  = $form['settings']['design'] ?? 'flat';
+$dgap_selection_mode  = $form['settings']['selection_mode'] ?? 'location_service_staff';
+$dgap_multi_loc_srvs  = DGAP_Booking_Repo::get_multi_location_services();
+$dgap_multi_loc_names = ! empty( $dgap_multi_loc_srvs ) ? wp_list_pluck( $dgap_multi_loc_srvs, 'name' ) : [];
 $dgap_form_status     = isset( $form['status'] ) ? (int) $form['status'] : 1;
 $dgap_adv_settings    = get_option( 'dgap_advanced_settings', [] );
 $dgap_recaptcha_on    = ! empty( $dgap_adv_settings['recaptcha_enabled'] );
@@ -179,6 +182,28 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 									<option value="minimal" <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'minimal' ); ?>><?php esc_html_e( 'Minimal (Clean Grid)', 'digent-appointments' ); ?></option>
 									<option value="inline" <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'inline' ); ?>><?php esc_html_e( 'Inline Expandable Grid', 'digent-appointments' ); ?></option>
 								</select>
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Appointment Fields', 'digent-appointments' ); ?></label>
+								<select name="settings[selection_mode]" id="dgap-selection-mode-select">
+									<option value="location_service_staff" <?php selected( $dgap_selection_mode, 'location_service_staff' ); ?>><?php esc_html_e( 'Location, Service & Staff', 'digent-appointments' ); ?></option>
+									<option value="location_service" <?php selected( $dgap_selection_mode, 'location_service' ); ?>><?php esc_html_e( 'Location & Service', 'digent-appointments' ); ?></option>
+									<option value="service_only" <?php selected( $dgap_selection_mode, 'service_only' ); ?>><?php esc_html_e( 'Service Only', 'digent-appointments' ); ?></option>
+								</select>
+								<?php if ( ! empty( $dgap_multi_loc_names ) ) : ?>
+									<p class="description dgap-selection-mode-warning" style="color:#b91c1c;margin-top:6px;<?php echo ( 'service_only' === $dgap_selection_mode ) ? '' : 'display:none;'; ?>">
+										<?php
+										echo esc_html(
+											sprintf(
+												/* translators: %s: comma-separated service names */
+												__( 'Service Only mode is not allowed because these service(s) are scheduled in multiple locations: %s', 'digent-appointments' ),
+												implode( ', ', $dgap_multi_loc_names )
+											)
+										);
+										?>
+									</p>
+								<?php endif; ?>
 							</div>
 
 						</div>
@@ -358,6 +383,54 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 								</div>
 							</div>
 
+						</div>
+					</div>
+
+					<!-- Booking Overview Fields -->
+					<?php
+					$dgap_summary_fields_cfg = $form['settings']['summary_fields'] ?? [];
+					$dgap_summary_field_list = [
+						'location'       => __( 'Location', 'digent-appointments' ),
+						'service'        => __( 'Service', 'digent-appointments' ),
+						'worker'         => __( 'Staff', 'digent-appointments' ),
+						'price'          => __( 'Price', 'digent-appointments' ),
+						'date_time'      => __( 'Date & Time', 'digent-appointments' ),
+						'customer_name'  => __( 'Customer Name', 'digent-appointments' ),
+						'customer_email' => __( 'Email', 'digent-appointments' ),
+						'customer_phone' => __( 'Phone', 'digent-appointments' ),
+						'custom_fields'  => __( 'Custom Fields', 'digent-appointments' ),
+					];
+					?>
+					<div class="dgap-accordion-item">
+						<div class="dgap-accordion-header">
+							<span class="dgap-acc-title-wrap">
+								<span class="dashicons dashicons-list-view dgap-acc-icon"></span>
+								<span><?php esc_html_e( 'Booking Overview', 'digent-appointments' ); ?></span>
+							</span>
+							<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
+						</div>
+						<div class="dgap-accordion-body">
+							<?php foreach ( $dgap_summary_field_list as $dgap_sf_key => $dgap_sf_label ) : ?>
+								<?php $dgap_sf_enabled = ! isset( $dgap_summary_fields_cfg[ $dgap_sf_key ] ) || 1 === (int) $dgap_summary_fields_cfg[ $dgap_sf_key ]; ?>
+								<div class="dgap-field-row dgap-field-row-toggle">
+									<div class="dgap-field-toggle-info">
+										<label for="dgap-summary-field-<?php echo esc_attr( $dgap_sf_key ); ?>"><?php echo esc_html( $dgap_sf_label ); ?></label>
+									</div>
+									<label class="dgap-switch">
+										<input type="hidden" name="settings[summary_fields][<?php echo esc_attr( $dgap_sf_key ); ?>]" value="0" />
+										<input
+											type="checkbox"
+											id="dgap-summary-field-<?php echo esc_attr( $dgap_sf_key ); ?>"
+											class="dgap-summary-field-toggle"
+											data-summary-target="<?php echo esc_attr( $dgap_sf_key ); ?>"
+											name="settings[summary_fields][<?php echo esc_attr( $dgap_sf_key ); ?>]"
+											value="1"
+											<?php checked( $dgap_sf_enabled, true ); ?>
+										/>
+										<span class="dgap-slider"></span>
+									</label>
+								</div>
+							<?php endforeach; ?>
 						</div>
 					</div>
 

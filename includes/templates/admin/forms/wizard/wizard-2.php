@@ -50,17 +50,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
                 <h2 class="dgap-wizard-step-title"><?php echo esc_html__( 'Personal Information', 'digent-appointments' ); ?></h2>
                 <p class="dgap-wizard-step-sub"><?php echo esc_html__( 'Fields with * are required', 'digent-appointments' ); ?></p>
                 <div class="dgap-personal-info"></div>
-                <!-- Inline summary for full width -->
-                <div class="dgap-wizard-inline-summary">
-                    <h4><?php echo esc_html__( 'Your Booking', 'digent-appointments' ); ?></h4>
-                    <?php include __DIR__ . '/../partials/summary.php'; ?>
-                </div>
             </div>
 
             <!-- Step 4 -->
             <div class="dgap-wizard-step" data-step="4">
                 <h2 class="dgap-wizard-step-title"><?php echo esc_html__( 'Confirm Booking', 'digent-appointments' ); ?></h2>
-                <p class="dgap-wizard-step-sub"><?php echo esc_html__( 'Review your details before submitting', 'digent-appointments' ); ?></p>
+                <p class="dgap-wizard-step-sub"><?php echo esc_html__( 'Review your booking details before submitting', 'digent-appointments' ); ?></p>
+                <?php include __DIR__ . '/../partials/summary.php'; ?>
                 <?php include __DIR__ . '/../partials/security-fields.php'; ?>
             </div>
 

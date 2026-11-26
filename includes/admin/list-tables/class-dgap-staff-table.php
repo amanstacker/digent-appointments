@@ -31,7 +31,9 @@ class DGAP_Staff_Table extends WP_List_Table {
 		$name = trim( ( $item['first_name'] ?? '' ) . ' ' . ( $item['last_name'] ?? '' ) );
 
 		return sprintf(
-			'<strong class="dgap-location-title">%s</strong>',
+			'<a href="#" class="dgap-edit dgap-row-edit-link" data-entity="staff" data-title="%2$s" data-id="%1$d"><strong class="dgap-location-title">%3$s</strong></a>',
+			(int) $item['id'],
+			esc_attr__( 'Edit Staff Member', 'digent-appointments' ),
 			esc_html( $name ?: '—' )
 		);
 	}

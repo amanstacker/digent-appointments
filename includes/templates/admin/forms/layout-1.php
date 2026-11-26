@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     <div class="dgap-card dgap-footer">
         <?php include __DIR__ . '/partials/security-fields.php'; ?>
         <div class="dgap-actions">
-            <button class="dgap-btn-submit"><?php esc_html_e( 'Submit', 'digent-appointments' ); ?></button>
+            <button type="button" class="dgap-btn-submit"><?php esc_html_e( 'Submit', 'digent-appointments' ); ?></button>
         </div>
     </div>
 

@@ -72,6 +72,29 @@ class DGAP_Form_Ajax {
         $settings      = self::sanitize_array( $settings );
         $custom_fields = self::sanitize_array( $custom_fields );
 
+        $allowed_modes = [ 'location_service_staff', 'location_service', 'service_only' ];
+        $selection_mode = $settings['selection_mode'] ?? 'location_service_staff';
+        if ( ! in_array( $selection_mode, $allowed_modes, true ) ) {
+            $selection_mode = 'location_service_staff';
+        }
+        $settings['selection_mode'] = $selection_mode;
+
+        if ( 'service_only' === $selection_mode ) {
+            $conflicts = DGAP_Booking_Repo::get_multi_location_services();
+            if ( ! empty( $conflicts ) ) {
+                $names = wp_list_pluck( $conflicts, 'name' );
+                wp_send_json_error(
+                    [
+                        'message' => sprintf(
+                            /* translators: %s: comma-separated service names */
+                            esc_html__( 'Cannot use "Service Only" mode because the following service(s) are assigned to multiple locations in Schedules: %s', 'digent-appointments' ),
+                            esc_html( implode( ', ', $names ) )
+                        ),
+                    ]
+                );
+            }
+        }
+
         foreach ( $custom_fields as $key => $field ) {
         	if ( strpos( $field['name'] , 'custom_' ) !== 0 ) {
         		continue;

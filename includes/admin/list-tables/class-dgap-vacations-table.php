@@ -33,7 +33,9 @@ class DGAP_Vacations_Table extends WP_List_Table {
 
 	public function column_name( $item ) {
 		return sprintf(
-			'<strong class="dgap-location-title">%s</strong>',
+			'<a href="#" class="dgap-edit dgap-row-edit-link" data-entity="vacation" data-title="%2$s" data-id="%1$d"><strong class="dgap-location-title">%3$s</strong></a>',
+			(int) $item['id'],
+			esc_attr__( 'Edit Vacation', 'digent-appointments' ),
 			esc_html( $item['name'] )
 		);
 	}

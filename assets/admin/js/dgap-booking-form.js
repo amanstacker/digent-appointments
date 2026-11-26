@@ -177,6 +177,29 @@ jQuery(function ($) {
         $('#dgap-live-preview .dgap-recaptcha-preview-row').toggle(show);
     });
 
+    $(document).on('change', '.dgap-summary-field-toggle', function () {
+        const target   = $(this).data('summary-target');
+        const show     = $(this).is(':checked');
+        const $preview = $('#dgap-live-preview');
+        const anyOn    = $('.dgap-summary-field-toggle:checked').length > 0;
+
+        $preview.find('.dgap-summary').toggleClass('dgap-summary-all-hidden', !anyOn);
+
+        if (target === 'custom_fields') {
+            if (show) {
+                $preview.find('.dgap-summary').removeAttr('data-hide-summary-custom');
+            } else {
+                $preview.find('.dgap-summary').attr('data-hide-summary-custom', '1');
+            }
+            if (window.dgapSyncSummaryCustomerDetails) {
+                window.dgapSyncSummaryCustomerDetails($preview);
+            }
+            return;
+        }
+
+        $preview.find(`[data-summary-field="${target}"]`).toggle(show);
+    });
+
     /* ================================================
         FIELD LABELS LIVE UPDATE
     ================================================ */
@@ -580,6 +603,12 @@ jQuery(function ($) {
     });
 
     $(document).on('click', '#dgap-refresh-preview', function () {
+        loadPreview();
+    });
+
+    $(document).on('change', '#dgap-selection-mode-select', function () {
+        const mode = $(this).val();
+        $('.dgap-selection-mode-warning').toggle(mode === 'service_only');
         loadPreview();
     });
 

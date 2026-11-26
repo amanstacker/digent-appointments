@@ -272,11 +272,16 @@ jQuery(function ($) {
         });
     });
 
+    function getSelectionMode() {
+        return getWrap().find('.dgap-preview-wrap').attr('data-selection-mode') || 'location_service_staff';
+    }
+
     /* ================================================
-        SERVICE → STAFF
+        SERVICE → STAFF (or auto-resolve in hidden modes)
     ================================================ */
     $(document).on('change', '#dgap-service', function () {
 
+        const mode        = getSelectionMode();
         const location_id = $('#dgap-location').val();
         const service_id  = $(this).val();
         const labels      = getLabels();
@@ -288,6 +293,35 @@ jQuery(function ($) {
             .html(`<option value="" data-placeholder="1">-- Select ${wLabel} --</option>`);
 
         disableCalendar();
+
+        if (mode === 'service_only') {
+            $('#dgap-location').val('');
+            if (!service_id) return;
+
+            $.post(ajax.url, {
+                action:      'dgap_front_resolve_service',
+                service_id:  service_id,
+                _dgap_nonce: ajax.nonce
+            }, function (res) {
+                if (res.success && res.data && res.data.location_id && res.data.staff_id) {
+                    const locId   = String(res.data.location_id);
+                    const staffId = String(res.data.staff_id);
+
+                    if (!$('#dgap-location option[value="' + locId + '"]').length) {
+                        $('#dgap-location').append(`<option value="${locId}">${res.data.location_name || ''}</option>`);
+                    }
+                    $('#dgap-location').val(locId);
+
+                    $('#dgap-staff')
+                        .html(`<option value="${staffId}">${res.data.staff_name || ''}</option>`)
+                        .val(staffId)
+                        .prop('disabled', false);
+
+                    enableCalendar();
+                }
+            });
+            return;
+        }
 
         if (!location_id || !service_id) return;
 
@@ -306,6 +340,11 @@ jQuery(function ($) {
                     );
                 });
                 $('#dgap-staff').prop('disabled', false);
+
+                if (mode === 'location_service' && res.data.length) {
+                    $('#dgap-staff').val(String(res.data[0].id));
+                    enableCalendar();
+                }
             }
         });
     });
@@ -455,6 +494,9 @@ jQuery(function ($) {
         const $summaryWrapper = $wrap.find('.dgap-summary-wrapper');
         if ($summaryWrapper.length) {
             $summaryWrapper.find('.dgap-summary-custom-item').remove();
+            if ($wrap.find('.dgap-summary').attr('data-hide-summary-custom') === '1') {
+                return;
+            }
             $wrap.find('.dgap-personal-info .dgap-custom-field').each(function () {
                 const fieldName = $(this).attr('name') || '';
                 if (fieldName === '_dgap_form_name' || fieldName === '_dgap_form_email' || fieldName === '_dgap_form_phone') {
@@ -496,13 +538,20 @@ jQuery(function ($) {
         WIZARD STEP NAVIGATION
         Uses dgap-* classes — matches all wizard templates
     ================================================ */
+    function getTotalSteps($wizard) {
+        const $w = ($wizard && $wizard.length) ? $wizard : getWrap().find('.dgap-wizard-wrap');
+        return $w.find('.dgap-wizard-step').length || 4;
+    }
+
     function goToStep(step) {
 
-        wizardStep    = step;
-        const $wrap   = getWrap();
-        const $wizard = $wrap.find('.dgap-wizard-wrap');
+        wizardStep       = step;
+        const $wrap      = getWrap();
+        const $wizard    = $wrap.find('.dgap-wizard-wrap');
 
         if (!$wizard.length) return;
+
+        const total = getTotalSteps($wizard);
 
         // Show correct step
         $wizard.find('.dgap-wizard-step').removeClass('active');
@@ -512,14 +561,14 @@ jQuery(function ($) {
         updateStepIndicators($wizard, step);
 
         // Progress bar
-        const pct = ((step - 1) / (totalSteps - 1)) * 100;
+        const pct = total > 1 ? ((step - 1) / (total - 1)) * 100 : 100;
         $wizard.find('.dgap-wizard-bar-fill').css('width', pct + '%');
         $wizard.find('.dgap-wizard-steps').css('--progress-width', pct + '%');
 
         // Nav buttons
         $wizard.find('.dgap-wizard-prev').toggle(step > 1);
-        $wizard.find('.dgap-wizard-next').toggle(step < totalSteps);
-        $wizard.find('.dgap-wizard-submit').toggle(step === totalSteps);
+        $wizard.find('.dgap-wizard-next').toggle(step < total);
+        $wizard.find('.dgap-wizard-submit').toggle(step === total);
 
         // Step-specific actions
         if (step === 2) renderCalendar();
@@ -551,7 +600,8 @@ jQuery(function ($) {
 
     // Next
     $(document).on('click', '.dgap-wizard-next', function () {
-        if (wizardStep < totalSteps) goToStep(wizardStep + 1);
+        const total = getTotalSteps();
+        if (wizardStep < total) goToStep(wizardStep + 1);
     });
 
     // Back
@@ -567,6 +617,111 @@ jQuery(function ($) {
             if (target) goToStep(target);
         }
     );
+
+    /* ================================================
+        ADMIN PREVIEW SUBMIT (Simulated Confirmation)
+    ================================================ */
+    if (isAdmin) {
+        function validatePreviewForm($wrap) {
+            $wrap.find('.dgap-preview-inline-error').remove();
+            $wrap.find('.dgap-error').removeClass('dgap-error');
+
+            const mode       = getSelectionMode();
+            const locationId = $wrap.find('#dgap-location').val();
+            const serviceId  = $wrap.find('#dgap-service').val();
+            const staffId    = $wrap.find('#dgap-staff').val();
+            const missing    = [];
+
+            if (mode === 'location_service_staff' && (!locationId || !serviceId || !staffId)) {
+                missing.push('Please select location, service and staff.');
+            } else if (mode === 'location_service' && (!locationId || !serviceId)) {
+                missing.push('Please select location and service.');
+            } else if (mode === 'service_only' && !serviceId) {
+                missing.push('Please select a service.');
+            }
+
+            if (!selectedDate || !$wrap.find('.dgap-slot.active').length) {
+                missing.push('Please select a date and time slot.');
+            }
+
+            let hasEmptyRequired = false;
+            $wrap.find('.dgap-personal-info [required]').each(function () {
+                if (!($(this).val() || '').trim()) {
+                    $(this).addClass('dgap-error');
+                    hasEmptyRequired = true;
+                }
+            });
+            if (hasEmptyRequired) {
+                missing.push('Please fill in all required personal information fields.');
+            }
+
+            const $gdpr = $wrap.find('.dgap-gdpr-consent:visible');
+            if ($gdpr.length && !$gdpr.is(':checked')) {
+                missing.push('Please accept the privacy consent checkbox.');
+            }
+
+            return missing;
+        }
+
+        $(document).on('click', '#dgap-live-preview .dgap-btn-submit, #dgap-live-preview .dgap-wizard-submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const $wrap   = getWrap();
+            const $previewWrap = $wrap.find('.dgap-preview-wrap');
+            const errors  = validatePreviewForm($wrap);
+
+            if (errors.length) {
+                const $err = $('<div class="dgap-preview-inline-error"></div>').text(errors[0]);
+                const $target = isWizard()
+                    ? $wrap.find('.dgap-wizard-nav')
+                    : $wrap.find('.dgap-actions').last();
+                $target.before($err);
+                return;
+            }
+
+            const serviceText = ($wrap.find('#dgap-service option:selected').text() || '').trim();
+            const dateText    = selectedDate + (selectedSlotStart ? ` (${selectedSlotStart}${selectedSlotEnd ? ' - ' + selectedSlotEnd : ''})` : '');
+            const detailsLine = [serviceText, dateText].filter(Boolean).join(' · ');
+
+            const successHtml = `
+                <div class="dgap-success dgap-preview-success-box">
+                    <span class="dgap-preview-mode-badge">Preview Mode — No real booking saved</span>
+                    <div class="dgap-success-icon">&#10003;</div>
+                    <h3>Booking Confirmed!</h3>
+                    <p>Your appointment has been successfully booked.</p>
+                    ${detailsLine ? `<p class="dgap-preview-success-meta">${$('<div>').text(detailsLine).html()}</p>` : ''}
+                    <button type="button" class="dgap-preview-reset-btn">Reset Preview</button>
+                </div>
+            `;
+
+            if (isWizard()) {
+                const $wizard = $wrap.find('.dgap-wizard-wrap');
+                $wizard.find('.dgap-step-dot, .dgap-tab, .dgap-vertical-step, .dgap-boxed-step')
+                    .removeClass('active')
+                    .addClass('completed');
+                $wizard.find('.dgap-wizard-bar-fill').css('width', '100%');
+                $wizard.find('.dgap-wizard-steps').css('--progress-width', '100%');
+                $wizard.find('.dgap-wizard-step, .dgap-wizard-nav, .dgap-preview-success-box').hide();
+
+                let $container = $wizard.find('.dgap-wizard-main, .dgap-tabs-body, .dgap-vertical-content, .dgap-boxed-body').first();
+                if (!$container.length) {
+                    $container = $wizard;
+                }
+                $container.find('.dgap-preview-success-box').remove();
+                $container.append(successHtml);
+            } else {
+                $previewWrap.find('.dgap-card').hide();
+                $previewWrap.find('.dgap-preview-success-box').remove();
+                $previewWrap.append(successHtml);
+            }
+        });
+
+        $(document).on('click', '#dgap-live-preview .dgap-preview-reset-btn', function (e) {
+            e.preventDefault();
+            $('#dgap-refresh-preview').trigger('click');
+        });
+    }
 
     /* ================================================
         PUBLIC API — called by admin JS

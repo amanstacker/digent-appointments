@@ -1057,21 +1057,21 @@
 .dgap-wizard-tabs .dgap-tabs-header {
     display:       flex;
     align-items:   center;
+    flex-wrap:     wrap;
     background:    #f6f7f7;
     border-bottom: 2px solid #e5e7eb;
     padding:       0 8px;
-    overflow-x:    auto;
+    overflow:      visible;
 }
 
 .dgap-tab {
     display:       flex;
     align-items:   center;
-    gap:           10px;
-    padding:       14px 16px;
+    gap:           8px;
+    padding:       12px 12px;
     background:    none;
     border:        none;
     border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
     cursor:        pointer;
     white-space:   nowrap;
     transition:    all 0.2s ease;
@@ -1686,4 +1686,79 @@
 
 .dgap-live-preview.is-mobile .dgap-preview-wrap .dgap-card {
     padding: 14px !important;
+}
+
+/* Selection Modes */
+.dgap-preview-wrap[data-selection-mode="location_service"] .dgap-field:has(#dgap-staff),
+.dgap-preview-wrap[data-selection-mode="location_service"] .dgap-summary-worker,
+.dgap-preview-wrap[data-selection-mode="service_only"] .dgap-field:has(#dgap-location),
+.dgap-preview-wrap[data-selection-mode="service_only"] .dgap-field:has(#dgap-staff),
+.dgap-preview-wrap[data-selection-mode="service_only"] .dgap-summary-loc,
+.dgap-preview-wrap[data-selection-mode="service_only"] .dgap-summary-worker {
+	display: none !important;
+}
+
+/* Hide entire Booking Overview / Summary section when all fields are disabled */
+.dgap-card:has(> .dgap-summary.dgap-summary-all-hidden),
+.dgap-wizard-sidebar:has(> .dgap-summary.dgap-summary-all-hidden),
+.dgap-wizard-inline-summary:has(> .dgap-summary.dgap-summary-all-hidden) {
+	display: none !important;
+}
+
+/* Preview Submit & Simulated Confirmation */
+.dgap-preview-inline-error {
+	background: #fef2f2;
+	border: 1px solid #fecaca;
+	color: #b91c1c;
+	border-radius: 6px;
+	padding: 10px 12px;
+	font-size: 13px;
+	margin: 10px 0 12px;
+}
+
+.dgap-personal-info .dgap-error {
+	border-color: #ef4444 !important;
+	box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) !important;
+}
+
+.dgap-preview-success-box {
+	text-align: center;
+	padding: 32px 24px;
+	background: var(--dgap-bg-color, #ffffff);
+	border: 1px solid #e2e8f0;
+	border-radius: var(--dgap-border-radius, 8px);
+}
+
+.dgap-preview-mode-badge {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 600;
+	color: #047857;
+	background: #ecfdf5;
+	border: 1px solid #a7f3d0;
+	border-radius: 999px;
+	padding: 3px 10px;
+	margin-bottom: 14px;
+}
+
+.dgap-preview-success-meta {
+	font-size: 13px;
+	color: #475569;
+	margin-top: 8px;
+}
+
+.dgap-preview-reset-btn {
+	margin-top: 16px;
+	padding: 8px 18px;
+	border-radius: 6px;
+	border: 1px solid var(--dgap-primary-color, #10b981);
+	background: var(--dgap-primary-color, #10b981);
+	color: #ffffff;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.dgap-preview-reset-btn:hover {
+	opacity: 0.92;
 }

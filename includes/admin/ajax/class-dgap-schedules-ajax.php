@@ -83,6 +83,15 @@ class DGAP_Schedules_Ajax {
 			);
 		}
 
+		$schedule_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
+		$is_active   = isset( $data['status'] );
+
+		if ( $is_active && DGAP_Booking_Repo::has_service_only_form() && DGAP_Booking_Repo::has_other_location_schedule_for_service( $service_id, $location_id, $schedule_id ) ) {
+			wp_send_json_error(
+				[ 'message' => esc_html__( 'This service is already scheduled at another location. Assigning the same service to multiple locations is not allowed while a booking form uses "Service Only" mode.', 'digent-appointments' ) ]
+			);
+		}
+
 		/* ===============================
 		* DATE VALIDATION
 		* =============================== */

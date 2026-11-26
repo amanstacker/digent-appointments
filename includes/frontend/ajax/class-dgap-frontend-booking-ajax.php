@@ -18,6 +18,9 @@ class DGAP_Frontend_Booking_Ajax {
 		
 		add_action( 'wp_ajax_dgap_front_get_staffs', [ $this, 'get_staffs' ] );
 		add_action( 'wp_ajax_nopriv_dgap_front_get_staffs', [ $this, 'get_staffs' ] );
+
+		add_action( 'wp_ajax_dgap_front_resolve_service', [ $this, 'resolve_service' ] );
+		add_action( 'wp_ajax_nopriv_dgap_front_resolve_service', [ $this, 'resolve_service' ] );
 		
 		add_action( 'wp_ajax_dgap_front_get_slots', [ $this, 'get_slots' ] );
 		add_action( 'wp_ajax_nopriv_dgap_front_get_slots', [ $this, 'get_slots' ] );
@@ -74,6 +77,27 @@ class DGAP_Frontend_Booking_Ajax {
 		);
 
 		wp_send_json_success( $results );
+	}
+
+	/* ================= Resolve Service (Service Only Mode) ================= */
+
+	public function resolve_service() {
+
+		check_ajax_referer( 'dgap_frontend_action', '_dgap_nonce' );
+
+		$service_id = absint( $_POST['service_id'] ?? 0 );
+
+		if ( ! $service_id ) {
+			wp_send_json_error( esc_html__( 'Invalid service', 'digent-appointments' ) );
+		}
+
+		$resolved = DGAP_Booking_Repo::resolve_schedule_for_service( $service_id );
+
+		if ( ! $resolved ) {
+			wp_send_json_error( esc_html__( 'No active schedule found for this service.', 'digent-appointments' ) );
+		}
+
+		wp_send_json_success( $resolved );
 	}
 
 	/* ================= Slots ================= */
@@ -154,6 +178,22 @@ class DGAP_Frontend_Booking_Ajax {
 			$service_data 	=	DGAP_Service_Repo::get( $data['service_id'] );
 			if ( is_array( $service_data ) && isset( $service_data['price'] ) ) {
 				$data['price'] 	=	$service_data['price'];
+			}
+
+			// Server-side fallback resolution for Location & Service / Service Only modes
+			if ( ! $data['location_id'] ) {
+				$resolved = DGAP_Booking_Repo::resolve_schedule_for_service( $data['service_id'] );
+				if ( $resolved ) {
+					$data['location_id'] = absint( $resolved['location_id'] );
+					if ( ! $data['staff_id'] ) {
+						$data['staff_id'] = absint( $resolved['staff_id'] );
+					}
+				}
+			} elseif ( ! $data['staff_id'] ) {
+				$staff_list = DGAP_Booking_Repo::get_staff_by_location_service( $data['location_id'], $data['service_id'] );
+				if ( ! empty( $staff_list[0]['id'] ) ) {
+					$data['staff_id'] = absint( $staff_list[0]['id'] );
+				}
 			}
 		}
 		

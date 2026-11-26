@@ -32,8 +32,11 @@ class DGAP_Forms_Table extends WP_List_Table {
 	}
 
 	public function column_name( $item ) {
+		$edit_url = admin_url( 'admin.php?page=digent-appointments-forms&action=edit&id=' . (int) $item['id'] );
+
 		return sprintf(
-			'<strong class="dgap-location-title">%s</strong>',
+			'<a href="%1$s" class="dgap-row-edit-link"><strong class="dgap-location-title">%2$s</strong></a>',
+			esc_url( $edit_url ),
 			esc_html( $item['name'] )
 		);
 	}

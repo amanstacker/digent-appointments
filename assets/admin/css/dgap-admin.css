@@ -3167,6 +3167,19 @@
 	white-space: nowrap;
 }
 
+.dgap-admin-wrap .wp-list-table a.dgap-row-edit-link {
+	color: inherit;
+	text-decoration: none;
+	display: inline-block;
+	transition: color 0.15s ease;
+}
+
+.dgap-admin-wrap .wp-list-table a.dgap-row-edit-link:hover,
+.dgap-admin-wrap .wp-list-table a.dgap-row-edit-link:focus {
+	color: var(--dgap-primary-hover, #059669);
+	text-decoration: underline;
+}
+
 .dgap-status-menu {
 	margin-right: 0 !important;
 	width: 26px !important;

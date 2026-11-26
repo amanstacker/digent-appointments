@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             <button type="button" class="dgap-step-dot active" data-step="1"><?php echo esc_html__( '1', 'digent-appointments' ); ?></button>
             <button type="button" class="dgap-step-dot" data-step="2"><?php echo esc_html__( '2', 'digent-appointments' ); ?></button>
             <button type="button" class="dgap-step-dot" data-step="3"><?php echo esc_html__( '3', 'digent-appointments' ); ?></button>
-            <button type="button" class="dgap-step-dot" data-step="4"><?php echo esc_html__( '4', 'digent-appointments' ); ?></button>
         </div>
     </div>
 
@@ -47,17 +46,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
                 <?php include __DIR__ . '/../partials/timeslots.php'; ?>
             </div>
 
-            <!-- Step 3: Personal Info -->
+            <!-- Step 3: Personal Info & Confirm -->
             <div class="dgap-wizard-step" data-step="3">
                 <h2 class="dgap-wizard-step-title"><?php echo esc_html__( 'Personal Information', 'digent-appointments' ); ?></h2>
                 <p class="dgap-wizard-step-sub"><?php echo esc_html__( 'Fields with * are required', 'digent-appointments' ); ?></p>
                 <div class="dgap-personal-info"></div>
-            </div>
-
-            <!-- Step 4: Confirm -->
-            <div class="dgap-wizard-step" data-step="4">
-                <h2 class="dgap-wizard-step-title"><?php echo esc_html__( 'Confirm Booking', 'digent-appointments' ); ?></h2>
-                <p class="dgap-wizard-step-sub"><?php echo esc_html__( 'Review your booking details before submitting', 'digent-appointments' ); ?></p>
                 <?php include __DIR__ . '/../partials/security-fields.php'; ?>
             </div>
 

@@ -26,7 +26,9 @@ class DGAP_Locations_Table extends WP_List_Table {
 
 	public function column_name( $item ) {
 		return sprintf(
-			'<strong class="dgap-location-title">%s</strong>',
+			'<a href="#" class="dgap-edit dgap-row-edit-link" data-entity="location" data-title="%2$s" data-id="%1$d"><strong class="dgap-location-title">%3$s</strong></a>',
+			(int) $item['id'],
+			esc_attr__( 'Edit Location', 'digent-appointments' ),
 			esc_html( $item['name'] )
 		);
 	}

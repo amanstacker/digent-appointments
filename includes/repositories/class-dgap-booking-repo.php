@@ -373,6 +373,119 @@ class DGAP_Booking_Repo {
 		);
 	}
 
+	/**
+	 * Get all active services that have at least one active schedule (used by Service Only mode).
+	 */
+	public static function get_all_scheduled_services() {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific lookup.
+		return $wpdb->get_results(
+			"
+			SELECT DISTINCT srv.*
+			FROM {$wpdb->prefix}dgap_services srv
+			INNER JOIN {$wpdb->prefix}dgap_schedules s ON s.service_id = srv.id
+			INNER JOIN {$wpdb->prefix}dgap_locations l ON l.id = s.location_id
+			INNER JOIN {$wpdb->prefix}dgap_staff st ON st.id = s.staff_id
+			WHERE s.status = 1
+			AND srv.status = 1
+			AND l.status = 1
+			AND st.status = 1
+			ORDER BY srv.name ASC
+			",
+			ARRAY_A
+		);
+	}
+
+	/**
+	 * Resolve matching location_id and staff_id from active schedule for a service (Service Only mode).
+	 */
+	public static function resolve_schedule_for_service( $service_id ) {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific lookup.
+		return $wpdb->get_row(
+			$wpdb->prepare(
+				"
+				SELECT s.location_id, s.staff_id, l.name AS location_name, CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+				FROM {$wpdb->prefix}dgap_schedules s
+				INNER JOIN {$wpdb->prefix}dgap_locations l ON l.id = s.location_id
+				INNER JOIN {$wpdb->prefix}dgap_staff st ON st.id = s.staff_id
+				WHERE s.service_id = %d
+				AND s.status = 1
+				AND l.status = 1
+				AND st.status = 1
+				ORDER BY s.id ASC
+				LIMIT 1
+				",
+				$service_id
+			),
+			ARRAY_A
+		);
+	}
+
+	/**
+	 * Find active services assigned to 2 or more distinct locations in active schedules.
+	 */
+	public static function get_multi_location_services() {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Validation lookup.
+		return $wpdb->get_results(
+			"
+			SELECT srv.id, srv.name, COUNT(DISTINCT s.location_id) AS location_count
+			FROM {$wpdb->prefix}dgap_schedules s
+			INNER JOIN {$wpdb->prefix}dgap_services srv ON srv.id = s.service_id
+			WHERE s.status = 1
+			AND srv.status = 1
+			GROUP BY s.service_id, srv.id, srv.name
+			HAVING COUNT(DISTINCT s.location_id) > 1
+			ORDER BY srv.name ASC
+			",
+			ARRAY_A
+		);
+	}
+
+	/**
+	 * Check whether any form uses selection_mode = 'service_only'.
+	 */
+	public static function has_service_only_form() {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Validation lookup.
+		$rows = $wpdb->get_results( "SELECT settings FROM {$wpdb->prefix}dgap_forms", ARRAY_A );
+		if ( empty( $rows ) ) {
+			return false;
+		}
+		foreach ( $rows as $row ) {
+			$settings = maybe_unserialize( $row['settings'] ?? '' );
+			if ( is_array( $settings ) && ( $settings['selection_mode'] ?? '' ) === 'service_only' ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if an active schedule exists for the same service at a different location.
+	 */
+	public static function has_other_location_schedule_for_service( $service_id, $location_id, $exclude_schedule_id = 0 ) {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Validation lookup.
+		$count = $wpdb->get_var(
+			$wpdb->prepare(
+				"
+				SELECT COUNT(*)
+				FROM {$wpdb->prefix}dgap_schedules
+				WHERE service_id = %d
+				AND location_id != %d
+				AND status = 1
+				AND id != %d
+				",
+				$service_id,
+				$location_id,
+				$exclude_schedule_id
+			)
+		);
+		return (int) $count > 0;
+	}
+
 	public static function get_schedule( $location_id, $service_id, $staff_id, $date ) {
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Fetching a specific schedule row by location, service, staff, and date; result is request-specific and caching is not required here.

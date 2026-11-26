@@ -29,9 +29,11 @@ class DGAP_Bookings_Table extends WP_List_Table {
 
 	public function column_booking( $item ) {
 		return sprintf(
-			'<strong class="dgap-booking-id">#%d</strong><br><strong class="dgap-booking-loc">%s</strong>',
+			'<a href="#" class="dgap-edit dgap-row-edit-link" data-entity="booking" data-title="%4$s" data-id="%1$d"><strong class="dgap-booking-id">#%2$s</strong><br><strong class="dgap-booking-loc">%3$s</strong></a>',
+			(int) $item['id'],
 			esc_html( $item['id'] ),
-			esc_html( $item['location_name'] ?? '' )
+			esc_html( $item['location_name'] ?? '' ),
+			esc_attr__( 'Edit Booking', 'digent-appointments' )
 		);
 	}
 

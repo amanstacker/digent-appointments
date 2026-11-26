@@ -11,9 +11,13 @@ class DGAP_Form_Renderer {
 			$form['layout'] = 'layout-1';
 		}
 	
-		$settings   = $form['settings'] ?? [];
-		$appearance = $settings['appearance'] ?? [];
-		$design     = $settings['design'] ?? 'flat';
+		$settings       = $form['settings'] ?? [];
+		$appearance     = $settings['appearance'] ?? [];
+		$design         = $settings['design'] ?? 'flat';
+		$selection_mode = $settings['selection_mode'] ?? 'location_service_staff';
+		if ( ! in_array( $selection_mode, [ 'location_service_staff', 'location_service', 'service_only' ], true ) ) {
+			$selection_mode = 'location_service_staff';
+		}
 
 		// Build CSS variables.
 		$font_size     = ! empty( $appearance['font_size'] )
@@ -96,6 +100,10 @@ class DGAP_Form_Renderer {
 		}
 		$html = ob_get_clean();
 
-		return str_replace( 'class="dgap-preview-wrap', 'class="dgap-preview-wrap btn-' . esc_attr( $button_style ), $html );
+		return str_replace(
+			'class="dgap-preview-wrap',
+			'data-selection-mode="' . esc_attr( $selection_mode ) . '" class="dgap-preview-wrap btn-' . esc_attr( $button_style ),
+			$html
+		);
 	}
 }

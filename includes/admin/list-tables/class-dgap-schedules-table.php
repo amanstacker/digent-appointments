@@ -31,7 +31,9 @@ class DGAP_Schedules_Table extends WP_List_Table {
 
 	public function column_location( $item ) {
 		return sprintf(
-			'<strong class="dgap-location-title">%s</strong>',
+			'<a href="#" class="dgap-edit dgap-row-edit-link" data-entity="schedule" data-title="%2$s" data-id="%1$d"><strong class="dgap-location-title">%3$s</strong></a>',
+			(int) $item['id'],
+			esc_attr__( 'Edit Schedule', 'digent-appointments' ),
 			esc_html( $item['location_name'] ?? '—' )
 		);
 	}

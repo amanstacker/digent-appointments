@@ -194,11 +194,16 @@ jQuery(function ($) {
         });
     });
 
+    function getSelectionMode() {
+        return $('.dgap-preview-wrap').attr('data-selection-mode') || 'location_service_staff';
+    }
+
     /* ------------------------------
-        SERVICE → STAFF
+        SERVICE → STAFF (or auto-resolve in hidden modes)
     -------------------------------- */
     $(document).on('change', '#dgap-service', function () {
 
+        const mode        = getSelectionMode();
         const location_id = $('#dgap-location').val();
         const service_id  = $(this).val();
         const workerLabel = labels.worker || 'Worker';
@@ -208,6 +213,35 @@ jQuery(function ($) {
             .html(`<option value="" data-placeholder="1">-- Select ${workerLabel} --</option>`);
 
         disableCalendar();
+
+        if (mode === 'service_only') {
+            $('#dgap-location').val('');
+            if (!service_id) return;
+
+            $.post(dgap_frontend.ajax_url, {
+                action:      'dgap_front_resolve_service',
+                service_id:  service_id,
+                _dgap_nonce: dgap_frontend._dgap_frontend_nonce
+            }, function (res) {
+                if (res.success && res.data && res.data.location_id && res.data.staff_id) {
+                    const locId   = String(res.data.location_id);
+                    const staffId = String(res.data.staff_id);
+
+                    if (!$('#dgap-location option[value="' + locId + '"]').length) {
+                        $('#dgap-location').append(`<option value="${locId}">${res.data.location_name || ''}</option>`);
+                    }
+                    $('#dgap-location').val(locId);
+
+                    $('#dgap-staff')
+                        .html(`<option value="${staffId}">${res.data.staff_name || ''}</option>`)
+                        .val(staffId)
+                        .prop('disabled', false);
+
+                    enableCalendar();
+                }
+            });
+            return;
+        }
 
         if (!location_id || !service_id) return;
 
@@ -226,6 +260,11 @@ jQuery(function ($) {
                     );
                 });
                 $('#dgap-staff').prop('disabled', false);
+
+                if (mode === 'location_service' && res.data.length) {
+                    $('#dgap-staff').val(String(res.data[0].id));
+                    enableCalendar();
+                }
             }
         });
     });
@@ -385,11 +424,17 @@ jQuery(function ($) {
         goToStep(1);
     }
 
+    function getTotalSteps($wrap) {
+        const $w = ($wrap && $wrap.length) ? $wrap : $('.dgap-wizard-wrap');
+        return $w.find('.dgap-wizard-step').length || 4;
+    }
+
     function goToStep(step) {
 
         wizardStep = step;
 
         const $wrap = $('.dgap-wizard-wrap');
+        const total = getTotalSteps($wrap);
 
         // Show correct step
         $wrap.find('.dgap-wizard-step').removeClass('active');
@@ -399,13 +444,13 @@ jQuery(function ($) {
         updateStepIndicators($wrap, step);
 
         // Progress bar
-        const pct = ((step - 1) / (totalSteps - 1)) * 100;
+        const pct = total > 1 ? ((step - 1) / (total - 1)) * 100 : 100;
         $wrap.find('.dgap-wizard-bar-fill').css('width', pct + '%');
 
         // Nav buttons
         $wrap.find('.dgap-wizard-prev').toggle(step > 1);
-        $wrap.find('.dgap-wizard-next').toggle(step < totalSteps);
-        $wrap.find('.dgap-wizard-submit').toggle(step === totalSteps);
+        $wrap.find('.dgap-wizard-next').toggle(step < total);
+        $wrap.find('.dgap-wizard-submit').toggle(step === total);
 
         // Re-render personal info on step 3
         if (step === 3) {
@@ -550,7 +595,8 @@ jQuery(function ($) {
 
     // Next button
     $(document).on('click', '.dgap-wizard-next', function () {
-        if (wizardStep < totalSteps && validateStep(wizardStep)) {
+        const total = getTotalSteps();
+        if (wizardStep < total && validateStep(wizardStep)) {
             goToStep(wizardStep + 1);
         }
     });
