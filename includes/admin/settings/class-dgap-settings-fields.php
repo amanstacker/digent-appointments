@@ -91,10 +91,12 @@ class DGAP_Settings_Fields {
 	}
 
 	public static function text( $args ) {
-		$value       = self::get_value( $args['id'], $args );
-		$field_name  = self::get_field_name( $args['id'], $args );
-		$type        = $args['type'] ?? 'text';
-		$placeholder = $args['placeholder'] ?? '';
+		$value            = self::get_value( $args['id'], $args );
+		$field_name       = self::get_field_name( $args['id'], $args );
+		$type             = $args['type'] ?? 'text';
+		$placeholder      = $args['placeholder'] ?? '';
+		$autocomplete     = $args['autocomplete'] ?? '';
+		$disable_autofill = ! empty( $args['disable_autofill'] );
 		?>
 		<input
 			type="<?php echo esc_attr( $type ); ?>"
@@ -102,6 +104,15 @@ class DGAP_Settings_Fields {
 			value="<?php echo esc_attr( $value ); ?>"
 			placeholder="<?php echo esc_attr( $placeholder ); ?>"
 			class="regular-text"
+			<?php if ( '' !== $autocomplete ) : ?>
+				autocomplete="<?php echo esc_attr( $autocomplete ); ?>"
+			<?php endif; ?>
+			<?php if ( $disable_autofill ) : ?>
+				data-lpignore="true"
+				data-1p-ignore="true"
+				readonly
+				onfocus="this.removeAttribute('readonly');"
+			<?php endif; ?>
 		/>
 		<?php
 		self::render_description( $args );
@@ -109,6 +120,9 @@ class DGAP_Settings_Fields {
 
 	public static function password( $args ) {
 		$args['type'] = 'password';
+		if ( empty( $args['autocomplete'] ) ) {
+			$args['autocomplete'] = 'new-password';
+		}
 		self::text( $args );
 	}
 

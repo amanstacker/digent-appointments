@@ -874,8 +874,8 @@
 .dgap-toggle {
     position: relative;
     display: inline-block;
-    width: 50px;
-    height: 24px;
+    width: 36px;
+    height: 20px;
     margin: 4px 0;
     flex-shrink: 0;
 }
@@ -894,23 +894,23 @@
     position: absolute;
     cursor: pointer;
     inset: 0;
-    background-color: #ccc;
-    transition: 0.3s ease;
-    border-radius: 24px;
+    background-color: #cbd5e1;
+    transition: 0.25s ease;
+    border-radius: 20px;
 }
 
 .dgap-slider:before,
 .dgap-toggle-slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    bottom: 2px;
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
     background-color: #fff;
-    transition: 0.3s ease;
+    transition: 0.25s ease;
     border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
 .dgap-switch input:checked + .dgap-slider,
@@ -920,7 +920,31 @@
 
 .dgap-switch input:checked + .dgap-slider:before,
 .dgap-toggle input:checked + .dgap-toggle-slider:before {
-    transform: translateX(26px);
+    transform: translateX(16px);
+}
+
+.dgap-field-row-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.dgap-field-toggle-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dgap-field-toggle-info label {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.dgap-field-toggle-info .description {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
 }
 
 /* ================================================

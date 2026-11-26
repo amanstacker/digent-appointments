@@ -11,7 +11,7 @@ class DGAP_Settings {
 
 		$tabs = [
 			'general',
-			'notifications',
+			'email_notifications',
 			'tools',
 			'advanced',
 			'support',
@@ -55,6 +55,10 @@ class DGAP_Settings {
 
 				case 'notification_retry':
 					$clean[ $key ] = absint( $value );
+					break;
+
+				case 'custom_frontend_css':
+					$clean[ $key ] = wp_strip_all_tags( (string) $value );
 					break;
 
 				default:

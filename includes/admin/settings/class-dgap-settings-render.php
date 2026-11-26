@@ -15,8 +15,8 @@ class DGAP_Settings_Render {
 					'limits'  => esc_html__( 'Limits', 'digent-appointments' ),
 				],
 			],
-			'notifications' => [
-				'label'    => esc_html__( 'Notifications', 'digent-appointments' ),
+			'email_notifications' => [
+				'label'    => esc_html__( 'Email Notifications', 'digent-appointments' ),
 				'sections' => [
 					'general'        => esc_html__( 'General', 'digent-appointments' ),
 					'admin_email'    => esc_html__( 'Admin Email', 'digent-appointments' ),
@@ -29,7 +29,7 @@ class DGAP_Settings_Render {
 				'sections' => [
 					'recaptcha'         => esc_html__( 'Google reCAPTCHA', 'digent-appointments' ),
 					'gdpr'              => esc_html__( 'GDPR', 'digent-appointments' ),
-					'roles_permissions' => esc_html__( 'Access & CSS', 'digent-appointments' ),
+					'custom_css' => esc_html__( 'Custom CSS', 'digent-appointments' ),
 				],
 			],
 			'tools' => [

@@ -25,13 +25,27 @@ class DGAP_Booking_Shortcode {
             return '<p>' . esc_html__( 'No form ID specified.', 'digent-appointments' ) . '</p>';
         }
 
+        $adv_settings   = get_option( 'dgap_advanced_settings', [] );
+        $disable_css    = ! empty( $adv_settings['disable_frontend_css'] );
+        $custom_css     = ! empty( $adv_settings['custom_frontend_css'] ) ? wp_strip_all_tags( (string) $adv_settings['custom_frontend_css'] ) : '';
+
         // enqueue frontend scripts and styles
-        wp_enqueue_style('dgap-forms-shared');
-		wp_enqueue_style('dgap-frontend');
+        if ( ! $disable_css ) {
+            wp_enqueue_style('dgap-forms-shared');
+            wp_enqueue_style('dgap-frontend');
+        }
 		wp_enqueue_style('dgap-flatpickr-css');
 
 		wp_enqueue_script('dgap-flatpickr');
 		wp_enqueue_script('dgap-frontend');
+
+        if ( '' !== trim( $custom_css ) ) {
+            if ( ! $disable_css ) {
+                wp_add_inline_style( 'dgap-frontend', $custom_css );
+            } else {
+                echo '<style id="dgap-custom-frontend-css">' . $custom_css . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- stripped via wp_strip_all_tags
+            }
+        }
 
         // Load repos needed for rendering
         require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-location-repo.php';
@@ -48,6 +62,12 @@ class DGAP_Booking_Shortcode {
         $form['settings']      = maybe_unserialize( $form['settings'] )      ?: [];
         $form['custom_fields'] = maybe_unserialize( $form['custom_fields'] ) ?: [];
 
+        $adv_settings   = get_option( 'dgap_advanced_settings', [] );
+        $gdpr_enabled   = ! empty( $adv_settings['gdpr_enabled'] );
+        $form_gdpr_on   = ! isset( $form['settings']['enable_gdpr'] ) || 1 === (int) $form['settings']['enable_gdpr'];
+        $gdpr_label     = ! empty( $adv_settings['gdpr_label'] ) ? $adv_settings['gdpr_label'] : __( 'I agree to the storage and handling of my data by this website.', 'digent-appointments' );
+        $gdpr_url       = ! empty( $adv_settings['gdpr_privacy_url'] ) ? $adv_settings['gdpr_privacy_url'] : '';
+
         $this->localize_data = [
             'id'            => $id,
             'layout'        => $form['layout'],
@@ -55,6 +75,11 @@ class DGAP_Booking_Shortcode {
             'labels'        => $form['settings']['labels'] ?? [],
             'custom_fields' => array_values( $form['custom_fields'] ),
             'settings' 		=> $form['settings'],
+            'gdpr'          => [
+                'enabled'     => ( $gdpr_enabled && $form_gdpr_on ),
+                'label'       => $gdpr_label,
+                'privacy_url' => esc_url_raw( $gdpr_url ),
+            ],
         ];
 
         ob_start();        

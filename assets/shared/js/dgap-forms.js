@@ -109,7 +109,9 @@ jQuery(function ($) {
         const savedValues = {};
         $container.find('input, textarea').each(function () {
             const name = $(this).attr('name');
-            if ( name ) savedValues[name] = $(this).val();
+            if ( name ) {
+                savedValues[name] = $(this).is(':checkbox') ? $(this).is(':checked') : $(this).val();
+            }
         });
 
         $container.html('');
@@ -140,9 +142,31 @@ jQuery(function ($) {
             `);
         });
 
+        if ( isFrontend && window.dgap_form_data && window.dgap_form_data.gdpr && window.dgap_form_data.gdpr.enabled ) {
+            const gdpr = window.dgap_form_data.gdpr;
+            const $labelText = $('<span>').text(gdpr.label || 'I agree to the storage and handling of my data by this website.');
+            const linkHtml = gdpr.privacy_url
+                ? ` <a href="${$('<div>').text(gdpr.privacy_url).html()}" target="_blank" rel="noopener noreferrer">Privacy Policy</a>`
+                : '';
+
+            $container.append(`
+                <div class="dgap-field-vertical dgap-gdpr-consent-row">
+                    <label class="dgap-gdpr-label" style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-weight:400;">
+                        <input type="checkbox" name="dgap_gdpr_consent" class="dgap-gdpr-consent" value="1" required style="margin-top:3px;width:auto;flex-shrink:0;" />
+                        <span>${$labelText.html()}${linkHtml} <span class="dgap-required">*</span></span>
+                    </label>
+                </div>
+            `);
+        }
+
         // Restore values
         Object.keys(savedValues).forEach(function (name) {
-            $container.find(`[name="${name}"]`).val(savedValues[name]);
+            const $el = $container.find(`[name="${name}"]`);
+            if ( $el.is(':checkbox') ) {
+                $el.prop('checked', Boolean(savedValues[name]));
+            } else {
+                $el.val(savedValues[name]);
+            }
         });
     }
 

@@ -45,14 +45,14 @@ $dgap_extensions = [
 		'description'  => esc_html__( 'Send automated booking reminders and confirmations via SMS (Twilio) & WhatsApp.', 'digent-appointments' ),
 		'slug'         => 'notifications',
 		'icon'         => 'dashicons-smartphone',
-		'settings_tab' => 'notifications',
+		'settings_tab' => 'email_notifications',
 	],
 	[
 		'title'        => esc_html__( 'Email Automation Suite', 'digent-appointments' ),
 		'description'  => esc_html__( 'Automated reminder sequences, follow-ups, and customizable email templates.', 'digent-appointments' ),
 		'slug'         => 'email-automation',
 		'icon'         => 'dashicons-email-alt',
-		'settings_tab' => 'notifications',
+		'settings_tab' => 'email_notifications',
 	],
 	[
 		'title'        => esc_html__( 'Calendar Sync', 'digent-appointments' ),

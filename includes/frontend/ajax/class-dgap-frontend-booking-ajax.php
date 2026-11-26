@@ -186,6 +186,21 @@ class DGAP_Frontend_Booking_Ajax {
 			wp_send_json_error( esc_html__( 'Form ID is missing', 'digent-appointments' ) );	
 		}
 
+		$adv_settings = get_option( 'dgap_advanced_settings', [] );
+		if ( ! empty( $adv_settings['gdpr_enabled'] ) ) {
+			require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';
+			$form_row      = DGAP_Form_Repo::get( $form_id );
+			$form_settings = ( $form_row && ! empty( $form_row['settings'] ) ) ? ( maybe_unserialize( $form_row['settings'] ) ?: [] ) : [];
+			$form_gdpr_on  = ! isset( $form_settings['enable_gdpr'] ) || 1 === (int) $form_settings['enable_gdpr'];
+
+			if ( $form_gdpr_on ) {
+				$gdpr_consent = isset( $_POST['dgap_gdpr_consent'] ) ? sanitize_text_field( wp_unslash( $_POST['dgap_gdpr_consent'] ) ) : '';
+				if ( '1' !== $gdpr_consent ) {
+					wp_send_json_error( esc_html__( 'Please accept the privacy consent to proceed.', 'digent-appointments' ) );
+				}
+			}
+		}
+
 		// Get dynamic custom fields
 		$custom_fields = [];
 
@@ -211,6 +226,12 @@ class DGAP_Frontend_Booking_Ajax {
 			$data['custom_fields'] 	=	NULL;
 		}
 		
+		$general_settings = get_option( 'dgap_general_settings', [] );
+		$default_status   = isset( $general_settings['default_booking_status'] ) && in_array( $general_settings['default_booking_status'], [ 'pending', 'confirmed' ], true )
+			? $general_settings['default_booking_status']
+			: 'pending';
+		$data['status']   = $default_status;
+
 		// ------------------------------
 		// Create booking via repo
 		// ------------------------------
@@ -221,25 +242,22 @@ class DGAP_Frontend_Booking_Ajax {
 		}
 
 		// Assign booking id
-		$data['booking_id'] 	=	$result;
+		$data['booking_id'] = $result;
 
+		// Send notification emails using the configured default booking status
+		DGAP_Email_Notification::send_notification_email( $default_status, $data, 'admin' );
 
-		// Send confirmation email to admin
-		// Digent_Email_Notification::send_admin_email( 'confirmed', $data );
-		DGAP_Email_Notification::send_notification_email( 'confirmed', $data, 'admin' );
+		// Send email to customer
+		DGAP_Email_Notification::send_notification_email( $default_status, $data, 'customer' );
 
-		// Send confirmation email to customer
-		// Digent_Email_Notification::send_customer_email( 'confirmed', $data );
-		DGAP_Email_Notification::send_notification_email( 'confirmed', $data, 'customer' );
-
-		// Send confirmation email to staff
-		// Digent_Email_Notification::send_staff_email( 'confirmed', $data );
-		DGAP_Email_Notification::send_notification_email( 'confirmed', $data, 'employee' );
+		// Send email to staff
+		DGAP_Email_Notification::send_notification_email( $default_status, $data, 'employee' );
 
 		wp_send_json_success(
 			[
-				'message'    => esc_html__( 'Booking confirmed', 'digent-appointments' ),
-				'booking_id' => absint ( $result ), 
+				'message'    => 'confirmed' === $default_status ? esc_html__( 'Booking confirmed', 'digent-appointments' ) : esc_html__( 'Booking submitted and pending approval', 'digent-appointments' ),
+				'booking_id' => absint( $result ),
+				'status'     => $default_status,
 			]
 		);
 	}

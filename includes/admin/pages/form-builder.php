@@ -29,8 +29,15 @@ if ( ! $dgap_is_new && $dgap_id ) {
 	}
 }
 
-$dgap_current_design = $form['settings']['design'] ?? 'flat';
-$dgap_form_status    = isset( $form['status'] ) ? (int) $form['status'] : 1;
+$dgap_current_design  = $form['settings']['design'] ?? 'flat';
+$dgap_form_status     = isset( $form['status'] ) ? (int) $form['status'] : 1;
+$dgap_adv_settings    = get_option( 'dgap_advanced_settings', [] );
+$dgap_recaptcha_on    = ! empty( $dgap_adv_settings['recaptcha_enabled'] );
+$dgap_recaptcha_ver   = $dgap_adv_settings['recaptcha_version'] ?? 'v2';
+$dgap_form_recaptcha  = isset( $form['settings']['enable_recaptcha'] ) ? (int) $form['settings']['enable_recaptcha'] : 1;
+$dgap_gdpr_on         = ! empty( $dgap_adv_settings['gdpr_enabled'] );
+$dgap_form_gdpr       = isset( $form['settings']['enable_gdpr'] ) ? (int) $form['settings']['enable_gdpr'] : 1;
+$dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 ?>
 
 <div class="wrap dgap-form-builder-wrap">
@@ -343,6 +350,48 @@ $dgap_form_status    = isset( $form['status'] ) ? (int) $form['status'] : 1;
 
 						</div>
 					</div>
+
+					<?php if ( $dgap_show_recaptcha || $dgap_gdpr_on ) : ?>
+					<!-- Security (reCAPTCHA v2 & GDPR per-form) -->
+					<div class="dgap-accordion-item">
+						<div class="dgap-accordion-header">
+							<span class="dgap-acc-title-wrap">
+								<span class="dashicons dashicons-shield dgap-acc-icon"></span>
+								<span><?php esc_html_e( 'Security', 'digent-appointments' ); ?></span>
+							</span>
+							<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
+						</div>
+						<div class="dgap-accordion-body">
+							<?php if ( $dgap_show_recaptcha ) : ?>
+							<div class="dgap-field-row dgap-field-row-toggle">
+								<div class="dgap-field-toggle-info">
+									<label for="dgap-form-enable-recaptcha"><?php esc_html_e( 'Enable reCAPTCHA (v2)', 'digent-appointments' ); ?></label>
+									<p class="description"><?php esc_html_e( 'Show Google reCAPTCHA v2 checkbox on this booking form.', 'digent-appointments' ); ?></p>
+								</div>
+								<label class="dgap-switch">
+									<input type="hidden" name="settings[enable_recaptcha]" value="0" />
+									<input type="checkbox" id="dgap-form-enable-recaptcha" name="settings[enable_recaptcha]" value="1" <?php checked( $dgap_form_recaptcha, 1 ); ?> />
+									<span class="dgap-slider"></span>
+								</label>
+							</div>
+							<?php endif; ?>
+
+							<?php if ( $dgap_gdpr_on ) : ?>
+							<div class="dgap-field-row dgap-field-row-toggle">
+								<div class="dgap-field-toggle-info">
+									<label for="dgap-form-enable-gdpr"><?php esc_html_e( 'Enable GDPR Consent', 'digent-appointments' ); ?></label>
+									<p class="description"><?php esc_html_e( 'Show privacy consent checkbox on this booking form.', 'digent-appointments' ); ?></p>
+								</div>
+								<label class="dgap-switch">
+									<input type="hidden" name="settings[enable_gdpr]" value="0" />
+									<input type="checkbox" id="dgap-form-enable-gdpr" name="settings[enable_gdpr]" value="1" <?php checked( $dgap_form_gdpr, 1 ); ?> />
+									<span class="dgap-slider"></span>
+								</label>
+							</div>
+							<?php endif; ?>
+						</div>
+					</div>
+					<?php endif; ?>
 
 				</div>
 			</div>

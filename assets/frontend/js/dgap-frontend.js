@@ -591,6 +591,12 @@ jQuery(function ($) {
             if (name) customFieldData[name] = $(this).val();
         });
 
+        const $gdprCheckbox = $('.dgap-gdpr-consent');
+        if ($gdprCheckbox.length && !$gdprCheckbox.is(':checked')) {
+            alert('Please accept the privacy consent checkbox.');
+            return;
+        }
+
         const formId = $('.dgap-form-wrap').data('form-id');
         if (formId <= 0) {
             alert('Form ID is missing');
@@ -598,15 +604,16 @@ jQuery(function ($) {
         }
 
         const postData = {
-            action:      'dgap_front_create_booking',
-            location_id: $('#dgap-location').val(),
-            service_id:  $('#dgap-service').val(),
-            staff_id:    $('#dgap-staff').val(),
-            booking_date: selectedDate,
-            start_time:  selectedSlotStart,
-            end_time:    selectedSlotEnd,
-            _dgap_nonce: dgap_frontend._dgap_frontend_nonce,
-            form_id: formId,
+            action:            'dgap_front_create_booking',
+            location_id:       $('#dgap-location').val(),
+            service_id:        $('#dgap-service').val(),
+            staff_id:          $('#dgap-staff').val(),
+            booking_date:      selectedDate,
+            start_time:        selectedSlotStart,
+            end_time:          selectedSlotEnd,
+            _dgap_nonce:       dgap_frontend._dgap_frontend_nonce,
+            form_id:           formId,
+            dgap_gdpr_consent: $gdprCheckbox.length ? ($gdprCheckbox.is(':checked') ? '1' : '0') : '1',
             ...customFieldData
         };
 

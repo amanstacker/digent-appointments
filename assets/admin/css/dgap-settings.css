@@ -425,9 +425,11 @@
 }
 
 .dgap-accordion-title {
+	margin: 0 !important;
 	padding: 12px 16px;
 	font-weight: 600;
 	font-size: 13.5px;
+	line-height: 1.4;
 	cursor: pointer;
 	background: var(--dgap-slate-50, #f8fafc);
 	color: var(--dgap-slate-800, #1e293b);
@@ -478,7 +480,7 @@
 }
 
 .dgap-email-labels {
-	margin-left: auto;
+	margin: 0 0 0 auto !important;
 }
 
 
@@ -864,4 +866,111 @@
 	background: #dc2626 !important;
 	border-color: #dc2626 !important;
 	color: #ffffff !important;
+}
+
+.form-table tr.dgap-sub-setting {
+	background: #f8fafc;
+}
+
+.form-table tr.dgap-sub-setting th {
+	padding-left: 28px !important;
+	position: relative;
+	color: var(--dgap-slate-700, #334155);
+	font-weight: 500;
+}
+
+.form-table tr.dgap-sub-setting th::before {
+	content: "";
+	position: absolute;
+	left: 12px;
+	top: 12px;
+	bottom: 12px;
+	width: 3px;
+	border-radius: 2px;
+	background: var(--dgap-primary, #10b981);
+	opacity: 0.45;
+}
+
+/* =====================================================
+   CUSTOM CSS CODE EDITOR
+   ===================================================== */
+.dgap-css-editor-wrap {
+	max-width: 780px;
+}
+
+.dgap-css-editor-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 8px 12px;
+	background: #1e293b;
+	border: 1px solid #0f172a;
+	border-bottom: none;
+	border-radius: 6px 6px 0 0;
+	color: #e2e8f0;
+}
+
+.dgap-css-editor-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 12px;
+	font-weight: 600;
+	color: #34d399;
+}
+
+.dgap-css-editor-badge .dashicons {
+	font-size: 15px;
+	width: 15px;
+	height: 15px;
+}
+
+.dgap-css-editor-chips {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.dgap-css-chips-label {
+	font-size: 11px;
+	color: #94a3b8;
+}
+
+.dgap-css-chip {
+	background: #334155;
+	color: #f8fafc;
+	border: 1px solid #475569;
+	border-radius: 4px;
+	padding: 2px 8px;
+	font-size: 11px;
+	font-family: Consolas, Monaco, monospace;
+	cursor: pointer;
+	transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.dgap-css-chip:hover {
+	background: #059669;
+	border-color: #10b981;
+}
+
+.dgap-css-clear-btn {
+	background: transparent !important;
+	border-color: #475569 !important;
+	color: #cbd5e1 !important;
+}
+
+.dgap-css-clear-btn:hover {
+	background: #334155 !important;
+	color: #ffffff !important;
+}
+
+.dgap-css-editor-wrap .CodeMirror {
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: 0 0 6px 6px;
+	min-height: 280px;
+	font-size: 13px;
+	line-height: 1.55;
 }

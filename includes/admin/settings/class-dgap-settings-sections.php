@@ -19,6 +19,8 @@ class DGAP_Settings_Sections {
 		add_action( 'admin_post_dgap_factory_reset', [ $this, 'handle_factory_reset' ] );
 		add_action( 'admin_post_dgap_flush_cache', [ $this, 'handle_flush_cache' ] );
 		add_action( 'admin_post_dgap_repair_tables', [ $this, 'handle_repair_tables' ] );
+		add_action( 'init', [ $this, 'maybe_schedule_cleanup_cron' ] );
+		add_action( 'dgap_daily_cleanup_cron', [ $this, 'run_auto_delete_old_bookings' ] );
 		add_action( 'wp_ajax_dgap_submit_support_ticket', [ $this, 'handle_support_ticket' ] );
 		add_filter( 'dgap_settings_show_submit', [ $this, 'filter_submit_visibility' ], 10, 3 );
 	}
@@ -40,9 +42,9 @@ class DGAP_Settings_Sections {
 		// 1. Booking Rules
 		add_settings_section(
 			'dgap_general_booking',
-			esc_html__( 'Booking Rules', 'digent-appointments' ),
+			'',
 			static function () {
-				echo '<p>' . esc_html__( 'Control default appointment status, time format, and post-booking behavior.', 'digent-appointments' ) . '</p>';
+				echo '<p>' . esc_html__( 'Control default appointment status and date/time formatting.', 'digent-appointments' ) . '</p>';
 			},
 			'dgap_general_booking'
 		);
@@ -83,6 +85,26 @@ class DGAP_Settings_Sections {
 		);
 
 		add_settings_field(
+			'date_format',
+			esc_html__( 'Date Format', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'select' ],
+			'dgap_general_booking',
+			'dgap_general_booking',
+			[
+				'id'      => 'date_format',
+				'tab'     => 'general',
+				'default' => 'site',
+				'options' => [
+					'site'   => esc_html__( 'WordPress Site Default', 'digent-appointments' ),
+					'F j, Y' => esc_html__( 'January 15, 2026 (F j, Y)', 'digent-appointments' ),
+					'Y-m-d'  => esc_html__( '2026-01-15 (Y-m-d)', 'digent-appointments' ),
+					'd/m/Y'  => esc_html__( '15/01/2026 (d/m/Y)', 'digent-appointments' ),
+					'm/d/Y'  => esc_html__( '01/15/2026 (m/d/Y)', 'digent-appointments' ),
+				],
+			]
+		);
+
+		add_settings_field(
 			'week_starts_on',
 			esc_html__( 'Week Starts On', 'digent-appointments' ),
 			[ 'DGAP_Settings_Fields', 'select' ],
@@ -101,28 +123,50 @@ class DGAP_Settings_Sections {
 		);
 
 		add_settings_field(
-			'post_booking_redirect',
-			esc_html__( 'Thank-You Redirect URL', 'digent-appointments' ),
-			[ 'DGAP_Settings_Fields', 'text' ],
+			'show_customer_timezone',
+			esc_html__( 'Show Customer Timezone', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'toggle' ],
 			'dgap_general_booking',
 			'dgap_general_booking',
 			[
-				'id'          => 'post_booking_redirect',
+				'id'          => 'show_customer_timezone',
 				'tab'         => 'general',
-				'type'        => 'url',
-				'placeholder' => 'https://example.com/thank-you',
-				'description' => __( 'Optional URL to redirect customers after a successful booking. Leave blank to show the inline confirmation.', 'digent-appointments' ),
+				'default'     => 0,
+				'description' => __( 'Auto-detect and display appointment times in the customer’s local timezone.', 'digent-appointments' ),
 			]
 		);
 
 		// 2. Display & Currency
 		add_settings_section(
 			'dgap_general_display',
-			esc_html__( 'Display & Currency', 'digent-appointments' ),
+			'',
 			static function () {
 				echo '<p>' . esc_html__( 'Configure how service prices and currency symbols appear on booking forms and emails.', 'digent-appointments' ) . '</p>';
 			},
 			'dgap_general_display'
+		);
+
+		add_settings_field(
+			'currency_code',
+			esc_html__( 'Currency', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'select' ],
+			'dgap_general_display',
+			'dgap_general_display',
+			[
+				'id'      => 'currency_code',
+				'tab'     => 'general',
+				'default' => 'USD',
+				'options' => [
+					'USD' => 'USD — US Dollar ($)',
+					'EUR' => 'EUR — Euro (€)',
+					'GBP' => 'GBP — British Pound (£)',
+					'INR' => 'INR — Indian Rupee (₹)',
+					'CAD' => 'CAD — Canadian Dollar ($)',
+					'AUD' => 'AUD — Australian Dollar ($)',
+					'AED' => 'AED — UAE Dirham (AED)',
+					'SGD' => 'SGD — Singapore Dollar ($)',
+				],
+			]
 		);
 
 		add_settings_field(
@@ -150,8 +194,10 @@ class DGAP_Settings_Sections {
 				'tab'     => 'general',
 				'default' => 'before',
 				'options' => [
-					'before' => esc_html__( 'Before Amount ($50.00)', 'digent-appointments' ),
-					'after'  => esc_html__( 'After Amount (50.00$)', 'digent-appointments' ),
+					'before'       => esc_html__( 'Before Amount ($50.00)', 'digent-appointments' ),
+					'after'        => esc_html__( 'After Amount (50.00$)', 'digent-appointments' ),
+					'before_space' => esc_html__( 'Before with Space ($ 50.00)', 'digent-appointments' ),
+					'after_space'  => esc_html__( 'After with Space (50.00 $)', 'digent-appointments' ),
 				],
 			]
 		);
@@ -187,9 +233,9 @@ class DGAP_Settings_Sections {
 		// 3. Limits & Restrictions
 		add_settings_section(
 			'dgap_general_limits',
-			esc_html__( 'Booking Limits & Restrictions', 'digent-appointments' ),
+			'',
 			static function () {
-				echo '<p>' . esc_html__( 'Prevent last-minute bookings and control slot capacity.', 'digent-appointments' ) . '</p>';
+				echo '<p>' . esc_html__( 'Prevent last-minute bookings, set buffer times, and control slot capacity.', 'digent-appointments' ) . '</p>';
 			},
 			'dgap_general_limits'
 		);
@@ -211,6 +257,22 @@ class DGAP_Settings_Sections {
 		);
 
 		add_settings_field(
+			'max_advance_days',
+			esc_html__( 'Maximum Advance Booking (Days)', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'number' ],
+			'dgap_general_limits',
+			'dgap_general_limits',
+			[
+				'id'          => 'max_advance_days',
+				'tab'         => 'general',
+				'default'     => 90,
+				'min'         => 0,
+				'step'        => 1,
+				'description' => __( 'How many days in advance customers can book (0 = unlimited).', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
 			'cancel_cutoff_time',
 			esc_html__( 'Cancellation Cutoff (Minutes)', 'digent-appointments' ),
 			[ 'DGAP_Settings_Fields', 'number' ],
@@ -223,6 +285,38 @@ class DGAP_Settings_Sections {
 				'min'         => 0,
 				'step'        => 15,
 				'description' => __( 'How far in advance a customer can cancel an appointment.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'buffer_before',
+			esc_html__( 'Default Buffer Before (Minutes)', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'number' ],
+			'dgap_general_limits',
+			'dgap_general_limits',
+			[
+				'id'          => 'buffer_before',
+				'tab'         => 'general',
+				'default'     => 0,
+				'min'         => 0,
+				'step'        => 5,
+				'description' => __( 'Preparation time blocked before each appointment.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'buffer_after',
+			esc_html__( 'Default Buffer After (Minutes)', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'number' ],
+			'dgap_general_limits',
+			'dgap_general_limits',
+			[
+				'id'          => 'buffer_after',
+				'tab'         => 'general',
+				'default'     => 0,
+				'min'         => 0,
+				'step'        => 5,
+				'description' => __( 'Cleanup/cooldown time blocked after each appointment.', 'digent-appointments' ),
 			]
 		);
 
@@ -264,16 +358,33 @@ class DGAP_Settings_Sections {
 		// 1. Google reCAPTCHA
 		add_settings_section(
 			'dgap_advanced_recaptcha',
-			esc_html__( 'Google reCAPTCHA', 'digent-appointments' ),
+			'',
 			static function () {
-				echo '<p>' . esc_html__( 'Protect your public booking forms from spam submissions.', 'digent-appointments' ) . '</p>';
+				$adv_opts = get_option( 'dgap_advanced_settings', [] );
+				$enabled  = ! empty( $adv_opts['recaptcha_enabled'] );
+				echo '<p>' . esc_html__( 'Protect your public booking forms from spam submissions. Choose v2 to toggle reCaptcha per form in the Form Builder, or v3 for automatic site-wide protection across all booking forms.', 'digent-appointments' ) . '</p>';
+				?>
+				<script>
+				(function ($) {
+					function dgapSyncRecaptchaSubRows() {
+						const $toggle = $('input[type="checkbox"][name="dgap_advanced_settings[recaptcha_enabled]"]');
+						if (!$toggle.length) return;
+						$('.dgap-recaptcha-sub-row').toggle($toggle.is(':checked'));
+					}
+					$(document).ready(dgapSyncRecaptchaSubRows);
+					$(document).on('change', 'input[type="checkbox"][name="dgap_advanced_settings[recaptcha_enabled]"]', dgapSyncRecaptchaSubRows);
+				})(jQuery);
+				</script>
+				<?php if ( ! $enabled ) : ?>
+					<style>.dgap-recaptcha-sub-row { display: none; }</style>
+				<?php endif;
 			},
 			'dgap_advanced_recaptcha'
 		);
 
 		add_settings_field(
 			'recaptcha_enabled',
-			esc_html__( 'Enable reCAPTCHA', 'digent-appointments' ),
+			esc_html__( 'Google reCaptcha', 'digent-appointments' ),
 			[ 'DGAP_Settings_Fields', 'toggle' ],
 			'dgap_advanced_recaptcha',
 			'dgap_advanced_recaptcha',
@@ -286,17 +397,18 @@ class DGAP_Settings_Sections {
 
 		add_settings_field(
 			'recaptcha_version',
-			esc_html__( 'reCAPTCHA Version', 'digent-appointments' ),
+			esc_html__( 'reCaptcha Version', 'digent-appointments' ),
 			[ 'DGAP_Settings_Fields', 'select' ],
 			'dgap_advanced_recaptcha',
 			'dgap_advanced_recaptcha',
 			[
 				'id'      => 'recaptcha_version',
 				'tab'     => 'advanced',
+				'class'   => 'dgap-sub-setting dgap-recaptcha-sub-row',
 				'default' => 'v2',
 				'options' => [
-					'v2' => esc_html__( 'reCAPTCHA v2 (Checkbox)', 'digent-appointments' ),
-					'v3' => esc_html__( 'reCAPTCHA v3 (Invisible)', 'digent-appointments' ),
+					'v2' => esc_html__( 'reCaptcha v2 (Checkbox)', 'digent-appointments' ),
+					'v3' => esc_html__( 'reCaptcha v3 (Invisible)', 'digent-appointments' ),
 				],
 			]
 		);
@@ -308,8 +420,12 @@ class DGAP_Settings_Sections {
 			'dgap_advanced_recaptcha',
 			'dgap_advanced_recaptcha',
 			[
-				'id'  => 'recaptcha_site_key',
-				'tab' => 'advanced',
+				'id'               => 'recaptcha_site_key',
+				'tab'              => 'advanced',
+				'class'            => 'dgap-sub-setting dgap-recaptcha-sub-row',
+				'autocomplete'     => 'off',
+				'disable_autofill' => true,
+				'placeholder'      => esc_attr__( 'Enter Google reCaptcha Site Key', 'digent-appointments' ),
 			]
 		);
 
@@ -320,17 +436,38 @@ class DGAP_Settings_Sections {
 			'dgap_advanced_recaptcha',
 			'dgap_advanced_recaptcha',
 			[
-				'id'  => 'recaptcha_secret_key',
-				'tab' => 'advanced',
+				'id'               => 'recaptcha_secret_key',
+				'tab'              => 'advanced',
+				'class'            => 'dgap-sub-setting dgap-recaptcha-sub-row',
+				'autocomplete'     => 'new-password',
+				'disable_autofill' => true,
+				'placeholder'      => esc_attr__( 'Enter Google reCaptcha Secret Key', 'digent-appointments' ),
 			]
 		);
 
 		// 2. GDPR
 		add_settings_section(
 			'dgap_advanced_gdpr',
-			esc_html__( 'GDPR & Privacy', 'digent-appointments' ),
+			'',
 			static function () {
-				echo '<p>' . esc_html__( 'Add privacy consent and automatic old-booking cleanup options.', 'digent-appointments' ) . '</p>';
+				$adv_opts = get_option( 'dgap_advanced_settings', [] );
+				$enabled  = ! empty( $adv_opts['gdpr_enabled'] );
+				echo '<p>' . esc_html__( 'Add a privacy consent checkbox and Privacy Policy link to your public booking forms.', 'digent-appointments' ) . '</p>';
+				?>
+				<script>
+				(function ($) {
+					function dgapSyncGdprSubRows() {
+						const $toggle = $('input[type="checkbox"][name="dgap_advanced_settings[gdpr_enabled]"]');
+						if (!$toggle.length) return;
+						$('.dgap-gdpr-sub-row').toggle($toggle.is(':checked'));
+					}
+					$(document).ready(dgapSyncGdprSubRows);
+					$(document).on('change', 'input[type="checkbox"][name="dgap_advanced_settings[gdpr_enabled]"]', dgapSyncGdprSubRows);
+				})(jQuery);
+				</script>
+				<?php if ( ! $enabled ) : ?>
+					<style>.dgap-gdpr-sub-row { display: none; }</style>
+				<?php endif;
 			},
 			'dgap_advanced_gdpr'
 		);
@@ -357,6 +494,7 @@ class DGAP_Settings_Sections {
 			[
 				'id'      => 'gdpr_label',
 				'tab'     => 'advanced',
+				'class'   => 'dgap-sub-setting dgap-gdpr-sub-row',
 				'default' => __( 'I agree to the storage and handling of my data by this website.', 'digent-appointments' ),
 			]
 		);
@@ -370,79 +508,110 @@ class DGAP_Settings_Sections {
 			[
 				'id'          => 'gdpr_privacy_url',
 				'tab'         => 'advanced',
+				'class'       => 'dgap-sub-setting dgap-gdpr-sub-row',
 				'type'        => 'url',
 				'placeholder' => home_url( '/privacy-policy' ),
 			]
 		);
 
-		add_settings_field(
-			'gdpr_auto_delete_days',
-			esc_html__( 'Auto-Delete Old Bookings (Days)', 'digent-appointments' ),
-			[ 'DGAP_Settings_Fields', 'number' ],
-			'dgap_advanced_gdpr',
-			'dgap_advanced_gdpr',
-			[
-				'id'          => 'gdpr_auto_delete_days',
-				'tab'         => 'advanced',
-				'default'     => 0,
-				'min'         => 0,
-				'description' => __( 'Automatically purge completed/cancelled bookings older than N days (0 = disabled).', 'digent-appointments' ),
-			]
-		);
-
-		// 3. Roles & Styling
+		// 3. Custom CSS
 		add_settings_section(
-			'dgap_advanced_roles_permissions',
-			esc_html__( 'Access & Styling', 'digent-appointments' ),
+			'dgap_advanced_custom_css',
+			'',
 			static function () {
-				echo '<p>' . esc_html__( 'Control admin access capability and frontend CSS overrides.', 'digent-appointments' ) . '</p>';
+				echo '<p>' . esc_html__( 'Customize the appearance of your public booking forms with custom CSS.', 'digent-appointments' ) . '</p>';
 			},
-			'dgap_advanced_roles_permissions'
-		);
-
-		add_settings_field(
-			'access_capability',
-			esc_html__( 'Minimum Admin Capability', 'digent-appointments' ),
-			[ 'DGAP_Settings_Fields', 'select' ],
-			'dgap_advanced_roles_permissions',
-			'dgap_advanced_roles_permissions',
-			[
-				'id'      => 'access_capability',
-				'tab'     => 'advanced',
-				'default' => 'manage_options',
-				'options' => [
-					'manage_options'    => esc_html__( 'Administrator (manage_options)', 'digent-appointments' ),
-					'edit_others_posts' => esc_html__( 'Editor (edit_others_posts)', 'digent-appointments' ),
-				],
-			]
+			'dgap_advanced_custom_css'
 		);
 
 		add_settings_field(
 			'disable_frontend_css',
 			esc_html__( 'Disable Plugin Frontend CSS', 'digent-appointments' ),
 			[ 'DGAP_Settings_Fields', 'toggle' ],
-			'dgap_advanced_roles_permissions',
-			'dgap_advanced_roles_permissions',
+			'dgap_advanced_custom_css',
+			'dgap_advanced_custom_css',
 			[
 				'id'          => 'disable_frontend_css',
 				'tab'         => 'advanced',
 				'default'     => 0,
-				'description' => __( 'Enable only if your theme provides all custom booking form styles.', 'digent-appointments' ),
+				'description' => __( 'Enable only if you want to write your own complete CSS from scratch (below or in your theme). Leave this OFF if you just want to add minor custom CSS overrides.', 'digent-appointments' ),
 			]
 		);
 
 		add_settings_field(
 			'custom_frontend_css',
 			esc_html__( 'Custom Frontend CSS', 'digent-appointments' ),
-			[ 'DGAP_Settings_Fields', 'textarea' ],
-			'dgap_advanced_roles_permissions',
-			'dgap_advanced_roles_permissions',
-			[
-				'id'          => 'custom_frontend_css',
-				'tab'         => 'advanced',
-				'placeholder' => '.dgap-booking-form { max-width: 640px; }',
-			]
+			[ $this, 'render_custom_css_field' ],
+			'dgap_advanced_custom_css',
+			'dgap_advanced_custom_css'
 		);
+	}
+
+	public function render_custom_css_field() {
+		$adv_opts = get_option( 'dgap_advanced_settings', [] );
+		$css      = isset( $adv_opts['custom_frontend_css'] ) ? (string) $adv_opts['custom_frontend_css'] : '';
+
+		$cm_settings = wp_enqueue_code_editor( [ 'type' => 'text/css' ] );
+		if ( false !== $cm_settings && isset( $cm_settings['codemirror'] ) ) {
+			$cm_settings['codemirror']['lineNumbers']       = true;
+			$cm_settings['codemirror']['indentUnit']        = 2;
+			$cm_settings['codemirror']['tabSize']           = 2;
+			$cm_settings['codemirror']['autoCloseBrackets'] = true;
+			$cm_settings['codemirror']['matchBrackets']     = true;
+			$cm_settings['codemirror']['lint']              = true;
+			$cm_settings['codemirror']['extraKeys']         = [ 'Ctrl-Space' => 'autocomplete' ];
+		}
+		?>
+		<div class="dgap-css-editor-wrap">
+			<div class="dgap-css-editor-bar">
+				<span class="dgap-css-editor-badge">
+					<span class="dashicons dashicons-editor-code"></span>
+					<?php esc_html_e( 'CSS Editor', 'digent-appointments' ); ?>
+				</span>
+				<div class="dgap-css-editor-chips">
+					<span class="dgap-css-chips-label"><?php esc_html_e( 'Quick selectors:', 'digent-appointments' ); ?></span>
+					<button type="button" class="dgap-css-chip" data-snippet=".dgap-form-wrap {&#10;  max-width: 680px;&#10;  margin: 0 auto;&#10;}">.dgap-form-wrap</button>
+					<button type="button" class="dgap-css-chip" data-snippet=".dgap-card {&#10;  border-radius: 12px;&#10;}">.dgap-card</button>
+					<button type="button" class="dgap-css-chip" data-snippet=".dgap-btn-submit {&#10;  background-color: #10b981;&#10;}">.dgap-btn-submit</button>
+				</div>
+				<button type="button" class="button button-small dgap-css-clear-btn" id="dgap-css-clear-btn"><?php esc_html_e( 'Clear', 'digent-appointments' ); ?></button>
+			</div>
+			<textarea id="dgap_custom_frontend_css" name="dgap_advanced_settings[custom_frontend_css]" rows="12" class="large-text code"><?php echo esc_textarea( $css ); ?></textarea>
+			<p class="description">
+				<?php esc_html_e( 'Press Ctrl+Space for CSS autocomplete. Applied to all public booking forms.', 'digent-appointments' ); ?>
+			</p>
+		</div>
+		<?php if ( false !== $cm_settings ) : ?>
+			<script>
+			jQuery(function ($) {
+				const textarea = document.getElementById('dgap_custom_frontend_css');
+				if (!textarea || !wp || !wp.codeEditor) return;
+
+				const editorInstance = wp.codeEditor.initialize(textarea, <?php echo wp_json_encode( $cm_settings ); ?>);
+				const cm = editorInstance && editorInstance.codemirror ? editorInstance.codemirror : null;
+				if (!cm) return;
+
+				cm.on('change', function () {
+					cm.save();
+				});
+
+				$(document).on('click', '.dgap-css-chip', function () {
+					const snippet = $(this).data('snippet');
+					const current = cm.getValue();
+					const nextVal = current.trim() ? current.replace(/\s*$/, '\n\n') + snippet : snippet;
+					cm.setValue(nextVal);
+					cm.focus();
+				});
+
+				$('#dgap-css-clear-btn').on('click', function () {
+					cm.setValue('');
+					cm.save();
+					cm.focus();
+				});
+			});
+			</script>
+		<?php endif; ?>
+		<?php
 	}
 
 	/* =====================================================
@@ -555,6 +724,25 @@ class DGAP_Settings_Sections {
 					<span class="dashicons dashicons-database"></span>
 					<span><?php esc_html_e( 'Repair Tables', 'digent-appointments' ); ?></span>
 				</a>
+			</div>
+
+			<div class="dgap-tool-card">
+				<div class="dgap-tool-card-info">
+					<h4><?php esc_html_e( 'Auto-Delete Old Bookings (Days)', 'digent-appointments' ); ?></h4>
+					<p><?php esc_html_e( 'Automatically purge completed and cancelled bookings older than N days via daily WP-Cron (0 = disabled).', 'digent-appointments' ); ?></p>
+				</div>
+				<div class="dgap-tool-number-wrap">
+					<?php
+					DGAP_Settings_Fields::number(
+						[
+							'id'      => 'auto_delete_days',
+							'tab'     => 'tools',
+							'default' => 0,
+							'min'     => 0,
+						]
+					);
+					?>
+				</div>
 			</div>
 
 			<div class="dgap-tool-card<?php echo $is_enabled ? ' is-danger' : ''; ?>">
@@ -711,6 +899,51 @@ class DGAP_Settings_Sections {
 	}
 
 	/**
+	 * Schedule daily WP-Cron for auto-deleting old bookings when enabled.
+	 */
+	public function maybe_schedule_cleanup_cron() {
+		$tools_opts = get_option( 'dgap_tools_settings', [] );
+		$days       = isset( $tools_opts['auto_delete_days'] ) ? absint( $tools_opts['auto_delete_days'] ) : 0;
+
+		if ( $days > 0 ) {
+			if ( ! wp_next_scheduled( 'dgap_daily_cleanup_cron' ) ) {
+				wp_schedule_event( time() + HOUR_IN_SECONDS, 'daily', 'dgap_daily_cleanup_cron' );
+			}
+		} else {
+			$timestamp = wp_next_scheduled( 'dgap_daily_cleanup_cron' );
+			if ( $timestamp ) {
+				wp_unschedule_event( $timestamp, 'dgap_daily_cleanup_cron' );
+			}
+		}
+	}
+
+	/**
+	 * Delete completed/cancelled bookings older than configured retention days.
+	 */
+	public function run_auto_delete_old_bookings() {
+		$tools_opts = get_option( 'dgap_tools_settings', [] );
+		$days       = isset( $tools_opts['auto_delete_days'] ) ? absint( $tools_opts['auto_delete_days'] ) : 0;
+		if ( $days <= 0 ) {
+			return;
+		}
+
+		global $wpdb;
+		$table = $wpdb->prefix . 'dgap_bookings';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM `{$table}` WHERE status IN ('completed', 'cancelled') AND booking_date < DATE_SUB(CURDATE(), INTERVAL %d DAY)",
+				$days
+			)
+		);
+	}
+
+	/**
 	 * Allowed WordPress option keys for settings export, import, and reset.
 	 *
 	 * @return string[]
@@ -718,7 +951,7 @@ class DGAP_Settings_Sections {
 	private function get_settings_option_keys() {
 		return [
 			'dgap_general_settings',
-			'dgap_notifications_settings',
+			'dgap_email_notifications_settings',
 			'dgap_payments_settings',
 			'dgap_calendar_settings',
 			'dgap_tools_settings',
