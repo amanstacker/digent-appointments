@@ -138,9 +138,14 @@ class DGAP_Admin {
             true
         );
 
+        $general_settings = get_option( 'dgap_general_settings', [] );
+
         // Localize AJAX URL
         wp_localize_script('dgap-admin', 'dgap_admin', $this->get_ajax_data(
-				[ 'default_avatar' => DGAP_PLUGIN_DIR_URL . 'assets/admin/img/person.avif']
+				[
+					'default_avatar' => DGAP_PLUGIN_DIR_URL . 'assets/admin/img/person.avif',
+					'time_format'    => $general_settings['time_format'] ?? '24',
+				]
 		));
     }
 

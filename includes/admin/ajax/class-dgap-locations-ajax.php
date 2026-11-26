@@ -158,13 +158,13 @@ class DGAP_Locations_Ajax {
 
 			if ( isset( $data['hours'][ $key ]['enabled'] ) ) {
 
-				$open  = $data['hours']['open'] ?? '';
-				$close = $data['hours']['close'] ?? '';
+				$open_raw  = trim( sanitize_text_field( $data['hours']['open'] ?? '' ) );
+				$close_raw = trim( sanitize_text_field( $data['hours']['close'] ?? '' ) );
 
 				/* ===============================
 				* Validate Open / Close Time
 				* =============================== */
-				if ( empty( $open ) || empty( $close ) ) {
+				if ( '' === $open_raw || '' === $close_raw ) {
 					wp_send_json_error(
 						[
 							'message' => esc_html__(
@@ -175,13 +175,65 @@ class DGAP_Locations_Ajax {
 					);
 				}
 
+				$time_pattern = '/^(?:(?:[01]?\d|2[0-3]):[0-5]\d|(?:0?[1-9]|1[0-2]):[0-5]\d\s*(?:AM|PM))$/i';
+				if ( ! preg_match( $time_pattern, $open_raw ) || ! preg_match( $time_pattern, $close_raw ) ) {
+					wp_send_json_error(
+						[
+							'message' => esc_html__(
+								'Please enter valid open and close times (e.g. 09:00 or 09:00 AM).',
+								'digent-appointments'
+							),
+						]
+					);
+				}
+
+				$open  = gmdate( 'H:i', strtotime( $open_raw ) );
+				$close = gmdate( 'H:i', strtotime( $close_raw ) );
+
+				if ( strtotime( $close ) <= strtotime( $open ) ) {
+					wp_send_json_error(
+						[
+							'message' => esc_html__(
+								'Closing time must be later than opening time.',
+								'digent-appointments'
+							),
+						]
+					);
+				}
+
+				$sanitized_breaks = dgap_sanitize_breaks( $data['breaks'] ?? [] );
+				foreach ( $sanitized_breaks as $br ) {
+					$br_start = strtotime( $br['start'] );
+					$br_end   = strtotime( $br['end'] );
+					if ( ! $br_start || ! $br_end || $br_end <= $br_start ) {
+						wp_send_json_error(
+							[
+								'message' => esc_html__(
+									'Break end time must be later than break start time.',
+									'digent-appointments'
+								),
+							]
+						);
+					}
+					if ( $br_start < strtotime( $open ) || $br_end > strtotime( $close ) ) {
+						wp_send_json_error(
+							[
+								'message' => esc_html__(
+									'Break times must be within opening and closing hours.',
+									'digent-appointments'
+								),
+							]
+						);
+					}
+				}
+
 				$has_open_day = true;
 		
 				$business_hours[ $day ] = [
 					'status' => 'open',
 					'open'   => sanitize_text_field( $open ),
 					'close'  => sanitize_text_field( $close ),
-					'breaks' => dgap_sanitize_breaks( $data['breaks'] ?? [] )
+					'breaks' => $sanitized_breaks,
 				];
 				
 			} else {

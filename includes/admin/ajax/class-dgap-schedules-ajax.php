@@ -171,13 +171,32 @@ class DGAP_Schedules_Ajax {
 
 		$availability = [];
 
+		$start_raw    = trim( sanitize_text_field( $data['availability']['start_time'] ?? '' ) );
+		$end_raw      = trim( sanitize_text_field( $data['availability']['end_time'] ?? '' ) );
+		$time_pattern = '/^(?:(?:[01]?\d|2[0-3]):[0-5]\d|(?:0?[1-9]|1[0-2]):[0-5]\d\s*(?:AM|PM))$/i';
+
+		if ( ! preg_match( $time_pattern, $start_raw ) || ! preg_match( $time_pattern, $end_raw ) ) {
+			wp_send_json_error(
+				[ 'message' => esc_html__( 'Please enter valid start and end times (e.g. 09:00 or 09:00 AM).', 'digent-appointments' ) ]
+			);
+		}
+
+		$start_24 = gmdate( 'H:i', strtotime( $start_raw ) );
+		$end_24   = gmdate( 'H:i', strtotime( $end_raw ) );
+
+		if ( strtotime( $end_24 ) <= strtotime( $start_24 ) ) {
+			wp_send_json_error(
+				[ 'message' => esc_html__( 'Ending time must be later than starting time.', 'digent-appointments' ) ]
+			);
+		}
+
 		foreach ( $days as $key => $day ) {
 
 			if ( isset( $data['availability'][ $key ]['enabled'] ) ) {
 				$availability[ $day ] = [
 					'status' => 'open',
-					'open'   => sanitize_text_field( $data['availability']['start_time'] ),
-					'close'  => sanitize_text_field( $data['availability']['end_time'] ),
+					'open'   => $start_24,
+					'close'  => $end_24,
 					'breaks' => dgap_sanitize_breaks( $data['breaks'] ?? [] )
 				];
 			} else {

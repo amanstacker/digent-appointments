@@ -76,9 +76,19 @@
 
 				<!-- Time range -->
 				<div class="dgap-vacation-time">
-					<input type="time" name="vacation_start">
+					<div class="dgap-clock-input-wrap">
+						<input type="text" class="dgap-time-picker" name="vacation_start" placeholder="09:00" autocomplete="off">
+						<button type="button" class="dgap-clock-trigger" tabindex="-1" title="<?php esc_attr_e( 'Open Clock Picker', 'digent-appointments' ); ?>">
+							<span class="dashicons dashicons-clock"></span>
+						</button>
+					</div>
 					<span>–</span>
-					<input type="time" name="vacation_end">
+					<div class="dgap-clock-input-wrap">
+						<input type="text" class="dgap-time-picker" name="vacation_end" placeholder="18:00" autocomplete="off">
+						<button type="button" class="dgap-clock-trigger" tabindex="-1" title="<?php esc_attr_e( 'Open Clock Picker', 'digent-appointments' ); ?>">
+							<span class="dashicons dashicons-clock"></span>
+						</button>
+					</div>
 				</div>
 			</div>
 

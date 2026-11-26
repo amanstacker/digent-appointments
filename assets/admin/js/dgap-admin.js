@@ -46,6 +46,407 @@ jQuery(function ($) {
 		$(this).siblings('span').toggleClass('selected', $(this).is(':checked'));
 	});
 
+	/* ================= Round Clock Time Picker (Respects Global Time Format + Manual Entry) ================= */
+	function dgapIs24HourMode() {
+		return String((typeof dgap_admin !== 'undefined' && dgap_admin.time_format) || '24') === '24';
+	}
+
+	function dgapParseTimeString(str) {
+		const raw = String(str || '').trim().toUpperCase();
+		if (!raw) return null;
+
+		const ampmMatch = raw.match(/^(\d{1,2})(?::(\d{1,2}))?\s*(AM|PM)$/);
+		if (ampmMatch) {
+			let h = parseInt(ampmMatch[1], 10);
+			const m = parseInt(ampmMatch[2] || '0', 10);
+			const ap = ampmMatch[3];
+			if (h < 1 || h > 12 || m < 0 || m > 59) return null;
+			if (ap === 'AM' && h === 12) h = 0;
+			if (ap === 'PM' && h < 12) h += 12;
+			return { h, m };
+		}
+
+		const h24Match = raw.match(/^(\d{1,2}):(\d{1,2})$/);
+		if (h24Match) {
+			const h = parseInt(h24Match[1], 10);
+			const m = parseInt(h24Match[2], 10);
+			if (h < 0 || h > 23 || m < 0 || m > 59) return null;
+			return { h, m };
+		}
+
+		return null;
+	}
+
+	function dgapFormatTimeForDisplay(h, m) {
+		const mm = String(m).padStart(2, '0');
+		if (dgapIs24HourMode()) {
+			return String(h).padStart(2, '0') + ':' + mm;
+		}
+		const ap = h >= 12 ? 'PM' : 'AM';
+		let h12 = h % 12;
+		if (h12 === 0) h12 = 12;
+		return String(h12).padStart(2, '0') + ':' + mm + ' ' + ap;
+	}
+
+	function dgapSetTimePickerValue($el, val) {
+		if (!$el.length) return;
+		const parsed = dgapParseTimeString(val);
+		if (parsed) {
+			$el.val(dgapFormatTimeForDisplay(parsed.h, parsed.m));
+		} else {
+			$el.val('');
+		}
+	}
+
+	function dgapInitTimePickers($scope) {
+		const is24 = dgapIs24HourMode();
+		($scope || $(document)).find('input.dgap-time-picker').each(function () {
+			$(this).attr('placeholder', is24 ? '09:00' : '09:00 AM');
+		});
+	}
+
+	const dgapClockState = {
+		$input: null,
+		mode: 'hour',
+		h: 9,
+		m: 0
+	};
+
+	function dgapEnsureClockPopover() {
+		let $pop = $('#dgap-round-clock-popover');
+		if ($pop.length) return $pop;
+
+		$pop = $(`
+			<div id="dgap-round-clock-popover" class="dgap-clock-popover" style="display:none;">
+				<div class="dgap-clock-header">
+					<div class="dgap-clock-digital">
+						<button type="button" class="dgap-clock-part is-active" data-part="hour">09</button>
+						<span class="dgap-clock-colon">:</span>
+						<button type="button" class="dgap-clock-part" data-part="minute">00</button>
+					</div>
+					<div class="dgap-clock-ampm" style="display:none;">
+						<button type="button" class="dgap-clock-ampm-btn" data-ap="AM">AM</button>
+						<button type="button" class="dgap-clock-ampm-btn" data-ap="PM">PM</button>
+					</div>
+				</div>
+				<div class="dgap-clock-face">
+					<div class="dgap-clock-center-dot"></div>
+					<div class="dgap-clock-hand"></div>
+					<div class="dgap-clock-numbers"></div>
+				</div>
+				<div class="dgap-clock-error" style="display:none;"></div>
+				<div class="dgap-clock-footer">
+					<button type="button" class="button-link dgap-clock-clear">Clear</button>
+					<button type="button" class="button button-small button-primary dgap-clock-done">Done</button>
+				</div>
+			</div>
+		`);
+		$('body').append($pop);
+		return $pop;
+	}
+
+	function dgapRenderClockFace() {
+		const $pop = dgapEnsureClockPopover();
+		const is24 = dgapIs24HourMode();
+		const h = dgapClockState.h;
+		const m = dgapClockState.m;
+
+		const dispH = is24 ? h : ((h % 12) === 0 ? 12 : (h % 12));
+		$pop.find('[data-part="hour"]')
+			.text(String(dispH).padStart(2, '0'))
+			.toggleClass('is-active', dgapClockState.mode === 'hour');
+		$pop.find('[data-part="minute"]')
+			.text(String(m).padStart(2, '0'))
+			.toggleClass('is-active', dgapClockState.mode === 'minute');
+
+		const $ampm = $pop.find('.dgap-clock-ampm');
+		if (is24) {
+			$ampm.hide();
+		} else {
+			$ampm.show();
+			const ap = h >= 12 ? 'PM' : 'AM';
+			$ampm.find('.dgap-clock-ampm-btn').removeClass('is-active');
+			$ampm.find(`[data-ap="${ap}"]`).addClass('is-active');
+		}
+
+		const $nums = $pop.find('.dgap-clock-numbers').empty();
+		const center = 108;
+		let handDeg = 0;
+		let handLen = 82;
+
+		if (dgapClockState.mode === 'hour') {
+			for (let i = 0; i < 12; i++) {
+				const num = i === 0 ? 12 : i;
+				const angleDeg = i * 30;
+				const rad = (angleDeg - 90) * (Math.PI / 180);
+				const r = 84;
+				const x = center + r * Math.cos(rad);
+				const y = center + r * Math.sin(rad);
+				const val24 = is24 ? (i === 0 ? 12 : i) : (h >= 12 ? (i === 0 ? 12 : i + 12) : (i === 0 ? 0 : i));
+				const isSel = is24 ? (h === val24) : (dispH === num);
+
+				$nums.append(
+					$('<button type="button" class="dgap-clock-num"></button>')
+						.text(is24 ? String(val24).padStart(2, '0') : String(num))
+						.css({ left: x + 'px', top: y + 'px' })
+						.toggleClass('is-selected', isSel)
+						.data('val', val24)
+				);
+			}
+
+			if (is24) {
+				for (let i = 0; i < 12; i++) {
+					const val24 = i === 0 ? 0 : i + 12;
+					const angleDeg = i * 30;
+					const rad = (angleDeg - 90) * (Math.PI / 180);
+					const r = 52;
+					const x = center + r * Math.cos(rad);
+					const y = center + r * Math.sin(rad);
+					const isSel = (h === val24);
+
+					$nums.append(
+						$('<button type="button" class="dgap-clock-num is-inner"></button>')
+							.text(String(val24).padStart(2, '0'))
+							.css({ left: x + 'px', top: y + 'px' })
+							.toggleClass('is-selected', isSel)
+							.data('val', val24)
+					);
+				}
+				const isInner = (h === 0 || h >= 13);
+				handLen = isInner ? 52 : 84;
+				handDeg = (h % 12) * 30;
+			} else {
+				handLen = 84;
+				handDeg = (h % 12) * 30;
+			}
+		} else {
+			for (let i = 0; i < 12; i++) {
+				const minVal = i * 5;
+				const angleDeg = i * 30;
+				const rad = (angleDeg - 90) * (Math.PI / 180);
+				const r = 84;
+				const x = center + r * Math.cos(rad);
+				const y = center + r * Math.sin(rad);
+				const isSel = (m === minVal);
+
+				$nums.append(
+					$('<button type="button" class="dgap-clock-num"></button>')
+						.text(String(minVal).padStart(2, '0'))
+						.css({ left: x + 'px', top: y + 'px' })
+						.toggleClass('is-selected', isSel)
+						.data('val', minVal)
+				);
+			}
+			handLen = 84;
+			handDeg = m * 6;
+		}
+
+		$pop.find('.dgap-clock-hand').css({
+			height: handLen + 'px',
+			transform: 'translateX(-50%) rotate(' + handDeg + 'deg)'
+		});
+	}
+
+	function dgapOpenClockForInput($input) {
+		const $pop = dgapEnsureClockPopover();
+		const parsed = dgapParseTimeString($input.val()) || { h: 9, m: 0 };
+
+		dgapClockState.$input = $input;
+		dgapClockState.mode = 'hour';
+		dgapClockState.h = parsed.h;
+		dgapClockState.m = parsed.m;
+
+		$pop.find('.dgap-clock-error').hide().text('');
+		dgapRenderClockFace();
+
+		const rect = $input[0].getBoundingClientRect();
+		const popW = 264;
+		const popH = 340;
+		let left = rect.left + window.scrollX;
+		let top = rect.bottom + window.scrollY + 6;
+
+		if (rect.left + popW > window.innerWidth - 12) {
+			left = Math.max(12, window.innerWidth - popW - 12 + window.scrollX);
+		}
+		if (rect.bottom + popH > window.innerHeight - 12) {
+			top = Math.max(12, rect.top + window.scrollY - popH - 6);
+		}
+
+		$pop.css({ left: left + 'px', top: top + 'px' }).show();
+	}
+
+	$(document).on('click', '.dgap-clock-trigger', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		const $input = $(this).siblings('input.dgap-time-picker');
+		dgapOpenClockForInput($input);
+	});
+
+	$(document).on('focus', 'input.dgap-time-picker', function () {
+		dgapOpenClockForInput($(this));
+	});
+
+	function dgapValidateLiveTimeField($input) {
+		if (!$input || !$input.length) return '';
+		const $form = $input.closest('.dgap-form');
+		if (!$form.length) return '';
+
+		const $footerErr = $form.find('.dgap-footer-error');
+		const $popErr    = $('#dgap-round-clock-popover .dgap-clock-error');
+		const name       = $input.attr('name') || '';
+		const rawVal     = ($input.val() || '').trim();
+		let err          = '';
+
+		if (rawVal && !dgapParseTimeString(rawVal)) {
+			err = 'Please enter a valid time (e.g. 09:00 or 09:00 AM).';
+		}
+
+		if (!err && (name === 'hours[open]' || name === 'hours[close]')) {
+			const openP  = dgapParseTimeString($form.find('[name="hours[open]"]').val());
+			const closeP = dgapParseTimeString($form.find('[name="hours[close]"]').val());
+			if (openP && closeP && ((closeP.h * 60 + closeP.m) <= (openP.h * 60 + openP.m))) {
+				err = 'Closing time must be later than opening time.';
+			}
+		}
+
+		if (!err && (name === 'availability[start_time]' || name === 'availability[end_time]')) {
+			const sP = dgapParseTimeString($form.find('[name="availability[start_time]"]').val());
+			const eP = dgapParseTimeString($form.find('[name="availability[end_time]"]').val());
+			if (sP && eP && ((eP.h * 60 + eP.m) <= (sP.h * 60 + sP.m))) {
+				err = 'Ending time must be later than starting time.';
+			}
+		}
+
+		if (!err && (name === 'vacation_start' || name === 'vacation_end')) {
+			const sP = dgapParseTimeString($form.find('[name="vacation_start"]').val());
+			const eP = dgapParseTimeString($form.find('[name="vacation_end"]').val());
+			if (sP && eP && ((eP.h * 60 + eP.m) <= (sP.h * 60 + sP.m))) {
+				err = 'Vacation end time must be later than start time.';
+			}
+		}
+
+		if (!err && name.indexOf('breaks[') === 0) {
+			const $row = $input.closest('.dgap-break-row');
+			const brS  = dgapParseTimeString($row.find('[name*="[start]"]').val());
+			const brE  = dgapParseTimeString($row.find('[name*="[end]"]').val());
+			if (brS && brE && ((brE.h * 60 + brE.m) <= (brS.h * 60 + brS.m))) {
+				err = 'Break end time must be later than break start time.';
+			} else if (brS || brE) {
+				const openEl  = $form.find('[name="hours[open]"], [name="availability[start_time]"]').first();
+				const closeEl = $form.find('[name="hours[close]"], [name="availability[end_time]"]').first();
+				const openP   = dgapParseTimeString(openEl.val());
+				const closeP  = dgapParseTimeString(closeEl.val());
+				if (openP && closeP) {
+					const oM = openP.h * 60 + openP.m;
+					const cM = closeP.h * 60 + closeP.m;
+					if ((brS && (brS.h * 60 + brS.m) < oM) || (brE && (brE.h * 60 + brE.m) > cM)) {
+						err = 'Break times must be within opening and closing hours.';
+					}
+				}
+			}
+		}
+
+		$input.toggleClass('dgap-time-invalid', Boolean(err));
+		if (err) {
+			$popErr.text(err).show();
+			$footerErr.text(err).fadeIn(150);
+		} else {
+			$popErr.hide().text('');
+			$form.find('.dgap-time-invalid').removeClass('dgap-time-invalid');
+			$footerErr.hide().text('');
+		}
+
+		return err;
+	}
+
+	$(document).on('input', 'input.dgap-time-picker', function () {
+		if (dgapClockState.$input && dgapClockState.$input[0] === this) {
+			const parsed = dgapParseTimeString($(this).val());
+			if (parsed) {
+				dgapClockState.h = parsed.h;
+				dgapClockState.m = parsed.m;
+				dgapRenderClockFace();
+			}
+		}
+		dgapValidateLiveTimeField($(this));
+	});
+
+	$(document).on('blur', 'input.dgap-time-picker', function () {
+		const raw = ($(this).val() || '').trim();
+		if (!raw) {
+			dgapValidateLiveTimeField($(this));
+			return;
+		}
+		const parsed = dgapParseTimeString(raw);
+		if (parsed) {
+			$(this).val(dgapFormatTimeForDisplay(parsed.h, parsed.m));
+		}
+		dgapValidateLiveTimeField($(this));
+	});
+
+	$(document).on('click', '#dgap-round-clock-popover [data-part]', function () {
+		dgapClockState.mode = $(this).data('part');
+		dgapRenderClockFace();
+	});
+
+	$(document).on('click', '#dgap-round-clock-popover .dgap-clock-ampm-btn', function () {
+		const ap = $(this).data('ap');
+		if (ap === 'AM' && dgapClockState.h >= 12) dgapClockState.h -= 12;
+		if (ap === 'PM' && dgapClockState.h < 12) dgapClockState.h += 12;
+		if (dgapClockState.$input) {
+			dgapClockState.$input.val(dgapFormatTimeForDisplay(dgapClockState.h, dgapClockState.m));
+			dgapValidateLiveTimeField(dgapClockState.$input);
+		}
+		dgapRenderClockFace();
+	});
+
+	$(document).on('click', '#dgap-round-clock-popover .dgap-clock-num', function () {
+		const val = parseInt($(this).data('val'), 10);
+		if (dgapClockState.mode === 'hour') {
+			dgapClockState.h = val;
+			dgapClockState.mode = 'minute';
+			if (dgapClockState.$input) {
+				dgapClockState.$input.val(dgapFormatTimeForDisplay(dgapClockState.h, dgapClockState.m));
+				dgapValidateLiveTimeField(dgapClockState.$input);
+			}
+			dgapRenderClockFace();
+		} else {
+			dgapClockState.m = val;
+			if (dgapClockState.$input) {
+				dgapClockState.$input.val(dgapFormatTimeForDisplay(dgapClockState.h, dgapClockState.m));
+				dgapValidateLiveTimeField(dgapClockState.$input);
+			}
+			dgapRenderClockFace();
+		}
+	});
+
+	$(document).on('click', '#dgap-round-clock-popover .dgap-clock-clear', function () {
+		if (dgapClockState.$input) {
+			dgapClockState.$input.val('');
+			dgapValidateLiveTimeField(dgapClockState.$input);
+		}
+		$('#dgap-round-clock-popover').hide();
+	});
+
+	$(document).on('click', '#dgap-round-clock-popover .dgap-clock-done', function () {
+		if (dgapClockState.$input) {
+			dgapClockState.$input.val(dgapFormatTimeForDisplay(dgapClockState.h, dgapClockState.m));
+			const err = dgapValidateLiveTimeField(dgapClockState.$input);
+			if (err) {
+				return;
+			}
+		}
+		$('#dgap-round-clock-popover').hide();
+	});
+
+	$(document).on('mousedown', function (e) {
+		if (!$(e.target).closest('#dgap-round-clock-popover, .dgap-clock-input-wrap').length) {
+			$('#dgap-round-clock-popover').hide();
+		}
+	});
+
+	dgapInitTimePickers($(document));
+
 	/* ================= Add ================= */
 	$(document).on('click', '.dgap-add', function (e) {
 		e.preventDefault();
@@ -57,6 +458,9 @@ jQuery(function ($) {
 		
 		currentForm.find('[name="image_id"]').val(''); 
 		currentForm.find('.dgap-image-preview').attr('src', dgap_admin.default_avatar);
+		currentForm.find('.dgap-time-picker').each(function () {
+			dgapSetTimePickerValue($(this), '');
+		});
 
 		setTimeout(function () {
 			const texts = dgap.vacation.getEntityTexts();
@@ -73,15 +477,22 @@ jQuery(function ($) {
 
 		const newBreak = $(
 			'<div class="dgap-break-row">' +
-				'<input type="time" name="breaks[' + index + '][start]" placeholder="From">' +
+				'<div class="dgap-clock-input-wrap">' +
+					'<input type="text" class="dgap-time-picker" name="breaks[' + index + '][start]" placeholder="From" autocomplete="off">' +
+					'<button type="button" class="dgap-clock-trigger" tabindex="-1" title="Open Clock Picker"><span class="dashicons dashicons-clock"></span></button>' +
+				'</div>' +
 				'<span>–</span>' +
-				'<input type="time" name="breaks[' + index + '][end]" placeholder="To">' +
+				'<div class="dgap-clock-input-wrap">' +
+					'<input type="text" class="dgap-time-picker" name="breaks[' + index + '][end]" placeholder="To" autocomplete="off">' +
+					'<button type="button" class="dgap-clock-trigger" tabindex="-1" title="Open Clock Picker"><span class="dashicons dashicons-clock"></span></button>' +
+				'</div>' +
 				'<button type="button" class="button button-small dgap-remove-break">Remove</button>' +
 			'</div>'
 		);
 
 		// Insert above Add button
 		newBreak.insertBefore($(this));
+		dgapInitTimePickers(newBreak);
 	});
 
 	/* ================= Remove Break ================= */
@@ -92,7 +503,7 @@ jQuery(function ($) {
 
 		// Re-index remaining rows
 		breakBox.find('.dgap-break-row').each(function (i) {
-			$(this).find('input[type="time"]').each(function () {
+			$(this).find('select[name^="breaks["], input[name^="breaks["]').each(function () {
 				if ($(this).attr('name').includes('[start]')) {
 					$(this).attr('name', 'breaks[' + i + '][start]');
 				} else {
@@ -805,8 +1216,8 @@ $(document).on('click', '.dgap-status-update', function (e) {
 				$('#vacation_mode_select').val(mode).trigger('change');
 
 				if ( mode === 'time' ) {
-					$('[name="vacation_start"]').val(first.time_start || '00:00');
-					$('[name="vacation_end"]').val(first.time_end || '00:00');
+					dgapSetTimePickerValue($('[name="vacation_start"]'), first.time_start || '00:00');
+					dgapSetTimePickerValue($('[name="vacation_end"]'), first.time_end || '00:00');
 				}
 			}
 
@@ -902,21 +1313,25 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			if ( firstDay ) {
 
 				if ( mode === 'availability' ) {
-					currentForm
-						.find('[name="availability[start_time]"]')
-						.val(firstDay.open || '');
+					dgapSetTimePickerValue(
+						currentForm.find('[name="availability[start_time]"]'),
+						firstDay.open || ''
+					);
 
-					currentForm
-						.find('[name="availability[end_time]"]')
-						.val(firstDay.close || '');
+					dgapSetTimePickerValue(
+						currentForm.find('[name="availability[end_time]"]'),
+						firstDay.close || ''
+					);
 				} else {
-					currentForm
-						.find('[name="hours[open]"]')
-						.val(firstDay.open || '');
+					dgapSetTimePickerValue(
+						currentForm.find('[name="hours[open]"]'),
+						firstDay.open || ''
+					);
 
-					currentForm
-						.find('[name="hours[close]"]')
-						.val(firstDay.close || '');
+					dgapSetTimePickerValue(
+						currentForm.find('[name="hours[close]"]'),
+						firstDay.close || ''
+					);
 				}
 
 				/* ==================================================
@@ -930,13 +1345,15 @@ $(document).on('click', '.dgap-status-update', function (e) {
 
 						currentForm.find('.dgap-add-break').trigger('click');
 
-						currentForm
-							.find('[name="breaks[' + i + '][start]"]')
-							.val(br.start || '');
+						dgapSetTimePickerValue(
+							currentForm.find('[name="breaks[' + i + '][start]"]'),
+							br.start || ''
+						);
 
-						currentForm
-							.find('[name="breaks[' + i + '][end]"]')
-							.val(br.end || '');
+						dgapSetTimePickerValue(
+							currentForm.find('[name="breaks[' + i + '][end]"]'),
+							br.end || ''
+						);
 					});
 				}
 			}
@@ -979,13 +1396,99 @@ $(document).on('click', '.dgap-status-update', function (e) {
 
 		footerError.hide().text('');
 
+		if ( entity === 'location' ) {
+			const openRaw  = (form.find('[name="hours[open]"]').val() || '').trim();
+			const closeRaw = (form.find('[name="hours[close]"]').val() || '').trim();
+			const hasEnabledDay = form.find('.dgap-day-pill input:checked').length > 0;
+
+			if (hasEnabledDay) {
+				const openParsed  = dgapParseTimeString(openRaw);
+				const closeParsed = dgapParseTimeString(closeRaw);
+
+				if (!openRaw || !closeRaw) {
+					footerError.text('Open and close time are required for all enabled days.').fadeIn();
+					return;
+				}
+				if (!openParsed || !closeParsed) {
+					footerError.text('Please enter valid open and close times (e.g. 09:00 or 09:00 AM).').fadeIn();
+					return;
+				}
+				const openMins  = (openParsed.h * 60) + openParsed.m;
+				const closeMins = (closeParsed.h * 60) + closeParsed.m;
+				if (closeMins <= openMins) {
+					footerError.text('Closing time must be later than opening time.').fadeIn();
+					return;
+				}
+
+				let breakErr = '';
+				form.find('.dgap-break-row').each(function () {
+					const brStartRaw = ($(this).find('[name*="[start]"]').val() || '').trim();
+					const brEndRaw   = ($(this).find('[name*="[end]"]').val() || '').trim();
+					if (!brStartRaw && !brEndRaw) return;
+					const brStart = dgapParseTimeString(brStartRaw);
+					const brEnd   = dgapParseTimeString(brEndRaw);
+					if (!brStart || !brEnd) {
+						breakErr = 'Please enter valid break start and end times.';
+						return false;
+					}
+					const sMins = (brStart.h * 60) + brStart.m;
+					const eMins = (brEnd.h * 60) + brEnd.m;
+					if (eMins <= sMins) {
+						breakErr = 'Break end time must be later than break start time.';
+						return false;
+					}
+					if (sMins < openMins || eMins > closeMins) {
+						breakErr = 'Break times must be within opening and closing hours.';
+						return false;
+					}
+				});
+				if (breakErr) {
+					footerError.text(breakErr).fadeIn();
+					return;
+				}
+			}
+		}
+
+		if ( entity === 'schedule' ) {
+			const startRaw = (form.find('[name="availability[start_time]"]').val() || '').trim();
+			const endRaw   = (form.find('[name="availability[end_time]"]').val() || '').trim();
+			const sParsed  = dgapParseTimeString(startRaw);
+			const eParsed  = dgapParseTimeString(endRaw);
+			if (startRaw && endRaw) {
+				if (!sParsed || !eParsed) {
+					footerError.text('Please enter valid start and end times (e.g. 09:00 or 09:00 AM).').fadeIn();
+					return;
+				}
+				if ((eParsed.h * 60 + eParsed.m) <= (sParsed.h * 60 + sParsed.m)) {
+					footerError.text('Ending time must be later than starting time.').fadeIn();
+					return;
+				}
+			}
+		}
+
 		let extraData = [];
 
 		if ( entity === 'vacation' && typeof selectedDates !== 'undefined' ) {
 
 			const mode = $('#vacation_mode_select').val() || 'full';
-			const timeStart = $('[name="vacation_start"]').val() || '00:00';
-			const timeEnd   = $('[name="vacation_end"]').val() || '00:00';
+			const rawStart    = ($('[name="vacation_start"]').val() || '').trim();
+			const rawEnd      = ($('[name="vacation_end"]').val() || '').trim();
+			const parsedStart = dgapParseTimeString(rawStart);
+			const parsedEnd   = dgapParseTimeString(rawEnd);
+
+			if (mode === 'time') {
+				if (!rawStart || !rawEnd || !parsedStart || !parsedEnd) {
+					footerError.text('Please enter valid vacation start and end times.').fadeIn();
+					return;
+				}
+				if ((parsedEnd.h * 60 + parsedEnd.m) <= (parsedStart.h * 60 + parsedStart.m)) {
+					footerError.text('Vacation end time must be later than start time.').fadeIn();
+					return;
+				}
+			}
+
+			const timeStart = parsedStart ? (String(parsedStart.h).padStart(2, '0') + ':' + String(parsedStart.m).padStart(2, '0')) : (rawStart || '00:00');
+			const timeEnd   = parsedEnd ? (String(parsedEnd.h).padStart(2, '0') + ':' + String(parsedEnd.m).padStart(2, '0')) : (rawEnd || '00:00');
 
 			const datesPayload = selectedDates.map(function (date) {
 				return {

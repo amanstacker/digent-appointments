@@ -65,12 +65,22 @@
 				<div class="dgap-time-box">
 					<div>
 						<label><?php esc_html_e( 'Opens At', 'digent-appointments' ); ?></label>
-						<input type="time" name="hours[open]">
+						<div class="dgap-clock-input-wrap">
+							<input type="text" class="dgap-time-picker" name="hours[open]" placeholder="09:00" autocomplete="off">
+							<button type="button" class="dgap-clock-trigger" tabindex="-1" title="<?php esc_attr_e( 'Open Clock Picker', 'digent-appointments' ); ?>">
+								<span class="dashicons dashicons-clock"></span>
+							</button>
+						</div>
 					</div>
 
 					<div>
 						<label><?php esc_html_e( 'Closes At', 'digent-appointments' ); ?></label>
-						<input type="time" name="hours[close]">
+						<div class="dgap-clock-input-wrap">
+							<input type="text" class="dgap-time-picker" name="hours[close]" placeholder="18:00" autocomplete="off">
+							<button type="button" class="dgap-clock-trigger" tabindex="-1" title="<?php esc_attr_e( 'Open Clock Picker', 'digent-appointments' ); ?>">
+								<span class="dashicons dashicons-clock"></span>
+							</button>
+						</div>
 					</div>
 				</div>
 

@@ -104,14 +104,20 @@ class DGAP_Vacations_Ajax {
 					wp_send_json_error( [ 'message' => esc_html__( 'Time range is required for time-based mode.', 'digent-appointments' ) ] );
 				}
 
-				$time_start = sanitize_text_field( $item['time_start'] );
-				$time_end   = sanitize_text_field( $item['time_end'] );
+				$raw_start  = sanitize_text_field( $item['time_start'] );
+				$raw_end    = sanitize_text_field( $item['time_end'] );
+				$time_start = strtotime( $raw_start ) ? gmdate( 'H:i', strtotime( $raw_start ) ) : $raw_start;
+				$time_end   = strtotime( $raw_end ) ? gmdate( 'H:i', strtotime( $raw_end ) ) : $raw_end;
 
 				if (
 					! preg_match( '/^\d{2}:\d{2}$/', $time_start ) ||
 					! preg_match( '/^\d{2}:\d{2}$/', $time_end )
 				) {
 					wp_send_json_error( [ 'message' => esc_html__( 'Invalid time format.', 'digent-appointments' ) ] );
+				}
+
+				if ( strtotime( $time_end ) <= strtotime( $time_start ) ) {
+					wp_send_json_error( [ 'message' => esc_html__( 'Vacation end time must be later than start time.', 'digent-appointments' ) ] );
 				}
 			}
 
