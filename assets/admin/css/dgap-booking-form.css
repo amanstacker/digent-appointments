@@ -690,14 +690,43 @@
 }
 
 .dgap-settings-group-title {
-    font-size:      12px;
-    font-weight:    600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color:          var(--dgap-primary-hover, #059669);
-    background:     #f7f7f7;
-    padding:        8px 12px;
-    border-bottom:  1px solid #eee;
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    font-size:       12px;
+    font-weight:     600;
+    text-transform:  uppercase;
+    letter-spacing:  0.5px;
+    color:           var(--dgap-primary-hover, #059669);
+    background:      #f7f7f7;
+    padding:         9px 12px;
+    cursor:          pointer;
+    user-select:     none;
+}
+
+.dgap-settings-group.active .dgap-settings-group-title {
+    border-bottom: 1px solid #eee;
+}
+
+.dgap-sub-acc-arrow {
+    font-size:   14px !important;
+    width:       14px !important;
+    height:      14px !important;
+    line-height: 14px !important;
+    color:       #64748b;
+    transition:  transform 0.2s ease;
+}
+
+.dgap-settings-group.active .dgap-sub-acc-arrow {
+    transform: rotate(180deg);
+}
+
+.dgap-settings-group-body {
+    display: none;
+}
+
+.dgap-settings-group.active .dgap-settings-group-body {
+    display: block;
 }
 
 .dgap-settings-group .dgap-field-row {
@@ -766,13 +795,31 @@
 }
 
 .dgap-field-item-header {
-    display:       flex;
-    align-items:   center;
-    gap:           8px;
-    padding:       10px 14px;
-    background:    #f7f7f7;
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+    padding:     10px 14px;
+    background:  #f7f7f7;
+    cursor:      pointer;
+    user-select: none;
+}
+
+.dgap-field-item.active .dgap-field-item-header {
     border-bottom: 1px solid #eee;
-    cursor:        pointer;
+}
+
+.dgap-field-acc-arrow {
+    font-size:   14px !important;
+    width:       14px !important;
+    height:      14px !important;
+    line-height: 14px !important;
+    color:       #64748b;
+    flex-shrink: 0;
+    transition:  transform 0.2s ease;
+}
+
+.dgap-field-item.active .dgap-field-acc-arrow {
+    transform: rotate(180deg);
 }
 
 .dgap-field-item-name {
@@ -823,7 +870,12 @@
 }
 
 .dgap-field-item-body {
+    display: none;
     padding: 6px 14px;
+}
+
+.dgap-field-item.active .dgap-field-item-body {
+    display: block;
 }
 
 .dgap-field-item-body .dgap-field-row {

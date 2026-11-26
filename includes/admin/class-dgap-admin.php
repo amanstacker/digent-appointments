@@ -255,7 +255,20 @@ class DGAP_Admin {
             true
         );
 
-        $extra  =   dgap_get_form_default_settings();
+        $extra        = dgap_get_form_default_settings();
+        $adv_settings = get_option( 'dgap_advanced_settings', [] );
+
+        $extra['gdpr'] = [
+            'enabled'     => ! empty( $adv_settings['gdpr_enabled'] ),
+            'label'       => ! empty( $adv_settings['gdpr_label'] ) ? $adv_settings['gdpr_label'] : __( 'I agree to the storage and handling of my data by this website.', 'digent-appointments' ),
+            'privacy_url' => ! empty( $adv_settings['gdpr_privacy_url'] ) ? esc_url_raw( $adv_settings['gdpr_privacy_url'] ) : '',
+        ];
+
+        $extra['recaptcha'] = [
+            'enabled'  => ! empty( $adv_settings['recaptcha_enabled'] ),
+            'version'  => $adv_settings['recaptcha_version'] ?? 'v2',
+            'site_key' => $adv_settings['recaptcha_site_key'] ?? '',
+        ];
 
         wp_localize_script( 'dgap-booking-form', 'dgap_booking_form', $this->get_ajax_data( $extra ) );
     }   

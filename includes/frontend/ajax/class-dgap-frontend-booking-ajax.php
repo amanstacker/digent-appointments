@@ -187,16 +187,55 @@ class DGAP_Frontend_Booking_Ajax {
 		}
 
 		$adv_settings = get_option( 'dgap_advanced_settings', [] );
-		if ( ! empty( $adv_settings['gdpr_enabled'] ) ) {
+		$form_settings = [];
+		if ( ! empty( $adv_settings['gdpr_enabled'] ) || ! empty( $adv_settings['recaptcha_enabled'] ) ) {
 			require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';
 			$form_row      = DGAP_Form_Repo::get( $form_id );
 			$form_settings = ( $form_row && ! empty( $form_row['settings'] ) ) ? ( maybe_unserialize( $form_row['settings'] ) ?: [] ) : [];
-			$form_gdpr_on  = ! isset( $form_settings['enable_gdpr'] ) || 1 === (int) $form_settings['enable_gdpr'];
+		}
 
+		if ( ! empty( $adv_settings['gdpr_enabled'] ) ) {
+			$form_gdpr_on = ! isset( $form_settings['enable_gdpr'] ) || 1 === (int) $form_settings['enable_gdpr'];
 			if ( $form_gdpr_on ) {
 				$gdpr_consent = isset( $_POST['dgap_gdpr_consent'] ) ? sanitize_text_field( wp_unslash( $_POST['dgap_gdpr_consent'] ) ) : '';
 				if ( '1' !== $gdpr_consent ) {
 					wp_send_json_error( esc_html__( 'Please accept the privacy consent to proceed.', 'digent-appointments' ) );
+				}
+			}
+		}
+
+		if ( ! empty( $adv_settings['recaptcha_enabled'] ) && ! empty( $adv_settings['recaptcha_secret_key'] ) ) {
+			$recap_ver     = $adv_settings['recaptcha_version'] ?? 'v2';
+			$form_recap_on = ! isset( $form_settings['enable_recaptcha'] ) || 1 === (int) $form_settings['enable_recaptcha'];
+			if ( 'v3' === $recap_ver || $form_recap_on ) {
+				$recap_token = isset( $_POST['g-recaptcha-response'] ) ? sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) ) : '';
+				if ( '' === $recap_token ) {
+					wp_send_json_error( esc_html__( 'Please complete the reCAPTCHA verification.', 'digent-appointments' ) );
+				}
+
+				$verify_res = wp_remote_post(
+					'https://www.google.com/recaptcha/api/siteverify',
+					[
+						'timeout' => 10,
+						'body'    => [
+							'secret'   => $adv_settings['recaptcha_secret_key'],
+							'response' => $recap_token,
+							'remoteip' => sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) ),
+						],
+					]
+				);
+
+				if ( is_wp_error( $verify_res ) ) {
+					wp_send_json_error( esc_html__( 'Could not verify reCAPTCHA. Please try again.', 'digent-appointments' ) );
+				}
+
+				$verify_body = json_decode( wp_remote_retrieve_body( $verify_res ), true );
+				$is_ok       = ! empty( $verify_body['success'] );
+				if ( $is_ok && 'v3' === $recap_ver && isset( $verify_body['score'] ) && (float) $verify_body['score'] < 0.5 ) {
+					$is_ok = false;
+				}
+				if ( ! $is_ok ) {
+					wp_send_json_error( esc_html__( 'reCAPTCHA verification failed. Please try again.', 'digent-appointments' ) );
 				}
 			}
 		}

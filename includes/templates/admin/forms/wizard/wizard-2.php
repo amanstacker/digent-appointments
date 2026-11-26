@@ -61,13 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             <div class="dgap-wizard-step" data-step="4">
                 <h2 class="dgap-wizard-step-title"><?php echo esc_html__( 'Confirm Booking', 'digent-appointments' ); ?></h2>
                 <p class="dgap-wizard-step-sub"><?php echo esc_html__( 'Review your details before submitting', 'digent-appointments' ); ?></p>
-                <label class="dgap-terms">
-                    <input type="checkbox">
-                    <?php echo esc_html__( 'I agree with terms and conditions', 'digent-appointments' ); ?>
-                </label>
-                <div class="dgap-captcha">
-                    <div class="dgap-captcha-box"><?php echo esc_html__( "I'm not a robot", 'digent-appointments' ); ?></div>
-                </div>
+                <?php include __DIR__ . '/../partials/security-fields.php'; ?>
             </div>
 
             <!-- Navigation -->

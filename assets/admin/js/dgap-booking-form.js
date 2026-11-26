@@ -34,6 +34,17 @@ jQuery(function ($) {
         $(this).parent().toggleClass('active');
     });
 
+    $(document).on('click', '.dgap-settings-group-title', function () {
+        $(this).closest('.dgap-settings-group').toggleClass('active');
+    });
+
+    $(document).on('click', '.dgap-field-item-header', function (e) {
+        if ($(e.target).closest('.dgap-remove-field').length) {
+            return;
+        }
+        $(this).closest('.dgap-field-item').toggleClass('active');
+    });
+
     /* ================================================
         COLOR PICKER <-> HEX TEXT SYNC
     ================================================ */
@@ -154,6 +165,19 @@ jQuery(function ($) {
     }
 
     /* ================================================
+        LIVE TOGGLE RE-RENDER (GDPR & reCAPTCHA v2)
+    ================================================ */
+    $(document).on('change', '#dgap-form-enable-gdpr', function () {
+        const show = $(this).is(':checked');
+        $('#dgap-live-preview .dgap-gdpr-consent-row').css('display', show ? 'flex' : 'none');
+    });
+
+    $(document).on('change', '#dgap-form-enable-recaptcha', function () {
+        const show = $(this).is(':checked');
+        $('#dgap-live-preview .dgap-recaptcha-preview-row').toggle(show);
+    });
+
+    /* ================================================
         FIELD LABELS LIVE UPDATE
     ================================================ */
     $(document).on('input', '[name^="settings[labels]"]', function () {
@@ -223,6 +247,7 @@ jQuery(function ($) {
                 ` : `
                     <span class="dgap-field-item-default-badge">Default</span>
                 `}
+                <span class="dashicons dashicons-arrow-down-alt2 dgap-field-acc-arrow"></span>
             </div>
 
             <div class="dgap-field-item-body">
@@ -377,6 +402,9 @@ jQuery(function ($) {
                             $('#dgap-form-render-service').text(service);
                             $('#dgap-form-render-worker').text(worker);
                             $('#dgap-form-render-price').text(price);
+                            if (window.dgapSyncSummaryCustomerDetails) {
+                                window.dgapSyncSummaryCustomerDetails($('#dgap-live-preview'));
+                            }
 
                             $('.dgap-summary').removeClass('disabled');
                         }

@@ -6,6 +6,7 @@ Version: 1.0.0
 Requires PHP: 7.4
 Requires at least: 6.7
 Text Domain: digent-appointments
+Domain Path: /languages
 Author: amanstacker
 Author URI: https://profiles.wordpress.org/amanstacker/
 License: GPLv2 or later

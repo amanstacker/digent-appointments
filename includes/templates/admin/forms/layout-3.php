@@ -48,13 +48,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             <h3 class="dgap-title"><?php echo esc_html__( 'Booking Overview', 'digent-appointments' ); ?></h3>
             <?php include __DIR__ . '/partials/summary.php'; ?>
 
-            <label class="dgap-terms">
-                <input type="checkbox"> <?php echo esc_html__( 'I agree with terms and conditions', 'digent-appointments' ); ?>
-            </label>
-
-            <div class="dgap-captcha">
-                <div class="dgap-captcha-box"><?php echo esc_html__( 'I am not a robot', 'digent-appointments' ); ?></div>
-            </div>
+            <?php include __DIR__ . '/partials/security-fields.php'; ?>
 
             <div class="dgap-actions">
                 <button class="dgap-btn-submit"><?php echo esc_html__( 'Submit', 'digent-appointments' ); ?></button>

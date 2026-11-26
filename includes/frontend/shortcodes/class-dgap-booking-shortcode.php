@@ -62,11 +62,24 @@ class DGAP_Booking_Shortcode {
         $form['settings']      = maybe_unserialize( $form['settings'] )      ?: [];
         $form['custom_fields'] = maybe_unserialize( $form['custom_fields'] ) ?: [];
 
-        $adv_settings   = get_option( 'dgap_advanced_settings', [] );
-        $gdpr_enabled   = ! empty( $adv_settings['gdpr_enabled'] );
-        $form_gdpr_on   = ! isset( $form['settings']['enable_gdpr'] ) || 1 === (int) $form['settings']['enable_gdpr'];
-        $gdpr_label     = ! empty( $adv_settings['gdpr_label'] ) ? $adv_settings['gdpr_label'] : __( 'I agree to the storage and handling of my data by this website.', 'digent-appointments' );
-        $gdpr_url       = ! empty( $adv_settings['gdpr_privacy_url'] ) ? $adv_settings['gdpr_privacy_url'] : '';
+        $adv_settings       = get_option( 'dgap_advanced_settings', [] );
+        $gdpr_enabled       = ! empty( $adv_settings['gdpr_enabled'] );
+        $form_gdpr_on       = ! isset( $form['settings']['enable_gdpr'] ) || 1 === (int) $form['settings']['enable_gdpr'];
+        $gdpr_label         = ! empty( $adv_settings['gdpr_label'] ) ? $adv_settings['gdpr_label'] : __( 'I agree to the storage and handling of my data by this website.', 'digent-appointments' );
+        $gdpr_url           = ! empty( $adv_settings['gdpr_privacy_url'] ) ? $adv_settings['gdpr_privacy_url'] : '';
+
+        $recap_enabled      = ! empty( $adv_settings['recaptcha_enabled'] ) && ! empty( $adv_settings['recaptcha_site_key'] );
+        $recap_version      = $adv_settings['recaptcha_version'] ?? 'v2';
+        $recap_site_key     = $adv_settings['recaptcha_site_key'] ?? '';
+        $form_recap_on      = ! isset( $form['settings']['enable_recaptcha'] ) || 1 === (int) $form['settings']['enable_recaptcha'];
+        $recap_active       = $recap_enabled && ( 'v3' === $recap_version || $form_recap_on );
+
+        if ( $recap_active ) {
+            $recap_src = ( 'v3' === $recap_version )
+                ? 'https://www.google.com/recaptcha/api.js?render=' . rawurlencode( $recap_site_key )
+                : 'https://www.google.com/recaptcha/api.js?render=explicit';
+            wp_enqueue_script( 'dgap-google-recaptcha', $recap_src, [], null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+        }
 
         $this->localize_data = [
             'id'            => $id,
@@ -79,6 +92,11 @@ class DGAP_Booking_Shortcode {
                 'enabled'     => ( $gdpr_enabled && $form_gdpr_on ),
                 'label'       => $gdpr_label,
                 'privacy_url' => esc_url_raw( $gdpr_url ),
+            ],
+            'recaptcha'     => [
+                'enabled'  => $recap_active,
+                'version'  => $recap_version,
+                'site_key' => $recap_site_key,
             ],
         ];
 

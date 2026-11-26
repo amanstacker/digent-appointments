@@ -1,0 +1,3749 @@
+# Copyright (C) 2026 Digent Appointments
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Digent Appointments 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/digent-appointments\n"
+"POT-Creation-Date: 2026-11-26 12:03+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: Digent POT Generator\n"
+"X-Domain: digent-appointments\n"
+
+#: digent-appointments.php:38
+#: includes/admin/menus/class-dgap-menu.php:30
+#: includes/admin/menus/class-dgap-menu.php:31
+#: includes/admin/pages/dashboard.php:10
+msgid "Dashboard"
+msgstr ""
+
+#: digent-appointments.php:39
+#: includes/admin/menus/class-dgap-menu.php:42
+#: includes/admin/pages/bookings.php:30
+msgid "Bookings"
+msgstr ""
+
+#: digent-appointments.php:40
+#: includes/admin/menus/class-dgap-menu.php:109
+msgid "Settings"
+msgstr ""
+
+#: digent-appointments.php:44
+msgid "Get Pro"
+msgstr ""
+
+#: digent-appointments.php:60
+#: includes/admin/pages/forms.php:31
+msgid "Booking Forms"
+msgstr ""
+
+#: digent-appointments.php:61
+#: includes/admin/pages/dashboard.php:16
+#: includes/admin/pages/extensions.php:161
+#: includes/admin/settings/class-dgap-settings-render.php:44
+#: includes/admin/settings/class-dgap-settings-render.php:77
+msgid "Support"
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:33
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:131
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:164
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:226
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:241
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:262
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:287
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:330
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:362
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:419
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:437
+#: includes/admin/ajax/class-dgap-customers-ajax.php:25
+#: includes/admin/ajax/class-dgap-customers-ajax.php:107
+#: includes/admin/ajax/class-dgap-customers-ajax.php:126
+#: includes/admin/ajax/class-dgap-customers-ajax.php:145
+#: includes/admin/ajax/class-dgap-customers-ajax.php:182
+#: includes/admin/ajax/class-dgap-locations-ajax.php:23
+#: includes/admin/ajax/class-dgap-locations-ajax.php:55
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:22
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:223
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:235
+#: includes/admin/ajax/class-dgap-services-ajax.php:22
+#: includes/admin/ajax/class-dgap-staff-ajax.php:22
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:204
+#: includes/admin/settings/class-dgap-settings-sections.php:880
+#: includes/admin/settings/class-dgap-settings-sections.php:891
+#: includes/admin/settings/class-dgap-settings-sections.php:1006
+#: includes/admin/settings/class-dgap-settings-sections.php:1024
+#: includes/admin/settings/class-dgap-settings-sections.php:1086
+#: includes/admin/settings/class-dgap-settings-sections.php:1100
+#: includes/admin/settings/notifications/general.php:265
+msgid "Permission denied."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:139
+msgid "No bookings or action selected."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:153
+#: includes/admin/ajax/class-dgap-customers-ajax.php:172
+#: includes/admin/ajax/class-dgap-form-ajax.php:171
+#: includes/admin/ajax/class-dgap-locations-ajax.php:45
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:44
+#: includes/admin/ajax/class-dgap-services-ajax.php:44
+#: includes/admin/ajax/class-dgap-staff-ajax.php:44
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:231
+msgid "Invalid bulk action."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:172
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:269
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:296
+msgid "Invalid data."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:185
+msgid "Invalid status."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:247
+msgid "Invalid location."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:307
+msgid "No schedule found."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-bookings-ajax.php:313
+msgid "Service not found."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:32
+#: includes/admin/ajax/class-dgap-locations-ajax.php:126
+#: includes/admin/ajax/class-dgap-services-ajax.php:63
+#: includes/admin/ajax/class-dgap-staff-ajax.php:66
+msgid "Invalid request data."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:54
+#: includes/admin/ajax/class-dgap-staff-ajax.php:79
+msgid "First name is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:60
+#: includes/admin/ajax/class-dgap-staff-ajax.php:87
+msgid "Email address is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:66
+#: includes/admin/ajax/class-dgap-staff-ajax.php:95
+#: includes/admin/settings/class-dgap-settings-sections.php:1257
+#: includes/admin/settings/notifications/general.php:236
+#: includes/admin/settings/notifications/general.php:270
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:113
+msgid "Customer not found."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:154
+#: includes/admin/ajax/class-dgap-form-ajax.php:153
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:213
+msgid "No items selected."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:159
+msgid "Selected customers activated."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:164
+msgid "Selected customers deactivated."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-customers-ajax.php:169
+msgid "Selected customers deleted."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:21
+msgid "No data received"
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:28
+msgid "Security check failed"
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:33
+#: includes/admin/ajax/class-dgap-form-ajax.php:55
+#: includes/admin/ajax/class-dgap-form-ajax.php:127
+#: includes/admin/ajax/class-dgap-form-ajax.php:144
+#: includes/common/common_functions.php:277
+msgid "Unauthorized"
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:50
+msgid "Invalid nonce"
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:64
+msgid "Form title is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:97
+msgid "Form updated successfully"
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:105
+msgid "Form saved successfully"
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:107
+msgid "Failed to save form"
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:158
+msgid "Selected forms activated."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:163
+msgid "Selected forms deactivated."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-form-ajax.php:168
+msgid "Selected forms deleted."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-locations-ajax.php:31
+msgid "No locations or action selected."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-locations-ajax.php:118
+#: includes/admin/ajax/class-dgap-locations-ajax.php:248
+#: includes/admin/ajax/class-dgap-locations-ajax.php:263
+msgid "You are not allowed to perform this action."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-locations-ajax.php:139
+msgid "Location name is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-locations-ajax.php:170
+msgid "Open and close time are required for all enabled days."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-locations-ajax.php:203
+msgid "At least one business day must be open."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:30
+msgid "No schedules or action selected."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:53
+#: includes/admin/settings/class-dgap-settings-sections.php:1245
+msgid "You do not have permission."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:70
+msgid "Location is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:76
+msgid "Service is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:82
+msgid "Staff is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:92
+msgid "Start date is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:100
+msgid "End date is required when run indefinitely is disabled."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:110
+msgid "Capacity per slot must be greater than zero."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:120
+msgid "Repeat interval must be at least 1."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:149
+msgid "Please select at least one available day."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-schedules-ajax.php:155
+msgid "Start time and end time are required for availability."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-services-ajax.php:30
+msgid "No services or action selected."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-services-ajax.php:54
+#: includes/admin/ajax/class-dgap-staff-ajax.php:57
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-services-ajax.php:76
+msgid "Service name is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-services-ajax.php:84
+msgid "Service duration is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-services-ajax.php:92
+msgid "Slot step is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-services-ajax.php:140
+#: includes/admin/ajax/class-dgap-staff-ajax.php:183
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:20
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:45
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:147
+msgid "You do not have permission to view this item."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-services-ajax.php:150
+#: includes/admin/ajax/class-dgap-staff-ajax.php:193
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:192
+msgid "You do not have permission to delete this item."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-staff-ajax.php:30
+msgid "No staff members or action selected."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-staff-ajax.php:112
+msgid "Either both phone number and dial code must be provided, or neither."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-staff-ajax.php:124
+msgid "Please enter a valid dial code (e.g. +1, +44, +91)."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-staff-ajax.php:136
+msgid "Please enter a valid phone number."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:52
+msgid "Vacation name is required."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:62
+msgid "Please select at least one staff or service."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:68
+msgid "Please select at least one date."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:77
+msgid "Please select at least one date or use a valid date format."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:84
+msgid "Invalid date entry detected."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:92
+msgid "Invalid date value."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:96
+msgid "Invalid vacation mode."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:104
+msgid "Time range is required for time-based mode."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:114
+msgid "Invalid time format."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:218
+msgid "Selected vacations activated."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:223
+msgid "Selected vacations deactivated."
+msgstr ""
+
+#: includes/admin/ajax/class-dgap-vacations-ajax.php:228
+msgid "Selected vacations deleted."
+msgstr ""
+
+#: includes/admin/class-dgap-form-renderer.php:95
+msgid "Layout not found"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:13
+msgid "Booking"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:14
+msgid "Customer"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:15
+msgid "Service & Staff"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:16
+#: includes/templates/admin/booking-slide-panel.php:94
+#: includes/templates/admin/forms/partials/summary.php:25
+#: includes/templates/admin/forms/wizard/wizard-3.php:19
+#: includes/templates/admin/forms/wizard/wizard-4.php:26
+#: includes/templates/admin/forms/wizard/wizard-5.php:12
+msgid "Date & Time"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:17
+#: includes/admin/list-tables/class-dgap-services-table.php:15
+#: includes/templates/admin/booking-slide-panel.php:119
+#: includes/templates/admin/forms/partials/summary.php:21
+#: includes/templates/admin/service-slide-panel.php:43
+msgid "Price"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:18
+#: includes/admin/list-tables/class-dgap-customers-table.php:18
+#: includes/admin/list-tables/class-dgap-forms-table.php:18
+#: includes/admin/list-tables/class-dgap-locations-table.php:15
+#: includes/admin/list-tables/class-dgap-schedules-table.php:20
+#: includes/admin/list-tables/class-dgap-services-table.php:16
+#: includes/admin/list-tables/class-dgap-staff-table.php:18
+#: includes/admin/list-tables/class-dgap-vacations-table.php:18
+#: includes/templates/admin/booking-slide-panel.php:132
+#: includes/templates/admin/customer-slide-panel.php:110
+#: includes/templates/admin/location-slide-panel.php:92
+#: includes/templates/admin/schedule-slide-panel.php:194
+#: includes/templates/admin/service-slide-panel.php:93
+#: includes/templates/admin/staff-slide-panel.php:110
+#: includes/templates/admin/vacation-slide-panel.php:87
+msgid "Status"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:19
+#: includes/admin/list-tables/class-dgap-customers-table.php:19
+#: includes/admin/list-tables/class-dgap-forms-table.php:19
+#: includes/admin/list-tables/class-dgap-locations-table.php:16
+#: includes/admin/list-tables/class-dgap-schedules-table.php:21
+#: includes/admin/list-tables/class-dgap-services-table.php:17
+#: includes/admin/list-tables/class-dgap-staff-table.php:19
+#: includes/admin/list-tables/class-dgap-vacations-table.php:19
+msgid "Actions"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:39
+msgid "Guest"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:86
+#: includes/admin/list-tables/class-dgap-bookings-table.php:91
+msgid "Change Status"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:94
+#: includes/admin/pages/bookings.php:108
+#: includes/admin/pages/bookings.php:207
+#: includes/admin/settings/notifications/template-helper.php:15
+#: includes/templates/admin/booking-slide-panel.php:136
+msgid "Pending"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:95
+#: includes/admin/pages/bookings.php:109
+#: includes/admin/pages/bookings.php:205
+#: includes/admin/settings/notifications/template-helper.php:16
+#: includes/templates/admin/booking-slide-panel.php:137
+msgid "Confirmed"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:96
+#: includes/admin/pages/bookings.php:111
+#: includes/admin/pages/bookings.php:208
+#: includes/admin/settings/notifications/template-helper.php:17
+#: includes/templates/admin/booking-slide-panel.php:139
+msgid "Cancelled"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:97
+#: includes/admin/pages/bookings.php:110
+#: includes/admin/pages/bookings.php:206
+#: includes/admin/pages/schedules.php:223
+#: includes/admin/pages/schedules.php:238
+#: includes/admin/pages/schedules.php:253
+msgid "Completed"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:102
+msgid "Notify customer"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:106
+msgid "Update"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:126
+#: includes/admin/list-tables/class-dgap-locations-table.php:58
+#: includes/admin/list-tables/class-dgap-schedules-table.php:109
+#: includes/admin/list-tables/class-dgap-services-table.php:61
+#: includes/admin/list-tables/class-dgap-staff-table.php:84
+msgid "Edit"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:127
+#: includes/admin/list-tables/class-dgap-customers-table.php:92
+#: includes/admin/list-tables/class-dgap-forms-table.php:87
+#: includes/admin/list-tables/class-dgap-locations-table.php:59
+#: includes/admin/list-tables/class-dgap-schedules-table.php:110
+#: includes/admin/list-tables/class-dgap-services-table.php:62
+#: includes/admin/list-tables/class-dgap-staff-table.php:85
+#: includes/admin/list-tables/class-dgap-vacations-table.php:123
+msgid "Delete"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-bookings-table.php:132
+msgid "No bookings match your current filter criteria."
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-customers-table.php:15
+msgid "Customer Name"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-customers-table.php:16
+#: includes/admin/list-tables/class-dgap-staff-table.php:16
+#: includes/common/common_functions.php:61
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:166
+#: includes/templates/admin/booking-slide-panel.php:64
+#: includes/templates/admin/forms/custom-fields.php:27
+msgid "Email"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-customers-table.php:17
+#: includes/admin/list-tables/class-dgap-staff-table.php:17
+#: includes/common/common_functions.php:54
+#: includes/templates/admin/forms/custom-fields.php:28
+msgid "Phone"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-customers-table.php:58
+#: includes/admin/list-tables/class-dgap-forms-table.php:54
+#: includes/admin/list-tables/class-dgap-locations-table.php:40
+#: includes/admin/list-tables/class-dgap-schedules-table.php:93
+#: includes/admin/list-tables/class-dgap-services-table.php:45
+#: includes/admin/list-tables/class-dgap-staff-table.php:66
+#: includes/admin/list-tables/class-dgap-vacations-table.php:90
+#: includes/admin/pages/customers.php:100
+#: includes/admin/pages/customers.php:144
+#: includes/admin/pages/extensions.php:299
+#: includes/admin/pages/form-builder.php:73
+#: includes/admin/pages/forms.php:93
+#: includes/admin/pages/forms.php:137
+#: includes/admin/pages/locations.php:82
+#: includes/admin/pages/locations.php:126
+#: includes/admin/pages/schedules.php:105
+#: includes/admin/pages/schedules.php:182
+#: includes/admin/pages/services.php:81
+#: includes/admin/pages/services.php:125
+#: includes/admin/pages/staff.php:82
+#: includes/admin/pages/staff.php:126
+#: includes/admin/pages/vacations.php:94
+#: includes/admin/pages/vacations.php:138
+msgid "Active"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-customers-table.php:61
+#: includes/admin/list-tables/class-dgap-forms-table.php:57
+#: includes/admin/list-tables/class-dgap-locations-table.php:43
+#: includes/admin/list-tables/class-dgap-schedules-table.php:94
+#: includes/admin/list-tables/class-dgap-services-table.php:46
+#: includes/admin/list-tables/class-dgap-staff-table.php:69
+#: includes/admin/list-tables/class-dgap-vacations-table.php:93
+#: includes/admin/pages/customers.php:101
+#: includes/admin/pages/customers.php:145
+#: includes/admin/pages/extensions.php:209
+#: includes/admin/pages/extensions.php:299
+#: includes/admin/pages/forms.php:94
+#: includes/admin/pages/forms.php:138
+#: includes/admin/pages/locations.php:83
+#: includes/admin/pages/locations.php:127
+#: includes/admin/pages/schedules.php:106
+#: includes/admin/pages/schedules.php:183
+#: includes/admin/pages/services.php:82
+#: includes/admin/pages/services.php:126
+#: includes/admin/pages/staff.php:83
+#: includes/admin/pages/staff.php:127
+#: includes/admin/pages/vacations.php:95
+#: includes/admin/pages/vacations.php:139
+msgid "Inactive"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-customers-table.php:90
+msgid "Edit Customer"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-customers-table.php:97
+msgid "No customers found matching your filters."
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-forms-table.php:15
+msgid "Form Name"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-forms-table.php:16
+#: includes/admin/pages/form-builder.php:142
+#: includes/admin/pages/form-builder.php:157
+msgid "Layout"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-forms-table.php:17
+msgid "Shortcode"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-forms-table.php:84
+#: includes/templates/admin/dashboard-overview.php:216
+msgid "Edit Form"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-forms-table.php:92
+msgid "No booking forms found matching your filters."
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-locations-table.php:13
+#: includes/admin/list-tables/class-dgap-schedules-table.php:15
+#: includes/admin/pages/form-builder.php:217
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:167
+#: includes/templates/admin/booking-slide-panel.php:25
+#: includes/templates/admin/forms/layout-1.php:14
+#: includes/templates/admin/forms/layout-2.php:19
+#: includes/templates/admin/forms/layout-3.php:17
+#: includes/templates/admin/forms/partials/summary.php:9
+#: includes/templates/admin/forms/wizard/wizard-1.php:29
+#: includes/templates/admin/forms/wizard/wizard-2.php:27
+#: includes/templates/admin/forms/wizard/wizard-3.php:48
+#: includes/templates/admin/forms/wizard/wizard-4.php:59
+#: includes/templates/admin/forms/wizard/wizard-5.php:36
+#: includes/templates/admin/schedule-slide-panel.php:22
+msgid "Location"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-locations-table.php:14
+#: includes/templates/admin/location-slide-panel.php:29
+msgid "Address"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-locations-table.php:57
+msgid "Edit Location"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-locations-table.php:64
+msgid "No locations match your current filter criteria."
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:16
+#: includes/admin/list-tables/class-dgap-staff-table.php:15
+#: includes/admin/list-tables/class-dgap-vacations-table.php:47
+#: includes/admin/pages/form-builder.php:227
+#: includes/admin/pages/vacations.php:86
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:169
+#: includes/templates/admin/booking-slide-panel.php:44
+#: includes/templates/admin/vacation-slide-panel.php:36
+msgid "Staff"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:17
+#: includes/admin/list-tables/class-dgap-services-table.php:13
+#: includes/admin/list-tables/class-dgap-vacations-table.php:46
+#: includes/admin/pages/form-builder.php:222
+#: includes/admin/pages/vacations.php:87
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:168
+#: includes/templates/admin/booking-slide-panel.php:39
+#: includes/templates/admin/dashboard-overview.php:129
+#: includes/templates/admin/forms/partials/summary.php:13
+#: includes/templates/admin/schedule-slide-panel.php:34
+#: includes/templates/admin/vacation-slide-panel.php:37
+msgid "Service"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:18
+#: includes/templates/admin/schedule-slide-panel.php:70
+msgid "Availability"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:19
+msgid "Capacity"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:59
+#: includes/templates/admin/forms/partials/calendar.php:18
+#: includes/templates/admin/location-slide-panel.php:46
+#: includes/templates/admin/schedule-slide-panel.php:80
+#: includes/templates/frontend/booking-form.php:29
+msgid "Mon"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:60
+#: includes/templates/admin/forms/partials/calendar.php:19
+#: includes/templates/admin/location-slide-panel.php:47
+#: includes/templates/admin/schedule-slide-panel.php:81
+#: includes/templates/frontend/booking-form.php:30
+msgid "Tue"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:61
+#: includes/templates/admin/forms/partials/calendar.php:20
+#: includes/templates/admin/location-slide-panel.php:48
+#: includes/templates/admin/schedule-slide-panel.php:82
+#: includes/templates/frontend/booking-form.php:31
+msgid "Wed"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:62
+#: includes/templates/admin/forms/partials/calendar.php:21
+#: includes/templates/admin/location-slide-panel.php:49
+#: includes/templates/admin/schedule-slide-panel.php:83
+#: includes/templates/frontend/booking-form.php:32
+msgid "Thu"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:63
+#: includes/templates/admin/forms/partials/calendar.php:22
+#: includes/templates/admin/location-slide-panel.php:50
+#: includes/templates/admin/schedule-slide-panel.php:84
+#: includes/templates/frontend/booking-form.php:33
+msgid "Fri"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:64
+#: includes/templates/admin/forms/partials/calendar.php:23
+#: includes/templates/admin/location-slide-panel.php:51
+#: includes/templates/admin/schedule-slide-panel.php:85
+#: includes/templates/frontend/booking-form.php:34
+msgid "Sat"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:65
+#: includes/templates/admin/forms/partials/calendar.php:24
+#: includes/templates/admin/location-slide-panel.php:52
+#: includes/templates/admin/schedule-slide-panel.php:86
+#: includes/templates/frontend/booking-form.php:35
+msgid "Sun"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:108
+msgid "Edit Schedule"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-schedules-table.php:115
+msgid "No schedules match your current filter criteria."
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-services-table.php:14
+msgid "Duration"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-services-table.php:36
+msgid "min"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-services-table.php:60
+msgid "Edit Service"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-services-table.php:67
+msgid "No services match your current filter criteria."
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-staff-table.php:83
+msgid "Edit Staff Member"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-staff-table.php:90
+msgid "No staff members match your current filter criteria."
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-vacations-table.php:15
+#: includes/templates/admin/vacation-slide-panel.php:29
+msgid "Vacation Name"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-vacations-table.php:16
+msgid "Applied On"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-vacations-table.php:17
+#: includes/templates/admin/vacation-slide-panel.php:49
+msgid "Dates"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-vacations-table.php:72
+msgid "day"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-vacations-table.php:72
+msgid "days"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-vacations-table.php:121
+msgid "Edit Vacation"
+msgstr ""
+
+#: includes/admin/list-tables/class-dgap-vacations-table.php:128
+msgid "No vacations found matching your filters."
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:9
+#: includes/admin/settings/class-dgap-settings-render.php:72
+msgid "Digent Appointments"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:10
+msgid "D Appointments"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:48
+#: includes/templates/admin/dashboard-overview.php:86
+msgid "Calendar View"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:54
+#: includes/templates/admin/dashboard-overview.php:89
+msgid "List View"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:61
+msgid "Setup"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:66
+msgid "1. Locations"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:71
+msgid "2. Services"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:76
+msgid "3. Staff Members"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:81
+msgid "4. Schedules"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:86
+msgid "5. Booking Forms"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:92
+#: includes/admin/pages/vacations.php:21
+#: includes/templates/admin/dashboard-overview.php:248
+msgid "Vacations"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:99
+msgid "Settings & Tools"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:104
+#: includes/admin/pages/customers.php:21
+msgid "Customers"
+msgstr ""
+
+#: includes/admin/menus/class-dgap-menu.php:114
+#: includes/admin/pages/extensions.php:135
+msgid "Premium Extensions"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:31
+msgid "Manage, filter, and update all customer bookings"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:42
+msgid "Export filtered bookings as CSV"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:42
+#: includes/admin/pages/calendar.php:23
+msgid "Export all bookings as CSV"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:45
+#: includes/admin/pages/customers.php:41
+msgid "Export Filtered"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:45
+#: includes/admin/pages/calendar.php:26
+#: includes/admin/pages/customers.php:41
+msgid "Export CSV"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:51
+#: includes/admin/pages/bookings.php:53
+#: includes/admin/pages/bookings.php:233
+#: includes/admin/pages/bookings.php:234
+#: includes/admin/pages/calendar.php:29
+#: includes/admin/pages/calendar.php:30
+#: includes/templates/admin/booking-slide-panel.php:8
+msgid "Add Booking"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:68
+#: includes/admin/pages/bookings.php:84
+msgid "Filter Bookings"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:69
+msgid "Filter by customer, status, location, service, staff, or date range"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:73
+#: includes/admin/pages/customers.php:65
+#: includes/admin/pages/forms.php:58
+#: includes/admin/pages/locations.php:47
+#: includes/admin/pages/schedules.php:70
+#: includes/admin/pages/services.php:46
+#: includes/admin/pages/staff.php:47
+#: includes/admin/pages/vacations.php:51
+msgid "Show Filters"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:86
+#: includes/admin/pages/customers.php:78
+#: includes/admin/pages/forms.php:71
+#: includes/admin/pages/locations.php:60
+#: includes/admin/pages/schedules.php:83
+#: includes/admin/pages/services.php:59
+#: includes/admin/pages/staff.php:60
+#: includes/admin/pages/vacations.php:64
+msgid "Hide Filters"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:101
+msgid "Search customer, service, or #ID..."
+msgstr ""
+
+#: includes/admin/pages/bookings.php:107
+#: includes/admin/pages/customers.php:99
+#: includes/admin/pages/forms.php:92
+#: includes/admin/pages/locations.php:81
+#: includes/admin/pages/schedules.php:104
+#: includes/admin/pages/services.php:80
+#: includes/admin/pages/staff.php:81
+#: includes/admin/pages/vacations.php:93
+msgid "All Statuses"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:116
+#: includes/admin/pages/bookings.php:117
+#: includes/admin/pages/schedules.php:111
+#: includes/admin/pages/schedules.php:112
+msgid "All Locations"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:127
+#: includes/admin/pages/bookings.php:128
+#: includes/admin/pages/schedules.php:122
+#: includes/admin/pages/schedules.php:123
+msgid "All Services"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:138
+#: includes/admin/pages/bookings.php:139
+#: includes/admin/pages/schedules.php:133
+#: includes/admin/pages/schedules.php:134
+msgid "All Staff"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:153
+#: includes/admin/pages/bookings.php:154
+msgid "From Date"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:161
+#: includes/admin/pages/bookings.php:162
+msgid "To Date"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:170
+#: includes/admin/pages/customers.php:109
+#: includes/admin/pages/forms.php:102
+#: includes/admin/pages/locations.php:91
+#: includes/admin/pages/schedules.php:147
+#: includes/admin/pages/services.php:90
+#: includes/admin/pages/staff.php:91
+#: includes/admin/pages/vacations.php:103
+msgid "Filter"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:175
+#: includes/admin/pages/customers.php:114
+#: includes/admin/pages/forms.php:107
+#: includes/admin/pages/locations.php:96
+#: includes/admin/pages/schedules.php:152
+#: includes/admin/pages/services.php:95
+#: includes/admin/pages/staff.php:96
+#: includes/admin/pages/vacations.php:108
+#: includes/admin/settings/class-dgap-settings-render.php:40
+msgid "Reset"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:188
+msgid "booking"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:194
+msgid "bookings selected"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:197
+#: includes/admin/pages/customers.php:136
+#: includes/admin/pages/forms.php:129
+#: includes/admin/pages/locations.php:118
+#: includes/admin/pages/schedules.php:174
+#: includes/admin/pages/services.php:117
+#: includes/admin/pages/staff.php:118
+#: includes/admin/pages/vacations.php:130
+msgid "Clear selection"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:204
+#: includes/admin/pages/customers.php:143
+#: includes/admin/pages/forms.php:136
+#: includes/admin/pages/locations.php:125
+#: includes/admin/pages/schedules.php:181
+#: includes/admin/pages/services.php:124
+#: includes/admin/pages/staff.php:125
+#: includes/admin/pages/vacations.php:137
+msgid "Change Status to..."
+msgstr ""
+
+#: includes/admin/pages/bookings.php:212
+#: includes/admin/pages/customers.php:149
+#: includes/admin/pages/forms.php:142
+#: includes/admin/pages/locations.php:131
+#: includes/admin/pages/schedules.php:187
+#: includes/admin/pages/services.php:130
+#: includes/admin/pages/staff.php:131
+#: includes/admin/pages/vacations.php:143
+msgid "Apply"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:218
+#: includes/admin/pages/customers.php:155
+#: includes/admin/pages/forms.php:148
+#: includes/admin/pages/locations.php:137
+#: includes/admin/pages/schedules.php:193
+#: includes/admin/pages/services.php:136
+#: includes/admin/pages/staff.php:137
+#: includes/admin/pages/vacations.php:149
+msgid "Delete Selected"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:231
+msgid "No Bookings Recorded Yet"
+msgstr ""
+
+#: includes/admin/pages/bookings.php:232
+msgid "When clients book appointments online or when you add them manually, they will appear here."
+msgstr ""
+
+#: includes/admin/pages/calendar.php:14
+msgid "Bookings Calendar"
+msgstr ""
+
+#: includes/admin/pages/calendar.php:15
+msgid "View and manage all customer appointments in calendar view"
+msgstr ""
+
+#: includes/admin/pages/calendar.php:41
+msgid "Loading bookings..."
+msgstr ""
+
+#: includes/admin/pages/customers.php:22
+msgid "Manage all your customers"
+msgstr ""
+
+#: includes/admin/pages/customers.php:38
+msgid "Export filtered customers as CSV"
+msgstr ""
+
+#: includes/admin/pages/customers.php:38
+msgid "Export all customers as CSV"
+msgstr ""
+
+#: includes/admin/pages/customers.php:44
+#: includes/admin/pages/customers.php:45
+#: includes/admin/pages/customers.php:170
+#: includes/admin/pages/customers.php:171
+#: includes/templates/admin/customer-slide-panel.php:10
+msgid "Add Customer"
+msgstr ""
+
+#: includes/admin/pages/customers.php:60
+#: includes/admin/pages/customers.php:76
+msgid "Filter Customers"
+msgstr ""
+
+#: includes/admin/pages/customers.php:61
+#: includes/admin/pages/forms.php:54
+msgid "Search or filter by status"
+msgstr ""
+
+#: includes/admin/pages/customers.php:93
+msgid "Search name, email, or phone..."
+msgstr ""
+
+#: includes/admin/pages/customers.php:127
+msgid "customer"
+msgstr ""
+
+#: includes/admin/pages/customers.php:133
+msgid "customers selected"
+msgstr ""
+
+#: includes/admin/pages/customers.php:168
+msgid "No Customers Registered Yet"
+msgstr ""
+
+#: includes/admin/pages/customers.php:169
+msgid "Your client database will be listed here. You can also add customer profiles manually."
+msgstr ""
+
+#: includes/admin/pages/dashboard.php:11
+msgid "Complete your setup flow and get your business ready for online appointments"
+msgstr ""
+
+#: includes/admin/pages/dashboard.php:15
+#: includes/admin/pages/extensions.php:158
+#: includes/admin/settings/class-dgap-settings-render.php:76
+msgid "Documentation"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:19
+msgid "Lifetime"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:24
+msgid "Lifetime Access"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:37
+msgid "Advanced Payments"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:38
+msgid "Accept payments via Stripe, PayPal, Razorpay. Enable deposits and invoices."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:44
+msgid "SMS & WhatsApp Notifications"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:45
+msgid "Send automated booking reminders and confirmations via SMS (Twilio) & WhatsApp."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:51
+msgid "Email Automation Suite"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:52
+msgid "Automated reminder sequences, follow-ups, and customizable email templates."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:58
+msgid "Calendar Sync"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:59
+msgid "Two-way real-time sync with Google Calendar, Outlook, and Apple iCal."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:65
+msgid "Staff & Resource Manager"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:66
+msgid "Manage multiple staff members, custom working hours, breaks, and service assignments."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:72
+msgid "Multi-Location Support"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:73
+msgid "Create multiple branches with separate schedules, addresses, and staff assignments."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:79
+msgid "Custom Booking Forms"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:80
+msgid "Create custom fields, file uploads, conditional logic, and tailored intake questions."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:86
+msgid "Dynamic & Tiered Pricing"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:87
+msgid "Apply peak-hour surge pricing, weekend rates, seasonal discounts, and group pricing."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:93
+msgid "Smart Waitlist Queue"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:94
+msgid "Automatically fill cancelled slots with priority waitlist customers."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:100
+msgid "Client Portal & Self-Service"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:101
+msgid "Allow clients to view, reschedule, cancel appointments, and access booking history."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:107
+msgid "Analytics & Reports"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:108
+msgid "Detailed revenue reports, booking trends, staff performance metrics, and CSV export."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:114
+msgid "Zapier & Webhook Integrations"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:115
+msgid "Connect with Zapier, Make, and external webhooks on any booking lifecycle event."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:137
+msgid "PREMIUM ACTIVE"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:140
+msgid "Extend digent with powerful premium features. Enable only what you need."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:148
+msgid "Back to Extensions"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:153
+msgid "License: Active"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:153
+#: includes/admin/pages/extensions.php:232
+msgid "Activate License"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:170
+msgid "All Extensions"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:175
+msgid "License & Updates"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:176
+#: includes/admin/pages/extensions.php:255
+msgid "License Active"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:176
+msgid "License Inactive"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:203
+msgid "Activate Digent Appointments Premium"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:204
+msgid "Enter your license key below to unlock 1-click automatic updates, extensions synchronization, and priority support."
+msgstr ""
+
+#: includes/admin/pages/extensions.php:240
+msgid "Get License Key"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:262
+msgid "days left"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:269
+msgid "Manage License"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:303
+msgid "PREMIUM"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:318
+msgid "Configure Settings"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:325
+msgid "Enabled"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:325
+msgid "Disabled"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:326
+msgid "Toggle extension"
+msgstr ""
+
+#: includes/admin/pages/extensions.php:338
+msgid "Upgrade Now"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:54
+msgid "Back to Forms"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:68
+msgid "Enter form title (e.g. Consultation Form)..."
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:72
+msgid "Form Active Status"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:85
+msgid "Copy shortcode"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:93
+msgid "Save Form"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:107
+msgid "Live Preview"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:111
+msgid "Preview Viewport"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:112
+msgid "Desktop View"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:115
+msgid "Mobile View"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:119
+msgid "Refresh Preview"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:128
+msgid "Loading preview..."
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:149
+msgid "Design"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:151
+#: includes/admin/pages/form-builder.php:159
+msgid "Flat"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:152
+#: includes/admin/pages/form-builder.php:164
+msgid "Wizard"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:160
+msgid "Layout 1"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:161
+msgid "Layout 2"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:162
+msgid "Layout 3"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:165
+msgid "Wizard 1 — Classic + Sidebar"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:166
+msgid "Wizard 2 — Full Width"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:167
+msgid "Wizard 3 — Top Tabs"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:168
+msgid "Wizard 4 — Vertical Steps"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:169
+msgid "Wizard 5 — Boxed Steps"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:175
+msgid "Calendar Style"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:177
+msgid "Modern (Circle)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:178
+msgid "Classic (Square Grid)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:179
+msgid "Minimal (Clean Grid)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:180
+msgid "Inline Expandable Grid"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:192
+msgid "Custom Fields"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:200
+msgid "Add Field"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:210
+msgid "Field Labels"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:216
+msgid "Location Label"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:221
+msgid "Service Label"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:226
+msgid "Staff Label"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:237
+msgid "Appearance"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:244
+#: includes/admin/settings/class-dgap-settings-render.php:11
+#: includes/admin/settings/class-dgap-settings-render.php:21
+#: includes/templates/admin/schedule-slide-panel.php:19
+msgid "General"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:247
+#: includes/admin/pages/form-builder.php:323
+msgid "Font Size"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:255
+#: includes/admin/pages/form-builder.php:331
+msgid "Font Weight"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:257
+#: includes/admin/pages/form-builder.php:333
+msgid "Default"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:258
+#: includes/admin/pages/form-builder.php:334
+msgid "Light (300)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:259
+#: includes/admin/pages/form-builder.php:335
+msgid "Normal (400)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:260
+#: includes/admin/pages/form-builder.php:336
+msgid "Medium (500)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:261
+#: includes/admin/pages/form-builder.php:337
+msgid "Semi Bold (600)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:262
+#: includes/admin/pages/form-builder.php:338
+msgid "Bold (700)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:267
+#: includes/admin/pages/form-builder.php:343
+msgid "Font Color"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:275
+msgid "Primary Color"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:283
+msgid "Background Color"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:291
+msgid "Border Radius"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:299
+msgid "Form Width"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:310
+msgid "Button Style"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:312
+msgid "Filled"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:313
+msgid "Outline"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:314
+msgid "Ghost"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:320
+msgid "Section Headings"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:360
+msgid "Security"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:368
+msgid "Enable reCAPTCHA (v2)"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:369
+msgid "Show Google reCAPTCHA v2 checkbox on this booking form."
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:382
+msgid "Enable GDPR Consent"
+msgstr ""
+
+#: includes/admin/pages/form-builder.php:383
+msgid "Show privacy consent checkbox on this booking form."
+msgstr ""
+
+#: includes/admin/pages/forms.php:32
+msgid "Manage your booking forms"
+msgstr ""
+
+#: includes/admin/pages/forms.php:38
+#: includes/admin/pages/forms.php:163
+msgid "Add Form"
+msgstr ""
+
+#: includes/admin/pages/forms.php:53
+#: includes/admin/pages/forms.php:69
+msgid "Filter Forms"
+msgstr ""
+
+#: includes/admin/pages/forms.php:86
+msgid "Search form name..."
+msgstr ""
+
+#: includes/admin/pages/forms.php:120
+msgid "form"
+msgstr ""
+
+#: includes/admin/pages/forms.php:126
+msgid "forms selected"
+msgstr ""
+
+#: includes/admin/pages/forms.php:161
+msgid "No Booking Forms Created Yet"
+msgstr ""
+
+#: includes/admin/pages/forms.php:162
+msgid "Build custom booking forms with the form builder and embed them anywhere on your site using shortcodes."
+msgstr ""
+
+#: includes/admin/pages/locations.php:21
+msgid "Locations"
+msgstr ""
+
+#: includes/admin/pages/locations.php:22
+msgid "Manage all your business locations"
+msgstr ""
+
+#: includes/admin/pages/locations.php:26
+#: includes/admin/pages/locations.php:27
+#: includes/admin/pages/locations.php:152
+#: includes/admin/pages/locations.php:153
+#: includes/admin/pages/schedules.php:220
+#: includes/common/common_functions.php:175
+#: includes/common/common_functions.php:178
+#: includes/templates/admin/location-slide-panel.php:7
+msgid "Add Location"
+msgstr ""
+
+#: includes/admin/pages/locations.php:42
+#: includes/admin/pages/locations.php:58
+msgid "Filter Locations"
+msgstr ""
+
+#: includes/admin/pages/locations.php:43
+msgid "Search by name, address, or status"
+msgstr ""
+
+#: includes/admin/pages/locations.php:75
+msgid "Search location name or address..."
+msgstr ""
+
+#: includes/admin/pages/locations.php:109
+msgid "location"
+msgstr ""
+
+#: includes/admin/pages/locations.php:115
+msgid "locations selected"
+msgstr ""
+
+#: includes/admin/pages/locations.php:150
+msgid "No Locations Added Yet"
+msgstr ""
+
+#: includes/admin/pages/locations.php:151
+msgid "Set up your physical clinic, salon, or office branches so clients know where appointments take place."
+msgstr ""
+
+#: includes/admin/pages/schedules.php:37
+msgid "Schedules"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:38
+msgid "Manage all schedules per location"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:43
+#: includes/admin/pages/schedules.php:44
+#: includes/admin/pages/schedules.php:49
+#: includes/admin/pages/schedules.php:264
+#: includes/admin/pages/schedules.php:265
+#: includes/common/common_functions.php:214
+#: includes/templates/admin/schedule-slide-panel.php:6
+msgid "Add Schedule"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:47
+msgid "Please create at least 1 Location, Service, and Staff member first"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:65
+#: includes/admin/pages/schedules.php:81
+msgid "Filter Schedules"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:66
+msgid "Filter by location, service, staff, or status"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:98
+msgid "Search location, service, or staff..."
+msgstr ""
+
+#: includes/admin/pages/schedules.php:165
+msgid "schedule"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:171
+msgid "schedules selected"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:207
+msgid "Prerequisites Required Before Creating Schedules"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:209
+msgid "Schedules connect your Staff members to specific Services and Locations. To create a working schedule, please complete the following steps first:"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:215
+msgid "1. Business Location"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:216
+#: includes/admin/pages/schedules.php:231
+#: includes/admin/pages/schedules.php:246
+msgid "%d configured"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:216
+#: includes/admin/pages/schedules.php:231
+#: includes/admin/pages/schedules.php:246
+msgid "0 configured"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:230
+msgid "2. Service"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:235
+#: includes/admin/pages/services.php:25
+#: includes/admin/pages/services.php:26
+#: includes/admin/pages/services.php:151
+#: includes/admin/pages/services.php:152
+#: includes/common/common_functions.php:190
+#: includes/templates/admin/service-slide-panel.php:9
+msgid "Add Service"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:245
+msgid "3. Staff Member"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:250
+#: includes/admin/pages/staff.php:27
+#: includes/admin/pages/staff.php:152
+msgid "Add Staff"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:262
+msgid "No Schedules Configured Yet"
+msgstr ""
+
+#: includes/admin/pages/schedules.php:263
+msgid "Configure working hours, shifts, and business availability across locations and team members."
+msgstr ""
+
+#: includes/admin/pages/services.php:21
+#: includes/templates/admin/forms/layout-1.php:18
+#: includes/templates/admin/forms/layout-2.php:23
+#: includes/templates/admin/forms/layout-3.php:21
+#: includes/templates/admin/forms/wizard/wizard-1.php:33
+#: includes/templates/admin/forms/wizard/wizard-2.php:31
+#: includes/templates/admin/forms/wizard/wizard-3.php:52
+#: includes/templates/admin/forms/wizard/wizard-4.php:63
+#: includes/templates/admin/forms/wizard/wizard-5.php:40
+msgid "Services"
+msgstr ""
+
+#: includes/admin/pages/services.php:22
+msgid "Manage booking services"
+msgstr ""
+
+#: includes/admin/pages/services.php:41
+#: includes/admin/pages/services.php:57
+msgid "Filter Services"
+msgstr ""
+
+#: includes/admin/pages/services.php:42
+msgid "Search by service name, description, or status"
+msgstr ""
+
+#: includes/admin/pages/services.php:74
+msgid "Search service name or description..."
+msgstr ""
+
+#: includes/admin/pages/services.php:108
+msgid "service"
+msgstr ""
+
+#: includes/admin/pages/services.php:114
+msgid "services selected"
+msgstr ""
+
+#: includes/admin/pages/services.php:149
+msgid "No Services Created Yet"
+msgstr ""
+
+#: includes/admin/pages/services.php:150
+msgid "Create the services, treatments, or consultation packages you offer to clients along with their duration and pricing."
+msgstr ""
+
+#: includes/admin/pages/staff.php:21
+msgid "Staff Members"
+msgstr ""
+
+#: includes/admin/pages/staff.php:22
+msgid "Manage your team members and availability"
+msgstr ""
+
+#: includes/admin/pages/staff.php:26
+#: includes/admin/pages/staff.php:153
+#: includes/common/common_functions.php:202
+#: includes/templates/admin/staff-slide-panel.php:10
+msgid "Add Staff Member"
+msgstr ""
+
+#: includes/admin/pages/staff.php:42
+#: includes/admin/pages/staff.php:58
+msgid "Filter Staff"
+msgstr ""
+
+#: includes/admin/pages/staff.php:43
+msgid "Search by name, email, phone, or status"
+msgstr ""
+
+#: includes/admin/pages/staff.php:75
+msgid "Search staff name, email, or phone..."
+msgstr ""
+
+#: includes/admin/pages/staff.php:109
+msgid "staff member"
+msgstr ""
+
+#: includes/admin/pages/staff.php:115
+msgid "staff members selected"
+msgstr ""
+
+#: includes/admin/pages/staff.php:150
+msgid "No Staff Members Added Yet"
+msgstr ""
+
+#: includes/admin/pages/staff.php:151
+msgid "Add team members, doctors, or specialists who deliver services and manage their individual availability."
+msgstr ""
+
+#: includes/admin/pages/vacations.php:22
+msgid "Manage staff vacations, holidays, and leave"
+msgstr ""
+
+#: includes/admin/pages/vacations.php:29
+#: includes/admin/pages/vacations.php:31
+#: includes/admin/pages/vacations.php:164
+#: includes/admin/pages/vacations.php:165
+#: includes/templates/admin/vacation-slide-panel.php:10
+msgid "Add Vacation"
+msgstr ""
+
+#: includes/admin/pages/vacations.php:46
+#: includes/admin/pages/vacations.php:62
+msgid "Filter Vacations"
+msgstr ""
+
+#: includes/admin/pages/vacations.php:47
+msgid "Search or filter by type and status"
+msgstr ""
+
+#: includes/admin/pages/vacations.php:79
+msgid "Search vacation name..."
+msgstr ""
+
+#: includes/admin/pages/vacations.php:85
+msgid "All Types"
+msgstr ""
+
+#: includes/admin/pages/vacations.php:121
+msgid "vacation"
+msgstr ""
+
+#: includes/admin/pages/vacations.php:127
+msgid "vacations selected"
+msgstr ""
+
+#: includes/admin/pages/vacations.php:162
+msgid "No Vacations Scheduled Yet"
+msgstr ""
+
+#: includes/admin/pages/vacations.php:163
+msgid "Manage holidays, vacations, or sick leave for staff members and specific services to prevent booking conflicts."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:13
+#: includes/templates/admin/service-slide-panel.php:75
+msgid "Booking Rules"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:14
+msgid "Display & Currency"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:15
+msgid "Limits"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:19
+msgid "Email Notifications"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:22
+msgid "Admin Email"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:23
+msgid "Employee Email"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:24
+msgid "Customer Email"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:28
+msgid "Advanced"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:30
+msgid "Google reCAPTCHA"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:31
+msgid "GDPR"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:32
+msgid "Custom CSS"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:36
+msgid "Tools"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:38
+msgid "Import / Export"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:39
+msgid "Data Cleanup"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:46
+msgid "Contact Support"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:73
+msgid "Manage appointment booking behavior and rules."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:135
+msgid "PREMIUM ADD-ON"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:137
+msgid "Upgrade to Digent Appointments Premium"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:139
+msgid "Unlock powerful automation, online payments, and client self-service tools."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:142
+msgid "Stripe, PayPal & Razorpay Payments"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:143
+msgid "2-Way Google, Outlook & Apple Sync"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:144
+msgid "SMS (Twilio) & WhatsApp Alerts"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:145
+msgid "Waitlist, Coupons & Dynamic Pricing"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:146
+msgid "Client Portal, Webhooks & REST API"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-render.php:149
+#: includes/common/common_functions.php:560
+msgid "Upgrade to Premium"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:47
+msgid "Control default appointment status and date/time formatting."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:54
+msgid "Default Booking Status"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:63
+msgid "Pending Approval"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:64
+msgid "Confirmed Automatically"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:66
+msgid "Status assigned to newly submitted customer bookings."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:72
+msgid "Time Format"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:81
+msgid "24-Hour (14:30)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:82
+msgid "12-Hour (2:30 PM)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:89
+msgid "Date Format"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:98
+msgid "WordPress Site Default"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:99
+msgid "January 15, 2026 (F j, Y)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:100
+msgid "2026-01-15 (Y-m-d)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:101
+msgid "15/01/2026 (d/m/Y)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:102
+msgid "01/15/2026 (m/d/Y)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:109
+msgid "Week Starts On"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:118
+msgid "Sunday"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:119
+msgid "Monday"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:120
+msgid "Saturday"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:127
+msgid "Show Customer Timezone"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:135
+msgid "Auto-detect and display appointment times in the customer’s local timezone."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:144
+msgid "Configure how service prices and currency symbols appear on booking forms and emails."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:151
+msgid "Currency"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:174
+msgid "Currency Symbol"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:188
+msgid "Currency Position"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:197
+msgid "Before Amount ($50.00)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:198
+msgid "After Amount (50.00$)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:199
+msgid "Before with Space ($ 50.00)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:200
+msgid "After with Space (50.00 $)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:207
+msgid "Hide Price on Booking Form"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:215
+msgid "Hide service prices from the public booking form."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:221
+msgid "Hide Decimals in Price"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:229
+msgid "Display whole numbers like $50 instead of $50.00 when decimals are .00."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:238
+msgid "Prevent last-minute bookings, set buffer times, and control slot capacity."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:245
+msgid "Minimum Lead Time (Minutes)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:255
+msgid "Minimum notice required before an appointment start time (e.g. 60 = 1 hour)."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:261
+msgid "Maximum Advance Booking (Days)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:271
+msgid "How many days in advance customers can book (0 = unlimited)."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:277
+msgid "Cancellation Cutoff (Minutes)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:287
+msgid "How far in advance a customer can cancel an appointment."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:293
+msgid "Default Buffer Before (Minutes)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:303
+msgid "Preparation time blocked before each appointment."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:309
+msgid "Default Buffer After (Minutes)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:319
+msgid "Cleanup/cooldown time blocked after each appointment."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:325
+msgid "Max Active Bookings per Customer"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:335
+msgid "Set 0 for unlimited active bookings per customer."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:341
+msgid "Allow Multiple Bookings in Same Slot"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:349
+msgid "Allow overlapping bookings for the same schedule slot when enabled."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:365
+msgid "Protect your public booking forms from spam submissions. Choose v2 to toggle reCaptcha per form in the Form Builder, or v3 for automatic site-wide protection across all booking forms."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:387
+msgid "Google reCaptcha"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:400
+msgid "reCaptcha Version"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:410
+msgid "reCaptcha v2 (Checkbox)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:411
+msgid "reCaptcha v3 (Invisible)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:418
+msgid "Site Key"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:428
+msgid "Enter Google reCaptcha Site Key"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:434
+msgid "Secret Key"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:444
+msgid "Enter Google reCaptcha Secret Key"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:455
+msgid "Add a privacy consent checkbox and Privacy Policy link to your public booking forms."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:477
+msgid "Show Privacy Consent Checkbox"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:490
+msgid "Consent Checkbox Label"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:498
+#: includes/frontend/shortcodes/class-dgap-booking-shortcode.php:68
+msgid "I agree to the storage and handling of my data by this website."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:504
+msgid "Privacy Policy URL"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:522
+msgid "Customize the appearance of your public booking forms with custom CSS."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:529
+msgid "Disable Plugin Frontend CSS"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:537
+msgid "Enable only if you want to write your own complete CSS from scratch (below or in your theme). Leave this OFF if you just want to add minor custom CSS overrides."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:543
+msgid "Custom Frontend CSS"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:569
+msgid "CSS Editor"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:572
+msgid "Quick selectors:"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:577
+msgid "Clear"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:581
+msgid "Press Ctrl+Space for CSS autocomplete. Applied to all public booking forms."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:655
+msgid "Please select a JSON file to import."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:656
+msgid "File upload failed. Please try again."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:657
+msgid "The uploaded file exceeds the 2 MB limit."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:658
+msgid "Invalid file type. Only .json files are allowed."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:659
+msgid "The uploaded file does not contain valid JSON."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:660
+msgid "No valid Digent Appointments settings were found in the uploaded JSON file."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:672
+msgid "Export Settings (JSON)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:673
+msgid "Download a JSON backup of all Digent Appointments settings to migrate or restore later."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:677
+msgid "Export JSON"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:683
+msgid "Import Settings (JSON)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:684
+msgid "Upload a previously exported Digent Appointments JSON settings file (max 2 MB)."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:692
+msgid "Import Settings"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:709
+msgid "Flush Plugin Object Cache"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:710
+msgid "Clear cached locations, services, staff, schedules, customers, and booking forms."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:714
+msgid "Flush Cache"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:720
+msgid "Verify & Repair Database Tables"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:721
+msgid "Re-run the database schema installer to create any missing tables or columns safely."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:725
+msgid "Repair Tables"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:731
+msgid "Auto-Delete Old Bookings (Days)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:732
+msgid "Automatically purge completed and cancelled bookings older than N days via daily WP-Cron (0 = disabled)."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:750
+msgid "Delete All Data on Uninstall"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:751
+msgid "Warning: When enabled, deleting the Digent Appointments plugin will permanently erase all bookings, locations, services, staff, customers, forms, and settings."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:784
+msgid "Reset All Settings to Default"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:785
+msgid "Reset all plugin settings back to their default values. Your bookings, services, staff, locations, customers, and booking forms will not be affected."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:789
+msgid "Reset All Settings"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:790
+msgid "Are you sure you want to reset all plugin settings back to their default values? Your bookings, services, staff, locations, customers, and booking forms will stay intact."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:791
+msgid "Yes, Reset Settings"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:793
+msgid "Reset Settings"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:799
+msgid "Full Factory Reset (Fresh Install State)"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:800
+msgid "Permanently delete all bookings, locations, services, staff, schedules, vacations, customers, booking forms, and settings, restoring the plugin to its exact first-time install state."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:804
+msgid "Confirm Full Factory Reset"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:805
+msgid "This will permanently erase ALL Digent Appointments data (bookings, locations, services, staff, schedules, vacations, customers, forms, and settings) and reset the plugin to a fresh install state. This action cannot be undone."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:806
+msgid "Yes, Factory Reset"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:808
+msgid "Full Factory Reset"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:832
+#: includes/templates/admin/confirm-modal.php:12
+msgid "Confirm Action"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:842
+#: includes/templates/admin/confirm-modal.php:20
+msgid "Confirm & Proceed"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:853
+msgid "Processing..."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1157
+msgid "Direct Support Email"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1159
+msgid "Need immediate help or prefer email? Reach us anytime at"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1167
+msgid "Ticket Subject"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1168
+msgid "Issue Subject"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1172
+#: includes/admin/settings/class-dgap-settings-sections.php:1173
+msgid "Your Email"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1177
+msgid "Detailed Description"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1178
+msgid "Describe your issue..."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1185
+#: includes/admin/settings/class-dgap-settings-sections.php:1230
+msgid "Submit Ticket"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1204
+#: includes/admin/settings/class-dgap-settings-sections.php:1253
+msgid "All fields are required."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1209
+msgid "Sending..."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1219
+#: includes/admin/settings/class-dgap-settings-sections.php:1298
+msgid "Your support ticket has been submitted successfully."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1223
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1227
+msgid "Request failed. Please try again."
+msgstr ""
+
+#. translators: %s: Ticket subject
+#: includes/admin/settings/class-dgap-settings-sections.php:1264
+msgid "Digent Appointments Support Ticket - %s"
+msgstr ""
+
+#: includes/admin/settings/class-dgap-settings-sections.php:1301
+msgid "Unable to send email. Please verify your server mail settings or email us directly at support@digentappointments.com."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:17
+msgid "Enable Email Notifications"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:30
+msgid "Admin Notification Email(s)"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:40
+msgid "Comma-separated email addresses for admin booking alerts."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:46
+msgid "From Name"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:55
+msgid "Leave blank to use your site title."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:61
+msgid "From Email"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:77
+msgid "Reply-To Email(s)"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:86
+msgid "Optional. Comma-separated email addresses where replies should go."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:92
+msgid "Reminder Timing"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:103
+msgid "Attach .ics Calendar Invite"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:112
+msgid "Attach an .ics calendar file to confirmed customer emails."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:118
+msgid "Retry Failed Emails"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:130
+msgid "Number of automatic retry attempts if email delivery fails (0-5)."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:148
+msgid "These settings apply to all email notifications globally."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:173
+msgid "1 Hour Before Appointment"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:174
+msgid "2 Hours Before Appointment"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:175
+msgid "6 Hours Before Appointment"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:176
+msgid "12 Hours Before Appointment"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:177
+msgid "24 Hours Before Appointment"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:178
+msgid "48 Hours Before Appointment"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:179
+msgid "Custom Time"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:192
+msgid "Minutes Before"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:193
+msgid "Hours Before"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:194
+msgid "Days Before"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:198
+msgid "How far in advance automated reminder emails should be sent."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:215
+#: includes/admin/settings/notifications/general.php:223
+msgid "Send Test Email"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:216
+msgid "Verify your From Name, From Email, Reply-To, and WordPress/SMTP mail delivery."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:220
+msgid "recipient@example.com"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:250
+msgid "Failed to send test email."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:254
+msgid "Request failed."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:290
+msgid "Test Notification Email"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:291
+msgid "Your Digent Appointments email configuration is working properly!"
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:295
+msgid "Test email sent to %s."
+msgstr ""
+
+#: includes/admin/settings/notifications/general.php:298
+msgid "WordPress could not send the test email. Check your SMTP/mail server settings."
+msgstr ""
+
+#: includes/admin/settings/notifications/template-helper.php:14
+#: includes/templates/admin/booking-slide-panel.php:135
+msgid "Reserved"
+msgstr ""
+
+#: includes/admin/settings/notifications/template-helper.php:18
+msgid "Reminder"
+msgstr ""
+
+#: includes/admin/settings/notifications/template-helper.php:48
+msgid "Email Templates"
+msgstr ""
+
+#: includes/admin/settings/notifications/template-helper.php:49
+msgid "Available Tags (click to copy):"
+msgstr ""
+
+#: includes/admin/settings/notifications/template-helper.php:76
+msgid "Email Subject"
+msgstr ""
+
+#: includes/common/common_functions.php:47
+msgid "Name"
+msgstr ""
+
+#: includes/common/common_functions.php:68
+#: includes/templates/admin/customer-slide-panel.php:100
+#: includes/templates/admin/service-slide-panel.php:34
+#: includes/templates/admin/staff-slide-panel.php:100
+msgid "Description"
+msgstr ""
+
+#: includes/common/common_functions.php:119
+msgid "No items found"
+msgstr ""
+
+#: includes/common/common_functions.php:120
+msgid "Get started by creating your first record."
+msgstr ""
+
+#: includes/common/common_functions.php:121
+msgid "Add New"
+msgstr ""
+
+#: includes/common/common_functions.php:176
+msgid "Set up your clinic, salon, branch, or virtual office."
+msgstr ""
+
+#: includes/common/common_functions.php:187
+msgid "Create Services"
+msgstr ""
+
+#: includes/common/common_functions.php:188
+msgid "Define services with duration, buffer time & pricing."
+msgstr ""
+
+#: includes/common/common_functions.php:199
+msgid "Add Staff Members"
+msgstr ""
+
+#: includes/common/common_functions.php:200
+msgid "Add team members or specialists who provide services."
+msgstr ""
+
+#: includes/common/common_functions.php:211
+msgid "Configure Schedules"
+msgstr ""
+
+#: includes/common/common_functions.php:212
+msgid "Link staff & services to locations with shift hours & time slots."
+msgstr ""
+
+#: includes/common/common_functions.php:223
+msgid "Publish Booking Form"
+msgstr ""
+
+#: includes/common/common_functions.php:224
+msgid "Build your customer form & embed it on your website with shortcode."
+msgstr ""
+
+#: includes/common/common_functions.php:226
+msgid "Create Form"
+msgstr ""
+
+#: includes/common/common_functions.php:455
+#: includes/templates/admin/vacation-slide-panel.php:72
+msgid "Full Day"
+msgstr ""
+
+#: includes/common/common_functions.php:496
+#: includes/templates/admin/dashboard-overview.php:267
+msgid "Off Today"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:50
+msgid "Invalid location"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:68
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:92
+msgid "Invalid data"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:103
+msgid "No schedule found"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:109
+msgid "Service not found"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:165
+#: includes/templates/admin/booking-slide-panel.php:54
+#: includes/templates/admin/customer-slide-panel.php:59
+#: includes/templates/admin/staff-slide-panel.php:59
+#: includes/templates/frontend/booking-form.php:50
+msgid "First Name"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:170
+#: includes/templates/admin/booking-slide-panel.php:99
+msgid "Booking Date"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:171
+msgid "Start Time"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:172
+msgid "End Time"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:176
+msgid "Missing required fields: "
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:181
+msgid "Invalid email address"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:186
+msgid "Form ID is missing"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:199
+msgid "Please accept the privacy consent to proceed."
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:258
+msgid "Booking confirmed"
+msgstr ""
+
+#: includes/frontend/ajax/class-dgap-frontend-booking-ajax.php:258
+msgid "Booking submitted and pending approval"
+msgstr ""
+
+#: includes/frontend/shortcodes/class-dgap-booking-shortcode.php:25
+msgid "No form ID specified."
+msgstr ""
+
+#: includes/frontend/shortcodes/class-dgap-booking-shortcode.php:58
+msgid "Form not found."
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:65
+msgid "This email action link is invalid or has expired."
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:66
+msgid "Invalid Link"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:74
+msgid "Security verification failed for this action link."
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:75
+msgid "Verification Failed"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:83
+msgid "Booking not found."
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:84
+msgid "Not Found"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:92
+msgid "Back to Website"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:92
+msgid "View Bookings in Admin"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:98
+msgid "Already Updated"
+msgstr ""
+
+#. translators: 1: booking ID, 2: status
+#: includes/notifications/class-dgap-email-notification.php:100
+msgid "Booking #%1$d is already %2$s."
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:104
+msgid "Booking Status"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:112
+msgid "Could not update booking status. Please try again later."
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:113
+msgid "Update Failed"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:132
+msgid "Booking Confirmed"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:132
+msgid "Booking Cancelled"
+msgstr ""
+
+#. translators: 1: booking ID, 2: status
+#: includes/notifications/class-dgap-email-notification.php:134
+msgid "Booking #%1$d has been marked as %2$s."
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:138
+msgid "Booking Updated"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:488
+msgid "Appointment Confirmed"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:489
+#: includes/notifications/class-dgap-email-notification.php:503
+msgid "Appointment Pending"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:490
+#: includes/notifications/class-dgap-email-notification.php:504
+msgid "Appointment Reserved"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:491
+#: includes/notifications/class-dgap-email-notification.php:505
+msgid "Appointment Cancelled"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:492
+#: includes/notifications/class-dgap-email-notification.php:506
+msgid "Appointment Reminder"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:495
+msgid "Your Appointment Confirmed"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:496
+msgid "Your Appointment Pending"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:497
+msgid "Your Appointment Reserved"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:498
+msgid "Your Appointment Cancelled"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:499
+msgid "Your Appointment Reminder"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:502
+msgid "New Appointment Confirmed"
+msgstr ""
+
+#: includes/notifications/class-dgap-email-notification.php:510
+msgid "Appointment Update"
+msgstr ""
+
+#: includes/repositories/class-dgap-booking-repo.php:191
+msgid "Failed to insert booking."
+msgstr ""
+
+#: includes/repositories/class-dgap-booking-repo.php:215
+msgid "Failed to update booking."
+msgstr ""
+
+#: includes/repositories/class-dgap-booking-repo.php:238
+msgid "Failed to delete booking."
+msgstr ""
+
+#: includes/repositories/class-dgap-booking-repo.php:432
+msgid "Slot already booked"
+msgstr ""
+
+#: includes/repositories/class-dgap-customer-repo.php:163
+msgid "Customer with this email already exists."
+msgstr ""
+
+#: includes/repositories/class-dgap-customer-repo.php:185
+msgid "Failed to insert customer."
+msgstr ""
+
+#: includes/repositories/class-dgap-customer-repo.php:201
+msgid "Email already exists."
+msgstr ""
+
+#: includes/repositories/class-dgap-customer-repo.php:224
+msgid "Failed to update customer."
+msgstr ""
+
+#: includes/repositories/class-dgap-customer-repo.php:248
+msgid "Failed to delete customer."
+msgstr ""
+
+#: includes/repositories/class-dgap-form-repo.php:147
+msgid "Failed to insert forms."
+msgstr ""
+
+#: includes/repositories/class-dgap-form-repo.php:171
+msgid "Failed to update form."
+msgstr ""
+
+#: includes/repositories/class-dgap-form-repo.php:195
+msgid "Failed to delete form."
+msgstr ""
+
+#: includes/repositories/class-dgap-location-repo.php:102
+msgid "Failed to insert location."
+msgstr ""
+
+#: includes/repositories/class-dgap-location-repo.php:127
+msgid "Failed to update location."
+msgstr ""
+
+#: includes/repositories/class-dgap-location-repo.php:151
+msgid "Failed to delete location."
+msgstr ""
+
+#: includes/repositories/class-dgap-schedule-repo.php:143
+msgid "Failed to insert schedule."
+msgstr ""
+
+#: includes/repositories/class-dgap-schedule-repo.php:180
+msgid "Failed to update schedule."
+msgstr ""
+
+#: includes/repositories/class-dgap-schedule-repo.php:204
+msgid "Failed to delete schedule."
+msgstr ""
+
+#: includes/repositories/class-dgap-service-repo.php:125
+msgid "Failed to insert service."
+msgstr ""
+
+#: includes/repositories/class-dgap-service-repo.php:149
+msgid "Failed to update service."
+msgstr ""
+
+#: includes/repositories/class-dgap-service-repo.php:174
+msgid "Failed to delete service."
+msgstr ""
+
+#: includes/repositories/class-dgap-staff-repo.php:131
+msgid "Failed to insert staff."
+msgstr ""
+
+#: includes/repositories/class-dgap-staff-repo.php:174
+msgid "Failed to update staff."
+msgstr ""
+
+#: includes/repositories/class-dgap-staff-repo.php:198
+msgid "Failed to delete staff."
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:22
+msgid "Booking Details"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:27
+#: includes/templates/admin/forms/partials/location.php:10
+#: includes/templates/admin/schedule-slide-panel.php:24
+msgid "-- Select Location --"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:51
+#: includes/templates/admin/customer-slide-panel.php:27
+msgid "Customer Details"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:59
+#: includes/templates/admin/customer-slide-panel.php:64
+#: includes/templates/admin/staff-slide-panel.php:64
+#: includes/templates/frontend/booking-form.php:55
+msgid "Last Name"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:70
+#: includes/templates/admin/customer-slide-panel.php:75
+#: includes/templates/admin/staff-slide-panel.php:75
+#: includes/templates/frontend/booking-form.php:65
+msgid "Phone Number"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:85
+#: includes/templates/admin/customer-slide-panel.php:91
+#: includes/templates/admin/staff-slide-panel.php:91
+msgid "Phone number"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:104
+msgid "Time Slot"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:107
+msgid "Select Slot"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:116
+msgid "Pricing"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:126
+msgid "Booking Notes"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:138
+msgid "Abandoned"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:151
+#: includes/templates/admin/confirm-modal.php:17
+#: includes/templates/admin/customer-slide-panel.php:127
+#: includes/templates/admin/location-slide-panel.php:108
+#: includes/templates/admin/schedule-slide-panel.php:209
+#: includes/templates/admin/service-slide-panel.php:110
+#: includes/templates/admin/staff-slide-panel.php:127
+#: includes/templates/admin/vacation-slide-panel.php:103
+#: includes/templates/frontend/booking-form.php:108
+msgid "Cancel"
+msgstr ""
+
+#: includes/templates/admin/booking-slide-panel.php:155
+msgid "Save Booking"
+msgstr ""
+
+#: includes/templates/admin/customer-slide-panel.php:32
+#: includes/templates/admin/staff-slide-panel.php:32
+msgid "Profile Image"
+msgstr ""
+
+#: includes/templates/admin/customer-slide-panel.php:47
+#: includes/templates/admin/staff-slide-panel.php:47
+msgid "Upload Image"
+msgstr ""
+
+#: includes/templates/admin/customer-slide-panel.php:51
+#: includes/templates/admin/forms/custom-fields.php:40
+#: includes/templates/admin/staff-slide-panel.php:51
+msgid "Remove"
+msgstr ""
+
+#: includes/templates/admin/customer-slide-panel.php:69
+#: includes/templates/admin/staff-slide-panel.php:70
+#: includes/templates/frontend/booking-form.php:60
+msgid "Email Address"
+msgstr ""
+
+#: includes/templates/admin/customer-slide-panel.php:103
+#: includes/templates/admin/staff-slide-panel.php:103
+msgid "Bio / Notes"
+msgstr ""
+
+#: includes/templates/admin/customer-slide-panel.php:131
+msgid "Save Customer"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:35
+msgid "Today's Appointments"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:45
+msgid "Pending Approvals"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:55
+msgid "Monthly Revenue"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:65
+msgid "Active Customers"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:81
+msgid "Upcoming Appointments"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:82
+msgid "Next scheduled bookings from today onwards"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:98
+msgid "Guest Customer"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:102
+#: includes/templates/admin/dashboard-overview.php:299
+msgid "Today"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:104
+#: includes/templates/admin/dashboard-overview.php:301
+msgid "Tomorrow"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:149
+msgid "No upcoming appointments scheduled yet."
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:151
+msgid "Open Calendar"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:162
+msgid "Published Booking Forms"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:163
+msgid "Copy shortcodes and paste them on any WordPress page"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:167
+msgid "New Form"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:214
+msgid "Copy"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:226
+msgid "No booking forms created yet."
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:228
+msgid "Create Booking Form"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:244
+msgid "Staff On-Duty Today"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:263
+msgid "On Vacation"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:275
+msgid "No active staff members found."
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:285
+msgid "Upcoming Vacations"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:286
+msgid "Scheduled staff & service vacations"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:289
+msgid "Add"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:317
+msgid "%d days"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:326
+msgid "No upcoming vacations scheduled."
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:336
+msgid "Popular Services"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:337
+msgid "Most booked offerings"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:340
+#: includes/templates/admin/dashboard-stepper.php:111
+msgid "Manage"
+msgstr ""
+
+#: includes/templates/admin/dashboard-overview.php:355
+msgid "%d booking"
+msgid_plural "%d bookings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/templates/admin/dashboard-overview.php:366
+msgid "No services configured yet."
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:20
+msgid "Setup Complete (5/5)"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:20
+msgid "Booking Setup Guide"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:25
+msgid "Show Setup Guide"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:41
+msgid "🎉 Your Booking System is Ready!"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:41
+msgid "Set Up Digent Appointments"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:44
+msgid "All 5 prerequisites are configured. Clients can now book appointments online. Just place form shortcode on pages where you want to accept bookings."
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:44
+msgid "Follow these 5 essential steps in order to configure locations, services, staff, schedules, and booking forms."
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:54
+msgid "Minimize Guide"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:93
+msgid "%d Added"
+msgid_plural "%d Added"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/templates/admin/dashboard-stepper.php:97
+msgid "Prerequisite Needed"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:101
+#: includes/templates/admin/forms/custom-fields.php:36
+msgid "Required"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:114
+msgid "Complete Location, Service, and Staff steps first"
+msgstr ""
+
+#: includes/templates/admin/dashboard-stepper.php:116
+msgid "Locked"
+msgstr ""
+
+#: includes/templates/admin/forms/custom-fields.php:23
+msgid "Field Label"
+msgstr ""
+
+#: includes/templates/admin/forms/custom-fields.php:26
+msgid "Text"
+msgstr ""
+
+#: includes/templates/admin/forms/custom-fields.php:29
+msgid "Textarea"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:11
+#: includes/templates/admin/forms/layout-2.php:16
+#: includes/templates/admin/forms/layout-3.php:14
+#: includes/templates/admin/forms/wizard/wizard-1.php:26
+#: includes/templates/admin/forms/wizard/wizard-2.php:24
+#: includes/templates/admin/forms/wizard/wizard-3.php:45
+#: includes/templates/admin/forms/wizard/wizard-4.php:56
+#: includes/templates/admin/forms/wizard/wizard-5.php:33
+msgid "Choose Appointment"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:22
+#: includes/templates/admin/forms/layout-2.php:27
+#: includes/templates/admin/forms/layout-3.php:25
+#: includes/templates/admin/forms/partials/summary.php:17
+#: includes/templates/admin/forms/wizard/wizard-1.php:37
+#: includes/templates/admin/forms/wizard/wizard-2.php:35
+#: includes/templates/admin/forms/wizard/wizard-3.php:56
+#: includes/templates/admin/forms/wizard/wizard-4.php:67
+#: includes/templates/admin/forms/wizard/wizard-5.php:44
+msgid "Worker"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:30
+#: includes/templates/admin/forms/layout-2.php:34
+#: includes/templates/admin/forms/layout-3.php:32
+#: includes/templates/admin/forms/wizard/wizard-1.php:44
+#: includes/templates/admin/forms/wizard/wizard-2.php:42
+#: includes/templates/admin/forms/wizard/wizard-3.php:62
+#: includes/templates/admin/forms/wizard/wizard-4.php:73
+#: includes/templates/admin/forms/wizard/wizard-5.php:50
+msgid "Select Date & Time"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:39
+#: includes/templates/admin/forms/layout-2.php:45
+#: includes/templates/admin/forms/layout-3.php:39
+#: includes/templates/admin/forms/wizard/wizard-1.php:52
+#: includes/templates/admin/forms/wizard/wizard-2.php:50
+#: includes/templates/admin/forms/wizard/wizard-3.php:69
+#: includes/templates/admin/forms/wizard/wizard-4.php:80
+#: includes/templates/admin/forms/wizard/wizard-5.php:57
+msgid "Personal Information"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:42
+#: includes/templates/admin/forms/layout-2.php:46
+#: includes/templates/admin/forms/layout-3.php:40
+#: includes/templates/admin/forms/wizard/wizard-1.php:53
+#: includes/templates/admin/forms/wizard/wizard-2.php:51
+#: includes/templates/admin/forms/wizard/wizard-3.php:70
+#: includes/templates/admin/forms/wizard/wizard-4.php:81
+#: includes/templates/admin/forms/wizard/wizard-5.php:58
+msgid "Fields with * are required"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:50
+#: includes/templates/admin/forms/layout-2.php:54
+#: includes/templates/admin/forms/layout-3.php:48
+#: includes/templates/frontend/booking-form.php:93
+msgid "Booking Overview"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:59
+#: includes/templates/admin/forms/layout-2.php:61
+#: includes/templates/admin/forms/layout-3.php:52
+#: includes/templates/admin/forms/wizard/wizard-1.php:63
+#: includes/templates/admin/forms/wizard/wizard-2.php:66
+#: includes/templates/admin/forms/wizard/wizard-3.php:80
+#: includes/templates/admin/forms/wizard/wizard-4.php:91
+#: includes/templates/admin/forms/wizard/wizard-5.php:68
+msgid "I agree with terms and conditions"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:63
+#: includes/templates/admin/forms/wizard/wizard-1.php:66
+#: includes/templates/admin/forms/wizard/wizard-2.php:69
+#: includes/templates/admin/forms/wizard/wizard-3.php:83
+#: includes/templates/admin/forms/wizard/wizard-4.php:94
+#: includes/templates/admin/forms/wizard/wizard-5.php:71
+msgid "I'm not a robot"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-1.php:67
+#: includes/templates/admin/forms/layout-2.php:69
+#: includes/templates/admin/forms/layout-3.php:60
+#: includes/templates/admin/forms/wizard/wizard-1.php:79
+#: includes/templates/admin/forms/wizard/wizard-2.php:82
+#: includes/templates/admin/forms/wizard/wizard-3.php:91
+#: includes/templates/admin/forms/wizard/wizard-4.php:101
+#: includes/templates/admin/forms/wizard/wizard-5.php:78
+msgid "Submit"
+msgstr ""
+
+#: includes/templates/admin/forms/layout-2.php:65
+#: includes/templates/admin/forms/layout-3.php:56
+msgid "I am not a robot"
+msgstr ""
+
+#: includes/templates/admin/forms/partials/service.php:10
+#: includes/templates/admin/schedule-slide-panel.php:36
+msgid "-- Select Service --"
+msgstr ""
+
+#: includes/templates/admin/forms/partials/worker.php:10
+msgid "-- Select Worker --"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:12
+#: includes/templates/admin/forms/wizard/wizard-2.php:12
+msgid "1"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:13
+#: includes/templates/admin/forms/wizard/wizard-2.php:13
+msgid "2"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:14
+#: includes/templates/admin/forms/wizard/wizard-2.php:14
+msgid "3"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:15
+#: includes/templates/admin/forms/wizard/wizard-2.php:15
+msgid "4"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:27
+#: includes/templates/admin/forms/wizard/wizard-2.php:25
+#: includes/templates/admin/forms/wizard/wizard-3.php:46
+#: includes/templates/admin/forms/wizard/wizard-4.php:57
+#: includes/templates/admin/forms/wizard/wizard-5.php:34
+msgid "Select your location, service and staff"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:45
+#: includes/templates/admin/forms/wizard/wizard-2.php:43
+#: includes/templates/admin/forms/wizard/wizard-3.php:63
+#: includes/templates/admin/forms/wizard/wizard-4.php:74
+#: includes/templates/admin/forms/wizard/wizard-5.php:51
+msgid "Pick a date and available slot"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:59
+#: includes/templates/admin/forms/wizard/wizard-2.php:62
+#: includes/templates/admin/forms/wizard/wizard-3.php:75
+#: includes/templates/admin/forms/wizard/wizard-4.php:86
+#: includes/templates/admin/forms/wizard/wizard-5.php:63
+msgid "Confirm Booking"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:60
+msgid "Review your booking details before submitting"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:73
+#: includes/templates/admin/forms/wizard/wizard-2.php:76
+#: includes/templates/admin/forms/wizard/wizard-3.php:89
+#: includes/templates/admin/forms/wizard/wizard-4.php:99
+#: includes/templates/admin/forms/wizard/wizard-5.php:76
+msgid "Back"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:76
+#: includes/templates/admin/forms/wizard/wizard-2.php:79
+#: includes/templates/admin/forms/wizard/wizard-3.php:90
+#: includes/templates/admin/forms/wizard/wizard-4.php:100
+#: includes/templates/admin/forms/wizard/wizard-5.php:77
+msgid "Next"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-1.php:87
+msgid "Summary"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-2.php:55
+msgid "Your Booking"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-2.php:63
+msgid "Review your details before submitting"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-3.php:11
+#: includes/templates/admin/forms/wizard/wizard-4.php:16
+#: includes/templates/admin/forms/wizard/wizard-5.php:11
+msgid "Appointment"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-3.php:12
+#: includes/templates/admin/forms/wizard/wizard-4.php:17
+msgid "Location & Service"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-3.php:20
+#: includes/templates/admin/forms/wizard/wizard-4.php:27
+msgid "Pick a slot"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-3.php:27
+#: includes/templates/admin/forms/wizard/wizard-4.php:36
+msgid "Your Details"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-3.php:28
+#: includes/templates/admin/forms/wizard/wizard-4.php:37
+msgid "Personal info"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-3.php:35
+#: includes/templates/admin/forms/wizard/wizard-4.php:46
+#: includes/templates/admin/forms/wizard/wizard-5.php:14
+msgid "Confirm"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-3.php:36
+#: includes/templates/admin/forms/wizard/wizard-4.php:47
+msgid "Review & submit"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-3.php:76
+#: includes/templates/admin/forms/wizard/wizard-4.php:87
+#: includes/templates/admin/forms/wizard/wizard-5.php:64
+msgid "Review your booking details"
+msgstr ""
+
+#: includes/templates/admin/forms/wizard/wizard-5.php:13
+msgid "Details"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:21
+#: includes/templates/admin/service-slide-panel.php:26
+#: includes/templates/admin/staff-slide-panel.php:27
+#: includes/templates/admin/vacation-slide-panel.php:26
+msgid "General Information"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:24
+msgid "Location Name"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:38
+msgid "Business Hours"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:39
+msgid "Set availability for this location"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:67
+msgid "Opens At"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:72
+msgid "Closes At"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:79
+msgid "Break Time"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:84
+msgid "Add Break"
+msgstr ""
+
+#: includes/templates/admin/location-slide-panel.php:112
+msgid "Save Location"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:46
+msgid "Staff Member"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:48
+msgid "-- Select Staff --"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:72
+msgid "When this schedule is available"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:110
+msgid "Start Date"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:116
+msgid "End Date"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:117
+msgid "(optional)"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:127
+msgid "Run indefinitely (no end date)"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:138
+msgid "Starts At"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:143
+msgid "Ends At"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:150
+msgid "Capacity per Slot"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:158
+msgid "Maximum bookings allowed per time slot"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:167
+msgid "Repeat"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:170
+msgid "Repeat Every"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:180
+msgid "week(s)"
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:184
+msgid "1 = weekly, 2 = every 2 weeks, 3 = every 3rd week, etc."
+msgstr ""
+
+#: includes/templates/admin/schedule-slide-panel.php:212
+msgid "Save Schedule"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:29
+msgid "Service Name"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:38
+msgid "Describe this service"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:50
+msgid "Duration & Timing"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:53
+msgid "Duration (minutes)"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:58
+msgid "Slot Step (minutes)"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:63
+msgid "Buffer Before (minutes)"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:68
+msgid "Buffer After (minutes)"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:78
+msgid "Daily Limit"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:83
+msgid "Advanced Booking (days)"
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:86
+msgid "Users can book only after this many days."
+msgstr ""
+
+#: includes/templates/admin/service-slide-panel.php:114
+msgid "Save Service"
+msgstr ""
+
+#: includes/templates/admin/staff-slide-panel.php:131
+msgid "Save Staff"
+msgstr ""
+
+#: includes/templates/admin/vacation-slide-panel.php:34
+msgid "Type"
+msgstr ""
+
+#: includes/templates/admin/vacation-slide-panel.php:42
+msgid "Select"
+msgstr ""
+
+#: includes/templates/admin/vacation-slide-panel.php:67
+#: includes/templates/admin/vacation-slide-panel.php:70
+msgid "Mode"
+msgstr ""
+
+#: includes/templates/admin/vacation-slide-panel.php:73
+msgid "Time Based"
+msgstr ""
+
+#: includes/templates/admin/vacation-slide-panel.php:107
+msgid "Save Vacation"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:8
+msgid "Select Location"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:12
+msgid "Select Service"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:16
+msgid "Select Staff"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:47
+msgid "Your Information"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:71
+msgid "Enter 10-digit number"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:77
+msgid "Notes"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:96
+msgid "Location:"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:97
+msgid "Service:"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:98
+msgid "Staff:"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:99
+msgid "Date:"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:100
+msgid "Time:"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:101
+msgid "Name:"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:102
+msgid "Email:"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:103
+msgid "Notes:"
+msgstr ""
+
+#: includes/templates/frontend/booking-form.php:112
+msgid "Book Now"
+msgstr ""

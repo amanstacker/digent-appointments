@@ -124,8 +124,15 @@ jQuery(function ($) {
             switch ( field.type ) {
                 case 'text':
                 case 'email':
+                    inputHtml = `<input type="${field.type}" name="${field.name}" class="dgap-custom-field" ${field.required ? 'required' : ''}>`;
+                    break;
                 case 'phone':
-                    inputHtml = `<input type="${field.type === 'phone' ? 'tel' : field.type}" name="${field.name}" class="dgap-custom-field" ${field.required ? 'required' : ''}>`;
+                    inputHtml = `
+                        <div class="dgap-phone-wrap" style="display:flex;gap:8px;align-items:center;width:100%;">
+                            <input type="text" name="phone_dial_code" class="dgap-phone-dial-code" placeholder="+1" maxlength="10" pattern="^\\+?[0-9]{1,5}$" style="width:78px;flex:0 0 78px;" ${field.required ? 'required' : ''}>
+                            <input type="tel" name="${field.name}" class="dgap-custom-field dgap-phone-number" placeholder="Phone number" style="flex:1;min-width:0;" ${field.required ? 'required' : ''}>
+                        </div>
+                    `;
                     break;
                 case 'textarea':
                     inputHtml = `<textarea name="${field.name}" class="dgap-custom-field" rows="3" ${field.required ? 'required' : ''}></textarea>`;
@@ -142,21 +149,14 @@ jQuery(function ($) {
             `);
         });
 
-        if ( isFrontend && window.dgap_form_data && window.dgap_form_data.gdpr && window.dgap_form_data.gdpr.enabled ) {
-            const gdpr = window.dgap_form_data.gdpr;
-            const $labelText = $('<span>').text(gdpr.label || 'I agree to the storage and handling of my data by this website.');
-            const linkHtml = gdpr.privacy_url
-                ? ` <a href="${$('<div>').text(gdpr.privacy_url).html()}" target="_blank" rel="noopener noreferrer">Privacy Policy</a>`
-                : '';
-
-            $container.append(`
-                <div class="dgap-field-vertical dgap-gdpr-consent-row">
-                    <label class="dgap-gdpr-label" style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-weight:400;">
-                        <input type="checkbox" name="dgap_gdpr_consent" class="dgap-gdpr-consent" value="1" required style="margin-top:3px;width:auto;flex-shrink:0;" />
-                        <span>${$labelText.html()}${linkHtml} <span class="dgap-required">*</span></span>
-                    </label>
-                </div>
-            `);
+        const recapCfg = isFrontend && window.dgap_form_data && window.dgap_form_data.recaptcha;
+        if ( recapCfg && recapCfg.enabled && recapCfg.version === 'v2' && recapCfg.site_key && window.grecaptcha && typeof window.grecaptcha.render === 'function' ) {
+            try {
+                const box = document.getElementById('dgap-g-recaptcha-box');
+                if ( box && !box.hasChildNodes() ) {
+                    window.dgap_recaptcha_widget_id = window.grecaptcha.render(box, { sitekey: recapCfg.site_key });
+                }
+            } catch (e) {}
         }
 
         // Restore values
@@ -168,7 +168,10 @@ jQuery(function ($) {
                 $el.val(savedValues[name]);
             }
         });
+
+        syncSummaryCustomerDetails(getWrap());
     }
+    window.dgapRenderPersonalInfoFields = renderPersonalInfoFields;
 
     /* ================================================
         CALENDAR
@@ -435,17 +438,58 @@ jQuery(function ($) {
     /* ================================================
         SUMMARY
     ================================================ */
+    function syncSummaryCustomerDetails($root) {
+        const $wrap = ($root && $root.length) ? $root : getWrap();
+        if (!$wrap.length) return;
+
+        const name = ($wrap.find('[name="_dgap_form_name"], [name="first_name"]').first().val() || '').trim();
+        const email = ($wrap.find('[name="_dgap_form_email"], [name="email"]').first().val() || '').trim();
+        const dial = ($wrap.find('[name="phone_dial_code"]').first().val() || '').trim();
+        const phone = ($wrap.find('[name="_dgap_form_phone"], [name="phone"]').first().val() || '').trim();
+        const fullPhone = [dial, phone].filter(Boolean).join(' ');
+
+        $wrap.find('#dgap-form-render-customer-name').text(name || '—');
+        $wrap.find('#dgap-form-render-customer-email').text(email || '—');
+        $wrap.find('#dgap-form-render-customer-phone').text(fullPhone || '—');
+
+        const $summaryWrapper = $wrap.find('.dgap-summary-wrapper');
+        if ($summaryWrapper.length) {
+            $summaryWrapper.find('.dgap-summary-custom-item').remove();
+            $wrap.find('.dgap-personal-info .dgap-custom-field').each(function () {
+                const fieldName = $(this).attr('name') || '';
+                if (fieldName === '_dgap_form_name' || fieldName === '_dgap_form_email' || fieldName === '_dgap_form_phone') {
+                    return;
+                }
+                const val = ($(this).val() || '').trim();
+                const rawLabel = $(this).closest('.dgap-field-vertical').find('label').first().text().replace(/\*/g, '').trim();
+                if (!rawLabel) return;
+
+                const $row = $('<div class="dgap-summary-item dgap-summary-custom-item"></div>');
+                $row.append($('<label></label>').text(rawLabel + ':'));
+                $row.append($('<span class="dgap-value"></span>').text(val || '—'));
+                $summaryWrapper.append($row);
+            });
+        }
+    }
+    window.dgapSyncSummaryCustomerDetails = syncSummaryCustomerDetails;
+
+    $(document).on('input change', '.dgap-personal-info input, .dgap-personal-info textarea', function () {
+        syncSummaryCustomerDetails($(this).closest('.dgap-form-wrap, #dgap-live-preview'));
+    });
+
     function updateSummary() {
         const location = $('#dgap-location option:selected').text();
         const service  = $('#dgap-service option:selected').text();
         const worker   = $('#dgap-staff option:selected').text();
         const price    = service.split('-')[1] || '';
+        const dateTime = selectedDate + (selectedSlotStart ? ` (${selectedSlotStart}${selectedSlotEnd ? ' - ' + selectedSlotEnd : ''})` : '');
 
         getWrap().find('#dgap-form-render-loc').text(location);
         getWrap().find('#dgap-form-render-service').text(service);
         getWrap().find('#dgap-form-render-worker').text(worker);
         getWrap().find('#dgap-form-render-price').text(price);
-        getWrap().find('#dgap-form-render-date').text(selectedDate);
+        getWrap().find('#dgap-form-render-date').text(dateTime);
+        syncSummaryCustomerDetails(getWrap());
     }
 
     /* ================================================

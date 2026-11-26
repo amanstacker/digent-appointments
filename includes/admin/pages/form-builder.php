@@ -240,8 +240,12 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 						</div>
 						<div class="dgap-accordion-body">
 
-							<div class="dgap-settings-group">
-								<div class="dgap-settings-group-title"><?php esc_html_e( 'General', 'digent-appointments' ); ?></div>
+							<div class="dgap-settings-group active">
+								<div class="dgap-settings-group-title">
+									<span><?php esc_html_e( 'General', 'digent-appointments' ); ?></span>
+									<span class="dashicons dashicons-arrow-down-alt2 dgap-sub-acc-arrow"></span>
+								</div>
+								<div class="dgap-settings-group-body">
 
 								<div class="dgap-field-row">
 									<label><?php esc_html_e( 'Font Size', 'digent-appointments' ); ?></label>
@@ -314,10 +318,15 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 										<option value="ghost" <?php selected( $form['settings']['appearance']['button_style'] ?? 'filled', 'ghost' ); ?>><?php esc_html_e( 'Ghost', 'digent-appointments' ); ?></option>
 									</select>
 								</div>
+								</div>
 							</div>
 
 							<div class="dgap-settings-group">
-								<div class="dgap-settings-group-title"><?php esc_html_e( 'Section Headings', 'digent-appointments' ); ?></div>
+								<div class="dgap-settings-group-title">
+									<span><?php esc_html_e( 'Section Headings', 'digent-appointments' ); ?></span>
+									<span class="dashicons dashicons-arrow-down-alt2 dgap-sub-acc-arrow"></span>
+								</div>
+								<div class="dgap-settings-group-body">
 
 								<div class="dgap-field-row">
 									<label><?php esc_html_e( 'Font Size', 'digent-appointments' ); ?></label>
@@ -345,6 +354,7 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 										<input type="color" name="settings[appearance][heading_font_color]" value="<?php echo esc_attr( $form['settings']['appearance']['heading_font_color'] ?? '#0f172a' ); ?>" />
 										<input type="text" class="dgap-color-text" data-target="settings[appearance][heading_font_color]" value="<?php echo esc_attr( $form['settings']['appearance']['heading_font_color'] ?? '#0f172a' ); ?>" placeholder="#0f172a" maxlength="7" />
 									</div>
+								</div>
 								</div>
 							</div>
 

@@ -54,15 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     <!-- Footer -->
     <div class="dgap-card dgap-footer">
-        <label class="dgap-terms">
-            <input type="checkbox">
-            <?php esc_html_e( 'I agree with terms and conditions', 'digent-appointments' ); ?>
-        </label>
-        <div class="dgap-captcha">
-            <div class="dgap-captcha-box">
-                <?php esc_html_e( "I'm not a robot", 'digent-appointments' ); ?>
-            </div>
-        </div>
+        <?php include __DIR__ . '/partials/security-fields.php'; ?>
         <div class="dgap-actions">
             <button class="dgap-btn-submit"><?php esc_html_e( 'Submit', 'digent-appointments' ); ?></button>
         </div>

@@ -366,11 +366,16 @@ jQuery(function ($) {
         const worker   = $('#dgap-staff option:selected').text();
         const price    = service.split('-')[1] || '';
 
+        const dateTime = selectedDate + (selectedSlotStart ? ` (${selectedSlotStart}${selectedSlotEnd ? ' - ' + selectedSlotEnd : ''})` : '');
+
         $('#dgap-form-render-loc').text(location);
         $('#dgap-form-render-service').text(service);
         $('#dgap-form-render-worker').text(worker);
         $('#dgap-form-render-price').text(price);
-        $('#dgap-form-render-date').text(selectedDate);
+        $('#dgap-form-render-date').text(dateTime);
+        if (window.dgapSyncSummaryCustomerDetails) {
+            window.dgapSyncSummaryCustomerDetails($('.dgap-form-wrap'));
+        }
     }
 
     /* ------------------------------
@@ -618,36 +623,70 @@ jQuery(function ($) {
         };
 
         // Also pass standard fields if they exist in the form
-        const firstName = $('[name="first_name"]').val();
-        const lastName  = $('[name="last_name"]').val();
-        const email     = $('[name="email"]').val();
-        const phone     = $('[name="phone"]').val();
-        const notes     = $('[name="notes"]').val();
+        const firstName     = $('[name="first_name"]').val();
+        const lastName      = $('[name="last_name"]').val();
+        const email         = $('[name="email"]').val();
+        const phone         = $('[name="phone"]').val();
+        const phoneDialCode = $('[name="phone_dial_code"]').val();
+        const notes         = $('[name="notes"]').val();
 
-        if (firstName) postData.first_name = firstName;
-        if (lastName)  postData.last_name  = lastName;
-        if (email)     postData.email      = email;
-        if (phone)     postData.phone      = phone;
-        if (notes)     postData.notes      = notes;
+        if (firstName)     postData.first_name      = firstName;
+        if (lastName)      postData.last_name       = lastName;
+        if (email)         postData.email           = email;
+        if (phone)         postData.phone           = phone;
+        if (phoneDialCode) postData.phone_dial_code = phoneDialCode;
+        if (notes)         postData.notes           = notes;
 
         const $btn = $(this);
-        $btn.prop('disabled', true).text('Booking...');
+        const submitBooking = function () {
+            $btn.prop('disabled', true).text('Booking...');
 
-        $.post(dgap_frontend.ajax_url, postData, function (res) {
-            if (res.success) {
-                showSuccess();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
+            $.post(dgap_frontend.ajax_url, postData, function (res) {
+                if (res.success) {
+                    showSuccess();
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    alert(res.data || 'Something went wrong. Please try again.');
+                    $btn.prop('disabled', false).text('Submit');
+                }
+            }).fail(function () {
+                alert('Request failed. Please try again.');
+                $btn.prop('disabled', false).text('Submit');
+            });
+        };
+
+        const recapCfg = window.dgap_form_data && window.dgap_form_data.recaptcha;
+        if (recapCfg && recapCfg.enabled && window.grecaptcha) {
+            if (recapCfg.version === 'v2') {
+                const token = typeof window.dgap_recaptcha_widget_id !== 'undefined'
+                    ? window.grecaptcha.getResponse(window.dgap_recaptcha_widget_id)
+                    : window.grecaptcha.getResponse();
+                if (!token) {
+                    alert('Please complete the reCAPTCHA verification.');
+                    return;
+                }
+                postData['g-recaptcha-response'] = token;
+                submitBooking();
+            } else if (recapCfg.version === 'v3' && recapCfg.site_key) {
+                $btn.prop('disabled', true).text('Verifying...');
+                window.grecaptcha.ready(function () {
+                    window.grecaptcha.execute(recapCfg.site_key, { action: 'dgap_booking' }).then(function (token) {
+                        postData['g-recaptcha-response'] = token;
+                        submitBooking();
+                    }).catch(function () {
+                        alert('reCAPTCHA verification failed. Please try again.');
+                        $btn.prop('disabled', false).text('Submit');
+                    });
                 });
             } else {
-                alert(res.data || 'Something went wrong. Please try again.');
-                $btn.prop('disabled', false).text('Submit');
+                submitBooking();
             }
-        }).fail(function () {
-            alert('Request failed. Please try again.');
-            $btn.prop('disabled', false).text('Submit');
-        });
+        } else {
+            submitBooking();
+        }
     });
 
     $(document).on('input change', '.dgap-custom-field', function () {
