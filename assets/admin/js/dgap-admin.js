@@ -247,6 +247,39 @@ jQuery(function ($) {
 		});
 	}
 
+	function dgapPositionClockPopover($input) {
+		const $pop = $('#dgap-round-clock-popover');
+		if (!$pop.length || !$input || !$input.length) return;
+
+		const rect = $input[0].getBoundingClientRect();
+		const popW = $pop.outerWidth() || 264;
+		const popH = $pop.outerHeight() || 340;
+		const spaceBelow = window.innerHeight - rect.bottom;
+		const spaceAbove = rect.top;
+
+		let left = rect.left;
+		let top  = rect.bottom + 8;
+
+		if (left + popW > window.innerWidth - 12) {
+			left = Math.max(12, window.innerWidth - popW - 12);
+		}
+
+		if (spaceBelow >= popH + 12) {
+			top = rect.bottom + 8;
+		} else if (spaceAbove >= popH + 12) {
+			top = rect.top - popH - 8;
+		} else if (rect.left >= popW + 20) {
+			left = rect.left - popW - 12;
+			top  = Math.max(12, Math.min(rect.top - 40, window.innerHeight - popH - 12));
+		} else {
+			top = spaceBelow >= spaceAbove
+				? Math.max(12, window.innerHeight - popH - 12)
+				: 12;
+		}
+
+		$pop.css({ left: left + 'px', top: top + 'px' });
+	}
+
 	function dgapOpenClockForInput($input) {
 		const $pop = dgapEnsureClockPopover();
 		const parsed = dgapParseTimeString($input.val()) || { h: 9, m: 0 };
@@ -258,21 +291,8 @@ jQuery(function ($) {
 
 		$pop.find('.dgap-clock-error').hide().text('');
 		dgapRenderClockFace();
-
-		const rect = $input[0].getBoundingClientRect();
-		const popW = 264;
-		const popH = 340;
-		let left = rect.left + window.scrollX;
-		let top = rect.bottom + window.scrollY + 6;
-
-		if (rect.left + popW > window.innerWidth - 12) {
-			left = Math.max(12, window.innerWidth - popW - 12 + window.scrollX);
-		}
-		if (rect.bottom + popH > window.innerHeight - 12) {
-			top = Math.max(12, rect.top + window.scrollY - popH - 6);
-		}
-
-		$pop.css({ left: left + 'px', top: top + 'px' }).show();
+		$pop.show();
+		dgapPositionClockPopover($input);
 	}
 
 	$(document).on('click', '.dgap-clock-trigger', function (e) {
@@ -349,11 +369,14 @@ jQuery(function ($) {
 		$input.toggleClass('dgap-time-invalid', Boolean(err));
 		if (err) {
 			$popErr.text(err).show();
-			$footerErr.text(err).fadeIn(150);
 		} else {
 			$popErr.hide().text('');
 			$form.find('.dgap-time-invalid').removeClass('dgap-time-invalid');
 			$footerErr.hide().text('');
+		}
+
+		if ($('#dgap-round-clock-popover').is(':visible')) {
+			dgapPositionClockPopover($input);
 		}
 
 		return err;

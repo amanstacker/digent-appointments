@@ -4037,7 +4037,7 @@
 }
 
 .dgap-clock-popover {
-	position: absolute;
+	position: fixed;
 	width: 264px;
 	background: #ffffff;
 	border: 1px solid var(--dgap-slate-200, #e2e8f0);

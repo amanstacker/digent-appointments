@@ -9,11 +9,12 @@ class DGAP_Locations_Table extends WP_List_Table {
 
 	public function get_columns() {
 		return [
-			'cb'      => '<input type="checkbox" />',
-			'name'    => esc_html__( 'Location', 'digent-appointments' ),
-			'address' => esc_html__( 'Address', 'digent-appointments' ),
-			'status'  => esc_html__( 'Status', 'digent-appointments' ),
-			'actions' => esc_html__( 'Actions', 'digent-appointments' ),
+			'cb'             => '<input type="checkbox" />',
+			'name'           => esc_html__( 'Location', 'digent-appointments' ),
+			'business_hours' => esc_html__( 'Opens & Closes', 'digent-appointments' ),
+			'break_time'     => esc_html__( 'Break Time', 'digent-appointments' ),
+			'status'         => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'        => esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -33,8 +34,74 @@ class DGAP_Locations_Table extends WP_List_Table {
 		);
 	}
 
-	public function column_address( $item ) {
-		return '<span class="dgap-muted">' . esc_html( $item['address'] ?: '—' ) . '</span>';
+	private function format_time_display( $time_24 ) {
+		$time_24 = trim( (string) $time_24 );
+		if ( '' === $time_24 ) {
+			return '';
+		}
+		$ts = strtotime( $time_24 );
+		if ( false === $ts ) {
+			return $time_24;
+		}
+		$settings    = get_option( 'dgap_general_settings', [] );
+		$time_format = $settings['time_format'] ?? '24';
+
+		return ( '12' === (string) $time_format )
+			? gmdate( 'g:i A', $ts )
+			: gmdate( 'H:i', $ts );
+	}
+
+	private function get_first_open_day( $item ) {
+		if ( empty( $item['business_hours'] ) ) {
+			return null;
+		}
+		$hours = is_array( $item['business_hours'] )
+			? $item['business_hours']
+			: json_decode( $item['business_hours'], true );
+
+		if ( empty( $hours ) || ! is_array( $hours ) ) {
+			return null;
+		}
+
+		foreach ( $hours as $day_info ) {
+			if ( isset( $day_info['status'] ) && 'open' === $day_info['status'] ) {
+				return $day_info;
+			}
+		}
+
+		return null;
+	}
+
+	public function column_business_hours( $item ) {
+		$day = $this->get_first_open_day( $item );
+		if ( ! $day || empty( $day['open'] ) || empty( $day['close'] ) ) {
+			return '<span class="dgap-muted">—</span>';
+		}
+
+		return sprintf(
+			'<span>%1$s – %2$s</span>',
+			esc_html( $this->format_time_display( $day['open'] ) ),
+			esc_html( $this->format_time_display( $day['close'] ) )
+		);
+	}
+
+	public function column_break_time( $item ) {
+		$day = $this->get_first_open_day( $item );
+		if ( ! $day || empty( $day['breaks'] ) || ! is_array( $day['breaks'] ) ) {
+			return '<span class="dgap-muted">—</span>';
+		}
+
+		$parts = [];
+		foreach ( $day['breaks'] as $br ) {
+			if ( empty( $br['start'] ) || empty( $br['end'] ) ) {
+				continue;
+			}
+			$parts[] = esc_html(
+				$this->format_time_display( $br['start'] ) . ' – ' . $this->format_time_display( $br['end'] )
+			);
+		}
+
+		return ! empty( $parts ) ? implode( '<br>', $parts ) : '<span class="dgap-muted">—</span>';
 	}
 
 	public function column_status( $item ) {

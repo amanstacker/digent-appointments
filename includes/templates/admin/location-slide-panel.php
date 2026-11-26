@@ -36,7 +36,6 @@
 
 				<h3>
 					<?php esc_html_e( 'Business Hours', 'digent-appointments' ); ?>
-					<span class="dgap-muted"><?php esc_html_e( 'Set availability for this location', 'digent-appointments'); ?></span>
 				</h3>
 
 				<!-- Days -->
