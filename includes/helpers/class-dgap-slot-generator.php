@@ -40,7 +40,9 @@ class DGAP_Slot_Generator {
 
 		// Service settings
 		$duration       = absint( $service['duration'] );
-		$slot_step      = absint( $service['slot_step'] );
+		$slot_step      = ! empty( $service['slot_step'] ) && absint( $service['slot_step'] ) > 0
+			? absint( $service['slot_step'] )
+			: $duration;
 		$buffer_before  = absint( $service['buffer_before'] );
 		$buffer_after   = absint( $service['buffer_after'] );
 

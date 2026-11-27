@@ -51,22 +51,25 @@
 
 				<p>
 					<label><?php esc_html_e( 'Duration (minutes)', 'digent-appointments' ); ?></label>
-					<input type="number" min="0" step="1" name="duration" placeholder="30">
+					<input type="number" min="0" step="1" name="duration" placeholder="30" required>
 				</p>
 
 				<p>
 					<label><?php esc_html_e( 'Slot Step (minutes)', 'digent-appointments' ); ?></label>
-					<input type="number" min="0" step="1" name="slot_step" placeholder="15">
+					<select name="slot_step" class="dgap-slot-step-select"></select>
+					<span class="dgap-muted">
+						<?php esc_html_e( 'Divisors of Duration (e.g. 60 → 60, 30, 20, 15, 12, 10, 6, 5).', 'digent-appointments' ); ?>
+					</span>
 				</p>
 
 				<p>
 					<label><?php esc_html_e( 'Buffer Before (minutes)', 'digent-appointments' ); ?></label>
-					<input type="number" min="0" step="1" name="buffer_before" placeholder="0">
+					<input type="number" min="0" step="1" name="buffer_before" placeholder="0" value="0">
 				</p>
 
 				<p>
 					<label><?php esc_html_e( 'Buffer After (minutes)', 'digent-appointments' ); ?></label>
-					<input type="number" min="0" step="1" name="buffer_after" placeholder="0">
+					<input type="number" min="0" step="1" name="buffer_after" placeholder="0" value="0">
 				</p>
 			</div>
 
@@ -75,15 +78,18 @@
 				<h3><?php esc_html_e( 'Booking Rules', 'digent-appointments' ); ?></h3>
 
 				<p>
-					<label><?php esc_html_e( 'Daily Limit', 'digent-appointments' ); ?></label>
-					<input type="number" min="0" step="1" name="daily_limit" placeholder="0">
+					<label><?php esc_html_e( 'Daily Booking Limit', 'digent-appointments' ); ?></label>
+					<input type="number" min="0" step="1" name="daily_limit" placeholder="0" value="0">
+					<span class="dgap-muted">
+						<?php esc_html_e( 'Maximum number of bookings allowed per day for this service. Set to 0 for unlimited.', 'digent-appointments' ); ?>
+					</span>
 				</p>
 
 				<p>
-					<label><?php esc_html_e( 'Advanced Booking (days)', 'digent-appointments' ); ?></label>
-					<input type="number" min="0" step="1" name="advanced_booking" placeholder="3">
+					<label><?php esc_html_e( 'Advance Booking Lead Time (days)', 'digent-appointments' ); ?></label>
+					<input type="number" min="0" step="1" name="advanced_booking" placeholder="0" value="0">
 					<span class="dgap-muted">
-						<?php esc_html_e( 'Users can book only after this many days.', 'digent-appointments' ); ?>
+						<?php esc_html_e( 'Minimum days before an appointment can be booked (e.g. 3 means bookings open 3 days from today). Set to 0 to allow same-day booking.', 'digent-appointments' ); ?>
 					</span>
 				</p>
 			</div>

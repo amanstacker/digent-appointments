@@ -181,6 +181,14 @@
 	resize: vertical;
 }
 
+#dgap-slide-panel select.dgap-slot-step-select,
+.dgap-form select.dgap-slot-step-select {
+	height: 38px;
+	min-height: 38px;
+	padding: 0 28px 0 12px;
+	line-height: 36px;
+}
+
 #dgap-slide-panel input:focus,
 #dgap-slide-panel input:focus-visible,
 #dgap-slide-panel select:focus,

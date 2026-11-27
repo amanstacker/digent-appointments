@@ -485,12 +485,66 @@ jQuery(function ($) {
 			dgapSetTimePickerValue($(this), '');
 		});
 
+		if ( currentEntity === 'service' ) {
+			currentForm.find('[name="duration"]').val('30');
+			currentForm.find('[name="buffer_before"]').val('0');
+			currentForm.find('[name="buffer_after"]').val('0');
+			dgapUpdateSlotStepSelect(currentForm, 30);
+		}
+
 		setTimeout(function () {
 			const texts = dgap.vacation.getEntityTexts();
 			$('#vacation-entity').closest('p').find('label').text(texts.label);
 			initVacationSelect2();
 		}, 100);
 
+	});
+
+	/* ================= Service Duration -> Slot Step Divisors (Easy Appointments Style) ================= */
+	function dgapGetSlotStepOptions(duration) {
+		const dur = parseInt(duration, 10);
+		if (isNaN(dur) || dur < 2) {
+			return [];
+		}
+		const minStep = dur >= 5 ? 5 : 2;
+		const options = [];
+		for (let step = dur; step >= minStep; step--) {
+			if (dur % step === 0) {
+				options.push(step);
+			}
+		}
+		return options;
+	}
+
+	function dgapUpdateSlotStepSelect($form, preferredVal) {
+		const $dur      = $form.find('[name="duration"]');
+		const $slotStep = $form.find('[name="slot_step"]');
+		if (!$slotStep.length) return;
+
+		const dur     = parseInt($dur.val(), 10);
+		const current = preferredVal !== undefined ? parseInt(preferredVal, 10) : parseInt($slotStep.val(), 10);
+		const options = dgapGetSlotStepOptions(dur);
+
+		if (!options.length) {
+			$slotStep.html('<option value="">—</option>').val('').prop('disabled', true);
+			return;
+		}
+
+		let html = '';
+		options.forEach(function (step) {
+			html += '<option value="' + step + '">' + step + '</option>';
+		});
+		$slotStep.html(html).prop('disabled', false);
+
+		if (!isNaN(current) && options.indexOf(current) !== -1) {
+			$slotStep.val(String(current));
+		} else {
+			$slotStep.val(String(dur));
+		}
+	}
+
+	$(document).on('input change', '#dgap-service-form [name="duration"]', function () {
+		dgapUpdateSlotStepSelect($(this).closest('#dgap-service-form'));
 	});
 
 	/* ================= Add Break ================= */
@@ -1181,6 +1235,10 @@ $(document).on('click', '.dgap-status-update', function (e) {
 					field.val(value);
 				}
 			});
+
+			if ( currentEntity === 'service' ) {
+				dgapUpdateSlotStepSelect(currentForm, res.data.slot_step);
+			}
 
 					/* ==================================================
 			* Vacation: Restore Select2 entities

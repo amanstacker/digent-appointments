@@ -86,19 +86,16 @@ class DGAP_Services_Ajax {
 			);
 		}
 
-		if ( empty( $data['slot_step'] ) || absint( $data['slot_step'] ) <= 0 ) {
-			wp_send_json_error(
-				[
-					'message' => esc_html__( 'Slot step is required.', 'digent-appointments' ),
-				]
-			);
-		}
+		$duration  = absint( $data['duration'] );
+		$slot_step = ! empty( $data['slot_step'] ) && absint( $data['slot_step'] ) > 0
+			? absint( $data['slot_step'] )
+			: $duration;
 
 		$payload = [
 			'name'              => sanitize_text_field( $data['name'] ),
 			'description'       => sanitize_textarea_field( $data['description'] ?? '' ),
-			'duration'          => absint( $data['duration'] ),
-			'slot_step'         => absint( $data['slot_step'] ),
+			'duration'          => $duration,
+			'slot_step'         => $slot_step,
 			'buffer_before'     => absint( $data['buffer_before'] ?? 0 ),
 			'buffer_after'      => absint( $data['buffer_after'] ?? 0 ),
 			'daily_limit'       => absint( $data['daily_limit'] ?? 0 ),
