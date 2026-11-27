@@ -605,7 +605,7 @@ class DGAP_Booking_Repo {
 				'price'        => $data['price'],
 				'ip_address'   => $data['ip'],
 				'custom_fields'=> $data['custom_fields'],
-				'status'       => 'confirmed',
+				'status'       => ! empty( $data['status'] ) ? $data['status'] : 'pending',
 				'created_at'   => current_time( 'mysql' ),
 			]
 		);

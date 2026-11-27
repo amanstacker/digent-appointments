@@ -789,6 +789,19 @@
     box-shadow:   0 2px 8px rgba(16, 185, 129, 0.25);
 }
 
+.dgap-preview-wrap .dgap-slot.is-disabled,
+.dgap-preview-wrap .dgap-slot:disabled,
+.dgap-preview-wrap .dgap-inline-slots-container .dgap-slot.is-disabled,
+.dgap-preview-wrap .dgap-inline-slots-container .dgap-slot:disabled {
+    background:      #f1f5f9 !important;
+    color:           #94a3b8 !important;
+    border-color:    #e2e8f0 !important;
+    text-decoration: line-through;
+    cursor:          not-allowed !important;
+    box-shadow:      none !important;
+    opacity:         0.75;
+}
+
 /* ================================================
    SUCCESS STATE
 ================================================ */

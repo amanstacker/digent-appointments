@@ -139,7 +139,8 @@ class DGAP_Frontend_Booking_Ajax {
 		$slots = DGAP_Slot_Generator::generate_slots_from_connections(
 			$connections,
 			$service,
-			$date
+			$date,
+			true
 		);
 
 		wp_send_json_success( $slots );

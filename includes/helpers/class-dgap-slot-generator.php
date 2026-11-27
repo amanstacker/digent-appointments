@@ -6,16 +6,16 @@ class DGAP_Slot_Generator {
 	/**
 	 * Merge available slots across multiple matching connections (e.g. morning + evening shifts).
 	 */
-	public static function generate_slots_from_connections( $connections, $service, $date ) {
+	public static function generate_slots_from_connections( $connections, $service, $date, $include_booked = false ) {
 		if ( empty( $connections ) || ! is_array( $connections ) ) {
 			return [];
 		}
 
 		$merged = [];
 		foreach ( $connections as $schedule ) {
-			$slots = self::generate_slot_from_schedule( $schedule, $service, $date );
+			$slots = self::generate_slot_from_schedule( $schedule, $service, $date, $include_booked );
 			foreach ( $slots as $slot ) {
-				if ( ! isset( $merged[ $slot['start'] ] ) ) {
+				if ( ! isset( $merged[ $slot['start'] ] ) || ( ! empty( $merged[ $slot['start'] ]['disabled'] ) && empty( $slot['disabled'] ) ) ) {
 					$merged[ $slot['start'] ] = $slot;
 				}
 			}
@@ -28,13 +28,14 @@ class DGAP_Slot_Generator {
 	/**
 	 * Generate slots based on schedule, service, and date
 	 *
-	 * @param array  $schedule Connection data including availability
-	 * @param array  $service  Service data including duration and buffers
-	 * @param string $date     Date for which to generate slots (Y-m-d format)
+	 * @param array  $schedule       Connection data including availability
+	 * @param array  $service        Service data including duration and buffers
+	 * @param string $date           Date for which to generate slots (Y-m-d format)
+	 * @param bool   $include_booked Whether to include booked/full slots marked as disabled
 	 *
-	 * @return array Generated slots with start, end, and label
+	 * @return array Generated slots with start, end, label, and disabled flag
 	 */
-	public static function generate_slot_from_schedule( $schedule, $service, $date ) {
+	public static function generate_slot_from_schedule( $schedule, $service, $date, $include_booked = false ) {
 
 		$slots = [];
 		$availability = json_decode( $schedule['availability'], true );
@@ -62,7 +63,7 @@ class DGAP_Slot_Generator {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific daily limit check.
 			$daily_count = (int) $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$wpdb->prefix}dgap_bookings WHERE service_id = %d AND booking_date = %s AND status = 'confirmed'",
+					"SELECT COUNT(*) FROM {$wpdb->prefix}dgap_bookings WHERE service_id = %d AND booking_date = %s AND status IN ('pending', 'confirmed', 'reserved')",
 					$service_id,
 					$date
 				)
@@ -199,7 +200,7 @@ class DGAP_Slot_Generator {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific booked slot check.
 			$existing_bookings = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT start_time, end_time FROM {$wpdb->prefix}dgap_bookings WHERE connection_id = %d AND booking_date = %s AND status = 'confirmed'",
+					"SELECT start_time, end_time FROM {$wpdb->prefix}dgap_bookings WHERE connection_id = %d AND booking_date = %s AND status IN ('pending', 'confirmed', 'reserved')",
 					$connection_id,
 					$date
 				),
@@ -248,7 +249,8 @@ class DGAP_Slot_Generator {
 				continue;
 			}
 
-			// Skip slots that reached schedule capacity
+			// Check whether slot reached connection capacity
+			$is_booked_full = false;
 			if ( ! empty( $existing_bookings ) ) {
 				$slot_start_hi = gmdate( 'H:i', $booking_start );
 				$slot_end_hi   = gmdate( 'H:i', $booking_end );
@@ -263,7 +265,10 @@ class DGAP_Slot_Generator {
 				}
 
 				if ( $overlap_count >= $capacity ) {
-					continue;
+					if ( ! $include_booked ) {
+						continue;
+					}
+					$is_booked_full = true;
 				}
 			}
 
@@ -276,9 +281,10 @@ class DGAP_Slot_Generator {
 				);
 
 			$slots[] = [
-				'start' => date_i18n( 'H:i', $booking_start ),
-				'end'   => date_i18n( 'H:i', $booking_end ),
-				'label' => $label,
+				'start'    => date_i18n( 'H:i', $booking_start ),
+				'end'      => date_i18n( 'H:i', $booking_end ),
+				'label'    => $label,
+				'disabled' => $is_booked_full,
 			];
 		}
 
@@ -297,6 +303,9 @@ class DGAP_Slot_Generator {
 		);
 		$capacity = max( 1, $capacity );
 
+		$start_time = ( strlen( (string) $start_time ) === 5 ) ? $start_time . ':00' : (string) $start_time;
+		$end_time   = ( strlen( (string) $end_time ) === 5 ) ? $end_time . ':00' : (string) $end_time;
+
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching --Reason Dynamic data is getting fetched here.
 		$count = (int) $wpdb->get_var(
 			$wpdb->prepare(
@@ -304,7 +313,7 @@ class DGAP_Slot_Generator {
 				FROM {$wpdb->prefix}dgap_bookings
 				WHERE connection_id = %d
 				AND booking_date = %s
-				AND status = 'confirmed'
+				AND status IN ('pending', 'confirmed', 'reserved')
 				AND (
 					start_time < %s
 					AND end_time > %s

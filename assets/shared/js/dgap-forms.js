@@ -484,10 +484,12 @@ jQuery(function ($) {
                 html += `<div class="dgap-inline-slots-grid${rangeClass}">`;
                 if (res.success && res.data.length) {
                     $.each(res.data, function (_, slot) {
+                        const isDis = !!slot.disabled;
                         html += `
-                            <button type="button" class="dgap-slot"
+                            <button type="button" class="dgap-slot${isDis ? ' is-disabled' : ''}"
                                 data-start="${slot.start}"
-                                data-end="${slot.end}">
+                                data-end="${slot.end}"
+                                ${isDis ? 'disabled aria-disabled="true"' : ''}>
                                 ${slot.label}
                             </button>`;
                     });
@@ -500,10 +502,12 @@ jQuery(function ($) {
                 let html = `<div class="dgap-slots-row${rangeClass}">`;
                 if (res.success && res.data.length) {
                     $.each(res.data, function (_, slot) {
+                        const isDis = !!slot.disabled;
                         html += `
-                            <button type="button" class="dgap-slot"
+                            <button type="button" class="dgap-slot${isDis ? ' is-disabled' : ''}"
                                 data-start="${slot.start}"
-                                data-end="${slot.end}">
+                                data-end="${slot.end}"
+                                ${isDis ? 'disabled aria-disabled="true"' : ''}>
                                 ${slot.label}
                             </button>`;
                     });
@@ -525,6 +529,9 @@ jQuery(function ($) {
     }
 
     $(document).on('click', '.dgap-slot', function () {
+        if ($(this).is(':disabled') || $(this).hasClass('is-disabled')) {
+            return;
+        }
 
         getWrap().find('.dgap-slot').removeClass('active selected');
 
