@@ -432,10 +432,6 @@ class DGAP_Bookings_Ajax {
 
 		$booking_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
 
-		if ( ! $booking_id && ! DGAP_Slot_Generator::is_slot_available( $connection_id, $booking_date, $start_time, $end_time ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Selected time slot is no longer available.', 'digent-appointments' ) ] );
-		}
-
 		$customer_id = absint( $data['customer_id'] ?? 0 );
 		if ( ! $customer_id ) {
 			$customer_id = DGAP_Booking_Repo::get_or_create_customer(
@@ -453,25 +449,25 @@ class DGAP_Bookings_Ajax {
 
 		$status  = sanitize_text_field( $data['status'] ?? 'pending' );
 		$payload = [
-			'user_id'      => ! empty( $data['user_id'] ) ? (int) $data['user_id'] : null,
-			'customer_id'  => $customer_id,
-			'connection_id'  => $connection_id,
-			'location_id'  => $location_id,
-			'service_id'   => $service_id,
+			'user_id'       => ! empty( $data['user_id'] ) ? (int) $data['user_id'] : null,
+			'customer_id'   => $customer_id,
+			'connection_id' => $connection_id,
+			'location_id'   => $location_id,
+			'service_id'    => $service_id,
 			'worker_id'     => $worker_id,
-			'booking_date' => $booking_date,
-			'start_time'   => $start_time,
-			'end_time'     => $end_time,
-			'price'        => isset( $data['price'] ) && '' !== $data['price'] ? (float) $data['price'] : 0,
-			'booking_note' => sanitize_textarea_field( $data['booking_note'] ?? '' ),
-			'status'       => $status,
-			'ip_address'   => sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? null ) ),
+			'booking_date'  => $booking_date,
+			'start_time'    => $start_time,
+			'end_time'      => $end_time,
+			'price'         => isset( $data['price'] ) && '' !== $data['price'] ? (float) $data['price'] : 0,
+			'booking_note'  => sanitize_textarea_field( $data['booking_note'] ?? '' ),
+			'status'        => $status,
+			'ip_address'    => sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? null ) ),
 		];
 
 		if ( $booking_id > 0 ) {
 			$result = DGAP_Booking_Repo::update( $booking_id, $payload );
 		} else {
-			$result = DGAP_Booking_Repo::insert( $payload );
+			$result = DGAP_Booking_Repo::insert_with_slot_lock( $payload );
 		}
 
 		// ❌ DB error

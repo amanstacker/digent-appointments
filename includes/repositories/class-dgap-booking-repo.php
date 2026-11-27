@@ -566,9 +566,57 @@ class DGAP_Booking_Repo {
 		return (int) $connections[0]['id'];
 	}
 
-	public static function create_booking( $data ) {
+	/**
+	 * Atomically validate slot capacity under a row-level lock and insert a booking.
+	 *
+	 * @param array $payload Prepared booking row payload.
+	 * @return int|WP_Error Inserted booking ID or WP_Error.
+	 */
+	public static function insert_with_slot_lock( $payload ) {
 		global $wpdb;
 
+		$connection_id = absint( $payload['connection_id'] ?? 0 );
+		$booking_date  = (string) ( $payload['booking_date'] ?? '' );
+		$start_time    = (string) ( $payload['start_time'] ?? '' );
+		$end_time      = (string) ( $payload['end_time'] ?? '' );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'START TRANSACTION' );
+
+		try {
+			if ( ! DGAP_Slot_Generator::is_slot_available(
+				$connection_id,
+				$booking_date,
+				$start_time,
+				$end_time,
+				true
+			) ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->query( 'ROLLBACK' );
+				return new WP_Error(
+					'slot_taken',
+					esc_html__( 'This time slot was just booked by another customer. Please choose another slot.', 'digent-appointments' )
+				);
+			}
+
+			$inserted = self::insert( $payload );
+			if ( is_wp_error( $inserted ) ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->query( 'ROLLBACK' );
+				return $inserted;
+			}
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( 'COMMIT' );
+			return (int) $inserted;
+		} catch ( Exception $e ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->query( 'ROLLBACK' );
+			return new WP_Error( 'booking_failed', $e->getMessage() );
+		}
+	}
+
+	public static function create_booking( $data ) {
 		$connection_id = self::resolve_connection_id_for_booking(
 			$data['location_id'],
 			$data['service_id'],
@@ -584,33 +632,33 @@ class DGAP_Booking_Repo {
 			$data['start_time'],
 			$data['end_time']
 		) ) {
-			return new WP_Error( 'slot_taken', esc_html__( 'Slot already booked', 'digent-appointments' ) );
+			return new WP_Error(
+				'slot_taken',
+				esc_html__( 'This time slot was just booked by another customer. Please choose another slot.', 'digent-appointments' )
+			);
 		}
 
 		$customer_id = self::get_or_create_customer( $data );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- all data is sanitized before this point, and we're inserting a new booking record with the provided data.
-		$wpdb->insert(
-			self::table(),
+
+		return self::insert_with_slot_lock(
 			[
-				'user_id'      => $data['user_id'],
-				'connection_id'  => $connection_id,
-				'customer_id'  => $customer_id,
-				'location_id'  => $data['location_id'],
-				'service_id'   => $data['service_id'],
+				'user_id'       => $data['user_id'],
+				'connection_id' => $connection_id,
+				'customer_id'   => $customer_id,
+				'location_id'   => $data['location_id'],
+				'service_id'    => $data['service_id'],
 				'worker_id'     => $data['worker_id'],
-				'booking_date' => $data['booking_date'],
-				'start_time'   => $data['start_time'],
-				'end_time'     => $data['end_time'],
-				'booking_note' => $data['notes'],
-				'price'        => $data['price'],
-				'ip_address'   => $data['ip'],
-				'custom_fields'=> $data['custom_fields'],
-				'status'       => ! empty( $data['status'] ) ? $data['status'] : 'pending',
-				'created_at'   => current_time( 'mysql' ),
+				'booking_date'  => $data['booking_date'],
+				'start_time'    => $data['start_time'],
+				'end_time'      => $data['end_time'],
+				'booking_note'  => $data['notes'],
+				'price'         => $data['price'],
+				'ip_address'    => $data['ip'],
+				'custom_fields' => $data['custom_fields'],
+				'status'        => ! empty( $data['status'] ) ? $data['status'] : 'pending',
+				'created_at'    => current_time( 'mysql' ),
 			]
 		);
-
-		return (int) $wpdb->insert_id;
 	}
 
 	public static function get_or_create_customer( $data ) {

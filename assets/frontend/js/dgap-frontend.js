@@ -840,11 +840,18 @@ jQuery(function ($) {
                     });
                 } else {
                     alert(res.data || 'Something went wrong. Please try again.');
-                    $btn.prop('disabled', false).text('Submit');
+                    selectedSlotStart = null;
+                    selectedSlotEnd   = null;
+                    $('.dgap-slot').removeClass('active selected');
+                    updateSummary();
+                    if (selectedDate) {
+                        $('.dgap-day.active').trigger('click');
+                    }
+                    $btn.prop('disabled', false).text(labels.submit_button || 'Submit');
                 }
             }).fail(function () {
                 alert('Request failed. Please try again.');
-                $btn.prop('disabled', false).text('Submit');
+                $btn.prop('disabled', false).text(labels.submit_button || 'Submit');
             });
         };
 

@@ -291,13 +291,14 @@ class DGAP_Slot_Generator {
 		return $slots;
 	}
 
-	public static function is_slot_available( $connection_id, $date, $start_time, $end_time ) {
+	public static function is_slot_available( $connection_id, $date, $start_time, $end_time, $lock = false ) {
 		
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching --Reason Dynamic data is getting fetched here.
+		$lock_sql = $lock ? ' FOR UPDATE' : '';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared --Reason Dynamic data is getting fetched here.
 		$capacity = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT capacity FROM {$wpdb->prefix}dgap_connections WHERE id = %d",
+				"SELECT capacity FROM {$wpdb->prefix}dgap_connections WHERE id = %d{$lock_sql}",
 				$connection_id
 			)
 		);
