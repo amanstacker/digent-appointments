@@ -247,8 +247,8 @@ jQuery(function ($) {
 		});
 	}
 
-	function dgapPositionClockPopover($input) {
-		const $pop = $('#dgap-round-clock-popover');
+	function dgapPositionClockPopover($input, $customPop) {
+		const $pop = $customPop || $('#dgap-round-clock-popover');
 		if (!$pop.length || !$input || !$input.length) return;
 
 		const rect = $input[0].getBoundingClientRect();
@@ -466,6 +466,227 @@ jQuery(function ($) {
 		if (!$(e.target).closest('#dgap-round-clock-popover, .dgap-clock-input-wrap').length) {
 			$('#dgap-round-clock-popover').hide();
 		}
+		if (!$(e.target).closest('#dgap-modern-date-popover, .dgap-date-input-wrap').length) {
+			$('#dgap-modern-date-popover').hide();
+		}
+	});
+
+	/* ================= Modern Date Picker (Matches Round Clock Theme) ================= */
+	const dgapDateState = {
+		$input: null,
+		year: new Date().getFullYear(),
+		month: new Date().getMonth(),
+		selected: ''
+	};
+
+	function dgapParseYmd(str) {
+		const m = String(str || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+		if (!m) return null;
+		const y = parseInt(m[1], 10);
+		const mo = parseInt(m[2], 10);
+		const d = parseInt(m[3], 10);
+		const dt = new Date(y, mo - 1, d);
+		if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
+		return { y, m: mo - 1, d, str: `${m[1]}-${m[2]}-${m[3]}` };
+	}
+
+	function dgapEnsureDatePopover() {
+		let $pop = $('#dgap-modern-date-popover');
+		if ($pop.length) return $pop;
+
+		$pop = $(`
+			<div id="dgap-modern-date-popover" class="dgap-date-popover" style="display:none;">
+				<div class="dgap-date-header">
+					<button type="button" class="dgap-date-nav" data-dir="-1" title="Previous Month">&lsaquo;</button>
+					<div class="dgap-date-title-wrap">
+						<span class="dgap-date-month-label"></span>
+						<span class="dgap-date-selected-sub"></span>
+					</div>
+					<button type="button" class="dgap-date-nav" data-dir="1" title="Next Month">&rsaquo;</button>
+				</div>
+				<div class="dgap-date-weekdays">
+					<span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+				</div>
+				<div class="dgap-date-grid"></div>
+				<div class="dgap-clock-error dgap-date-error" style="display:none;"></div>
+				<div class="dgap-clock-footer">
+					<button type="button" class="button-link dgap-date-clear">Clear</button>
+					<div style="display:flex;gap:6px;">
+						<button type="button" class="button button-small dgap-date-today">Today</button>
+						<button type="button" class="button button-small button-primary dgap-clock-done dgap-date-done">Done</button>
+					</div>
+				</div>
+			</div>
+		`);
+		$('body').append($pop);
+		return $pop;
+	}
+
+	function dgapValidateLiveDateField($input) {
+		if (!$input || !$input.length) return '';
+		const $form = $input.closest('.dgap-form');
+		if (!$form.length) return '';
+
+		const name   = $input.attr('name') || '';
+		const rawVal = ($input.val() || '').trim();
+		const $err   = $('#dgap-modern-date-popover .dgap-date-error');
+		let err      = '';
+
+		if (rawVal && !dgapParseYmd(rawVal)) {
+			err = 'Please enter a valid date (YYYY-MM-DD).';
+		}
+
+		if (!err && (name === 'date_start' || name === 'date_end')) {
+			const s = dgapParseYmd($form.find('[name="date_start"]').val());
+			const e = dgapParseYmd($form.find('[name="date_end"]').val());
+			if (s && e && e.str < s.str) {
+				err = 'End date must be on or after start date.';
+			}
+		}
+
+		$input.toggleClass('dgap-time-invalid', Boolean(err));
+		if (err) {
+			$err.text(err).show();
+		} else {
+			$err.hide().text('');
+			$form.find('.dgap-date-picker.dgap-time-invalid').removeClass('dgap-time-invalid');
+		}
+
+		if ($('#dgap-modern-date-popover').is(':visible')) {
+			dgapPositionClockPopover($input, $('#dgap-modern-date-popover'));
+		}
+		return err;
+	}
+
+	function dgapRenderDateGrid() {
+		const $pop = dgapEnsureDatePopover();
+		const y = dgapDateState.year;
+		const m = dgapDateState.month;
+		const firstDay = new Date(y, m, 1);
+		const startOffset = (firstDay.getDay() + 6) % 7;
+		const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+		const now = new Date();
+		const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+		$pop.find('.dgap-date-month-label').text(
+			firstDay.toLocaleString('default', { month: 'long', year: 'numeric' })
+		);
+		$pop.find('.dgap-date-selected-sub').text(dgapDateState.selected || 'Pick a date');
+
+		const $grid = $pop.find('.dgap-date-grid').empty();
+		for (let i = 0; i < startOffset; i++) {
+			$grid.append('<span class="dgap-date-empty"></span>');
+		}
+		for (let d = 1; d <= daysInMonth; d++) {
+			const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+			$grid.append(
+				$('<button type="button" class="dgap-date-day"></button>')
+					.text(d)
+					.data('date', dateStr)
+					.toggleClass('is-today', dateStr === todayStr)
+					.toggleClass('is-selected', dateStr === dgapDateState.selected)
+			);
+		}
+	}
+
+	function dgapOpenDateForInput($input) {
+		if (!$input.length || $input.is(':disabled')) return;
+		$('#dgap-round-clock-popover').hide();
+
+		const $pop = dgapEnsureDatePopover();
+		const parsed = dgapParseYmd($input.val());
+		const now = new Date();
+
+		dgapDateState.$input = $input;
+		dgapDateState.year = parsed ? parsed.y : now.getFullYear();
+		dgapDateState.month = parsed ? parsed.m : now.getMonth();
+		dgapDateState.selected = parsed ? parsed.str : '';
+
+		$pop.find('.dgap-date-error').hide().text('');
+		dgapRenderDateGrid();
+		$pop.show();
+		dgapPositionClockPopover($input, $pop);
+	}
+
+	$(document).on('click', '.dgap-date-trigger', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		const $input = $(this).siblings('input.dgap-date-picker');
+		dgapOpenDateForInput($input);
+	});
+
+	$(document).on('focus', 'input.dgap-date-picker', function () {
+		dgapOpenDateForInput($(this));
+	});
+
+	$(document).on('input', 'input.dgap-date-picker', function () {
+		if (dgapDateState.$input && dgapDateState.$input[0] === this) {
+			const parsed = dgapParseYmd($(this).val());
+			if (parsed) {
+				dgapDateState.year = parsed.y;
+				dgapDateState.month = parsed.m;
+				dgapDateState.selected = parsed.str;
+				dgapRenderDateGrid();
+			}
+		}
+		dgapValidateLiveDateField($(this));
+	});
+
+	$(document).on('click', '#dgap-modern-date-popover .dgap-date-nav', function () {
+		const dir = parseInt($(this).data('dir'), 10);
+		dgapDateState.month += dir;
+		if (dgapDateState.month < 0) {
+			dgapDateState.month = 11;
+			dgapDateState.year--;
+		} else if (dgapDateState.month > 11) {
+			dgapDateState.month = 0;
+			dgapDateState.year++;
+		}
+		dgapRenderDateGrid();
+	});
+
+	$(document).on('click', '#dgap-modern-date-popover .dgap-date-day', function () {
+		const dateStr = $(this).data('date');
+		dgapDateState.selected = dateStr;
+		if (dgapDateState.$input) {
+			dgapDateState.$input.val(dateStr).trigger('change');
+			const err = dgapValidateLiveDateField(dgapDateState.$input);
+			dgapRenderDateGrid();
+			if (!err) {
+				$('#dgap-modern-date-popover').hide();
+			}
+		}
+	});
+
+	$(document).on('click', '#dgap-modern-date-popover .dgap-date-today', function () {
+		const now = new Date();
+		const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+		dgapDateState.year = now.getFullYear();
+		dgapDateState.month = now.getMonth();
+		dgapDateState.selected = dateStr;
+		if (dgapDateState.$input) {
+			dgapDateState.$input.val(dateStr).trigger('change');
+			dgapValidateLiveDateField(dgapDateState.$input);
+		}
+		dgapRenderDateGrid();
+	});
+
+	$(document).on('click', '#dgap-modern-date-popover .dgap-date-clear', function () {
+		dgapDateState.selected = '';
+		if (dgapDateState.$input) {
+			dgapDateState.$input.val('').trigger('change');
+			dgapValidateLiveDateField(dgapDateState.$input);
+		}
+		$('#dgap-modern-date-popover').hide();
+	});
+
+	$(document).on('click', '#dgap-modern-date-popover .dgap-date-done', function () {
+		if (dgapDateState.$input) {
+			const err = dgapValidateLiveDateField(dgapDateState.$input);
+			if (err) return;
+		}
+		$('#dgap-modern-date-popover').hide();
 	});
 
 	dgapInitTimePickers($(document));

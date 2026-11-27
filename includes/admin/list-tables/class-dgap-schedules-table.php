@@ -16,7 +16,6 @@ class DGAP_Schedules_Table extends WP_List_Table {
 			'staff'        => esc_html__( 'Staff', 'digent-appointments' ),
 			'service'      => esc_html__( 'Service', 'digent-appointments' ),
 			'availability' => esc_html__( 'Availability', 'digent-appointments' ),
-			'capacity'     => esc_html__( 'Capacity', 'digent-appointments' ),
 			'status'       => esc_html__( 'Status', 'digent-appointments' ),
 			'actions'      => esc_html__( 'Actions', 'digent-appointments' ),
 		];
@@ -47,47 +46,108 @@ class DGAP_Schedules_Table extends WP_List_Table {
 		return '<span class="dgap-muted">' . esc_html( $item['service_name'] ?? '—' ) . '</span>';
 	}
 
+	private function format_time_display( $time_24 ) {
+		$time_24 = trim( (string) $time_24 );
+		if ( '' === $time_24 ) {
+			return '';
+		}
+		$ts = strtotime( $time_24 );
+		if ( false === $ts ) {
+			return $time_24;
+		}
+		$settings    = get_option( 'dgap_general_settings', [] );
+		$time_format = $settings['time_format'] ?? '24';
+
+		return ( '12' === (string) $time_format )
+			? gmdate( 'g:i A', $ts )
+			: gmdate( 'H:i', $ts );
+	}
+
+	private function format_day_ranges( $indices, $short_labels ) {
+		$ranges = [];
+		$start  = null;
+		$prev   = null;
+
+		foreach ( $indices as $idx ) {
+			if ( null === $start ) {
+				$start = $idx;
+				$prev  = $idx;
+			} elseif ( $idx === $prev + 1 ) {
+				$prev = $idx;
+			} else {
+				$ranges[] = ( $start === $prev )
+					? $short_labels[ $start ]
+					: ( ( $prev - $start >= 2 )
+						? $short_labels[ $start ] . '–' . $short_labels[ $prev ]
+						: $short_labels[ $start ] . ', ' . $short_labels[ $prev ] );
+				$start = $idx;
+				$prev  = $idx;
+			}
+		}
+
+		if ( null !== $start ) {
+			$ranges[] = ( $start === $prev )
+				? $short_labels[ $start ]
+				: ( ( $prev - $start >= 2 )
+					? $short_labels[ $start ] . '–' . $short_labels[ $prev ]
+					: $short_labels[ $start ] . ', ' . $short_labels[ $prev ] );
+		}
+
+		return implode( ', ', $ranges );
+	}
+
 	public function column_availability( $item ) {
 		if ( empty( $item['availability'] ) ) {
-			return '—';
+			return '<span class="dgap-muted">—</span>';
 		}
 
 		$data = json_decode( $item['availability'], true );
 		if ( empty( $data ) || ! is_array( $data ) ) {
-			return '—';
+			return '<span class="dgap-muted">—</span>';
 		}
 
-		$labels = [
-			'monday'    => esc_html__( 'Mon', 'digent-appointments' ),
-			'tuesday'   => esc_html__( 'Tue', 'digent-appointments' ),
-			'wednesday' => esc_html__( 'Wed', 'digent-appointments' ),
-			'thursday'  => esc_html__( 'Thu', 'digent-appointments' ),
-			'friday'    => esc_html__( 'Fri', 'digent-appointments' ),
-			'saturday'  => esc_html__( 'Sat', 'digent-appointments' ),
-			'sunday'    => esc_html__( 'Sun', 'digent-appointments' ),
+		$day_order = [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ];
+		$short_labels = [
+			esc_html__( 'Mon', 'digent-appointments' ),
+			esc_html__( 'Tue', 'digent-appointments' ),
+			esc_html__( 'Wed', 'digent-appointments' ),
+			esc_html__( 'Thu', 'digent-appointments' ),
+			esc_html__( 'Fri', 'digent-appointments' ),
+			esc_html__( 'Sat', 'digent-appointments' ),
+			esc_html__( 'Sun', 'digent-appointments' ),
 		];
 
-		$output = [];
-		foreach ( $data as $day => $info ) {
+		$grouped = [];
+		foreach ( $day_order as $idx => $day ) {
+			$info = $data[ $day ] ?? [];
 			if ( empty( $info['status'] ) || 'open' !== $info['status'] ) {
 				continue;
 			}
-			$time = '—';
-			if ( ! empty( $info['open'] ) && ! empty( $info['close'] ) ) {
-				$time = esc_html( $info['open'] . ' → ' . $info['close'] );
+			$open  = ! empty( $info['open'] ) ? $this->format_time_display( $info['open'] ) : '';
+			$close = ! empty( $info['close'] ) ? $this->format_time_display( $info['close'] ) : '';
+			$time_key = ( $open && $close ) ? ( $open . ' – ' . $close ) : '—';
+
+			if ( ! isset( $grouped[ $time_key ] ) ) {
+				$grouped[ $time_key ] = [];
 			}
-			$output[] = sprintf(
-				'<strong>%s</strong>: %s',
-				$labels[ $day ] ?? ucfirst( $day ),
-				$time
+			$grouped[ $time_key ][] = $idx;
+		}
+
+		if ( empty( $grouped ) ) {
+			return '<span class="dgap-muted">—</span>';
+		}
+
+		$lines = [];
+		foreach ( $grouped as $time_str => $indices ) {
+			$day_text = $this->format_day_ranges( $indices, $short_labels );
+			$lines[]  = sprintf(
+				'<div class="dgap-avail-compact"><strong>%s</strong> <span class="dgap-muted">(%s)</span></div>',
+				esc_html( $day_text ),
+				esc_html( $time_str )
 			);
 		}
 
-		return ! empty( $output ) ? implode( '<br>', $output ) : '—';
-	}
-
-	public function column_capacity( $item ) {
-		return '<strong>' . esc_html( $item['capacity'] ?: '—' ) . '</strong>';
+		return implode( '', $lines );
 	}
 
 	public function column_status( $item ) {

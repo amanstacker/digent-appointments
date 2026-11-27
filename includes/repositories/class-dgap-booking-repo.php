@@ -487,9 +487,17 @@ class DGAP_Booking_Repo {
 	}
 
 	public static function get_schedule( $location_id, $service_id, $staff_id, $date ) {
+		$schedules = self::get_schedules( $location_id, $service_id, $staff_id, $date );
+		return ! empty( $schedules[0] ) ? $schedules[0] : null;
+	}
+
+	/**
+	 * Get all active schedules matching location, service, staff, and date (supports multiple shifts/schedules).
+	 */
+	public static function get_schedules( $location_id, $service_id, $staff_id, $date ) {
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Fetching a specific schedule row by location, service, staff, and date; result is request-specific and caching is not required here.
-		return $wpdb->get_row(
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Fetching schedule rows by location, service, staff, and date; result is request-specific.
+		return $wpdb->get_results(
 			$wpdb->prepare(
 				"
 				SELECT *
@@ -499,7 +507,8 @@ class DGAP_Booking_Repo {
 				AND staff_id = %d
 				AND status = 1
 				AND date_start <= %s
-				AND ( date_end IS NULL OR date_end >= %s )
+				AND ( is_infinite = 1 OR date_end IS NULL OR date_end >= %s )
+				ORDER BY id ASC
 				",
 				$location_id,
 				$service_id,
@@ -517,7 +526,7 @@ class DGAP_Booking_Repo {
 		return $wpdb->get_row(
 			$wpdb->prepare(
 				"
-				SELECT duration, slot_step, buffer_before, buffer_after
+				SELECT id, duration, slot_step, buffer_before, buffer_after, daily_limit, advanced_booking
 				FROM {$wpdb->prefix}dgap_services
 				WHERE id = %d AND status = 1
 				",
@@ -527,13 +536,46 @@ class DGAP_Booking_Repo {
 		);
 	}
 
+	/**
+	 * Resolve the exact schedule ID covering the requested date and time window.
+	 */
+	private static function resolve_schedule_id_for_booking( $location_id, $service_id, $staff_id, $date, $start_time, $end_time ) {
+		$schedules = self::get_schedules( $location_id, $service_id, $staff_id, $date );
+		if ( empty( $schedules ) ) {
+			return DGAP_Schedules_Repo::get_schedule_id_by_staff_service_location( $staff_id, $service_id, $location_id );
+		}
+
+		$day_key   = strtolower( gmdate( 'l', strtotime( $date ) ) );
+		$req_start = strtotime( $date . ' ' . $start_time );
+		$req_end   = strtotime( $date . ' ' . $end_time );
+
+		foreach ( $schedules as $sched ) {
+			$availability = json_decode( $sched['availability'] ?? '', true );
+			if ( empty( $availability[ $day_key ] ) || ( $availability[ $day_key ]['status'] ?? '' ) !== 'open' ) {
+				continue;
+			}
+			$day_open  = strtotime( $date . ' ' . ( $availability[ $day_key ]['open'] ?? '' ) );
+			$day_close = strtotime( $date . ' ' . ( $availability[ $day_key ]['close'] ?? '' ) );
+			if ( $day_open && $day_close && $req_start >= $day_open && $req_end <= $day_close ) {
+				if ( DGAP_Slot_Generator::is_slot_available( (int) $sched['id'], $date, $start_time, $end_time ) ) {
+					return (int) $sched['id'];
+				}
+			}
+		}
+
+		return (int) $schedules[0]['id'];
+	}
+
 	public static function create_booking( $data ) {
 		global $wpdb;
 
-		$schedule_id = DGAP_Schedules_Repo::get_schedule_id_by_staff_service_location(
-			$data['staff_id'],
+		$schedule_id = self::resolve_schedule_id_for_booking(
+			$data['location_id'],
 			$data['service_id'],
-			$data['location_id']
+			$data['staff_id'],
+			$data['booking_date'],
+			$data['start_time'],
+			$data['end_time']
 		);
 
 		if ( ! DGAP_Slot_Generator::is_slot_available(

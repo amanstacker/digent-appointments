@@ -4,6 +4,28 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class DGAP_Slot_Generator {
 
 	/**
+	 * Merge available slots across multiple matching schedules (e.g. morning + evening shifts).
+	 */
+	public static function generate_slots_from_schedules( $schedules, $service, $date ) {
+		if ( empty( $schedules ) || ! is_array( $schedules ) ) {
+			return [];
+		}
+
+		$merged = [];
+		foreach ( $schedules as $schedule ) {
+			$slots = self::generate_slot_from_schedule( $schedule, $service, $date );
+			foreach ( $slots as $slot ) {
+				if ( ! isset( $merged[ $slot['start'] ] ) ) {
+					$merged[ $slot['start'] ] = $slot;
+				}
+			}
+		}
+
+		ksort( $merged );
+		return array_values( $merged );
+	}
+
+	/**
 	 * Generate slots based on schedule, service, and date
 	 *
 	 * @param array  $schedule Schedule data including availability
@@ -18,6 +40,36 @@ class DGAP_Slot_Generator {
 		$availability = json_decode( $schedule['availability'], true );
 		if ( empty( $availability ) ) {
 			return $slots;
+		}
+
+		$today_str = current_time( 'Y-m-d' );
+		if ( $date < $today_str ) {
+			return $slots;
+		}
+
+		$advanced_days = absint( $service['advanced_booking'] ?? 0 );
+		if ( $advanced_days > 0 ) {
+			$min_date = gmdate( 'Y-m-d', strtotime( $today_str . ' +' . $advanced_days . ' days' ) );
+			if ( $date < $min_date ) {
+				return $slots;
+			}
+		}
+
+		$service_id  = absint( $service['id'] ?? 0 );
+		$daily_limit = absint( $service['daily_limit'] ?? 0 );
+		if ( $service_id > 0 && $daily_limit > 0 ) {
+			global $wpdb;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific daily limit check.
+			$daily_count = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$wpdb->prefix}dgap_bookings WHERE service_id = %d AND booking_date = %s AND status = 'confirmed'",
+					$service_id,
+					$date
+				)
+			);
+			if ( $daily_count >= $daily_limit ) {
+				return $slots;
+			}
 		}
 
 		$day_key = strtolower( gmdate( 'l', strtotime( $date ) ) );
@@ -55,7 +107,28 @@ class DGAP_Slot_Generator {
 		$buffer_b_sec = $buffer_before * MINUTE_IN_SECONDS;
 		$buffer_a_sec = $buffer_after * MINUTE_IN_SECONDS;
 
-		$breaks = $day['breaks'] ?? [];
+		$breaks      = $day['breaks'] ?? [];
+		$schedule_id = absint( $schedule['id'] ?? 0 );
+		$capacity    = max( 1, absint( $schedule['capacity'] ?? 1 ) );
+		$now_ts      = current_time( 'timestamp' );
+		$is_today    = ( $date === $today_str );
+
+		$existing_bookings = [];
+		if ( $schedule_id > 0 ) {
+			global $wpdb;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific booked slot check.
+			$existing_bookings = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT start_time, end_time FROM {$wpdb->prefix}dgap_bookings WHERE schedule_id = %d AND booking_date = %s AND status = 'confirmed'",
+					$schedule_id,
+					$date
+				),
+				ARRAY_A
+			);
+		}
+
+		$general_settings = get_option( 'dgap_general_settings', [] );
+		$time_format      = ( '12' === (string) ( $general_settings['time_format'] ?? '24' ) ) ? 'g:i A' : 'H:i';
 
 		for ( $start = $day_start; ; $start += $step_sec ) {
 
@@ -67,6 +140,11 @@ class DGAP_Slot_Generator {
 
 			if ( $effective_end > $day_end ) {
 				break;
+			}
+
+			// Skip past slots on today's date
+			if ( $is_today && $booking_start <= $now_ts ) {
+				continue;
 			}
 
 			// Skip breaks
@@ -89,13 +167,32 @@ class DGAP_Slot_Generator {
 				continue;
 			}
 
+			// Skip slots that reached schedule capacity
+			if ( ! empty( $existing_bookings ) ) {
+				$slot_start_hi = gmdate( 'H:i', $booking_start );
+				$slot_end_hi   = gmdate( 'H:i', $booking_end );
+				$overlap_count = 0;
+
+				foreach ( $existing_bookings as $bk ) {
+					$bk_start = substr( (string) $bk['start_time'], 0, 5 );
+					$bk_end   = substr( (string) $bk['end_time'], 0, 5 );
+					if ( $bk_start < $slot_end_hi && $bk_end > $slot_start_hi ) {
+						$overlap_count++;
+					}
+				}
+
+				if ( $overlap_count >= $capacity ) {
+					continue;
+				}
+			}
+
 			$slots[] = [
 				'start' => date_i18n( 'H:i', $booking_start ),
 				'end'   => date_i18n( 'H:i', $booking_end ),
 				'label' => sprintf(
 					'%s - %s',
-					date_i18n( 'H:i', $booking_start ),
-					date_i18n( 'H:i', $booking_end )
+					date_i18n( $time_format, $booking_start ),
+					date_i18n( $time_format, $booking_end )
 				),
 			];
 		}
@@ -107,7 +204,16 @@ class DGAP_Slot_Generator {
 		
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching --Reason Dynamic data is getting fetched here.
-		$count = $wpdb->get_var(
+		$capacity = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT capacity FROM {$wpdb->prefix}dgap_schedules WHERE id = %d",
+				$schedule_id
+			)
+		);
+		$capacity = max( 1, $capacity );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching --Reason Dynamic data is getting fetched here.
+		$count = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(*)
 				FROM {$wpdb->prefix}dgap_bookings
@@ -125,7 +231,7 @@ class DGAP_Slot_Generator {
 			)
 		);
 
-		return $count == 0;
+		return $count < $capacity;
 	}
 
 }

@@ -296,14 +296,14 @@ class DGAP_Bookings_Ajax {
 			wp_send_json_error( esc_html__( 'Invalid data.', 'digent-appointments' ) );
 		}
 
-		$schedule = DGAP_Booking_Repo::get_schedule(
+		$schedules = DGAP_Booking_Repo::get_schedules(
 			$location_id,
 			$service_id,
 			$staff_id,
 			$date
 		);
 
-		if ( ! $schedule ) {
+		if ( empty( $schedules ) ) {
 			wp_send_json_error( esc_html__( 'No schedule found.', 'digent-appointments' ) );
 		}
 
@@ -313,8 +313,8 @@ class DGAP_Bookings_Ajax {
 			wp_send_json_error( esc_html__( 'Service not found.', 'digent-appointments' ) );
 		}
 
-		$slots = DGAP_Slot_Generator::generate_slot_from_schedule(
-			$schedule,
+		$slots = DGAP_Slot_Generator::generate_slots_from_schedules(
+			$schedules,
 			$service,
 			$date
 		);

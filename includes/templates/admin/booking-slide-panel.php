@@ -97,7 +97,12 @@
 				<div class="dgap-time-box">
 					<div>
 						<label><?php esc_html_e( 'Booking Date', 'digent-appointments' ); ?></label>
-						<input type="date" name="booking_date" required>
+						<div class="dgap-date-input-wrap">
+							<input type="text" class="dgap-date-picker" name="booking_date" placeholder="YYYY-MM-DD" autocomplete="off" required>
+							<button type="button" class="dgap-date-trigger" tabindex="-1" title="<?php esc_attr_e( 'Open Calendar', 'digent-appointments' ); ?>">
+								<span class="dashicons dashicons-calendar-alt"></span>
+							</button>
+						</div>
 					</div>
 
 					<div>

@@ -68,9 +68,6 @@
 
 	<h3>
 		<?php esc_html_e( 'Availability', 'digent-appointments' ); ?>
-		<span class="dgap-muted">
-			<?php esc_html_e( 'When this schedule is available', 'digent-appointments' ); ?>
-		</span>
 	</h3>
 
 	<!-- Days -->
@@ -108,7 +105,12 @@
 
 			<div class="dgap-date-field">
 				<label><?php esc_html_e( 'Start Date', 'digent-appointments' ); ?></label>
-				<input type="date" name="date_start" required>
+				<div class="dgap-date-input-wrap">
+					<input type="text" class="dgap-date-picker" name="date_start" placeholder="YYYY-MM-DD" autocomplete="off" required>
+					<button type="button" class="dgap-date-trigger" tabindex="-1" title="<?php esc_attr_e( 'Open Calendar', 'digent-appointments' ); ?>">
+						<span class="dashicons dashicons-calendar-alt"></span>
+					</button>
+				</div>
 			</div>
 
 			<div class="dgap-date-field">
@@ -116,7 +118,12 @@
 					<?php esc_html_e( 'End Date', 'digent-appointments' ); ?>
 					<span class="dgap-muted"><?php esc_html_e( '(optional)', 'digent-appointments' );?></span>
 				</label>
-				<input type="date" name="date_end">
+				<div class="dgap-date-input-wrap">
+					<input type="text" class="dgap-date-picker" name="date_end" placeholder="YYYY-MM-DD" autocomplete="off">
+					<button type="button" class="dgap-date-trigger" tabindex="-1" title="<?php esc_attr_e( 'Open Calendar', 'digent-appointments' ); ?>">
+						<span class="dashicons dashicons-calendar-alt"></span>
+					</button>
+				</div>
 			</div>
 
 		</div>

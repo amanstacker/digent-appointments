@@ -21,6 +21,11 @@ foreach ( $top_services as $srv ) {
 		$max_service_count = (int) $srv['bookings_count'];
 	}
 }
+
+if ( ! class_exists( 'DGAP_Booking_Repo' ) ) {
+	require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
+}
+$total_bookings_count = (int) DGAP_Booking_Repo::count_all();
 ?>
 
 <div class="dgap-dashboard-overview">
@@ -74,6 +79,7 @@ foreach ( $top_services as $srv ) {
 		<!-- Left Column: Upcoming Appointments + Published Forms -->
 		<div class="dgap-overview-main">
 
+			<?php ob_start(); ?>
 			<!-- Upcoming Appointments -->
 			<div class="dgap-dash-card">
 				<div class="dgap-dash-card-header">
@@ -155,6 +161,10 @@ foreach ( $top_services as $srv ) {
 				</div>
 			</div>
 
+			<?php
+			$dgap_upcoming_card_html = ob_get_clean();
+			ob_start();
+			?>
 			<!-- Active Booking Forms & Shortcodes -->
 			<div class="dgap-dash-card">
 				<div class="dgap-dash-card-header">
@@ -231,6 +241,16 @@ foreach ( $top_services as $srv ) {
 					<?php endif; ?>
 				</div>
 			</div>
+			<?php
+			$dgap_published_forms_card_html = ob_get_clean();
+			if ( 0 === $total_bookings_count ) {
+				echo $dgap_published_forms_card_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside card template.
+				echo $dgap_upcoming_card_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside card template.
+			} else {
+				echo $dgap_upcoming_card_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside card template.
+				echo $dgap_published_forms_card_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside card template.
+			}
+			?>
 
 		</div>
 
@@ -368,6 +388,16 @@ foreach ( $top_services as $srv ) {
 					<?php endif; ?>
 				</div>
 			</div>
+			<?php
+			$dgap_published_forms_card_html = ob_get_clean();
+			if ( 0 === $total_bookings_count ) {
+				echo $dgap_published_forms_card_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside card template.
+				echo $dgap_upcoming_card_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside card template.
+			} else {
+				echo $dgap_upcoming_card_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside card template.
+				echo $dgap_published_forms_card_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside card template.
+			}
+			?>
 
 		</div>
 
