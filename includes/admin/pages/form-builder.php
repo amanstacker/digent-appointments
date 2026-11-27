@@ -250,7 +250,7 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 						<div class="dgap-accordion-header">
 							<span class="dgap-acc-title-wrap">
 								<span class="dashicons dashicons-translation dgap-acc-icon"></span>
-								<span><?php esc_html_e( 'Field Labels', 'digent-appointments' ); ?></span>
+								<span><?php esc_html_e( 'Labels & Headings', 'digent-appointments' ); ?></span>
 							</span>
 							<span class="dashicons dashicons-arrow-down-alt2 dgap-acc-arrow"></span>
 						</div>
@@ -268,6 +268,39 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 							<div class="dgap-field-row">
 								<label><?php esc_html_e( 'Staff Label', 'digent-appointments' ); ?></label>
 								<input type="text" name="settings[labels][worker]" placeholder="<?php esc_attr_e( 'Staff', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['worker'] ?? 'Staff' ); ?>" />
+							</div>
+
+							<div class="dgap-field-row" style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;">
+								<strong style="font-size:11.5px;color:#64748b;text-transform:uppercase;letter-spacing:0.04em;"><?php esc_html_e( 'Section Titles', 'digent-appointments' ); ?></strong>
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Appointment Section Title', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][section_appointment]" placeholder="<?php esc_attr_e( 'Choose Appointment', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['section_appointment'] ?? 'Choose Appointment' ); ?>" />
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Date & Time Section Title', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][section_datetime]" placeholder="<?php esc_attr_e( 'Select Date & Time', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['section_datetime'] ?? 'Select Date & Time' ); ?>" />
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Personal Info Section Title', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][section_personal]" placeholder="<?php esc_attr_e( 'Personal Information', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['section_personal'] ?? 'Personal Information' ); ?>" />
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Overview Section Title', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][section_summary]" placeholder="<?php esc_attr_e( 'Booking Overview', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['section_summary'] ?? 'Booking Overview' ); ?>" />
+							</div>
+
+							<div class="dgap-field-row" style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;">
+								<strong style="font-size:11.5px;color:#64748b;text-transform:uppercase;letter-spacing:0.04em;"><?php esc_html_e( 'Buttons', 'digent-appointments' ); ?></strong>
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Submit Button Text', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][submit_button]" placeholder="<?php esc_attr_e( 'Submit', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['submit_button'] ?? 'Submit' ); ?>" />
 							</div>
 						</div>
 					</div>
@@ -321,8 +354,8 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 								<div class="dgap-field-row">
 									<label><?php esc_html_e( 'Primary Color', 'digent-appointments' ); ?></label>
 									<div class="dgap-color-row">
-										<input type="color" name="settings[appearance][primary_color]" value="<?php echo esc_attr( $form['settings']['appearance']['primary_color'] ?? '#10b981' ); ?>" />
-										<input type="text" class="dgap-color-text" data-target="settings[appearance][primary_color]" value="<?php echo esc_attr( $form['settings']['appearance']['primary_color'] ?? '#10b981' ); ?>" placeholder="#10b981" maxlength="7" />
+										<input type="color" name="settings[appearance][primary_color]" value="<?php echo esc_attr( $form['settings']['appearance']['primary_color'] ?? '#2563eb' ); ?>" />
+										<input type="text" class="dgap-color-text" data-target="settings[appearance][primary_color]" value="<?php echo esc_attr( $form['settings']['appearance']['primary_color'] ?? '#2563eb' ); ?>" placeholder="#2563eb" maxlength="7" />
 									</div>
 								</div>
 
@@ -337,7 +370,7 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 								<div class="dgap-field-row">
 									<label><?php esc_html_e( 'Border Radius', 'digent-appointments' ); ?></label>
 									<div class="dgap-input-group">
-										<input type="number" name="settings[appearance][border_radius]" placeholder="8" min="0" max="50" value="<?php echo esc_attr( $form['settings']['appearance']['border_radius'] ?? '8' ); ?>" />
+										<input type="number" name="settings[appearance][border_radius]" placeholder="3" min="0" max="50" value="<?php echo esc_attr( $form['settings']['appearance']['border_radius'] ?? '3' ); ?>" />
 										<span class="dgap-unit-label">px</span>
 									</div>
 								</div>

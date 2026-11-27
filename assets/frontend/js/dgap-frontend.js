@@ -56,6 +56,11 @@ jQuery(function ($) {
             $wrap.find('#dgap-staff option[data-placeholder="1"]')
                  .text( '-- Select ' + labels.worker + ' --' );
         }
+        $wrap.find('[data-label="section_appointment"]').text( labels.section_appointment || 'Choose Appointment' );
+        $wrap.find('[data-label="section_datetime"]').text( labels.section_datetime || 'Select Date & Time' );
+        $wrap.find('[data-label="section_personal"]').text( labels.section_personal || 'Personal Information' );
+        $wrap.find('[data-label="section_summary"]').text( labels.section_summary || 'Booking Overview' );
+        $wrap.find('[data-label="submit_button"]').text( labels.submit_button || 'Submit' );
     }
 
     /* ------------------------------

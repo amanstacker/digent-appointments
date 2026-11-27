@@ -205,13 +205,22 @@ jQuery(function ($) {
     /* ================================================
         FIELD LABELS LIVE UPDATE
     ================================================ */
+    function getBuilderLabels() {
+        return {
+            location:            $('input[name="settings[labels][location]"]').val(),
+            service:             $('input[name="settings[labels][service]"]').val(),
+            worker:              $('input[name="settings[labels][worker]"]').val(),
+            section_appointment: $('input[name="settings[labels][section_appointment]"]').val(),
+            section_datetime:    $('input[name="settings[labels][section_datetime]"]').val(),
+            section_personal:    $('input[name="settings[labels][section_personal]"]').val(),
+            section_summary:     $('input[name="settings[labels][section_summary]"]').val(),
+            submit_button:       $('input[name="settings[labels][submit_button]"]').val()
+        };
+    }
+
     $(document).on('input', '[name^="settings[labels]"]', function () {
         if (window.dgapForms) {
-            window.dgapForms.applyLabels({
-                location: $('input[name="settings[labels][location]"]').val(),
-                service:  $('input[name="settings[labels][service]"]').val(),
-                worker:   $('input[name="settings[labels][worker]"]').val()
-            });
+            window.dgapForms.applyLabels(getBuilderLabels());
         }
     });
 
@@ -348,11 +357,7 @@ jQuery(function ($) {
 
                 // Apply labels from builder inputs
                 if (window.dgapForms) {
-                    window.dgapForms.applyLabels({
-                        location: $('input[name="settings[labels][location]"]').val(),
-                        service:  $('input[name="settings[labels][service]"]').val(),
-                        worker:   $('input[name="settings[labels][worker]"]').val()
-                    });
+                    window.dgapForms.applyLabels(getBuilderLabels());
                 }
 
                 restoreFormState();

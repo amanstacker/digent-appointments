@@ -71,7 +71,7 @@ class DGAP_Admin {
 				font-weight: 700 !important;
 				letter-spacing: 0.08em !important;
 				text-transform: uppercase !important;
-				color: #10b981 !important;
+				color: #60a5fa !important;
 				background: transparent !important;
 				cursor: default !important;
 				pointer-events: none !important;

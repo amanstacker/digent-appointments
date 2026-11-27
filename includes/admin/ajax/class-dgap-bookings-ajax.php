@@ -290,10 +290,16 @@ class DGAP_Bookings_Ajax {
 		$staff_id    = absint( $_POST['staff_id'] ?? 0 );
 		$service_id  = absint( $_POST['service_id'] ?? 0 );
 		$location_id = absint( $_POST['location_id'] ?? 0 );
+		$booking_id  = absint( $_POST['booking_id'] ?? 0 );
 		$date        = sanitize_text_field( wp_unslash( $_POST['date'] ?? '' ) );
 
 		if ( ! $staff_id || ! $service_id || ! $location_id || ! $date ) {
 			wp_send_json_error( esc_html__( 'Invalid data.', 'digent-appointments' ) );
+		}
+
+		$service = DGAP_Booking_Repo::get_service_meta( $service_id );
+		if ( ! $service ) {
+			wp_send_json_error( esc_html__( 'Service not found.', 'digent-appointments' ) );
 		}
 
 		$schedules = DGAP_Booking_Repo::get_schedules(
@@ -303,23 +309,58 @@ class DGAP_Bookings_Ajax {
 			$date
 		);
 
-		if ( empty( $schedules ) ) {
-			wp_send_json_error( esc_html__( 'No schedule found.', 'digent-appointments' ) );
+		$slots = [];
+		if ( ! empty( $schedules ) ) {
+			$slots = DGAP_Slot_Generator::generate_slots_from_schedules(
+				$schedules,
+				$service,
+				$date
+			);
 		}
 
-		$service = DGAP_Booking_Repo::get_service_meta( $service_id );
+		// When editing an existing booking, keep its current slot selectable on that date.
+		if ( $booking_id > 0 ) {
+			$existing = DGAP_Booking_Repo::get( $booking_id );
+			if ( $existing && ( $existing['booking_date'] ?? '' ) === $date ) {
+				$cur_start = substr( (string) ( $existing['start_time'] ?? '' ), 0, 5 );
+				$cur_end   = substr( (string) ( $existing['end_time'] ?? '' ), 0, 5 );
+				if ( '' !== $cur_start && '' !== $cur_end ) {
+					$already_exists = false;
+					foreach ( $slots as $s ) {
+						if ( ( $s['start'] ?? '' ) === $cur_start && ( $s['end'] ?? '' ) === $cur_end ) {
+							$already_exists = true;
+							break;
+						}
+					}
+					if ( ! $already_exists ) {
+						$general_settings = get_option( 'dgap_general_settings', [] );
+						$time_format      = ( '12' === (string) ( $general_settings['time_format'] ?? '24' ) ) ? 'g:i A' : 'H:i';
+						$slot_label_style = $general_settings['slot_label_style'] ?? 'from_to';
+						$st_ts            = strtotime( $date . ' ' . $cur_start );
+						$en_ts            = strtotime( $date . ' ' . $cur_end );
+						$cur_label        = ( 'from' === $slot_label_style )
+							? date_i18n( $time_format, $st_ts )
+							: sprintf( '%s - %s', date_i18n( $time_format, $st_ts ), date_i18n( $time_format, $en_ts ) );
 
-		if ( ! $service ) {
-			wp_send_json_error( esc_html__( 'Service not found.', 'digent-appointments' ) );
+						array_unshift(
+							$slots,
+							[
+								'start' => $cur_start,
+								'end'   => $cur_end,
+								'label' => $cur_label . ' ' . esc_html__( '(Current)', 'digent-appointments' ),
+							]
+						);
+					}
+				}
+			}
 		}
 
-		$slots = DGAP_Slot_Generator::generate_slots_from_schedules(
-			$schedules,
-			$service,
-			$date
+		wp_send_json_success(
+			[
+				'slots' => $slots,
+				'price' => isset( $service['price'] ) ? (float) $service['price'] : null,
+			]
 		);
-
-		wp_send_json_success( $slots );
 	}
 
 	public function calendar() {
@@ -365,29 +406,70 @@ class DGAP_Bookings_Ajax {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --Reason: Sanitization is handled below
 		parse_str( wp_unslash( $_POST['data'] ), $data );
 
+		$location_id  = absint( $data['location_id'] ?? 0 );
+		$service_id   = absint( $data['service_id'] ?? 0 );
+		$staff_id     = absint( $data['staff_id'] ?? 0 );
+		$booking_date = sanitize_text_field( $data['booking_date'] ?? '' );
+
+		$start_time = sanitize_text_field( $data['start_time'] ?? '' );
+		$end_time   = sanitize_text_field( $data['end_time'] ?? '' );
+		if ( ( '' === $start_time || '' === $end_time ) && ! empty( $data['time_slot'] ) ) {
+			$slot_raw   = sanitize_text_field( $data['time_slot'] );
+			$slot_parts = preg_split( '/\s*(?:\||-)\s*/', $slot_raw );
+			if ( count( $slot_parts ) >= 2 ) {
+				$start_time = trim( $slot_parts[0] );
+				$end_time   = trim( $slot_parts[1] );
+			}
+		}
+
+		if ( ! $location_id || ! $service_id || ! $staff_id || '' === $booking_date || '' === $start_time || '' === $end_time ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Please select location, service, staff, date, and a valid time slot.', 'digent-appointments' ) ] );
+		}
+
+		$schedule_id = ! empty( $data['schedule_id'] )
+			? absint( $data['schedule_id'] )
+			: DGAP_Booking_Repo::resolve_schedule_id_for_booking( $location_id, $service_id, $staff_id, $booking_date, $start_time, $end_time );
+
+		$booking_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
+
+		if ( ! $booking_id && ! DGAP_Slot_Generator::is_slot_available( $schedule_id, $booking_date, $start_time, $end_time ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Selected time slot is no longer available.', 'digent-appointments' ) ] );
+		}
+
+		$customer_id = absint( $data['customer_id'] ?? 0 );
+		if ( ! $customer_id ) {
+			$customer_id = DGAP_Booking_Repo::get_or_create_customer(
+				[
+					'user_id'         => ! empty( $data['user_id'] ) ? (int) $data['user_id'] : null,
+					'first_name'      => sanitize_text_field( $data['first_name'] ?? '' ),
+					'last_name'       => sanitize_text_field( $data['last_name'] ?? '' ),
+					'email'           => sanitize_email( $data['email'] ?? '' ),
+					'phone_dial_code' => sanitize_text_field( $data['phone_dial_code'] ?? '' ),
+					'phone'           => sanitize_text_field( $data['phone'] ?? '' ),
+					'notes'           => sanitize_textarea_field( $data['booking_note'] ?? '' ),
+				]
+			);
+		}
+
+		$status  = sanitize_text_field( $data['status'] ?? 'pending' );
 		$payload = [
 			'user_id'      => ! empty( $data['user_id'] ) ? (int) $data['user_id'] : null,
-			'customer_id'  => absint( $data['customer_id'] ),
-			'schedule_id'  => absint( $data['schedule_id'] ),
-			'location_id'  => absint( $data['location_id'] ),
-			'service_id'   => absint( $data['service_id'] ),
-			'staff_id'     => absint( $data['staff_id'] ),
-			'booking_date' => sanitize_text_field( $data['booking_date'] ),
-			'start_time'   => sanitize_text_field( $data['start_time'] ),
-			'end_time'     => sanitize_text_field( $data['end_time'] ),
-			'price'        => isset( $data['price'] ) ? (float) $data['price'] : 0,
+			'customer_id'  => $customer_id,
+			'schedule_id'  => $schedule_id,
+			'location_id'  => $location_id,
+			'service_id'   => $service_id,
+			'staff_id'     => $staff_id,
+			'booking_date' => $booking_date,
+			'start_time'   => $start_time,
+			'end_time'     => $end_time,
+			'price'        => isset( $data['price'] ) && '' !== $data['price'] ? (float) $data['price'] : 0,
 			'booking_note' => sanitize_textarea_field( $data['booking_note'] ?? '' ),
-			'status'       => sanitize_text_field( $data['status'] ?? 'pending' ),
-			'ip_address'   => sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR']  ?? null ) ),
+			'status'       => $status,
+			'ip_address'   => sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? null ) ),
 		];
 
-		/**
-		 * 👉 Future hook:
-		 * slot overlap validation
-		 * payment validation
-		 */
-		if ( ! empty( $data['id'] ) ) {
-			$result = DGAP_Booking_Repo::update( (int) $data['id'], $payload );
+		if ( $booking_id > 0 ) {
+			$result = DGAP_Booking_Repo::update( $booking_id, $payload );
 		} else {
 			$result = DGAP_Booking_Repo::insert( $payload );
 		}
@@ -399,6 +481,23 @@ class DGAP_Bookings_Ajax {
 					'message' => esc_html( $result->get_error_message() ),
 				]
 			);
+		}
+
+		if ( ! $booking_id && $result ) {
+			$email_data = array_merge(
+				$payload,
+				[
+					'booking_id'    => (int) $result,
+					'first_name'    => sanitize_text_field( $data['first_name'] ?? '' ),
+					'last_name'     => sanitize_text_field( $data['last_name'] ?? '' ),
+					'customer_name' => trim( sanitize_text_field( ( $data['first_name'] ?? '' ) . ' ' . ( $data['last_name'] ?? '' ) ) ),
+					'email'         => sanitize_email( $data['email'] ?? '' ),
+					'phone'         => trim( sanitize_text_field( ( $data['phone_dial_code'] ?? '' ) . ' ' . ( $data['phone'] ?? '' ) ) ),
+				]
+			);
+			DGAP_Email_Notification::send_notification_email( $status, $email_data, 'admin' );
+			DGAP_Email_Notification::send_notification_email( $status, $email_data, 'customer' );
+			DGAP_Email_Notification::send_notification_email( $status, $email_data, 'employee' );
 		}
 
 		wp_send_json_success(

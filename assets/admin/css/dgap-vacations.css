@@ -9,7 +9,7 @@
 	padding: 10px;
 	background: #fff;
 	border: 1px solid #e5e7eb;
-	border-radius: 8px;
+	border-radius: 3px;
 }
 
 /* LEFT: Calendar */
@@ -52,7 +52,7 @@
 	height: 40px;
 	margin-bottom: 8px;
 	background: #f3f4f6;
-	border-radius: 6px;
+	border-radius: 3px;
 }
 
 #dgap-vacation-calendar .ui-datepicker-title {
@@ -72,7 +72,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 6px;
+	border-radius: 3px;
 	cursor: pointer;
 }
 
@@ -100,8 +100,8 @@
 
 #dgap-vacation-calendar .ui-datepicker-prev:hover,
 #dgap-vacation-calendar .ui-datepicker-next:hover {
-	background: var(--dgap-primary-light, #ecfdf5);
-	color: var(--dgap-primary-hover, #059669);
+	background: var(--dgap-primary-light, #eff6ff);
+	color: var(--dgap-primary-hover, #1d4ed8);
 }
 
 /* Table */
@@ -132,7 +132,7 @@
 	width: 32px;
 	height: 32px;
 	margin: 0 auto;
-	border-radius: 6px;
+	border-radius: 3px;
 	font-size: 13px;
 	color: #111827;
 	text-decoration: none;
@@ -140,8 +140,8 @@
 }
 
 #dgap-vacation-calendar td a:hover {
-	background: var(--dgap-primary-light, #ecfdf5);
-	color: var(--dgap-primary-hover, #059669);
+	background: var(--dgap-primary-light, #eff6ff);
+	color: var(--dgap-primary-hover, #1d4ed8);
 }
 
 /* ===============================
@@ -149,23 +149,23 @@
  * =============================== */
 
 #dgap-vacation-calendar td.dgap-selected-day a {
-	background: var(--dgap-primary, #10b981) !important;
+	background: var(--dgap-primary, #2563eb) !important;
 	color: #fff !important;
-	border-radius: 6px;
+	border-radius: 3px;
 }
 
 /* TODAY */
 #dgap-vacation-calendar .ui-datepicker-today a {
-	background: var(--dgap-primary-light, #ecfdf5) !important;
-	color: var(--dgap-primary-text, #065f46) !important;
-	border: 1px solid var(--dgap-primary, #10b981) !important;
+	background: var(--dgap-primary-light, #eff6ff) !important;
+	color: var(--dgap-primary-text, #1e40af) !important;
+	border: 1px solid var(--dgap-primary, #2563eb) !important;
 }
 
 /* TODAY + SELECTED → SELECTED WINS */
 #dgap-vacation-calendar .ui-datepicker-today.dgap-selected-day a {
-	background: var(--dgap-primary, #10b981) !important;
+	background: var(--dgap-primary, #2563eb) !important;
 	color: #fff !important;
-	border-color: var(--dgap-primary, #10b981) !important;
+	border-color: var(--dgap-primary, #2563eb) !important;
 }
 
 /* =========================================================
@@ -188,7 +188,7 @@
 	justify-content: space-between;
 	align-items: center;
 	padding: 4px 5px;
-	border-radius: 6px;
+	border-radius: 3px;
 	border: 1px solid #e5e7eb;
 	background: #f9fafb;
 	font-size: 12px;
@@ -253,14 +253,14 @@
 .dgap-form .select2-selection{
 	padding: 4px 3px !important;
 	border: 1px solid var(--dgap-slate-300, #cbd5e1) !important;
-	border-radius: var(--dgap-btn-radius, 6px) !important;
+	border-radius: var(--dgap-btn-radius, 3px) !important;
 	height: 43px !important;
 	transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .dgap-form .select2-container--default.select2-container--focus .select2-selection,
 .dgap-form .select2-container--default.select2-container--open .select2-selection {
-	border-color: var(--dgap-primary, #10b981) !important;
-	box-shadow: 0 0 0 3px var(--dgap-primary-focus, rgba(16, 185, 129, 0.2)) !important;
+	border-color: var(--dgap-primary, #2563eb) !important;
+	box-shadow: 0 0 0 3px var(--dgap-primary-focus, rgba(37, 99, 235, 0.2)) !important;
 	outline: none !important;
 }
 .dgap-form .select2-container .select2-search--inline .select2-search__field{

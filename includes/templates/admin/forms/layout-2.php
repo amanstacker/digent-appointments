@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <!-- Selection -->
             <div class="dgap-card dgap-selection">
-                <h3 class="dgap-title">
-                    <?php echo esc_html__( 'Choose Appointment', 'digent-appointments' ); ?>
+                <h3 class="dgap-title" data-label="section_appointment">
+                    <?php echo esc_html( ! empty( $form['settings']['labels']['section_appointment'] ) ? $form['settings']['labels']['section_appointment'] : __( 'Choose Appointment', 'digent-appointments' ) ); ?>
                 </h3>
                 <div class="dgap-field">
                     <label data-label="location"><?php echo esc_html__( 'Location', 'digent-appointments' ); ?></label>
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <!-- Calendar -->
             <div class="dgap-card dgap-calendar-wrapper">
-                <h3 class="dgap-title"><?php echo esc_html__( 'Select Date & Time', 'digent-appointments' ); ?></h3>
+                <h3 class="dgap-title" data-label="section_datetime"><?php echo esc_html( ! empty( $form['settings']['labels']['section_datetime'] ) ? $form['settings']['labels']['section_datetime'] : __( 'Select Date & Time', 'digent-appointments' ) ); ?></h3>
                 <?php include __DIR__ . '/partials/calendar.php'; ?>
                 <?php include __DIR__ . '/partials/timeslots.php'; ?>
             </div>
@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <!-- Personal Info -->
             <div class="dgap-card dgap-personal-info-wrapper">
-                <h3 class="dgap-title"><?php echo esc_html__( 'Personal Information', 'digent-appointments' ); ?></h3>
+                <h3 class="dgap-title" data-label="section_personal"><?php echo esc_html( ! empty( $form['settings']['labels']['section_personal'] ) ? $form['settings']['labels']['section_personal'] : __( 'Personal Information', 'digent-appointments' ) ); ?></h3>
                 <p class="dgap-note"><?php echo esc_html__( 'Fields with * are required', 'digent-appointments' ); ?></p>
                 <div class="dgap-personal-info disabled">
                     <?php //include __DIR__ . '/partials/personal-info.php'; ?>
@@ -51,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <!-- Summary -->
             <div class="dgap-card">
-                <h3 class="dgap-title"><?php echo esc_html__( 'Booking Overview', 'digent-appointments' ); ?></h3>
+                <h3 class="dgap-title" data-label="section_summary"><?php echo esc_html( ! empty( $form['settings']['labels']['section_summary'] ) ? $form['settings']['labels']['section_summary'] : __( 'Booking Overview', 'digent-appointments' ) ); ?></h3>
                 <?php include __DIR__ . '/partials/summary.php'; ?>
             </div>
 
@@ -60,7 +60,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <?php include __DIR__ . '/partials/security-fields.php'; ?>
 
                 <div class="dgap-actions">
-                    <button type="button" class="dgap-btn-submit"><?php echo esc_html__( 'Submit', 'digent-appointments' ); ?></button>
+                    <button type="button" class="dgap-btn-submit" data-label="submit_button"><?php echo esc_html( ! empty( $form['settings']['labels']['submit_button'] ) ? $form['settings']['labels']['submit_button'] : __( 'Submit', 'digent-appointments' ) ); ?></button>
                 </div>
             </div>
         </div>

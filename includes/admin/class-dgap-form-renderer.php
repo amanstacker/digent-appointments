@@ -35,7 +35,7 @@ class DGAP_Form_Renderer {
 
 		$primary_color = ! empty( $appearance['primary_color'] )
 			? esc_attr( $appearance['primary_color'] )
-			: '#10b981';
+			: '#2563eb';
 
 		$bg_color      = ! empty( $appearance['bg_color'] )
 			? esc_attr( $appearance['bg_color'] )
@@ -43,7 +43,7 @@ class DGAP_Form_Renderer {
 
 		$border_radius = isset( $appearance['border_radius'] )
 			? esc_attr( $appearance['border_radius'] ) . 'px'
-			: '8px';
+			: '3px';
 
 		$button_style  = ! empty( $appearance['button_style'] )
 			? esc_attr( $appearance['button_style'] )

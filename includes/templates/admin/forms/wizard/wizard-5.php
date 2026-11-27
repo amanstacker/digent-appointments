@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
     <div class="dgap-boxed-body">
 
         <div class="dgap-wizard-step active" data-step="1">
-            <h2 class="dgap-wizard-step-title"><?php esc_html_e( 'Choose Appointment', 'digent-appointments' ); ?></h2>
+            <h2 class="dgap-wizard-step-title" data-label="section_appointment"><?php echo esc_html( ! empty( $form['settings']['labels']['section_appointment'] ) ? $form['settings']['labels']['section_appointment'] : __( 'Choose Appointment', 'digent-appointments' ) ); ?></h2>
             <p class="dgap-wizard-step-sub"><?php esc_html_e( 'Select your location, service and staff', 'digent-appointments' ); ?></p>
             <div class="dgap-field">
                 <label data-label="location"><?php esc_html_e( 'Location', 'digent-appointments' ); ?></label>
@@ -47,20 +47,20 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         </div>
 
         <div class="dgap-wizard-step" data-step="2">
-            <h2 class="dgap-wizard-step-title"><?php esc_html_e( 'Select Date & Time', 'digent-appointments' ); ?></h2>
+            <h2 class="dgap-wizard-step-title" data-label="section_datetime"><?php echo esc_html( ! empty( $form['settings']['labels']['section_datetime'] ) ? $form['settings']['labels']['section_datetime'] : __( 'Select Date & Time', 'digent-appointments' ) ); ?></h2>
             <p class="dgap-wizard-step-sub"><?php esc_html_e( 'Pick a date and available slot', 'digent-appointments' ); ?></p>
             <?php include __DIR__ . '/../partials/calendar.php'; ?>
             <?php include __DIR__ . '/../partials/timeslots.php'; ?>
         </div>
 
         <div class="dgap-wizard-step" data-step="3">
-            <h2 class="dgap-wizard-step-title"><?php esc_html_e( 'Personal Information', 'digent-appointments' ); ?></h2>
+            <h2 class="dgap-wizard-step-title" data-label="section_personal"><?php echo esc_html( ! empty( $form['settings']['labels']['section_personal'] ) ? $form['settings']['labels']['section_personal'] : __( 'Personal Information', 'digent-appointments' ) ); ?></h2>
             <p class="dgap-wizard-step-sub"><?php esc_html_e( 'Fields with * are required', 'digent-appointments' ); ?></p>
             <div class="dgap-personal-info"></div>
         </div>
 
         <div class="dgap-wizard-step" data-step="4">
-            <h2 class="dgap-wizard-step-title"><?php esc_html_e( 'Confirm Booking', 'digent-appointments' ); ?></h2>
+            <h2 class="dgap-wizard-step-title" data-label="section_summary"><?php echo esc_html( ! empty( $form['settings']['labels']['section_summary'] ) ? $form['settings']['labels']['section_summary'] : __( 'Confirm Booking', 'digent-appointments' ) ); ?></h2>
             <p class="dgap-wizard-step-sub"><?php esc_html_e( 'Review your booking details', 'digent-appointments' ); ?></p>
             <?php include __DIR__ . '/../partials/summary.php'; ?>
             <?php include __DIR__ . '/../partials/security-fields.php'; ?>
@@ -69,7 +69,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         <div class="dgap-wizard-nav">
             <button type="button" class="dgap-wizard-prev" style="display:none;">&larr; <?php esc_html_e( 'Back', 'digent-appointments' ); ?></button>
             <button type="button" class="dgap-wizard-next"><?php esc_html_e( 'Next', 'digent-appointments' ); ?> &rarr;</button>
-            <button type="button" class="dgap-wizard-submit dgap-btn-submit" style="display:none;"><?php esc_html_e( 'Submit', 'digent-appointments' ); ?></button>
+            <button type="button" class="dgap-wizard-submit dgap-btn-submit" data-label="submit_button" style="display:none;"><?php echo esc_html( ! empty( $form['settings']['labels']['submit_button'] ) ? $form['settings']['labels']['submit_button'] : __( 'Submit', 'digent-appointments' ) ); ?></button>
         </div>
 
     </div>

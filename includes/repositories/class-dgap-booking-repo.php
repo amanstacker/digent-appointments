@@ -539,7 +539,7 @@ class DGAP_Booking_Repo {
 	/**
 	 * Resolve the exact schedule ID covering the requested date and time window.
 	 */
-	private static function resolve_schedule_id_for_booking( $location_id, $service_id, $staff_id, $date, $start_time, $end_time ) {
+	public static function resolve_schedule_id_for_booking( $location_id, $service_id, $staff_id, $date, $start_time, $end_time ) {
 		$schedules = self::get_schedules( $location_id, $service_id, $staff_id, $date );
 		if ( empty( $schedules ) ) {
 			return DGAP_Schedules_Repo::get_schedule_id_by_staff_service_location( $staff_id, $service_id, $location_id );
@@ -613,7 +613,7 @@ class DGAP_Booking_Repo {
 		return (int) $wpdb->insert_id;
 	}
 
-	private static function get_or_create_customer( $data ) {
+	public static function get_or_create_customer( $data ) {
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Fetching customer ID by specific email address; result is request-specific and caching is not required here.
 		$id = $wpdb->get_var(

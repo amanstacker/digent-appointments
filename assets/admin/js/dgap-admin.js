@@ -713,6 +713,16 @@ jQuery(function ($) {
 			dgapUpdateSlotStepSelect(currentForm, 30);
 		}
 
+		if ( currentEntity === 'booking' ) {
+			currentForm[0].reset();
+			currentForm.find('[name="id"]').val('');
+			currentForm.find('[name="service_id"]').html('<option value="">Select Service</option>').prop('disabled', true);
+			currentForm.find('[name="staff_id"]').html('<option value="">Select Staff</option>').prop('disabled', true);
+			currentForm.find('[name="time_slot"]').html('<option value="">Select Slot</option>').prop('disabled', true);
+			currentForm.find('[name="status"]').val((dgap_admin && dgap_admin.default_booking_status) ? dgap_admin.default_booking_status : 'pending');
+			currentForm.find('.dgap-footer-error').hide().text('');
+		}
+
 		setTimeout(function () {
 			const texts = dgap.vacation.getEntityTexts();
 			$('#vacation-entity').closest('p').find('label').text(texts.label);
@@ -1007,17 +1017,75 @@ const bookingForm = $('#dgap-booking-form');
 
 if ( bookingForm.length ) {
 
-	const $location = bookingForm.find('[name="location_id"]');
-	const $service  = bookingForm.find('[name="service_id"]');
-	const $staff    = bookingForm.find('[name="staff_id"]');
+	const $location    = bookingForm.find('[name="location_id"]');
+	const $service     = bookingForm.find('[name="service_id"]');
+	const $staff       = bookingForm.find('[name="staff_id"]');
+	const $bookingDate = bookingForm.find('[name="booking_date"]');
+	const $timeSlot    = bookingForm.find('[name="time_slot"]');
+	const $price       = bookingForm.find('[name="price"]');
 
 	/* ---------- Helpers ---------- */
 	function resetSelect($el, placeholder) {
 		$el.html('<option value="">' + placeholder + '</option>').prop('disabled', true);
 	}
 
+	window.dgapLoadAdminBookingSlots = function ($form, selectedSlot = null) {
+		const $f       = ($form && $form.length) ? $form : bookingForm;
+		const locId    = $f.find('[name="location_id"]').val();
+		const srvId    = $f.find('[name="service_id"]').val();
+		const stfId    = $f.find('[name="staff_id"]').val();
+		const dateVal  = ($f.find('[name="booking_date"]').val() || '').trim();
+		const bookId   = $f.find('[name="id"]').val() || 0;
+		const $slotSel = $f.find('[name="time_slot"]');
+
+		if (!locId || !srvId || !stfId || !dateVal) {
+			resetSelect($slotSel, 'Select Slot');
+			return $.Deferred().resolve().promise();
+		}
+
+		resetSelect($slotSel, 'Loading slots...');
+
+		return $.post(dgap_admin.ajax_url, {
+			action      : 'dgap_get_slots',
+			location_id : locId,
+			service_id  : srvId,
+			staff_id    : stfId,
+			date        : dateVal,
+			booking_id  : bookId,
+			_dgap_nonce : dgap_admin.nonce
+		}, function (res) {
+			const payload = (res && res.success && res.data) ? res.data : {};
+			const slots   = Array.isArray(payload) ? payload : (Array.isArray(payload.slots) ? payload.slots : []);
+
+			if (!Array.isArray(payload) && payload.price !== null && payload.price !== undefined && !bookId) {
+				$f.find('[name="price"]').val(payload.price);
+			}
+
+			if (!slots.length) {
+				resetSelect($slotSel, 'No slots available');
+				return;
+			}
+
+			$slotSel.html('<option value="">Select Slot</option>');
+			$.each(slots, function (_, slot) {
+				const val = (slot.start || '') + '|' + (slot.end || '');
+				$slotSel.append(
+					$('<option></option>').val(val).text(slot.label || val)
+				);
+			});
+			$slotSel.prop('disabled', false);
+
+			if (selectedSlot) {
+				$slotSel.val(selectedSlot);
+			}
+		}).fail(function () {
+			resetSelect($slotSel, 'Select Slot');
+		});
+	};
+
 	resetSelect($service, 'Select Service');
 	resetSelect($staff, 'Select Staff');
+	resetSelect($timeSlot, 'Select Slot');
 
 	/* ---------- Location → Services ---------- */
 	$location.on('change', function () {
@@ -1026,6 +1094,7 @@ if ( bookingForm.length ) {
 
 		resetSelect($service, 'Loading services...');
 		resetSelect($staff, 'Select Staff');
+		resetSelect($timeSlot, 'Select Slot');
 
 		if ( ! locationId ) {
 			resetSelect($service, 'Select Service');
@@ -1045,9 +1114,11 @@ if ( bookingForm.length ) {
 			}
 
 			$.each(res.data, function (_, service) {
-				$service.append(
-					'<option value="' + service.id + '">' + service.name + '</option>'
-				);
+				$('<option></option>')
+					.val(service.id)
+					.text(service.name)
+					.attr('data-price', service.price !== undefined && service.price !== null ? service.price : '')
+					.appendTo($service);
 			});
 
 			$service.prop('disabled', false);
@@ -1059,8 +1130,14 @@ if ( bookingForm.length ) {
 
 		const locationId = $location.val();
 		const serviceId  = $(this).val();
+		const srvPrice   = $(this).find('option:selected').attr('data-price');
+
+		if (!bookingForm.find('[name="id"]').val() && srvPrice !== undefined && srvPrice !== '') {
+			$price.val(srvPrice);
+		}
 
 		resetSelect($staff, 'Loading staff...');
+		resetSelect($timeSlot, 'Select Slot');
 
 		if ( ! locationId || ! serviceId ) {
 			resetSelect($staff, 'Select Staff');
@@ -1088,6 +1165,15 @@ if ( bookingForm.length ) {
 
 			$staff.prop('disabled', false);
 		});
+	});
+
+	/* ---------- Staff / Date → Slots ---------- */
+	$staff.on('change', function () {
+		window.dgapLoadAdminBookingSlots(bookingForm);
+	});
+
+	$bookingDate.on('change', function () {
+		window.dgapLoadAdminBookingSlots(bookingForm);
 	});
 }
 
@@ -1668,6 +1754,9 @@ $(document).on('click', '.dgap-status-update', function (e) {
 				const locationId = res.data.location_id;
 				const serviceId  = res.data.service_id;
 				const staffId    = res.data.staff_id;
+				const startHHMM  = res.data.start_time ? String(res.data.start_time).slice(0, 5) : '';
+				const endHHMM    = res.data.end_time ? String(res.data.end_time).slice(0, 5) : '';
+				const slotVal    = (startHHMM && endHHMM) ? (startHHMM + '|' + endHHMM) : '';
 
 				if ( locationId ) {
 
@@ -1678,6 +1767,11 @@ $(document).on('click', '.dgap-status-update', function (e) {
 						.then(function () {
 							if ( serviceId ) {
 								return loadStaff(locationId, serviceId, staffId);
+							}
+						})
+						.then(function () {
+							if ( typeof window.dgapLoadAdminBookingSlots === 'function' ) {
+								return window.dgapLoadAdminBookingSlots(currentForm, slotVal);
 							}
 						});
 				}

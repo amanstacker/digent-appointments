@@ -8,7 +8,7 @@
     --dgap-font-color:     #334155;
     --dgap-primary-color:  #10b981;
     --dgap-bg-color:       #ffffff;
-    --dgap-border-radius:  8px;
+    --dgap-border-radius: 3px;
     --dgap-form-width:     100%;
     --dgap-heading-size:   16px;
     --dgap-heading-weight: 600;
@@ -100,7 +100,7 @@
     max-width:     none;
     padding:       0 12px;
     border:        1px solid #cbd5e1;
-    border-radius: var(--dgap-border-radius, 8px);
+    border-radius: var(--dgap-border-radius, 3px);
     font-size:     var(--dgap-font-size, 14px);
     box-sizing:    border-box;
     background:    #fff;
@@ -121,7 +121,7 @@
 .dgap-preview-wrap .dgap-field input:focus,
 .dgap-preview-wrap .dgap-field-vertical input:focus,
 .dgap-preview-wrap .dgap-field-vertical textarea:focus {
-    border-color: var(--dgap-primary-color, #10b981);
+    border-color: var(--dgap-primary-color, #2563eb);
     box-shadow:   0 0 0 3px rgba(16, 185, 129, 0.2);
     outline:      none;
 }
@@ -135,7 +135,7 @@
     line-height:         1.4 !important;
     padding:             0 34px 0 12px !important;
     border:              1px solid #cbd5e1 !important;
-    border-radius:       var(--dgap-border-radius, 8px) !important;
+    border-radius:       var(--dgap-border-radius, 3px) !important;
     font-size:           var(--dgap-font-size, 14px) !important;
     box-sizing:          border-box !important;
     background-color:    #fff !important;
@@ -154,7 +154,7 @@
 
 .dgap-preview-wrap .dgap-field select:focus,
 .dgap-preview-wrap .dgap-field-vertical select:focus {
-    border-color: var(--dgap-primary-color, #10b981) !important;
+    border-color: var(--dgap-primary-color, #2563eb) !important;
     box-shadow:   0 0 0 3px rgba(16, 185, 129, 0.2) !important;
     outline:      none !important;
 }
@@ -281,7 +281,7 @@
     display:       inline-block;
     border:        1px solid #ddd;
     padding:       12px 20px;
-    border-radius: 4px;
+    border-radius: 3px;
     background:    #f9f9f9;
     font-size:     13px;
     margin-bottom: 12px;
@@ -306,7 +306,7 @@
    CALENDAR
 ================================================ */
 .dgap-preview-wrap .dgap-calendar {
-    border-radius: 10px;
+    border-radius: 3px;
     overflow:      hidden;
     border:        1px solid #e5e7eb;
     margin:        10px auto 0 auto;
@@ -341,7 +341,7 @@
 .dgap-preview-wrap .dgap-next-month {
     background:      #fff;
     border:          1px solid #e5e7eb;
-    border-radius:   6px;
+    border-radius:   3px;
     width:           28px;
     height:          28px;
     display:         flex;
@@ -357,8 +357,8 @@
 
 .dgap-preview-wrap .dgap-prev-month:hover,
 .dgap-preview-wrap .dgap-next-month:hover {
-    background:   var(--dgap-primary-color, #10b981);
-    border-color: var(--dgap-primary-color, #10b981);
+    background:   var(--dgap-primary-color, #2563eb);
+    border-color: var(--dgap-primary-color, #2563eb);
     color:        #fff;
 }
 
@@ -407,11 +407,11 @@
 
 .dgap-preview-wrap .dgap-day:hover {
     background: rgba(16, 185, 129, 0.1);
-    color:      var(--dgap-primary-color, #10b981);
+    color:      var(--dgap-primary-color, #2563eb);
 }
 
 .dgap-preview-wrap .dgap-day.active {
-    background:  var(--dgap-primary-color, #10b981);
+    background:  var(--dgap-primary-color, #2563eb);
     color:       #fff;
     font-weight: 600;
     box-shadow:  0 2px 8px rgba(16, 185, 129, 0.35);
@@ -426,7 +426,7 @@
 /* ── Calendar Style: Classic (Square Grid) ── */
 .dgap-preview-wrap .dgap-calendar-style-classic {
     border: 1px solid #cbd5e1;
-    border-radius: 6px;
+    border-radius: 3px;
 }
 
 .dgap-preview-wrap .dgap-calendar-style-classic .dgap-calendar-header {
@@ -457,11 +457,11 @@
 
 .dgap-preview-wrap .dgap-calendar-style-classic .dgap-day:hover {
     background: #f8fafc;
-    color: var(--dgap-primary-color, #10b981);
+    color: var(--dgap-primary-color, #2563eb);
 }
 
 .dgap-preview-wrap .dgap-calendar-style-classic .dgap-day.active {
-    background: var(--dgap-primary-color, #10b981);
+    background: var(--dgap-primary-color, #2563eb);
     color: #fff;
     font-weight: 700;
     box-shadow: none;
@@ -491,17 +491,17 @@
 }
 
 .dgap-preview-wrap .dgap-calendar-style-minimal .dgap-day {
-    border-radius: 6px;
+    border-radius: 3px;
     font-weight: 600;
 }
 
 .dgap-preview-wrap .dgap-calendar-style-minimal .dgap-day:hover {
     background: #f1f5f9;
-    color: var(--dgap-primary-color, #10b981);
+    color: var(--dgap-primary-color, #2563eb);
 }
 
 .dgap-preview-wrap .dgap-calendar-style-minimal .dgap-day.active {
-    background: var(--dgap-primary-color, #10b981);
+    background: var(--dgap-primary-color, #2563eb);
     color: #fff;
     box-shadow: none;
 }
@@ -509,7 +509,7 @@
 /* ── Calendar Style: Inline Expandable Grid ── */
 .dgap-preview-wrap .dgap-calendar-style-inline {
     border: 1px solid #e2e8f0;
-    border-radius: 10px;
+    border-radius: 3px;
     background: #ffffff;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
 }
@@ -539,7 +539,7 @@
     width:         100% !important;
     height:        38px !important;
     margin:        0 !important;
-    border-radius: 8px !important;
+    border-radius: 3px !important;
     border:        1px solid #e2e8f0;
     background:    #f8fafc;
     font-weight:   600;
@@ -547,13 +547,13 @@
 
 .dgap-preview-wrap .dgap-calendar-style-inline .dgap-day:hover {
     background: #ecfdf5;
-    border-color: var(--dgap-primary-color, #10b981);
-    color: var(--dgap-primary-color, #10b981);
+    border-color: var(--dgap-primary-color, #2563eb);
+    color: var(--dgap-primary-color, #2563eb);
 }
 
 .dgap-preview-wrap .dgap-calendar-style-inline .dgap-day.active {
-    background: var(--dgap-primary-color, #10b981);
-    border-color: var(--dgap-primary-color, #10b981);
+    background: var(--dgap-primary-color, #2563eb);
+    border-color: var(--dgap-primary-color, #2563eb);
     color: #fff;
     font-weight: 700;
     box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
@@ -625,7 +625,7 @@
     border: 1px solid #cbd5e1;
     background: #fff;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 3px;
     font-size: 12px;
     font-weight: 600;
     color: #374151;
@@ -636,17 +636,17 @@
 
 .dgap-preview-wrap .dgap-inline-slots-container .dgap-slot:hover {
     background: #f1f5f9;
-    color: var(--dgap-primary-color, #10b981);
-    border-color: var(--dgap-primary-color, #10b981);
+    color: var(--dgap-primary-color, #2563eb);
+    border-color: var(--dgap-primary-color, #2563eb);
 }
 
 /* Selected green state as requested in reference */
 .dgap-preview-wrap .dgap-inline-slots-container .dgap-slot.active,
 .dgap-preview-wrap .dgap-inline-slots-container .dgap-slot.selected {
-    background: #15803d !important;
+    background: var(--dgap-primary-color, #2563eb) !important;
     color: #fff !important;
-    border-color: #15803d !important;
-    box-shadow: 0 2px 4px rgba(21,128,61,0.25) !important;
+    border-color: var(--dgap-primary-color, #2563eb) !important;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25) !important;
 }
 
 @keyframes dgapFadeSlideDown {
@@ -753,7 +753,7 @@
     margin:         8px auto;
     background:     #f8fafc;
     border:         1px dashed #cbd5e1;
-    border-radius:  6px;
+    border-radius:  3px;
     color:          #64748b;
     font-size:      13px;
     font-weight:    500;
@@ -764,28 +764,28 @@
 
 .dgap-preview-wrap .dgap-slot {
     padding:       6px 14px;
-    border:        1.5px solid var(--dgap-primary-color, #10b981);
+    border:        1.5px solid var(--dgap-primary-color, #2563eb);
     background:    #fff;
     cursor:        pointer;
-    border-radius: 5px;
+    border-radius: 3px;
     font-size:     13px;
     font-weight:   500;
-    color:         var(--dgap-primary-color, #10b981);
+    color:         var(--dgap-primary-color, #2563eb);
     transition:    all 0.15s ease;
     white-space:   nowrap;
 }
 
 .dgap-preview-wrap .dgap-slot:hover {
-    background: var(--dgap-primary-color, #10b981);
+    background: var(--dgap-primary-color, #2563eb);
     color:      #fff;
     box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
 }
 
 .dgap-preview-wrap .dgap-slot.active,
 .dgap-preview-wrap .dgap-slot.selected {
-    background:   var(--dgap-primary-color, #10b981);
+    background:   var(--dgap-primary-color, #2563eb);
     color:        #fff;
-    border-color: var(--dgap-primary-color, #10b981);
+    border-color: var(--dgap-primary-color, #2563eb);
     box-shadow:   0 2px 8px rgba(16, 185, 129, 0.25);
 }
 
@@ -803,7 +803,7 @@
     width:           60px;
     height:          60px;
     border-radius:   50%;
-    background:      var(--dgap-primary-color, #10b981);
+    background:      #10b981;
     color:           #fff;
     font-size:       28px;
     display:         flex;
@@ -834,7 +834,7 @@
 .dgap-success-details {
     background:    #f8fafc;
     border:        1px solid #e2e8f0;
-    border-radius: 8px;
+    border-radius: 3px;
     padding:       6px 18px;
     text-align:    left;
     margin-bottom: 22px;
@@ -892,9 +892,9 @@
 
 .dgap-start-over-btn {
     padding:       10px 24px;
-    border-radius: var(--dgap-border-radius, 6px);
+    border-radius: var(--dgap-border-radius, 3px);
     border:        none;
-    background:    var(--dgap-primary-color, #10b981);
+    background:    var(--dgap-primary-color, #2563eb);
     color:         #ffffff;
     font-size:     14px;
     font-weight:   600;
@@ -914,7 +914,7 @@
     max-width:     100%;
     box-sizing:    border-box;
     overflow:      hidden;
-    border-radius: var(--dgap-border-radius, 8px);
+    border-radius: var(--dgap-border-radius, 3px);
     box-shadow:    0 4px 20px rgba(0,0,0,0.08);
 }
 
@@ -956,7 +956,7 @@
     top: 50%;
     width: var(--progress-width, 0%);
     height: 2px;
-    background: var(--dgap-primary-color, #10b981);
+    background: var(--dgap-primary-color, #2563eb);
     transform: translateY(-50%);
     z-index: 0;
     transition: width 0.4s ease;
@@ -983,15 +983,15 @@
 }
 
 .dgap-step-dot.active {
-    border-color: var(--dgap-primary-color, #10b981);
-    background:   var(--dgap-primary-color, #10b981);
+    border-color: var(--dgap-primary-color, #2563eb);
+    background:   var(--dgap-primary-color, #2563eb);
     color:        #fff;
     box-shadow:   0 0 0 4px rgba(16, 185, 129, 0.2);
 }
 
 .dgap-step-dot.completed {
-    border-color: var(--dgap-primary-color, #10b981);
-    background:   var(--dgap-primary-color, #10b981);
+    border-color: var(--dgap-primary-color, #2563eb);
+    background:   var(--dgap-primary-color, #2563eb);
     color:        #fff;
 }
 
@@ -1059,7 +1059,7 @@
     border:        1px solid #dcdcde;
     color:         #1d2327;
     padding:       10px 20px;
-    border-radius: var(--dgap-border-radius, 8px);
+    border-radius: var(--dgap-border-radius, 3px);
     cursor:        pointer;
     font-size:     13px;
     font-weight:   500;
@@ -1072,11 +1072,11 @@
 
 .dgap-wizard-next,
 .dgap-wizard-submit {
-    background:    var(--dgap-primary-color, #10b981);
-    border:        2px solid var(--dgap-primary-color, #10b981);
+    background:    var(--dgap-primary-color, #2563eb);
+    border:        2px solid var(--dgap-primary-color, #2563eb);
     color:         #fff !important;
     padding:       10px 24px;
-    border-radius: var(--dgap-border-radius, 8px);
+    border-radius: var(--dgap-border-radius, 3px);
     cursor:        pointer;
     font-size:     13px;
     font-weight:   600;
@@ -1092,7 +1092,7 @@
 .dgap-wizard-sidebar {
     width:       220px;
     flex-shrink: 0;
-    background:  var(--dgap-primary-color, #10b981);
+    background:  var(--dgap-primary-color, #2563eb);
     padding:     28px 20px;
     box-sizing:  border-box;
 }
@@ -1166,7 +1166,7 @@
     margin-top:    20px;
     padding:       16px;
     background:    #f6f7f7;
-    border-radius: var(--dgap-border-radius, 8px);
+    border-radius: var(--dgap-border-radius, 3px);
     border:        1px solid #dcdcde;
 }
 
@@ -1205,12 +1205,12 @@
 }
 
 .dgap-tab.active {
-    border-bottom-color: var(--dgap-primary-color, #10b981);
-    color:               var(--dgap-primary-color, #10b981);
+    border-bottom-color: var(--dgap-primary-color, #2563eb);
+    color:               var(--dgap-primary-color, #2563eb);
 }
 
 .dgap-tab.completed {
-    color:   var(--dgap-primary-color, #10b981);
+    color:   var(--dgap-primary-color, #2563eb);
     opacity: 0.6;
 }
 
@@ -1302,8 +1302,8 @@
 
 .dgap-vertical-step.active .dgap-vertical-dot,
 .dgap-vertical-step.completed .dgap-vertical-dot {
-    background:   var(--dgap-primary-color, #10b981);
-    border-color: var(--dgap-primary-color, #10b981);
+    background:   var(--dgap-primary-color, #2563eb);
+    border-color: var(--dgap-primary-color, #2563eb);
     color:        #fff;
 }
 
@@ -1321,7 +1321,7 @@
 
 .dgap-vertical-step.active .dgap-vertical-line,
 .dgap-vertical-step.completed .dgap-vertical-line {
-    background: var(--dgap-primary-color, #10b981);
+    background: var(--dgap-primary-color, #2563eb);
     opacity:    0.3;
 }
 
@@ -1344,11 +1344,11 @@
 }
 
 .dgap-vertical-step.active .dgap-vertical-label {
-    color: var(--dgap-primary-color, #10b981);
+    color: var(--dgap-primary-color, #2563eb);
 }
 
 .dgap-vertical-step.completed .dgap-vertical-label {
-    color:   var(--dgap-primary-color, #10b981);
+    color:   var(--dgap-primary-color, #2563eb);
     opacity: 0.7;
 }
 
@@ -1370,7 +1370,7 @@
    WIZARD 5 — BOXED STEPS
 ================================================ */
 .dgap-wizard-boxed .dgap-boxed-header {
-    background: var(--dgap-primary-color, #10b981);
+    background: var(--dgap-primary-color, #2563eb);
     padding:    20px 24px;
 }
 
@@ -1399,7 +1399,7 @@
 .dgap-boxed-icon {
     width:           44px;
     height:          44px;
-    border-radius:   12px;
+    border-radius:   3px;
     background:      rgba(255,255,255,0.15);
     display:         flex;
     align-items:     center;
@@ -1484,7 +1484,7 @@
 .dgap-calendar-wrapper {
     margin-top: 20px;
     border:     1px solid #cbd5e1;
-    border-radius: 6px;
+    border-radius: 3px;
     padding:    15px;
     background: #fff;
 }
@@ -1509,9 +1509,9 @@
 }
 
 .dgap-timeslot.active {
-    background:   #15803d;
+    background:   var(--dgap-primary-color, #2563eb);
     color:        #fff;
-    border-color: #15803d;
+    border-color: var(--dgap-primary-color, #2563eb);
 }
 
 /* ================================================
@@ -1527,7 +1527,7 @@
 ================================================ */
 .dgap-preview-wrap .dgap-day.active,
 .dgap-preview-wrap .dgap-slot.active {
-    background-color: var(--dgap-primary-color, #10b981);
+    background-color: var(--dgap-primary-color, #2563eb);
     color: #fff;
 }
 
@@ -1621,12 +1621,12 @@
         flex: 1 1 calc(50% - 6px);
         padding: 8px 10px;
         border: 1px solid #e5e7eb;
-        border-radius: 6px;
+        border-radius: 3px;
         margin-bottom: 0;
         background: #fff;
     }
     .dgap-tab.active {
-        border-color: var(--dgap-primary-color, #10b981);
+        border-color: var(--dgap-primary-color, #2563eb);
     }
     .dgap-wizard-tabs .dgap-tabs-body,
     .dgap-wizard-boxed .dgap-boxed-body {
@@ -1660,7 +1660,7 @@
         width: 34px;
         height: 34px;
         font-size: 16px;
-        border-radius: 10px;
+        border-radius: 3px;
     }
     .dgap-boxed-label {
         font-size: 10px;
@@ -1738,13 +1738,13 @@
     flex: 1 1 calc(50% - 6px) !important;
     padding: 8px 10px !important;
     border: 1px solid #e5e7eb !important;
-    border-radius: 6px !important;
+    border-radius: 3px !important;
     margin-bottom: 0 !important;
     background: #fff !important;
 }
 
 .dgap-live-preview.is-mobile .dgap-tab.active {
-    border-color: var(--dgap-primary-color, #10b981) !important;
+    border-color: var(--dgap-primary-color, #2563eb) !important;
 }
 
 .dgap-live-preview.is-mobile .dgap-wizard-tabs .dgap-tabs-body,
@@ -1790,7 +1790,7 @@
     width: 34px !important;
     height: 34px !important;
     font-size: 16px !important;
-    border-radius: 10px !important;
+    border-radius: 3px !important;
 }
 
 .dgap-live-preview.is-mobile .dgap-boxed-label {
@@ -1836,7 +1836,7 @@
 	background: #fef2f2;
 	border: 1px solid #fecaca;
 	color: #b91c1c;
-	border-radius: 6px;
+	border-radius: 3px;
 	padding: 10px 12px;
 	font-size: 13px;
 	margin: 10px 0 12px;
@@ -1852,7 +1852,7 @@
 	padding: 32px 24px;
 	background: var(--dgap-bg-color, #ffffff);
 	border: 1px solid #e2e8f0;
-	border-radius: var(--dgap-border-radius, 8px);
+	border-radius: var(--dgap-border-radius, 3px);
 }
 
 .dgap-preview-mode-badge {
@@ -1876,9 +1876,9 @@
 .dgap-preview-reset-btn {
 	margin-top: 16px;
 	padding: 8px 18px;
-	border-radius: 6px;
-	border: 1px solid var(--dgap-primary-color, #10b981);
-	background: var(--dgap-primary-color, #10b981);
+	border-radius: 3px;
+	border: 1px solid var(--dgap-primary-color, #2563eb);
+	background: var(--dgap-primary-color, #2563eb);
 	color: #ffffff;
 	font-size: 13px;
 	font-weight: 600;
