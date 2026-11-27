@@ -30,6 +30,8 @@ if ( ! $dgap_is_new && $dgap_id ) {
 }
 
 $dgap_current_design  = $form['settings']['design'] ?? 'flat';
+$dgap_slot_position   = $form['settings']['slot_position'] ?? 'inside';
+$dgap_slot_display    = $form['settings']['slot_display'] ?? 'full';
 $dgap_selection_mode  = $form['settings']['selection_mode'] ?? 'location_service_staff';
 $dgap_multi_loc_srvs  = DGAP_Booking_Repo::get_multi_location_services();
 $dgap_multi_loc_names = ! empty( $dgap_multi_loc_srvs ) ? wp_list_pluck( $dgap_multi_loc_srvs, 'name' ) : [];
@@ -181,6 +183,22 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 									<option value="classic" <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'classic' ); ?>><?php esc_html_e( 'Classic (Square Grid)', 'digent-appointments' ); ?></option>
 									<option value="minimal" <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'minimal' ); ?>><?php esc_html_e( 'Minimal (Clean Grid)', 'digent-appointments' ); ?></option>
 									<option value="inline" <?php selected( $form['settings']['calendar_style'] ?? 'modern', 'inline' ); ?>><?php esc_html_e( 'Inline Expandable Grid', 'digent-appointments' ); ?></option>
+								</select>
+							</div>
+
+							<div class="dgap-field-row dgap-slot-position-row"<?php echo ( 'wizard' === $dgap_current_design ) ? ' style="display:none;"' : ''; ?>>
+								<label><?php esc_html_e( 'Slot Position', 'digent-appointments' ); ?></label>
+								<select name="settings[slot_position]" id="dgap-slot-position-select">
+									<option value="inside" <?php selected( $dgap_slot_position, 'inside' ); ?>><?php esc_html_e( 'Inside Calendar', 'digent-appointments' ); ?></option>
+									<option value="outside" <?php selected( $dgap_slot_position, 'outside' ); ?>><?php esc_html_e( 'Outside Calendar (Below)', 'digent-appointments' ); ?></option>
+								</select>
+							</div>
+
+							<div class="dgap-field-row dgap-slot-display-row"<?php echo ( 'wizard' === $dgap_current_design ) ? ' style="display:none;"' : ''; ?>>
+								<label><?php esc_html_e( 'Slot Display', 'digent-appointments' ); ?></label>
+								<select name="settings[slot_display]" id="dgap-slot-display-select">
+									<option value="full" <?php selected( $dgap_slot_display, 'full' ); ?>><?php esc_html_e( 'Full List (No Scroll)', 'digent-appointments' ); ?></option>
+									<option value="scroll" <?php selected( $dgap_slot_display, 'scroll' ); ?>><?php esc_html_e( 'Scrollable Box', 'digent-appointments' ); ?></option>
 								</select>
 							</div>
 
@@ -398,6 +416,7 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 						'customer_name'  => __( 'Customer Name', 'digent-appointments' ),
 						'customer_email' => __( 'Email', 'digent-appointments' ),
 						'customer_phone' => __( 'Phone', 'digent-appointments' ),
+						'notes'          => __( 'Notes', 'digent-appointments' ),
 						'custom_fields'  => __( 'Custom Fields', 'digent-appointments' ),
 					];
 					?>

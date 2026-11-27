@@ -4,13 +4,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $dgap_general_opts  = get_option( 'dgap_general_settings', [] );
-$dgap_hide_price    = ! empty( $dgap_general_opts['hide_price'] );
+$dgap_show_price    = isset( $dgap_general_opts['show_price'] )
+	? ! empty( $dgap_general_opts['show_price'] )
+	: empty( $dgap_general_opts['hide_price'] );
+$dgap_hide_price    = ! $dgap_show_price;
 $dgap_sum_cfg       = $form['settings']['summary_fields'] ?? [];
 $dgap_sum_show      = static function ( $key ) use ( $dgap_sum_cfg ) {
 	return ! isset( $dgap_sum_cfg[ $key ] ) || 1 === (int) $dgap_sum_cfg[ $key ];
 };
 $dgap_hide_custom   = ! $dgap_sum_show( 'custom_fields' );
-$dgap_summary_keys  = [ 'location', 'service', 'worker', 'date_time', 'customer_name', 'customer_email', 'customer_phone', 'custom_fields' ];
+$dgap_summary_keys  = [ 'location', 'service', 'worker', 'date_time', 'customer_name', 'customer_email', 'customer_phone', 'notes', 'custom_fields' ];
 if ( ! $dgap_hide_price ) {
 	$dgap_summary_keys[] = 'price';
 }
@@ -57,6 +60,10 @@ foreach ( $dgap_summary_keys as $dgap_sum_key ) {
 		<div class="dgap-summary-item" data-summary-field="customer_phone"<?php echo $dgap_sum_show( 'customer_phone' ) ? '' : ' style="display:none;"'; ?>>
 			<label><?php echo esc_html__( 'Phone', 'digent-appointments' ); ?>:</label>
 			<span class="dgap-value" id="dgap-form-render-customer-phone">&mdash;</span>
+		</div>
+		<div class="dgap-summary-item" data-summary-field="notes"<?php echo $dgap_sum_show( 'notes' ) ? '' : ' style="display:none;"'; ?>>
+			<label><?php echo esc_html__( 'Notes', 'digent-appointments' ); ?>:</label>
+			<span class="dgap-value" id="dgap-form-render-customer-notes">&mdash;</span>
 		</div>
 	</div>
 </div>

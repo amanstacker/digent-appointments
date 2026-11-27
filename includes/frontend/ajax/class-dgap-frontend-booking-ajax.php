@@ -24,6 +24,9 @@ class DGAP_Frontend_Booking_Ajax {
 		
 		add_action( 'wp_ajax_dgap_front_get_slots', [ $this, 'get_slots' ] );
 		add_action( 'wp_ajax_nopriv_dgap_front_get_slots', [ $this, 'get_slots' ] );
+
+		add_action( 'wp_ajax_dgap_front_get_available_dates', [ $this, 'get_available_dates' ] );
+		add_action( 'wp_ajax_nopriv_dgap_front_get_available_dates', [ $this, 'get_available_dates' ] );
 		
 		add_action( 'wp_ajax_dgap_front_create_booking', [ $this, 'create_booking' ] );
 		add_action( 'wp_ajax_nopriv_dgap_front_create_booking', [ $this, 'create_booking' ] );
@@ -140,6 +143,45 @@ class DGAP_Frontend_Booking_Ajax {
 		);
 
 		wp_send_json_success( $slots );
+	}
+
+	/* ================= Available Dates (Month) ================= */
+
+	public function get_available_dates() {
+
+		check_ajax_referer( 'dgap_frontend_action', '_dgap_nonce' );
+
+		$staff_id    = absint( $_POST['staff_id'] ?? 0 );
+		$service_id  = absint( $_POST['service_id'] ?? 0 );
+		$location_id = absint( $_POST['location_id'] ?? 0 );
+		$year        = absint( $_POST['year'] ?? 0 );
+		$month       = absint( $_POST['month'] ?? 0 ); // 1-12
+
+		if ( ! $staff_id || ! $service_id || ! $location_id || $year < 2000 || $month < 1 || $month > 12 ) {
+			wp_send_json_error( esc_html__( 'Invalid data', 'digent-appointments' ) );
+		}
+
+		$service = DGAP_Booking_Repo::get_service_meta( $service_id );
+		if ( ! $service ) {
+			wp_send_json_success( [] );
+		}
+
+		$days_in_month = (int) gmdate( 't', strtotime( sprintf( '%04d-%02d-01', $year, $month ) ) );
+		$available     = [];
+
+		for ( $d = 1; $d <= $days_in_month; $d++ ) {
+			$date_str  = sprintf( '%04d-%02d-%02d', $year, $month, $d );
+			$schedules = DGAP_Booking_Repo::get_schedules( $location_id, $service_id, $staff_id, $date_str );
+			if ( empty( $schedules ) ) {
+				continue;
+			}
+			$slots = DGAP_Slot_Generator::generate_slots_from_schedules( $schedules, $service, $date_str );
+			if ( ! empty( $slots ) ) {
+				$available[] = $date_str;
+			}
+		}
+
+		wp_send_json_success( $available );
 	}
 
 	/* ================= Create Booking ================= */

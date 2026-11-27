@@ -386,10 +386,12 @@ class DGAP_Email_Notification {
         $booking_id                 =   isset( $data['booking_id'] ) ? absint( $data['booking_id'] ) : 0;
         $raw_price = isset( $data['price'] ) ? (float) $data['price'] : (float) $service_price;
         $gen_opts  = get_option( 'dgap_general_settings', [] );
-        $sym       = isset( $gen_opts['currency_symbol'] ) && '' !== $gen_opts['currency_symbol'] ? (string) $gen_opts['currency_symbol'] : '$';
+        $sym       = dgap_get_currency_symbol( $gen_opts['currency_code'] ?? 'USD' );
         $pos       = $gen_opts['currency_position'] ?? 'before';
-        $hide_dec  = ! empty( $gen_opts['hide_decimals'] );
-        $decimals  = ( $hide_dec && floor( $raw_price ) === $raw_price ) ? 0 : 2;
+        $show_dec  = isset( $gen_opts['show_decimals'] )
+            ? ! empty( $gen_opts['show_decimals'] )
+            : empty( $gen_opts['hide_decimals'] );
+        $decimals  = ( ! $show_dec && floor( $raw_price ) === $raw_price ) ? 0 : 2;
         $num_str   = number_format( $raw_price, $decimals );
         switch ( $pos ) {
             case 'after':

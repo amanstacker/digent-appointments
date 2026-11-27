@@ -14,6 +14,7 @@ class DGAP_Form_Renderer {
 		$settings       = $form['settings'] ?? [];
 		$appearance     = $settings['appearance'] ?? [];
 		$design         = $settings['design'] ?? 'flat';
+		$slot_display   = ( 'flat' === $design && 'scroll' === ( $settings['slot_display'] ?? 'full' ) ) ? 'scroll' : 'full';
 		$selection_mode = $settings['selection_mode'] ?? 'location_service_staff';
 		if ( ! in_array( $selection_mode, [ 'location_service_staff', 'location_service', 'service_only' ], true ) ) {
 			$selection_mode = 'location_service_staff';
@@ -102,7 +103,7 @@ class DGAP_Form_Renderer {
 
 		return str_replace(
 			'class="dgap-preview-wrap',
-			'data-selection-mode="' . esc_attr( $selection_mode ) . '" class="dgap-preview-wrap btn-' . esc_attr( $button_style ),
+			'data-selection-mode="' . esc_attr( $selection_mode ) . '" data-slot-display="' . esc_attr( $slot_display ) . '" class="dgap-preview-wrap btn-' . esc_attr( $button_style ),
 			$html
 		);
 	}

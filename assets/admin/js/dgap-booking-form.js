@@ -109,10 +109,12 @@ jQuery(function ($) {
             $layout.find('.dgap-opt-flat').prop('disabled', true).attr('hidden', true);
             $layout.find('.dgap-opt-wizard').prop('disabled', false).removeAttr('hidden');
             $layout.val('wizard-1');
+            $('.dgap-slot-position-row, .dgap-slot-display-row').hide();
         } else {
             $layout.find('.dgap-opt-wizard').prop('disabled', true).attr('hidden', true);
             $layout.find('.dgap-opt-flat').prop('disabled', false).removeAttr('hidden');
             $layout.val('layout-1');
+            $('.dgap-slot-position-row, .dgap-slot-display-row').show();
         }
 
         loadPreview();
@@ -122,7 +124,7 @@ jQuery(function ($) {
         loadPreview();
     });
 
-    $(document).on('change', '#dgap-calendar-style-select', function () {
+    $(document).on('change', '#dgap-calendar-style-select, #dgap-slot-position-select, #dgap-slot-display-select', function () {
         loadPreview();
     });
 

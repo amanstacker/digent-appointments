@@ -17,12 +17,18 @@ class DGAP_Admin {
     }
 
     private function get_ajax_data( array $extra = [] ) {
+		$gen_opts = get_option( 'dgap_general_settings', [] );
 
 		return array_merge(
 			[
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'dgap_admin_action' ),
-                '_dgap_frontend_nonce'    => wp_create_nonce( 'dgap_frontend_action' ),
+				'ajax_url'             => admin_url( 'admin-ajax.php' ),
+				'nonce'                => wp_create_nonce( 'dgap_admin_action' ),
+				'_dgap_frontend_nonce' => wp_create_nonce( 'dgap_frontend_action' ),
+				'time_format'          => $gen_opts['time_format'] ?? '24',
+				'show_price'           => isset( $gen_opts['show_price'] ) ? (bool) $gen_opts['show_price'] : empty( $gen_opts['hide_price'] ),
+				'show_decimals'        => isset( $gen_opts['show_decimals'] ) ? (bool) $gen_opts['show_decimals'] : empty( $gen_opts['hide_decimals'] ),
+				'currency_symbol'        => dgap_get_currency_symbol( $gen_opts['currency_code'] ?? 'USD' ),
+				'default_booking_status' => ( isset( $gen_opts['default_booking_status'] ) && in_array( $gen_opts['default_booking_status'], [ 'pending', 'confirmed' ], true ) ) ? $gen_opts['default_booking_status'] : 'pending',
 			],
 			$extra
 		);

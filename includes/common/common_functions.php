@@ -22,12 +22,21 @@ function dgap_sanitize_breaks( $breaks ) {
 			continue;
 		}
 
-		$start = sanitize_text_field( $break['start'] ?? '' );
-		$end   = sanitize_text_field( $break['end'] ?? '' );
+		$start = trim( sanitize_text_field( $break['start'] ?? '' ) );
+		$end   = trim( sanitize_text_field( $break['end'] ?? '' ) );
 
 		// Skip empty values.
 		if ( empty( $start ) || empty( $end ) ) {
 			continue;
+		}
+
+		$start_ts = strtotime( $start );
+		$end_ts   = strtotime( $end );
+		if ( false !== $start_ts ) {
+			$start = gmdate( 'H:i', $start_ts );
+		}
+		if ( false !== $end_ts ) {
+			$end = gmdate( 'H:i', $end_ts );
 		}
 
 		$sanitized_breaks[] = [
@@ -560,4 +569,35 @@ function dgap_render_upgrade_button( $variant = 'secondary' ) {
 		<span><?php esc_html_e( 'Upgrade to Premium', 'digent-appointments' ); ?></span>
 	</a>
 	<?php
+}
+
+/**
+ * Resolve currency symbol automatically from the configured currency code.
+ *
+ * @param string|null $currency_code Optional currency code; defaults to saved setting.
+ * @return string
+ */
+function dgap_get_currency_symbol( $currency_code = null ) {
+	if ( null === $currency_code ) {
+		$gen_opts      = get_option( 'dgap_general_settings', [] );
+		$currency_code = $gen_opts['currency_code'] ?? 'USD';
+	}
+
+	$code = strtoupper( trim( (string) $currency_code ) );
+
+	$symbols = apply_filters(
+		'dgap_currency_symbols',
+		[
+			'USD' => '$',
+			'EUR' => '€',
+			'GBP' => '£',
+			'INR' => '₹',
+			'CAD' => '$',
+			'AUD' => '$',
+			'AED' => 'AED',
+			'SGD' => '$',
+		]
+	);
+
+	return $symbols[ $code ] ?? '$';
 }

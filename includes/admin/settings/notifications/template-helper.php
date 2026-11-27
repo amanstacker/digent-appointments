@@ -45,12 +45,21 @@ if ( ! function_exists( 'dgap_render_email_templates_section' ) ) {
 		$email_templates   = apply_filters( 'dgap_email_notification_templates', [] );
 		$default_templates = isset( $email_templates[ "{$type}_email_templates" ] ) ? $email_templates[ "{$type}_email_templates" ] : [];
 
-		echo '<h3 style="margin-bottom:10px;">' . esc_html__( 'Email Templates', 'digent-appointments' ) . '</h3>';
-		echo '<p style="margin-bottom:8px;"><strong>' . esc_html__( 'Available Tags (click to copy):', 'digent-appointments' ) . '</strong></p>';
-		echo '<div class="dgap-email-tags-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;">';
+		echo '<div class="dgap-email-templates-header">';
+		echo '<h3>' . esc_html__( 'Email Templates', 'digent-appointments' ) . '</h3>';
+		echo '<p>' . esc_html__( 'Customize the subject and body for each appointment status notification.', 'digent-appointments' ) . '</p>';
+		echo '</div>';
+
+		echo '<div class="dgap-email-tags-card">';
+		echo '<div class="dgap-email-tags-title">';
+		echo '<span>' . esc_html__( 'Available Dynamic Tags', 'digent-appointments' ) . '</span>';
+		echo '<span class="dgap-email-tags-hint">' . esc_html__( 'Click any tag to copy', 'digent-appointments' ) . '</span>';
+		echo '</div>';
+		echo '<div class="dgap-email-tags-list">';
 		foreach ( $available_tags as $tag ) {
-			echo '<code class="dgap-copy-tag" data-tag="' . esc_attr( $tag ) . '" style="cursor:pointer;padding:3px 8px;border-radius:4px;background:#f1f5f9;border:1px solid #e2e8f0;font-size:12px;">' . esc_html( $tag ) . '</code>';
+			echo '<code class="dgap-copy-tag" data-tag="' . esc_attr( $tag ) . '">' . esc_html( $tag ) . '</code>';
 		}
+		echo '</div>';
 		echo '</div>';
 
 		foreach ( $statuses as $status => $label ) :
@@ -71,8 +80,8 @@ if ( ! function_exists( 'dgap_render_email_templates_section' ) ) {
 					</label>
 				</h4>
 				<div class="dgap-accordion-content">
-					<div style="margin-bottom:14px;">
-						<label for="dgap_<?php echo esc_attr( $subject_key ); ?>" style="display:block;font-weight:600;margin-bottom:6px;">
+					<div class="dgap-email-subject-field">
+						<label for="dgap_<?php echo esc_attr( $subject_key ); ?>">
 							<?php esc_html_e( 'Email Subject', 'digent-appointments' ); ?>
 						</label>
 						<input type="text"
@@ -108,9 +117,9 @@ if ( ! function_exists( 'dgap_render_email_templates_section' ) ) {
 				const tag = $el.data('tag');
 				if (navigator.clipboard && tag) {
 					navigator.clipboard.writeText(tag).then(function () {
-						$el.css({ background: '#dcfce7', borderColor: '#10b981' });
+						$el.addClass('is-copied');
 						setTimeout(function () {
-							$el.css({ background: '#f1f5f9', borderColor: '#e2e8f0' });
+							$el.removeClass('is-copied');
 						}, 700);
 					});
 				}

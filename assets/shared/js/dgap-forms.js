@@ -209,10 +209,49 @@ jQuery(function ($) {
 
     function disableCalendar() {
         getWrap().find('.dgap-calendar').addClass('disabled');
+        getWrap().find('.dgap-day:not(.empty)').removeClass('active disabled');
+        getWrap().find('.dgap-slots, .dgap-inline-slots-container').empty();
+        selectedDate = '';
+        selectedSlotStart = '';
+        selectedSlotEnd = '';
+    }
+
+    function refreshCalendarAvailability() {
+        const $wrap       = getWrap();
+        const location_id = $wrap.find('#dgap-location').val();
+        const service_id  = $wrap.find('#dgap-service').val();
+        const staff_id    = $wrap.find('#dgap-staff').val();
+        if (!location_id || !service_id || !staff_id) return;
+
+        const ajax  = getAjax();
+        const year  = currentMonth.getFullYear();
+        const month = currentMonth.getMonth() + 1;
+
+        $.post(ajax.url, {
+            action:      'dgap_front_get_available_dates',
+            location_id: location_id,
+            service_id:  service_id,
+            staff_id:    staff_id,
+            year:        year,
+            month:       month,
+            _dgap_nonce: ajax.nonce
+        }, function (res) {
+            if (!res.success || !Array.isArray(res.data)) return;
+            const availSet = new Set(res.data);
+            getWrap().find('.dgap-calendar .dgap-day:not(.empty)').each(function () {
+                const d = $(this).data('date');
+                const isAvail = availSet.has(d);
+                $(this).toggleClass('disabled', !isAvail);
+                if (!isAvail) {
+                    $(this).removeClass('active');
+                }
+            });
+        });
     }
 
     function enableCalendar() {
         getWrap().find('.dgap-calendar').removeClass('disabled');
+        refreshCalendarAvailability();
     }
 
     function isWizard() {
@@ -225,11 +264,17 @@ jQuery(function ($) {
     $(document).on('click', '.dgap-prev-month', function () {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         renderCalendar();
+        if (!getWrap().find('.dgap-calendar').hasClass('disabled')) {
+            refreshCalendarAvailability();
+        }
     });
 
     $(document).on('click', '.dgap-next-month', function () {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         renderCalendar();
+        if (!getWrap().find('.dgap-calendar').hasClass('disabled')) {
+            refreshCalendarAvailability();
+        }
     });
 
     /* ================================================
@@ -261,10 +306,20 @@ jQuery(function ($) {
             _dgap_nonce: ajax.nonce
         }, function (res) {
             if (res.success) {
+                const cfg          = isFrontend ? dgap_frontend : dgap_booking_form;
+                const showPrice    = cfg.show_price !== false;
+                const showDecimals = cfg.show_decimals !== false;
+                const sym          = cfg.currency_symbol || '$';
+
                 $('#dgap-service').prop('disabled', false);
                 $.each(res.data, function (_, srv) {
+                    const num      = parseFloat(srv.price || 0);
+                    const dec      = (!showDecimals && Math.floor(num) === num) ? 0 : 2;
+                    const priceStr = sym + num.toFixed(dec);
+                    const label    = showPrice ? `${srv.name} - ${priceStr}` : srv.name;
+
                     $('#dgap-service').append(
-                        `<option value="${srv.id}">${srv.name} - $${srv.price}</option>`
+                        `<option value="${srv.id}" data-price="${priceStr}">${label}</option>`
                     );
                 });
                 // $('#dgap-service').prop('disabled', false);
@@ -367,7 +422,7 @@ jQuery(function ($) {
     /* ================================================
         DATE CLICK → LOAD SLOTS
     ================================================ */
-    $(document).on('click', '.dgap-calendar:not(.disabled) .dgap-day:not(.empty)', function () {
+    $(document).on('click', '.dgap-calendar:not(.disabled) .dgap-day:not(.empty):not(.disabled)', function () {
 
         const date        = $(this).data('date');
         const location_id = $('#dgap-location').val();
@@ -375,7 +430,7 @@ jQuery(function ($) {
         const staff_id    = $('#dgap-staff').val();
         const ajax        = getAjax();
         const $calendar   = $(this).closest('.dgap-calendar');
-        const isInline    = $calendar.hasClass('dgap-calendar-style-inline');
+        const isInline    = $calendar.attr('data-slot-position') === 'inside' || $calendar.hasClass('dgap-calendar-style-inline');
 
         selectedDate = date;
 
@@ -407,9 +462,16 @@ jQuery(function ($) {
             _dgap_nonce: ajax.nonce
         }, function (res) {
 
+            const firstLabel    = res.success && res.data.length ? String(res.data[0].label || '') : '';
+            const hasRangeLabel = firstLabel.indexOf(' - ') !== -1;
+            const hasAmPm       = /\b(AM|PM)\b/i.test(firstLabel);
+            const rangeClass    = hasRangeLabel
+                ? (hasAmPm ? ' dgap-slots-range dgap-slots-range-ampm' : ' dgap-slots-range')
+                : '';
+
             if (isInline) {
                 let html = '<p class="dgap-inline-title">Available Time Slots</p>';
-                html += '<div class="dgap-inline-slots-grid">';
+                html += `<div class="dgap-inline-slots-grid${rangeClass}">`;
                 if (res.success && res.data.length) {
                     $.each(res.data, function (_, slot) {
                         html += `
@@ -425,7 +487,7 @@ jQuery(function ($) {
                 html += '</div>';
                 getWrap().find('.dgap-inline-slots-container').html(html);
             } else {
-                let html = '<div class="dgap-slots-row">';
+                let html = `<div class="dgap-slots-row${rangeClass}">`;
                 if (res.success && res.data.length) {
                     $.each(res.data, function (_, slot) {
                         html += `
@@ -456,19 +518,11 @@ jQuery(function ($) {
 
         getWrap().find('.dgap-slot').removeClass('active selected');
 
-        const clickedStart = timeToMinutes($(this).data('start'));
-        const clickedEnd   = timeToMinutes($(this).data('end'));
-        const windowEnd    = clickedStart + (clickedEnd - clickedStart);
+        const $clicked = $(this);
+        $clicked.addClass('active selected');
 
-        getWrap().find('.dgap-slot').each(function () {
-            const slotStart = timeToMinutes($(this).data('start'));
-            if (slotStart >= clickedStart && slotStart < windowEnd) {
-                $(this).addClass('active selected');
-            }
-        });
-
-        selectedSlotStart = getWrap().find('.dgap-slot.active').first().data('start');
-        selectedSlotEnd   = getWrap().find('.dgap-slot.active').last().data('end');
+        selectedSlotStart = $clicked.data('start');
+        selectedSlotEnd   = $clicked.data('end');
 
         updateSummary();
         getWrap().find('.dgap-summary').removeClass('disabled');
@@ -486,10 +540,12 @@ jQuery(function ($) {
         const dial = ($wrap.find('[name="phone_dial_code"]').first().val() || '').trim();
         const phone = ($wrap.find('[name="_dgap_form_phone"], [name="phone"]').first().val() || '').trim();
         const fullPhone = [dial, phone].filter(Boolean).join(' ');
+        const notes = ($wrap.find('[name="_dgap_form_description"], [name="notes"]').first().val() || '').trim();
 
         $wrap.find('#dgap-form-render-customer-name').text(name || '—');
         $wrap.find('#dgap-form-render-customer-email').text(email || '—');
         $wrap.find('#dgap-form-render-customer-phone').text(fullPhone || '—');
+        $wrap.find('#dgap-form-render-customer-notes').text(notes || '—');
 
         const $summaryWrapper = $wrap.find('.dgap-summary-wrapper');
         if ($summaryWrapper.length) {
@@ -499,7 +555,7 @@ jQuery(function ($) {
             }
             $wrap.find('.dgap-personal-info .dgap-custom-field').each(function () {
                 const fieldName = $(this).attr('name') || '';
-                if (fieldName === '_dgap_form_name' || fieldName === '_dgap_form_email' || fieldName === '_dgap_form_phone') {
+                if (fieldName === '_dgap_form_name' || fieldName === '_dgap_form_email' || fieldName === '_dgap_form_phone' || fieldName === '_dgap_form_description' || fieldName === 'notes') {
                     return;
                 }
                 const val = ($(this).val() || '').trim();
@@ -519,12 +575,42 @@ jQuery(function ($) {
         syncSummaryCustomerDetails($(this).closest('.dgap-form-wrap, #dgap-live-preview'));
     });
 
+    function formatDateHuman(ymd) {
+        if (!ymd) return '';
+        const parts = String(ymd).split('-');
+        if (parts.length !== 3) return ymd;
+        const dt = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        if (isNaN(dt.getTime())) return ymd;
+        return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatTimeHuman(hhmm) {
+        if (!hhmm) return '';
+        const parts = String(hhmm).split(':');
+        if (parts.length < 2) return hhmm;
+        let h = parseInt(parts[0], 10);
+        const m = parts[1];
+        const is12 = String((typeof dgap_frontend !== 'undefined' && dgap_frontend.time_format) || '24') === '12';
+        if (!is12) {
+            return String(h).padStart(2, '0') + ':' + m;
+        }
+        const ap = h >= 12 ? 'PM' : 'AM';
+        h = h % 12;
+        if (h === 0) h = 12;
+        return h + ':' + m + ' ' + ap;
+    }
+
     function updateSummary() {
-        const location = $('#dgap-location option:selected').text();
-        const service  = $('#dgap-service option:selected').text();
-        const worker   = $('#dgap-staff option:selected').text();
-        const price    = service.split('-')[1] || '';
-        const dateTime = selectedDate + (selectedSlotStart ? ` (${selectedSlotStart}${selectedSlotEnd ? ' - ' + selectedSlotEnd : ''})` : '');
+        const $srvOpt   = $('#dgap-service option:selected');
+        const location  = $('#dgap-location option:selected').text();
+        const service   = $srvOpt.text();
+        const worker    = $('#dgap-staff option:selected').text();
+        const price     = $srvOpt.data('price') || service.split('-')[1] || '';
+        const dateHuman = formatDateHuman(selectedDate);
+        const timeRange = selectedSlotStart
+            ? `${formatTimeHuman(selectedSlotStart)}${selectedSlotEnd ? ' – ' + formatTimeHuman(selectedSlotEnd) : ''}`
+            : '';
+        const dateTime  = [dateHuman, timeRange].filter(Boolean).join(' · ');
 
         getWrap().find('#dgap-form-render-loc').text(location);
         getWrap().find('#dgap-form-render-service').text(service);
@@ -680,18 +766,70 @@ jQuery(function ($) {
                 return;
             }
 
-            const serviceText = ($wrap.find('#dgap-service option:selected').text() || '').trim();
-            const dateText    = selectedDate + (selectedSlotStart ? ` (${selectedSlotStart}${selectedSlotEnd ? ' - ' + selectedSlotEnd : ''})` : '');
-            const detailsLine = [serviceText, dateText].filter(Boolean).join(' · ');
+            const escHtml = function (str) {
+                return $('<div>').text(str == null ? '' : String(str)).html();
+            };
+
+            const $locOpt      = $wrap.find('#dgap-location option:selected');
+            const locationText = ($locOpt.length && $locOpt.val() && !$locOpt.data('placeholder')) ? $locOpt.text().trim() : '';
+            const $srvOpt      = $wrap.find('#dgap-service option:selected');
+            const serviceText  = ($srvOpt.length && $srvOpt.val() && !$srvOpt.data('placeholder')) ? $srvOpt.text().trim() : '';
+            const $stfOpt      = $wrap.find('#dgap-staff option:selected');
+            const staffText    = ($stfOpt.length && $stfOpt.val() && !$stfOpt.data('placeholder')) ? $stfOpt.text().trim() : '';
+
+            const dateStr      = selectedDate ? formatDateHuman(selectedDate) : '';
+            const timeStr      = selectedSlotStart
+                ? (selectedSlotEnd ? `${formatTimeHuman(selectedSlotStart)} – ${formatTimeHuman(selectedSlotEnd)}` : formatTimeHuman(selectedSlotStart))
+                : '';
+            const dateTimeText = [dateStr, timeStr].filter(Boolean).join(' · ');
+
+            const customerName  = ($wrap.find('[name="_dgap_form_name"], [name="first_name"]').first().val() || '').trim();
+            const customerEmail = ($wrap.find('[name="_dgap_form_email"], [name="email"]').first().val() || '').trim();
+            const dialCode      = ($wrap.find('[name="phone_dial_code"]').first().val() || '').trim();
+            const phoneNum      = ($wrap.find('[name="_dgap_form_phone"], [name="phone"]').first().val() || '').trim();
+            const customerPhone = [dialCode, phoneNum].filter(Boolean).join(' ');
+            const customerNotes = ($wrap.find('[name="_dgap_form_description"], [name="notes"]').first().val() || '').trim();
+
+            const statusCfg     = (typeof dgap_booking_form !== 'undefined' && dgap_booking_form)
+                ? dgap_booking_form
+                : ((typeof dgap_frontend !== 'undefined' && dgap_frontend) ? dgap_frontend : {});
+            const defaultStatus = String(statusCfg.default_booking_status || 'pending').toLowerCase();
+            const isPending     = defaultStatus === 'pending' || defaultStatus === 'reserved';
+            const titleText     = isPending ? 'Booking Submitted!' : 'Booking Confirmed!';
+            const subText       = isPending
+                ? 'Your appointment request has been submitted and is awaiting approval. Once confirmed, you will be notified via your communication channel.'
+                : 'Your appointment has been successfully booked.';
+            const statusLabel   = isPending ? 'Pending' : 'Confirmed';
+            const statusClass   = isPending ? 'is-pending' : 'is-confirmed';
+
+            const rows = [];
+            if (serviceText)   rows.push({ label: 'Service', value: serviceText });
+            if (staffText)     rows.push({ label: 'Staff', value: staffText });
+            if (locationText)  rows.push({ label: 'Location', value: locationText });
+            if (dateTimeText)  rows.push({ label: 'Date & Time', value: dateTimeText });
+            if (customerName)  rows.push({ label: 'Name', value: customerName });
+            if (customerEmail) rows.push({ label: 'Email', value: customerEmail });
+            if (customerPhone) rows.push({ label: 'Phone', value: customerPhone });
+            if (customerNotes) rows.push({ label: 'Notes', value: customerNotes });
+            rows.push({ label: 'Status', value: statusLabel, isBadge: true });
+
+            const rowsHtml = rows.map(function (r) {
+                const valHtml = r.isBadge
+                    ? `<span class="dgap-success-status ${statusClass}">${escHtml(r.value)}</span>`
+                    : escHtml(r.value);
+                return `<div class="dgap-success-row"><span class="dgap-success-label">${escHtml(r.label)}</span><span class="dgap-success-value">${valHtml}</span></div>`;
+            }).join('');
 
             const successHtml = `
                 <div class="dgap-success dgap-preview-success-box">
                     <span class="dgap-preview-mode-badge">Preview Mode — No real booking saved</span>
-                    <div class="dgap-success-icon">&#10003;</div>
-                    <h3>Booking Confirmed!</h3>
-                    <p>Your appointment has been successfully booked.</p>
-                    ${detailsLine ? `<p class="dgap-preview-success-meta">${$('<div>').text(detailsLine).html()}</p>` : ''}
-                    <button type="button" class="dgap-preview-reset-btn">Reset Preview</button>
+                    <div class="dgap-success-icon ${statusClass}">&#10003;</div>
+                    <h3>${escHtml(titleText)}</h3>
+                    <p class="dgap-success-subtitle">${escHtml(subText)}</p>
+                    <div class="dgap-success-details">${rowsHtml}</div>
+                    <div class="dgap-success-actions">
+                        <button type="button" class="dgap-preview-reset-btn dgap-start-over-btn">Start Over</button>
+                    </div>
                 </div>
             `;
 

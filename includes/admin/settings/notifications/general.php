@@ -69,6 +69,7 @@ function dgap_register_general_notifications_section() {
 			'type'        => 'email',
 			'default'     => get_option( 'admin_email' ),
 			'placeholder' => get_option( 'admin_email' ),
+			'description' => __( 'Email address shown as the sender in outgoing notifications.', 'digent-appointments' ),
 		]
 	);
 

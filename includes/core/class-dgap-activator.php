@@ -8,7 +8,38 @@ class DGAP_Activator {
 	public static function activate() {
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/core/class-dgap-db.php';
 		DGAP_DB::create_tables();
+		self::seed_default_settings();
 		self::seed_default_forms();
+	}
+
+	/**
+	 * Ensure default display settings are enabled on first-time plugin activation.
+	 */
+	public static function seed_default_settings() {
+		$general = get_option( 'dgap_general_settings', null );
+		if ( null === $general || ! is_array( $general ) ) {
+			update_option(
+				'dgap_general_settings',
+				[
+					'show_price'    => 1,
+					'show_decimals' => 1,
+				]
+			);
+			return;
+		}
+
+		$updated = false;
+		if ( ! array_key_exists( 'show_price', $general ) ) {
+			$general['show_price'] = ! empty( $general['hide_price'] ) ? 0 : 1;
+			$updated               = true;
+		}
+		if ( ! array_key_exists( 'show_decimals', $general ) ) {
+			$general['show_decimals'] = ! empty( $general['hide_decimals'] ) ? 0 : 1;
+			$updated                  = true;
+		}
+		if ( $updated ) {
+			update_option( 'dgap_general_settings', $general );
+		}
 	}
 
 	/**

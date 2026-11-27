@@ -85,6 +85,24 @@ class DGAP_Settings_Sections {
 		);
 
 		add_settings_field(
+			'slot_label_style',
+			esc_html__( 'Slot Label Style', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'select' ],
+			'dgap_general_booking',
+			'dgap_general_booking',
+			[
+				'id'          => 'slot_label_style',
+				'tab'         => 'general',
+				'default'     => 'from_to',
+				'options'     => [
+					'from_to' => esc_html__( 'From - To (e.g. 09:00 - 10:00)', 'digent-appointments' ),
+					'from'    => esc_html__( 'From Only (e.g. 09:00)', 'digent-appointments' ),
+				],
+				'description' => __( 'Choose whether time slots on the booking form show a start-to-end range or only the start time.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
 			'date_format',
 			esc_html__( 'Date Format', 'digent-appointments' ),
 			[ 'DGAP_Settings_Fields', 'select' ],
@@ -141,9 +159,28 @@ class DGAP_Settings_Sections {
 			'dgap_general_display',
 			'',
 			static function () {
+				$opts       = get_option( 'dgap_general_settings', [] );
+				$show_price = ! isset( $opts['show_price'] ) || 1 === (int) $opts['show_price'];
 				echo '<p>' . esc_html__( 'Configure how service prices and currency symbols appear on booking forms and emails.', 'digent-appointments' ) . '</p>';
+				if ( ! $show_price ) {
+					echo '<style>.dgap-price-child-row { display: none; }</style>';
+				}
 			},
 			'dgap_general_display'
+		);
+
+		add_settings_field(
+			'show_price',
+			esc_html__( 'Show Price on Booking Form', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'toggle' ],
+			'dgap_general_display',
+			'dgap_general_display',
+			[
+				'id'          => 'show_price',
+				'tab'         => 'general',
+				'default'     => 1,
+				'description' => __( 'Display service prices on the public booking form and service dropdown.', 'digent-appointments' ),
+			]
 		);
 
 		add_settings_field(
@@ -156,6 +193,7 @@ class DGAP_Settings_Sections {
 				'id'      => 'currency_code',
 				'tab'     => 'general',
 				'default' => 'USD',
+				'class'   => 'dgap-sub-setting dgap-price-child-row',
 				'options' => [
 					'USD' => 'USD — US Dollar ($)',
 					'EUR' => 'EUR — Euro (€)',
@@ -170,20 +208,6 @@ class DGAP_Settings_Sections {
 		);
 
 		add_settings_field(
-			'currency_symbol',
-			esc_html__( 'Currency Symbol', 'digent-appointments' ),
-			[ 'DGAP_Settings_Fields', 'text' ],
-			'dgap_general_display',
-			'dgap_general_display',
-			[
-				'id'          => 'currency_symbol',
-				'tab'         => 'general',
-				'default'     => '$',
-				'placeholder' => '$',
-			]
-		);
-
-		add_settings_field(
 			'currency_position',
 			esc_html__( 'Currency Position', 'digent-appointments' ),
 			[ 'DGAP_Settings_Fields', 'select' ],
@@ -193,6 +217,7 @@ class DGAP_Settings_Sections {
 				'id'      => 'currency_position',
 				'tab'     => 'general',
 				'default' => 'before',
+				'class'   => 'dgap-sub-setting dgap-price-child-row',
 				'options' => [
 					'before'       => esc_html__( 'Before Amount ($50.00)', 'digent-appointments' ),
 					'after'        => esc_html__( 'After Amount (50.00$)', 'digent-appointments' ),
@@ -203,30 +228,17 @@ class DGAP_Settings_Sections {
 		);
 
 		add_settings_field(
-			'hide_price',
-			esc_html__( 'Hide Price on Booking Form', 'digent-appointments' ),
+			'show_decimals',
+			esc_html__( 'Show Decimals in Price', 'digent-appointments' ),
 			[ 'DGAP_Settings_Fields', 'toggle' ],
 			'dgap_general_display',
 			'dgap_general_display',
 			[
-				'id'          => 'hide_price',
+				'id'          => 'show_decimals',
 				'tab'         => 'general',
-				'default'     => 0,
-				'description' => __( 'Hide service prices from the public booking form.', 'digent-appointments' ),
-			]
-		);
-
-		add_settings_field(
-			'hide_decimals',
-			esc_html__( 'Hide Decimals in Price', 'digent-appointments' ),
-			[ 'DGAP_Settings_Fields', 'toggle' ],
-			'dgap_general_display',
-			'dgap_general_display',
-			[
-				'id'          => 'hide_decimals',
-				'tab'         => 'general',
-				'default'     => 0,
-				'description' => __( 'Display whole numbers like $50 instead of $50.00 when decimals are .00.', 'digent-appointments' ),
+				'default'     => 1,
+				'class'       => 'dgap-sub-setting dgap-price-child-row',
+				'description' => __( 'Display decimals in prices like $50.00 instead of $50.', 'digent-appointments' ),
 			]
 		);
 

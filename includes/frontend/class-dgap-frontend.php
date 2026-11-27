@@ -50,14 +50,14 @@ class DGAP_Frontend {
 		    'dgap-forms-shared',
 		    DGAP_PLUGIN_DIR_URL . 'assets/shared/css/dgap-forms.css',
 		    [],
-		    DGAP_VERSION
+		    filemtime( DGAP_PLUGIN_DIR_PATH . 'assets/shared/css/dgap-forms.css' )
 		);
 
 		wp_register_style(
 		    'dgap-frontend',
 		    DGAP_PLUGIN_DIR_URL . 'assets/frontend/css/dgap-frontend.css',
 		    ['dgap-forms-shared'],
-		    DGAP_VERSION
+		    filemtime( DGAP_PLUGIN_DIR_PATH . 'assets/frontend/css/dgap-frontend.css' )
 		);
 
 		wp_register_style(
@@ -80,15 +80,28 @@ class DGAP_Frontend {
 		    'dgap-frontend',
 		    DGAP_PLUGIN_DIR_URL . 'assets/frontend/js/dgap-frontend.js',
 		    [ 'jquery', 'dgap-flatpickr', 'wp-i18n' ],
-		    DGAP_VERSION,
+		    filemtime( DGAP_PLUGIN_DIR_PATH . 'assets/frontend/js/dgap-frontend.js' ),
 		    true
 		);
 
 		// Localize AJAX URL
 
-		$localize_data 	= [
-			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'_dgap_frontend_nonce'    => wp_create_nonce( 'dgap_frontend_action' ),
+		$general_settings = get_option( 'dgap_general_settings', [] );
+		$show_price       = isset( $general_settings['show_price'] )
+			? (bool) $general_settings['show_price']
+			: empty( $general_settings['hide_price'] );
+		$show_decimals    = isset( $general_settings['show_decimals'] )
+			? (bool) $general_settings['show_decimals']
+			: empty( $general_settings['hide_decimals'] );
+		$currency_symbol  = dgap_get_currency_symbol( $general_settings['currency_code'] ?? 'USD' );
+
+		$localize_data    = [
+			'ajax_url'             => admin_url( 'admin-ajax.php' ),
+			'_dgap_frontend_nonce' => wp_create_nonce( 'dgap_frontend_action' ),
+			'time_format'          => $general_settings['time_format'] ?? '24',
+			'show_price'           => $show_price,
+			'show_decimals'        => $show_decimals,
+			'currency_symbol'      => $currency_symbol,
 		];
 		$localize_data1 	=	apply_filters( 'dgap_localize_front_data', [] );
 

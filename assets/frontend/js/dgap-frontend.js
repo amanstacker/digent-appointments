@@ -70,14 +70,23 @@ jQuery(function ($) {
         customFields.forEach(function ( field ) {
             let inputHtml = '';
 
+            const isReq = (field.required == 1 || field.required === true || field.required === '1');
+
             switch ( field.type ) {
                 case 'text':
                 case 'email':
+                    inputHtml = `<input type="${field.type}" name="${field.name}" class="dgap-custom-field" ${isReq ? 'required' : ''}>`;
+                    break;
                 case 'phone':
-                    inputHtml = `<input type="${field.type}" name="${field.name}" class="dgap-custom-field" ${field.required ? 'required' : ''}>`;
+                    inputHtml = `
+                        <div class="dgap-phone-wrap" style="display:flex;gap:8px;align-items:center;width:100%;">
+                            <input type="text" name="phone_dial_code" class="dgap-phone-dial-code" placeholder="+1" maxlength="10" pattern="^\\+?[0-9]{1,5}$" style="width:78px;flex:0 0 78px;" ${isReq ? 'required' : ''}>
+                            <input type="tel" name="${field.name}" class="dgap-custom-field dgap-phone-number" placeholder="Phone number" style="flex:1;min-width:0;" ${isReq ? 'required' : ''}>
+                        </div>
+                    `;
                     break;
                 case 'textarea':
-                    inputHtml = `<textarea name="${field.name}" class="dgap-custom-field" rows="3" ${field.required ? 'required' : ''}></textarea>`;
+                    inputHtml = `<textarea name="${field.name}" class="dgap-custom-field" rows="3" ${isReq ? 'required' : ''}></textarea>`;
                     break;
             }
 
@@ -90,6 +99,8 @@ jQuery(function ($) {
                 </div>
             `);
         });
+
+        syncSummaryCustomerDetails($('.dgap-form-wrap'));
     }
 
     /* ------------------------------
@@ -137,10 +148,47 @@ jQuery(function ($) {
 
     function disableCalendar() {
         $('.dgap-calendar').addClass('disabled');
+        $('.dgap-day:not(.empty)').removeClass('active disabled');
+        $('.dgap-slots, .dgap-inline-slots-container').empty();
+        selectedDate = '';
+        selectedSlotStart = '';
+        selectedSlotEnd = '';
+    }
+
+    function refreshCalendarAvailability() {
+        const location_id = $('#dgap-location').val();
+        const service_id  = $('#dgap-service').val();
+        const staff_id    = $('#dgap-staff').val();
+        if (!location_id || !service_id || !staff_id) return;
+
+        const year  = currentMonth.getFullYear();
+        const month = currentMonth.getMonth() + 1;
+
+        $.post(dgap_frontend.ajax_url, {
+            action:      'dgap_front_get_available_dates',
+            location_id: location_id,
+            service_id:  service_id,
+            staff_id:    staff_id,
+            year:        year,
+            month:       month,
+            _dgap_nonce: dgap_frontend._dgap_frontend_nonce
+        }, function (res) {
+            if (!res.success || !Array.isArray(res.data)) return;
+            const availSet = new Set(res.data);
+            $('.dgap-calendar .dgap-day:not(.empty)').each(function () {
+                const d = $(this).data('date');
+                const isAvail = availSet.has(d);
+                $(this).toggleClass('disabled', !isAvail);
+                if (!isAvail) {
+                    $(this).removeClass('active');
+                }
+            });
+        });
     }
 
     function enableCalendar() {
         $('.dgap-calendar').removeClass('disabled');
+        refreshCalendarAvailability();
     }
 
     /* ------------------------------
@@ -149,11 +197,17 @@ jQuery(function ($) {
     $(document).on('click', '.dgap-prev-month', function () {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         renderCalendar();
+        if (!$('.dgap-calendar').hasClass('disabled')) {
+            refreshCalendarAvailability();
+        }
     });
 
     $(document).on('click', '.dgap-next-month', function () {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         renderCalendar();
+        if (!$('.dgap-calendar').hasClass('disabled')) {
+            refreshCalendarAvailability();
+        }
     });
 
     /* ------------------------------
@@ -183,10 +237,18 @@ jQuery(function ($) {
             _dgap_nonce: dgap_frontend._dgap_frontend_nonce
         }, function (res) {
             if (res.success) {
+                const showPrice    = dgap_frontend.show_price !== false;
+                const showDecimals = dgap_frontend.show_decimals !== false;
+                const sym          = dgap_frontend.currency_symbol || '$';
+
                 $.each(res.data, function (_, srv) {
-                    
+                    const num = parseFloat(srv.price || 0);
+                    const dec = (!showDecimals && Math.floor(num) === num) ? 0 : 2;
+                    const priceStr = sym + num.toFixed(dec);
+                    const label = showPrice ? `${srv.name} - ${priceStr}` : srv.name;
+
                     $('#dgap-service').append(
-                        `<option value="${srv.id}">${srv.name} - $${srv.price}</option>`
+                        `<option value="${srv.id}" data-price="${priceStr}">${label}</option>`
                     );
                 });
                 $('#dgap-service').prop('disabled', false);
@@ -287,14 +349,14 @@ jQuery(function ($) {
     /* ------------------------------
         DATE CLICK → LOAD SLOTS
     -------------------------------- */
-    $(document).on('click', '.dgap-calendar:not(.disabled) .dgap-day:not(.empty)', function () {
+    $(document).on('click', '.dgap-calendar:not(.disabled) .dgap-day:not(.empty):not(.disabled)', function () {
 
         const date        = $(this).data('date');
         const location_id = $('#dgap-location').val();
         const service_id  = $('#dgap-service').val();
         const staff_id    = $('#dgap-staff').val();
         const $calendar   = $(this).closest('.dgap-calendar');
-        const isInline    = $calendar.hasClass('dgap-calendar-style-inline');
+        const isInline    = $calendar.attr('data-slot-position') === 'inside' || $calendar.hasClass('dgap-calendar-style-inline');
 
         selectedDate = date;
 
@@ -326,9 +388,16 @@ jQuery(function ($) {
             _dgap_nonce: dgap_frontend._dgap_frontend_nonce
         }, function (res) {
 
+            const firstLabel    = res.success && res.data.length ? String(res.data[0].label || '') : '';
+            const hasRangeLabel = firstLabel.indexOf(' - ') !== -1;
+            const hasAmPm       = /\b(AM|PM)\b/i.test(firstLabel);
+            const rangeClass    = hasRangeLabel
+                ? (hasAmPm ? ' dgap-slots-range dgap-slots-range-ampm' : ' dgap-slots-range')
+                : '';
+
             if (isInline) {
                 let html = '<p class="dgap-inline-title">Available Time Slots</p>';
-                html += '<div class="dgap-inline-slots-grid">';
+                html += `<div class="dgap-inline-slots-grid${rangeClass}">`;
                 if (res.success && res.data.length) {
                     $.each(res.data, function (_, slot) {
                         html += `
@@ -344,7 +413,7 @@ jQuery(function ($) {
                 html += '</div>';
                 $('.dgap-inline-slots-container').html(html);
             } else {
-                let html = '<div class="dgap-slots-row">';
+                let html = `<div class="dgap-slots-row${rangeClass}">`;
                 if (res.success && res.data.length) {
                     $.each(res.data, function (_, slot) {
                         html += `
@@ -375,19 +444,11 @@ jQuery(function ($) {
 
         $('.dgap-slot').removeClass('active selected');
 
-        const clickedStart = timeToMinutes($(this).data('start'));
-        const clickedEnd   = timeToMinutes($(this).data('end'));
-        const windowEnd    = clickedStart + (clickedEnd - clickedStart);
+        const $clicked = $(this);
+        $clicked.addClass('active selected');
 
-        $('.dgap-slot').each(function () {
-            const slotStart = timeToMinutes($(this).data('start'));
-            if (slotStart >= clickedStart && slotStart < windowEnd) {
-                $(this).addClass('active selected');
-            }
-        });
-
-        selectedSlotStart = $('.dgap-slot.active').first().data('start');
-        selectedSlotEnd   = $('.dgap-slot.active').last().data('end');
+        selectedSlotStart = $clicked.data('start');
+        selectedSlotEnd   = $clicked.data('end');
 
         // Update summary
         updateSummary();
@@ -399,22 +460,93 @@ jQuery(function ($) {
     /* ------------------------------
         UPDATE SUMMARY
     -------------------------------- */
-    function updateSummary() {
-        const location = $('#dgap-location option:selected').text();
-        const service  = $('#dgap-service option:selected').text();
-        const worker   = $('#dgap-staff option:selected').text();
-        const price    = service.split('-')[1] || '';
+    function formatDateHuman(ymd) {
+        if (!ymd) return '';
+        const parts = String(ymd).split('-');
+        if (parts.length !== 3) return ymd;
+        const dt = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        if (isNaN(dt.getTime())) return ymd;
+        return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
 
-        const dateTime = selectedDate + (selectedSlotStart ? ` (${selectedSlotStart}${selectedSlotEnd ? ' - ' + selectedSlotEnd : ''})` : '');
+    function formatTimeHuman(hhmm) {
+        if (!hhmm) return '';
+        const parts = String(hhmm).split(':');
+        if (parts.length < 2) return hhmm;
+        let h = parseInt(parts[0], 10);
+        const m = parts[1];
+        const is12 = String((typeof dgap_frontend !== 'undefined' && dgap_frontend.time_format) || '24') === '12';
+        if (!is12) {
+            return String(h).padStart(2, '0') + ':' + m;
+        }
+        const ap = h >= 12 ? 'PM' : 'AM';
+        h = h % 12;
+        if (h === 0) h = 12;
+        return h + ':' + m + ' ' + ap;
+    }
+
+    function syncSummaryCustomerDetails($root) {
+        const $wrap = ($root && $root.length) ? $root : $('.dgap-form-wrap');
+        if (!$wrap.length) return;
+
+        const name      = ($wrap.find('[name="_dgap_form_name"], [name="first_name"]').first().val() || '').trim();
+        const email     = ($wrap.find('[name="_dgap_form_email"], [name="email"]').first().val() || '').trim();
+        const dial      = ($wrap.find('[name="phone_dial_code"]').first().val() || '').trim();
+        const phone     = ($wrap.find('[name="_dgap_form_phone"], [name="phone"]').first().val() || '').trim();
+        const fullPhone = [dial, phone].filter(Boolean).join(' ');
+        const notes     = ($wrap.find('[name="_dgap_form_description"], [name="notes"]').first().val() || '').trim();
+
+        $wrap.find('#dgap-form-render-customer-name').text(name || '—');
+        $wrap.find('#dgap-form-render-customer-email').text(email || '—');
+        $wrap.find('#dgap-form-render-customer-phone').text(fullPhone || '—');
+        $wrap.find('#dgap-form-render-customer-notes').text(notes || '—');
+
+        const $summaryWrapper = $wrap.find('.dgap-summary-wrapper');
+        if ($summaryWrapper.length) {
+            $summaryWrapper.find('.dgap-summary-custom-item').remove();
+            if ($wrap.find('.dgap-summary').attr('data-hide-summary-custom') === '1') {
+                return;
+            }
+            $wrap.find('.dgap-personal-info .dgap-custom-field').each(function () {
+                const fieldName = $(this).attr('name') || '';
+                if (fieldName === '_dgap_form_name' || fieldName === '_dgap_form_email' || fieldName === '_dgap_form_phone' || fieldName === '_dgap_form_description' || fieldName === 'notes') {
+                    return;
+                }
+                const val = ($(this).val() || '').trim();
+                const rawLabel = $(this).closest('.dgap-field-vertical').find('label').first().text().replace(/\*/g, '').trim();
+                if (!rawLabel) return;
+
+                const $row = $('<div class="dgap-summary-item dgap-summary-custom-item"></div>');
+                $row.append($('<label></label>').text(rawLabel + ':'));
+                $row.append($('<span class="dgap-value"></span>').text(val || '—'));
+                $summaryWrapper.append($row);
+            });
+        }
+    }
+    window.dgapSyncSummaryCustomerDetails = syncSummaryCustomerDetails;
+
+    $(document).on('input change', '.dgap-personal-info input, .dgap-personal-info textarea', function () {
+        syncSummaryCustomerDetails($(this).closest('.dgap-form-wrap'));
+    });
+
+    function updateSummary() {
+        const $srvOpt   = $('#dgap-service option:selected');
+        const location  = $('#dgap-location option:selected').text();
+        const service   = $srvOpt.text();
+        const worker    = $('#dgap-staff option:selected').text();
+        const price     = $srvOpt.data('price') || service.split('-')[1] || '';
+        const dateHuman = formatDateHuman(selectedDate);
+        const timeRange = selectedSlotStart
+            ? `${formatTimeHuman(selectedSlotStart)}${selectedSlotEnd ? ' – ' + formatTimeHuman(selectedSlotEnd) : ''}`
+            : '';
+        const dateTime  = [dateHuman, timeRange].filter(Boolean).join(' · ');
 
         $('#dgap-form-render-loc').text(location);
         $('#dgap-form-render-service').text(service);
         $('#dgap-form-render-worker').text(worker);
         $('#dgap-form-render-price').text(price);
         $('#dgap-form-render-date').text(dateTime);
-        if (window.dgapSyncSummaryCustomerDetails) {
-            window.dgapSyncSummaryCustomerDetails($('.dgap-form-wrap'));
-        }
+        syncSummaryCustomerDetails($('.dgap-form-wrap'));
     }
 
     /* ------------------------------
@@ -689,7 +821,7 @@ jQuery(function ($) {
 
             $.post(dgap_frontend.ajax_url, postData, function (res) {
                 if (res.success) {
-                    showSuccess();
+                    showSuccess(res.data || {});
                     window.scrollTo({
                         top: 0,
                         behavior: 'smooth'
@@ -743,15 +875,79 @@ jQuery(function ($) {
     /* ------------------------------
         SUCCESS STATE
     -------------------------------- */
-    function showSuccess() {
+    function escHtml(str) {
+        return $('<div>').text(str == null ? '' : String(str)).html();
+    }
+
+    function showSuccess(respData) {
+        respData = respData || {};
+        const bookingId = respData.booking_id ? `#${respData.booking_id}` : '';
+        const statusRaw = String(respData.status || 'confirmed').toLowerCase();
+        const isPending = statusRaw === 'pending' || statusRaw === 'reserved';
+
+        const titleText = isPending ? 'Booking Submitted!' : 'Booking Confirmed!';
+        const subText   = isPending
+            ? 'Your appointment request has been submitted and is awaiting approval. Once confirmed, you will be notified via your communication channel.'
+            : 'Your appointment has been successfully booked.';
+        const statusLabel = statusRaw.charAt(0).toUpperCase() + statusRaw.slice(1);
+
+        const $locOpt = $('#dgap-location option:selected');
+        const locationText = ($locOpt.length && $locOpt.val() && !$locOpt.data('placeholder')) ? $locOpt.text().trim() : '';
+
+        const $srvOpt = $('#dgap-service option:selected');
+        const serviceText = ($srvOpt.length && $srvOpt.val() && !$srvOpt.data('placeholder')) ? $srvOpt.text().trim() : '';
+
+        const $stfOpt = $('#dgap-staff option:selected');
+        const staffText = ($stfOpt.length && $stfOpt.val() && !$stfOpt.data('placeholder')) ? $stfOpt.text().trim() : '';
+
+        const dateText = selectedDate ? formatDateHuman(selectedDate) : '';
+        const timeText = selectedSlotStart
+            ? (selectedSlotEnd ? `${formatTimeHuman(selectedSlotStart)} – ${formatTimeHuman(selectedSlotEnd)}` : formatTimeHuman(selectedSlotStart))
+            : '';
+        const dateTimeText = [dateText, timeText].filter(Boolean).join(' · ');
+
+        const customerName  = ($('[name="_dgap_form_name"], [name="first_name"]').first().val() || '').trim();
+        const customerEmail = ($('[name="_dgap_form_email"], [name="email"]').first().val() || '').trim();
+        const dialCode      = ($('[name="phone_dial_code"]').first().val() || '').trim();
+        const phoneNum      = ($('[name="_dgap_form_phone"], [name="phone"]').first().val() || '').trim();
+        const customerPhone = [dialCode, phoneNum].filter(Boolean).join(' ');
+        const customerNotes = ($('[name="_dgap_form_description"], [name="notes"]').first().val() || '').trim();
+
+        const rows = [];
+        if (bookingId)     rows.push({ label: 'Booking ID', value: bookingId });
+        if (serviceText)   rows.push({ label: 'Service', value: serviceText });
+        if (staffText)     rows.push({ label: 'Staff', value: staffText });
+        if (locationText)  rows.push({ label: 'Location', value: locationText });
+        if (dateTimeText)  rows.push({ label: 'Date & Time', value: dateTimeText });
+        if (customerName)  rows.push({ label: 'Name', value: customerName });
+        if (customerEmail) rows.push({ label: 'Email', value: customerEmail });
+        if (customerPhone) rows.push({ label: 'Phone', value: customerPhone });
+        if (customerNotes) rows.push({ label: 'Notes', value: customerNotes });
+        rows.push({ label: 'Status', value: statusLabel, isBadge: true });
+
+        const rowsHtml = rows.map(function (r) {
+            const valHtml = r.isBadge
+                ? `<span class="dgap-success-status is-${escHtml(statusRaw)}">${escHtml(r.value)}</span>`
+                : escHtml(r.value);
+            return `<div class="dgap-success-row"><span class="dgap-success-label">${escHtml(r.label)}</span><span class="dgap-success-value">${valHtml}</span></div>`;
+        }).join('');
+
         $('.dgap-form-wrap').html(`
             <div class="dgap-success">
-                <div class="dgap-success-icon">✓</div>
-                <h3>Booking Confirmed!</h3>
-                <p>Your appointment has been successfully booked.</p>
+                <div class="dgap-success-icon is-${escHtml(statusRaw)}">&#10003;</div>
+                <h3>${escHtml(titleText)}</h3>
+                <p class="dgap-success-subtitle">${escHtml(subText)}</p>
+                <div class="dgap-success-details">${rowsHtml}</div>
+                <div class="dgap-success-actions">
+                    <button type="button" class="dgap-start-over-btn">Start Over</button>
+                </div>
             </div>
         `);
     }
+
+    $(document).on('click', '.dgap-start-over-btn', function () {
+        window.location.reload();
+    });
 
     /*--------------------------------
     Form validation

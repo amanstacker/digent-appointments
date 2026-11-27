@@ -363,7 +363,16 @@
 }
 
 .dgap-settings-main select {
-	padding-right: 28px !important;
+	padding-right: 34px !important;
+	-webkit-appearance: none !important;
+	-moz-appearance: none !important;
+	appearance: none !important;
+	background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center !important;
+	background-size: 14px 14px !important;
+}
+
+.dgap-settings-main select::picker-icon {
+	display: none !important;
 }
 
 .dgap-settings-main textarea {
@@ -415,18 +424,96 @@
 }
 
 /* Modern Accordion Styles */
+.dgap-email-templates-header {
+	margin-bottom: 16px;
+}
+
+.dgap-email-templates-header h3 {
+	margin: 0 0 4px;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--dgap-slate-900, #0f172a);
+}
+
+.dgap-email-templates-header p {
+	margin: 0;
+	font-size: 13px;
+	color: var(--dgap-slate-500, #64748b);
+}
+
+.dgap-email-tags-card {
+	background: #f8fafc;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	border-radius: var(--dgap-card-radius, 8px);
+	padding: 14px 16px;
+	margin-bottom: 20px;
+}
+
+.dgap-email-tags-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 10px;
+	font-size: 12.5px;
+	font-weight: 600;
+	color: var(--dgap-slate-700, #334155);
+}
+
+.dgap-email-tags-hint {
+	font-weight: 500;
+	font-size: 12px;
+	color: var(--dgap-slate-500, #64748b);
+}
+
+.dgap-email-tags-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.dgap-copy-tag {
+	cursor: pointer;
+	padding: 4px 9px;
+	border-radius: 5px;
+	background: #ffffff;
+	border: 1px solid var(--dgap-slate-200, #e2e8f0);
+	color: var(--dgap-slate-700, #334155);
+	font-size: 12px;
+	font-weight: 500;
+	transition: all 0.15s ease;
+	user-select: none;
+}
+
+.dgap-copy-tag:hover {
+	background: #ecfdf5;
+	border-color: #a7f3d0;
+	color: #065f46;
+}
+
+.dgap-copy-tag.is-copied {
+	background: #dcfce7;
+	border-color: #10b981;
+	color: #065f46;
+}
+
 .dgap-accordion {
 	margin-bottom: 12px;
 	border: 1px solid var(--dgap-slate-200, #e2e8f0);
 	border-radius: var(--dgap-card-radius, 8px);
 	background: #ffffff;
 	overflow: hidden;
-	transition: all 0.15s ease;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dgap-accordion:hover {
+	border-color: var(--dgap-slate-300, #cbd5e1);
 }
 
 .dgap-accordion-title {
 	margin: 0 !important;
-	padding: 12px 16px;
+	padding: 13px 16px;
 	font-weight: 600;
 	font-size: 13.5px;
 	line-height: 1.4;
@@ -445,10 +532,11 @@
 }
 
 .dgap-accordion-title::before {
-	content: "\25BC";
-	font-size: 10px;
-	color: var(--dgap-slate-400, #94a3b8);
-	transition: transform 0.25s ease;
+	content: "\25BE";
+	font-size: 13px;
+	line-height: 1;
+	color: var(--dgap-slate-500, #64748b);
+	transition: transform 0.2s ease, color 0.15s ease;
 }
 
 .dgap-accordion-title.active {
@@ -464,10 +552,36 @@
 
 .dgap-accordion-content {
 	display: none;
-	padding: 16px;
+	padding: 18px 16px;
 	background: #ffffff;
 	border-top: 1px solid var(--dgap-slate-100, #f1f5f9);
 	animation: dgapFadeIn 0.2s ease-in;
+}
+
+.dgap-email-subject-field {
+	margin-bottom: 14px;
+}
+
+.dgap-email-subject-field label {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--dgap-slate-800, #1e293b);
+	margin-bottom: 6px;
+}
+
+.dgap-accordion-content .wp-media-buttons .button {
+	background: #ffffff;
+	border-color: var(--dgap-slate-300, #cbd5e1);
+	color: var(--dgap-slate-700, #334155);
+	border-radius: 5px;
+	font-weight: 500;
+}
+
+.dgap-accordion-content .wp-media-buttons .button:hover {
+	background: #ecfdf5;
+	border-color: var(--dgap-primary, #10b981);
+	color: #065f46;
 }
 
 @keyframes dgapFadeIn {
@@ -754,7 +868,14 @@
 	gap: 10px;
 	margin: 0;
 	padding: 0 !important;
-	flex-shrink: 0;
+	flex-shrink: 1;
+	max-width: 100%;
+}
+
+.dgap-tool-inline-form input[type="email"].regular-text {
+	width: 260px;
+	max-width: 100%;
+	flex: 1 1 200px;
 }
 
 .dgap-tool-file-input {
@@ -873,22 +994,43 @@
 }
 
 .form-table tr.dgap-sub-setting th {
-	padding-left: 28px !important;
-	position: relative;
+	padding-left: 24px !important;
+	border-left: 3px solid rgba(16, 185, 129, 0.55) !important;
 	color: var(--dgap-slate-700, #334155);
 	font-weight: 500;
 }
 
-.form-table tr.dgap-sub-setting th::before {
-	content: "";
-	position: absolute;
-	left: 12px;
-	top: 12px;
-	bottom: 12px;
-	width: 3px;
-	border-radius: 2px;
-	background: var(--dgap-primary, #10b981);
-	opacity: 0.45;
+@media (max-width: 782px) {
+	.form-table tr.dgap-sub-setting td {
+		padding-left: 24px !important;
+		border-left: 3px solid rgba(16, 185, 129, 0.55) !important;
+	}
+}
+
+@media (max-width: 600px) {
+	.dgap-tabs {
+		gap: 8px 16px;
+		padding: 0 16px;
+	}
+	.dgap-tabs a {
+		padding: 10px 0;
+		font-size: 14px;
+	}
+	.dgap-subtabs {
+		padding: 0 16px;
+		gap: 6px;
+	}
+	.dgap-settings-main form {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+	.dgap-tool-inline-form {
+		width: 100%;
+	}
+	.dgap-tool-inline-form input[type="email"].regular-text,
+	.dgap-tool-inline-form .dgap-tool-btn {
+		width: 100%;
+	}
 }
 
 /* =====================================================

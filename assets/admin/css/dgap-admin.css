@@ -462,8 +462,32 @@
 	border-collapse: separate;
 	border-spacing: 0;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-	overflow: hidden;
+	overflow: visible;
 	margin-top: 14px;
+}
+
+.dgap-admin-wrap .wp-list-table thead tr:first-child th:first-child,
+.dgap-admin-wrap .wp-list-table thead tr:first-child td:first-child {
+	border-top-left-radius: var(--dgap-card-radius);
+}
+
+.dgap-admin-wrap .wp-list-table thead tr:first-child th:last-child,
+.dgap-admin-wrap .wp-list-table thead tr:first-child td:last-child {
+	border-top-right-radius: var(--dgap-card-radius);
+}
+
+.dgap-admin-wrap .wp-list-table tbody tr:last-child th:first-child,
+.dgap-admin-wrap .wp-list-table tbody tr:last-child td:first-child,
+.dgap-admin-wrap .wp-list-table tfoot tr:last-child th:first-child,
+.dgap-admin-wrap .wp-list-table tfoot tr:last-child td:first-child {
+	border-bottom-left-radius: var(--dgap-card-radius);
+}
+
+.dgap-admin-wrap .wp-list-table tbody tr:last-child th:last-child,
+.dgap-admin-wrap .wp-list-table tbody tr:last-child td:last-child,
+.dgap-admin-wrap .wp-list-table tfoot tr:last-child th:last-child,
+.dgap-admin-wrap .wp-list-table tfoot tr:last-child td:last-child {
+	border-bottom-right-radius: var(--dgap-card-radius);
 }
 
 .dgap-admin-wrap .wp-list-table thead th,

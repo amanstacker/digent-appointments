@@ -7,9 +7,12 @@
 .dgap-form-wrap {
     box-sizing: border-box;
     width:      100%;
-    /* Respect the form width but cap it at 1000px for a clean widescreen presentation */
-    max-width:  min(1000px, var(--dgap-form-width, 100%));
+    max-width:  min(440px, var(--dgap-form-width, 100%));
     margin:     0 auto;
+}
+
+.dgap-form-wrap:has(.dgap-wizard-wrap) {
+    max-width:  min(700px, var(--dgap-form-width, 100%));
 }
 
 .dgap-form-wrap * {

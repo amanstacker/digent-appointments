@@ -5,9 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <?php
-$calendar_style = $form['settings']['calendar_style'] ?? 'modern';
+$calendar_style  = $form['settings']['calendar_style'] ?? 'modern';
+$design          = $form['settings']['design'] ?? 'flat';
+$slot_position   = $form['settings']['slot_position'] ?? ( 'flat' === $design ? 'inside' : 'outside' );
+$is_inline_slots = ( 'inline' === $calendar_style || ( 'flat' === $design && 'inside' === $slot_position ) );
 ?>
-<div class="dgap-calendar disabled dgap-calendar-style-<?php echo esc_attr( $calendar_style ); ?>">
+<div class="dgap-calendar disabled dgap-calendar-style-<?php echo esc_attr( $calendar_style ); ?>" data-slot-position="<?php echo esc_attr( $is_inline_slots ? 'inside' : 'outside' ); ?>">
 	<div class="dgap-calendar-header">
 		<button type="button" class="dgap-prev-month" type="button">&lsaquo;</button>
 		<span class="dgap-month-label"></span>
