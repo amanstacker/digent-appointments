@@ -203,10 +203,10 @@ class DGAP_Email_Notification {
         } elseif ( 'customer' === $type ) {
             $to = $data['email'] ?? '';
         } elseif ( 'employee' === $type ) {
-            if ( ! empty( $data['staff_id'] ) ) {
-                $staff_data = DGAP_Staff_Repo::get( absint( $data['staff_id'] ) );
-                if ( ! empty( $staff_data ) && is_array( $staff_data ) && ! empty( $staff_data['email'] ) ) {
-                    $to = $staff_data['email'];
+            if ( ! empty( $data['worker_id'] ) ) {
+                $worker_data = DGAP_Worker_Repo::get( absint( $data['worker_id'] ) );
+                if ( ! empty( $worker_data ) && is_array( $worker_data ) && ! empty( $worker_data['email'] ) ) {
+                    $to = $worker_data['email'];
                 }
             }
         }
@@ -327,7 +327,7 @@ class DGAP_Email_Notification {
 
         $service                    =   'NA';
         $service_price              =   '';
-        $staff_name                 =   'NA';
+        $worker_name                 =   'NA';
         $location_name              =   'NA';
 
         if ( ! empty( $data['service_id'] ) ) {
@@ -342,20 +342,20 @@ class DGAP_Email_Notification {
             }
         }
 
-        $staff_email = '';
-        if ( ! empty( $data['staff_id'] ) ) { 
-            $staff_data             =   DGAP_Staff_Repo::get( absint( $data['staff_id'] ) );
-            if ( ! empty( $staff_data ) && is_array( $staff_data ) ) {
-                $staff_name         =   '';
-                if ( isset( $staff_data['first_name'] ) ) {
-                    $staff_name     .=   $staff_data['first_name'] . ' ';
+        $worker_email = '';
+        if ( ! empty( $data['worker_id'] ) ) { 
+            $worker_data             =   DGAP_Worker_Repo::get( absint( $data['worker_id'] ) );
+            if ( ! empty( $worker_data ) && is_array( $worker_data ) ) {
+                $worker_name         =   '';
+                if ( isset( $worker_data['first_name'] ) ) {
+                    $worker_name     .=   $worker_data['first_name'] . ' ';
                 }
-                if ( isset( $staff_data['last_name'] ) ) {
-                    $staff_name     .=   $staff_data['last_name'];
+                if ( isset( $worker_data['last_name'] ) ) {
+                    $worker_name     .=   $worker_data['last_name'];
                 }
-                $staff_name         =   trim( $staff_name );
-                if ( ! empty( $staff_data['email'] ) ) {
-                    $staff_email    =   $staff_data['email'];
+                $worker_name         =   trim( $worker_name );
+                if ( ! empty( $worker_data['email'] ) ) {
+                    $worker_email    =   $worker_data['email'];
                 }
             }
         }
@@ -414,8 +414,8 @@ class DGAP_Email_Notification {
         $data['customer_phone']     =   isset( $data['phone'] ) ? $data['phone'] : '';
         $data['service_name']       =   $service;
         $data['service_price']      =   $formatted_price;
-        $data['staff_name']         =   $staff_name;
-        $data['staff_email']        =   $staff_email;
+        $data['worker_name']         =   $worker_name;
+        $data['worker_email']        =   $worker_email;
         $data['booking_date']       =   isset( $data['booking_date'] ) ? $data['booking_date'] : '';
         $data['booking_time']       =   $booking_time;
         $data['booking_status']     =   ucfirst( $status );
@@ -447,8 +447,10 @@ class DGAP_Email_Notification {
             '{customer_phone}'  => esc_html( $data['customer_phone'] ?? '' ),
             '{service_name}'    => esc_html( $data['service_name'] ?? '' ),
             '{service_price}'   => esc_html( $data['service_price'] ?? '' ),
-            '{staff_name}'      => esc_html( $data['staff_name'] ?? '' ),
-            '{staff_email}'     => esc_html( $data['staff_email'] ?? '' ),
+            '{worker_name}'      => esc_html( $data['worker_name'] ?? '' ),
+            '{worker_email}'     => esc_html( $data['worker_email'] ?? '' ),
+            '{staff_name}'       => esc_html( $data['worker_name'] ?? '' ),
+            '{staff_email}'      => esc_html( $data['worker_email'] ?? '' ),
             '{booking_date}'    => esc_html( $data['booking_date'] ?? '' ),
             '{booking_time}'    => esc_html( $data['booking_time'] ?? '' ),
             '{booking_status}'  => esc_html( $data['booking_status'] ?? '' ),

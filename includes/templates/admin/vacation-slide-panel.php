@@ -33,7 +33,7 @@
 				<p>
 					<label><?php esc_html_e( 'Type', 'digent-appointments' ); ?></label>
 					<select name="type" id="dgap-vacation-type">
-						<option value="staff"><?php esc_html_e( 'Staff', 'digent-appointments' ); ?></option>
+						<option value="worker"><?php esc_html_e( 'Worker', 'digent-appointments' ); ?></option>
 						<option value="service"><?php esc_html_e( 'Service', 'digent-appointments' ); ?></option>
 					</select>
 				</p>

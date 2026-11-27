@@ -4,15 +4,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class DGAP_Slot_Generator {
 
 	/**
-	 * Merge available slots across multiple matching schedules (e.g. morning + evening shifts).
+	 * Merge available slots across multiple matching connections (e.g. morning + evening shifts).
 	 */
-	public static function generate_slots_from_schedules( $schedules, $service, $date ) {
-		if ( empty( $schedules ) || ! is_array( $schedules ) ) {
+	public static function generate_slots_from_connections( $connections, $service, $date ) {
+		if ( empty( $connections ) || ! is_array( $connections ) ) {
 			return [];
 		}
 
 		$merged = [];
-		foreach ( $schedules as $schedule ) {
+		foreach ( $connections as $schedule ) {
 			$slots = self::generate_slot_from_schedule( $schedule, $service, $date );
 			foreach ( $slots as $slot ) {
 				if ( ! isset( $merged[ $slot['start'] ] ) ) {
@@ -28,7 +28,7 @@ class DGAP_Slot_Generator {
 	/**
 	 * Generate slots based on schedule, service, and date
 	 *
-	 * @param array  $schedule Schedule data including availability
+	 * @param array  $schedule Connection data including availability
 	 * @param array  $service  Service data including duration and buffers
 	 * @param string $date     Date for which to generate slots (Y-m-d format)
 	 *
@@ -130,9 +130,9 @@ class DGAP_Slot_Generator {
 			}
 		}
 
-		// Respect active Staff & Service Vacations on this date
-		$staff_id = absint( $schedule['staff_id'] ?? 0 );
-		if ( $staff_id > 0 || $service_id > 0 ) {
+		// Respect active Worker & Service Vacations on this date
+		$worker_id = absint( $schedule['worker_id'] ?? 0 );
+		if ( $worker_id > 0 || $service_id > 0 ) {
 			global $wpdb;
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific vacation check.
 			$vacations = $wpdb->get_results(
@@ -145,7 +145,7 @@ class DGAP_Slot_Generator {
 					continue;
 				}
 				$eids = array_map( 'absint', $eids );
-				$applies = ( 'staff' === ( $vac['type'] ?? '' ) && $staff_id > 0 && in_array( $staff_id, $eids, true ) )
+				$applies = ( 'worker' === ( $vac['type'] ?? '' ) && $worker_id > 0 && in_array( $worker_id, $eids, true ) )
 					|| ( 'service' === ( $vac['type'] ?? '' ) && $service_id > 0 && in_array( $service_id, $eids, true ) );
 				if ( ! $applies ) {
 					continue;
@@ -188,19 +188,19 @@ class DGAP_Slot_Generator {
 		$buffer_b_sec = $buffer_before * MINUTE_IN_SECONDS;
 		$buffer_a_sec = $buffer_after * MINUTE_IN_SECONDS;
 
-		$schedule_id = absint( $schedule['id'] ?? 0 );
+		$connection_id = absint( $schedule['id'] ?? 0 );
 		$capacity    = max( 1, absint( $schedule['capacity'] ?? 1 ) );
 		$now_ts      = current_time( 'timestamp' );
 		$is_today    = ( $date === $today_str );
 
 		$existing_bookings = [];
-		if ( $schedule_id > 0 ) {
+		if ( $connection_id > 0 ) {
 			global $wpdb;
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific booked slot check.
 			$existing_bookings = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT start_time, end_time FROM {$wpdb->prefix}dgap_bookings WHERE schedule_id = %d AND booking_date = %s AND status = 'confirmed'",
-					$schedule_id,
+					"SELECT start_time, end_time FROM {$wpdb->prefix}dgap_bookings WHERE connection_id = %d AND booking_date = %s AND status = 'confirmed'",
+					$connection_id,
 					$date
 				),
 				ARRAY_A
@@ -285,14 +285,14 @@ class DGAP_Slot_Generator {
 		return $slots;
 	}
 
-	public static function is_slot_available( $schedule_id, $date, $start_time, $end_time ) {
+	public static function is_slot_available( $connection_id, $date, $start_time, $end_time ) {
 		
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching --Reason Dynamic data is getting fetched here.
 		$capacity = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT capacity FROM {$wpdb->prefix}dgap_schedules WHERE id = %d",
-				$schedule_id
+				"SELECT capacity FROM {$wpdb->prefix}dgap_connections WHERE id = %d",
+				$connection_id
 			)
 		);
 		$capacity = max( 1, $capacity );
@@ -302,14 +302,14 @@ class DGAP_Slot_Generator {
 			$wpdb->prepare(
 				"SELECT COUNT(*)
 				FROM {$wpdb->prefix}dgap_bookings
-				WHERE schedule_id = %d
+				WHERE connection_id = %d
 				AND booking_date = %s
 				AND status = 'confirmed'
 				AND (
 					start_time < %s
 					AND end_time > %s
 				)",
-				$schedule_id,
+				$connection_id,
 				$date,
 				$end_time,
 				$start_time

@@ -21,7 +21,7 @@ jQuery(function ($) {
     let formState = {
         location: '',
         service:  '',
-        staff:    '',
+        worker:    '',
         date:     '',
         slots:    [],
         personal: {}
@@ -379,7 +379,7 @@ jQuery(function ($) {
     function captureFormState() {
         formState.location = $('#dgap-location').val();
         formState.service  = $('#dgap-service').val();
-        formState.staff    = $('#dgap-staff').val();
+        formState.worker    = $('#dgap-worker').val();
         formState.date     = $('.dgap-day.active').data('date') || '';
 
         formState.slots = [];
@@ -409,8 +409,8 @@ jQuery(function ($) {
                 $('#dgap-service').val(formState.service).trigger('change');
             }
             setTimeout(() => {
-                if (formState.staff) {
-                    $('#dgap-staff').val(formState.staff).trigger('change');
+                if (formState.worker) {
+                    $('#dgap-worker').val(formState.worker).trigger('change');
                 }
                 setTimeout(() => {
                     if (formState.date) {
@@ -425,7 +425,7 @@ jQuery(function ($) {
 
                             const location = $('#dgap-location option:selected').text();
                             const service  = $('#dgap-service option:selected').text();
-                            const worker   = $('#dgap-staff option:selected').text();
+                            const worker   = $('#dgap-worker option:selected').text();
                             const price    = service.split('-')[1] || '';
 
                             $('#dgap-form-render-loc').text(location);

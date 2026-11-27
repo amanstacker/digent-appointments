@@ -7,17 +7,17 @@
 		<div class="dgap-panel-title">
 			<span class="dashicons dashicons-businessperson"></span>
 			<h2 id="dgap-panel-title">
-				<?php esc_html_e( 'Add Staff Member', 'digent-appointments' ); ?>
+				<?php esc_html_e( 'Add Worker', 'digent-appointments' ); ?>
 			</h2>
 		</div>
 		<button class="dgap-close dashicons dashicons-no-alt"></button>
 	</div>
 
 	<!-- ================= Form ================= -->
-	<form id="dgap-staff-form" class="dgap-form">
+	<form id="dgap-worker-form" class="dgap-form">
 
 		<input type="hidden" name="id" value="">
-		<?php wp_nonce_field( 'dgap_staff_action', '_dgap_nonce' ); ?>
+		<?php wp_nonce_field( 'dgap_worker_action', '_dgap_nonce' ); ?>
 
 		<!-- ================= Body ================= -->
 		<div class="dgap-panel-body">
@@ -26,7 +26,7 @@
 			<div class="dgap-section">
 				<h3><?php esc_html_e( 'General Information', 'digent-appointments' ); ?></h3>
 
-				<!-- Staff Image -->
+				<!-- Worker Image -->
 				<div class="dgap-avatar-box">
 					<p class="dgap-image-field">
 						<label><?php esc_html_e( 'Profile Image', 'digent-appointments' ); ?></label>
@@ -128,7 +128,7 @@
 				</button>
 
 				<button type="submit" class="button dgap-btn button-primary">
-					<?php esc_html_e( 'Save Staff', 'digent-appointments' ); ?>
+					<?php esc_html_e( 'Save Worker', 'digent-appointments' ); ?>
 				</button>
 			</div>
 

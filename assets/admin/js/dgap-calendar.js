@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { icon: 'dashicons-admin-tools', text: parsed.service },
             { icon: 'dashicons-calendar-alt', text: formatDate(ev.start) },
             { icon: 'dashicons-clock', text: timeRange },
-            { icon: 'dashicons-admin-users', text: props.staff ? 'Staff: ' + props.staff : '' },
+            { icon: 'dashicons-admin-users', text: props.worker ? 'Worker: ' + props.worker : '' },
             { icon: 'dashicons-tag', text: priceVal ? 'Price: ' + priceVal : '' }
         ];
 

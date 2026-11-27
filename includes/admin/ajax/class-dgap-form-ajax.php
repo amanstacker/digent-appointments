@@ -72,10 +72,10 @@ class DGAP_Form_Ajax {
         $settings      = self::sanitize_array( $settings );
         $custom_fields = self::sanitize_array( $custom_fields );
 
-        $allowed_modes = [ 'location_service_staff', 'location_service', 'service_only' ];
-        $selection_mode = $settings['selection_mode'] ?? 'location_service_staff';
+        $allowed_modes = [ 'location_service_worker', 'location_service', 'service_only' ];
+        $selection_mode = $settings['selection_mode'] ?? 'location_service_worker';
         if ( ! in_array( $selection_mode, $allowed_modes, true ) ) {
-            $selection_mode = 'location_service_staff';
+            $selection_mode = 'location_service_worker';
         }
         $settings['selection_mode'] = $selection_mode;
 
@@ -87,7 +87,7 @@ class DGAP_Form_Ajax {
                     [
                         'message' => sprintf(
                             /* translators: %s: comma-separated service names */
-                            esc_html__( 'Cannot use "Service Only" mode because the following service(s) are assigned to multiple locations in Schedules: %s', 'digent-appointments' ),
+                            esc_html__( 'Cannot use "Service Only" mode because the following service(s) are assigned to multiple locations in Connections: %s', 'digent-appointments' ),
                             esc_html( implode( ', ', $names ) )
                         ),
                     ]

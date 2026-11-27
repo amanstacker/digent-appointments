@@ -897,7 +897,7 @@
 	}
 }
 
-/* Staff Avatar */
+/* Worker Avatar */
 .dgap-avatar-box {
 	border: 1px solid var(--dgap-slate-200);
 	padding: 15px; 
@@ -2350,7 +2350,7 @@
 	color: #64748b !important;
 }
 
-/* Dependency Guard Card (Schedules page) */
+/* Dependency Guard Card (Connections page) */
 .dgap-guard-card {
 	padding: 32px 28px !important;
 	max-width: 580px !important;
@@ -2901,7 +2901,7 @@
 	line-height: 15px;
 }
 
-/* Staff On-Duty Today */
+/* Worker On-Duty Today */
 .dgap-duty-list {
 	display: flex;
 	flex-direction: column;

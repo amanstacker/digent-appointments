@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$dgap_selection_mode = $form['settings']['selection_mode'] ?? 'location_service_staff';
+$dgap_selection_mode = $form['settings']['selection_mode'] ?? 'location_service_worker';
 $dgap_services       = ( 'service_only' === $dgap_selection_mode )
-	? DGAP_Booking_Repo::get_all_scheduled_services()
+	? DGAP_Booking_Repo::get_all_connected_services()
 	: [];
 $dgap_gen_opts       = get_option( 'dgap_general_settings', [] );
 $dgap_show_price     = isset( $dgap_gen_opts['show_price'] ) ? ! empty( $dgap_gen_opts['show_price'] ) : empty( $dgap_gen_opts['hide_price'] );

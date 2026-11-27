@@ -3,21 +3,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class DGAP_Staff_Repo {
+class DGAP_Worker_Repo {
 
 	private static function table() {
 		global $wpdb;
-		return $wpdb->prefix . 'dgap_staff';
+		return $wpdb->prefix . 'dgap_workers';
 	}
 
 	private static function cache_group() {
-		return 'dgap_staff';
+		return 'dgap_workers';
 	}
 
 	/* ================= Get ================= */
 
 	public static function get_all() {
-		$cache_key = 'dgap_all_staff';
+		$cache_key = 'dgap_all_workers';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -28,9 +28,9 @@ class DGAP_Staff_Repo {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$results = $wpdb->get_results( "SELECT * FROM " . self::table() . " ORDER BY id DESC", ARRAY_A );
 
-		// Add image_url for each staff
-		foreach ( $results as &$staff ) {
-			$staff['image_url'] = ! empty( $staff['image_id'] ) ? wp_get_attachment_url( $staff['image_id'] ) : '';
+		// Add image_url for each worker
+		foreach ( $results as &$worker ) {
+			$worker['image_url'] = ! empty( $worker['image_id'] ) ? wp_get_attachment_url( $worker['image_id'] ) : '';
 		}
 
 		wp_cache_set( $cache_key, $results, self::cache_group() );
@@ -76,7 +76,7 @@ class DGAP_Staff_Repo {
 	}
 
 	public static function get( $id ) {
-		$cache_key = 'dgap_staff_' . $id;
+		$cache_key = 'dgap_worker_' . $id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -85,15 +85,15 @@ class DGAP_Staff_Repo {
 
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
-		$staff = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::table() . " WHERE id = %d", $id ), ARRAY_A );
+		$worker = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . self::table() . " WHERE id = %d", $id ), ARRAY_A );
 
-		if ( $staff ) {
-			$staff['image_url'] = ! empty( $staff['image_id'] ) ? wp_get_attachment_url( $staff['image_id'] ) : '';
+		if ( $worker ) {
+			$worker['image_url'] = ! empty( $worker['image_id'] ) ? wp_get_attachment_url( $worker['image_id'] ) : '';
 		}
 
-		wp_cache_set( $cache_key, $staff, self::cache_group() );
+		wp_cache_set( $cache_key, $worker, self::cache_group() );
 
-		return $staff;
+		return $worker;
 	}
 
 	/* ================= Insert ================= */
@@ -128,11 +128,11 @@ class DGAP_Staff_Repo {
 		if ( false === $result ) {
 			return new WP_Error(
 				'db_insert_failed',
-				$wpdb->last_error ?: __( 'Failed to insert staff.', 'digent-appointments' )
+				$wpdb->last_error ?: __( 'Failed to insert worker.', 'digent-appointments' )
 			);
 		}
 
-		wp_cache_delete( 'dgap_all_staff', self::cache_group() );
+		wp_cache_delete( 'dgap_all_workers', self::cache_group() );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -171,12 +171,12 @@ class DGAP_Staff_Repo {
 		if ( false === $result ) {
 			return new WP_Error(
 				'db_update_failed',
-				$wpdb->last_error ?: __( 'Failed to update staff.', 'digent-appointments' )
+				$wpdb->last_error ?: __( 'Failed to update worker.', 'digent-appointments' )
 			);
 		}
 
-		wp_cache_delete( 'dgap_all_staff', self::cache_group() );
-		wp_cache_delete( 'dgap_staff_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_workers', self::cache_group() );
+		wp_cache_delete( 'dgap_worker_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -195,12 +195,12 @@ class DGAP_Staff_Repo {
 		if ( false === $result ) {
 			return new WP_Error(
 				'db_delete_failed',
-				$wpdb->last_error ?: __( 'Failed to delete staff.', 'digent-appointments' )
+				$wpdb->last_error ?: __( 'Failed to delete worker.', 'digent-appointments' )
 			);
 		}
 
-		wp_cache_delete( 'dgap_all_staff', self::cache_group() );
-		wp_cache_delete( 'dgap_staff_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_workers', self::cache_group() );
+		wp_cache_delete( 'dgap_worker_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -219,9 +219,9 @@ class DGAP_Staff_Repo {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$updated = $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET status = %d WHERE id IN ({$placeholders})", $params ) );
 
-		wp_cache_delete( 'dgap_all_staff', self::cache_group() );
+		wp_cache_delete( 'dgap_all_workers', self::cache_group() );
 		foreach ( $ids as $id ) {
-			wp_cache_delete( 'dgap_staff_' . $id, self::cache_group() );
+			wp_cache_delete( 'dgap_worker_' . $id, self::cache_group() );
 		}
 
 		return (int) $updated;
@@ -240,9 +240,9 @@ class DGAP_Staff_Repo {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ({$placeholders})", $ids ) );
 
-		wp_cache_delete( 'dgap_all_staff', self::cache_group() );
+		wp_cache_delete( 'dgap_all_workers', self::cache_group() );
 		foreach ( $ids as $id ) {
-			wp_cache_delete( 'dgap_staff_' . $id, self::cache_group() );
+			wp_cache_delete( 'dgap_worker_' . $id, self::cache_group() );
 		}
 
 		return (int) $deleted;

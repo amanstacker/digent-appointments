@@ -12,8 +12,8 @@
 			<option value=""><?php esc_html_e( 'Select Service', 'digent-appointments' ); ?></option>
 		</select>
 
-		<select id="dgap-staff" disabled>
-			<option value=""><?php esc_html_e( 'Select Staff', 'digent-appointments' ); ?></option>
+		<select id="dgap-worker" disabled>
+			<option value=""><?php esc_html_e( 'Select Worker', 'digent-appointments' ); ?></option>
 		</select>
 	</div>
 
@@ -81,7 +81,7 @@
 		<!-- Hidden Booking Data -->
 		<input type="hidden" name="location_id" id="dgap-hidden-location">
 		<input type="hidden" name="service_id" id="dgap-hidden-service">
-		<input type="hidden" name="staff_id" id="dgap-hidden-staff">
+		<input type="hidden" name="worker_id" id="dgap-hidden-worker">
 		<input type="hidden" name="booking_date" id="dgap-hidden-date">
 		<input type="hidden" name="booking_time" id="dgap-hidden-time">
 
@@ -95,7 +95,7 @@
 		<ul class="dgap-overview-list">
 			<li><strong><?php esc_html_e( 'Location:', 'digent-appointments' ); ?></strong> <span data-overview="location"></span></li>
 			<li><strong><?php esc_html_e( 'Service:', 'digent-appointments' ); ?></strong> <span data-overview="service"></span></li>
-			<li><strong><?php esc_html_e( 'Staff:', 'digent-appointments' ); ?></strong> <span data-overview="staff"></span></li>
+			<li><strong><?php esc_html_e( 'Worker:', 'digent-appointments' ); ?></strong> <span data-overview="worker"></span></li>
 			<li><strong><?php esc_html_e( 'Date:', 'digent-appointments' ); ?></strong> <span data-overview="date"></span></li>
 			<li><strong><?php esc_html_e( 'Time:', 'digent-appointments' ); ?></strong> <span data-overview="time"></span></li>
 			<li><strong><?php esc_html_e( 'Name:', 'digent-appointments' ); ?></strong> <span data-overview="name"></span></li>

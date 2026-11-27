@@ -62,15 +62,15 @@ $dgap_extensions = [
 		'settings_tab' => 'calendar',
 	],
 	[
-		'title'        => esc_html__( 'Staff & Resource Manager', 'digent-appointments' ),
-		'description'  => esc_html__( 'Manage multiple staff members, custom working hours, breaks, and service assignments.', 'digent-appointments' ),
-		'slug'         => 'staff',
+		'title'        => esc_html__( 'Worker & Resource Manager', 'digent-appointments' ),
+		'description'  => esc_html__( 'Manage multiple worker members, custom working hours, breaks, and service assignments.', 'digent-appointments' ),
+		'slug'         => 'worker',
 		'icon'         => 'dashicons-groups',
 		'settings_tab' => 'general',
 	],
 	[
 		'title'        => esc_html__( 'Multi-Location Support', 'digent-appointments' ),
-		'description'  => esc_html__( 'Create multiple branches with separate schedules, addresses, and staff assignments.', 'digent-appointments' ),
+		'description'  => esc_html__( 'Create multiple branches with separate connections, addresses, and worker assignments.', 'digent-appointments' ),
 		'slug'         => 'locations',
 		'icon'         => 'dashicons-location-alt',
 		'settings_tab' => 'general',
@@ -105,7 +105,7 @@ $dgap_extensions = [
 	],
 	[
 		'title'        => esc_html__( 'Analytics & Reports', 'digent-appointments' ),
-		'description'  => esc_html__( 'Detailed revenue reports, booking trends, staff performance metrics, and CSV export.', 'digent-appointments' ),
+		'description'  => esc_html__( 'Detailed revenue reports, booking trends, worker performance metrics, and CSV export.', 'digent-appointments' ),
 		'slug'         => 'reports',
 		'icon'         => 'dashicons-analytics',
 		'settings_tab' => 'tools',

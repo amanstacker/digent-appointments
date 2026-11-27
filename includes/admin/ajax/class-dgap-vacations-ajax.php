@@ -20,12 +20,12 @@ class DGAP_Vacations_Ajax {
 			wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to view this item.', 'digent-appointments' ) ], 403 );
 		}
 
-		$type   = sanitize_text_field( wp_unslash( $_POST['type'] ?? 'staff' ) );
+		$type   = sanitize_text_field( wp_unslash( $_POST['type'] ?? 'worker' ) );
 		$search = sanitize_text_field( wp_unslash( $_POST['search'] ?? '' ) );
 		$page   = absint( $_POST['page'] ?? 1 );
 
-		if ( 'staff' === $type ) {
-			$result = DGAP_Staff_Repo::search_for_vacation( $search, $page );
+		if ( 'worker' === $type ) {
+			$result = DGAP_Worker_Repo::search_for_vacation( $search, $page );
 		} else {
 			$result = DGAP_Service_Repo::search_for_vacation( $search, $page );
 		}
@@ -59,7 +59,7 @@ class DGAP_Vacations_Ajax {
 		);
 
 		if ( empty( $entity_ids ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Please select at least one staff or service.', 'digent-appointments' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Please select at least one worker or service.', 'digent-appointments' ) ] );
 		}
 
 		$raw_dates = $data['dates'] ?? '';
@@ -164,13 +164,13 @@ class DGAP_Vacations_Ajax {
 		$entity_ids = json_decode( $row['entity_ids'], true ) ?: [];
 		$labels     = [];
 
-		if ( 'staff' === $row['type'] ) {
+		if ( 'worker' === $row['type'] ) {
 			foreach ( $entity_ids as $eid ) {
-				$staff = DGAP_Staff_Repo::get( absint( $eid ) );
-				if ( $staff ) {
+				$worker = DGAP_Worker_Repo::get( absint( $eid ) );
+				if ( $worker ) {
 					$labels[] = [
 						'id'   => $eid,
-						'text' => trim( $staff['first_name'] . ' ' . $staff['last_name'] ),
+						'text' => trim( $worker['first_name'] . ' ' . $worker['last_name'] ),
 					];
 				}
 			}

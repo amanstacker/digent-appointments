@@ -26,7 +26,7 @@
 			<div class="dgap-section">
 				<h3><?php esc_html_e( 'Customer Details', 'digent-appointments' ); ?></h3>
 
-				<!-- Customer Image (Same as Staff) -->
+				<!-- Customer Image (Same as Worker) -->
 				<div class="dgap-avatar-box">
 					<p class="dgap-image-field">
 						<label><?php esc_html_e( 'Profile Image', 'digent-appointments' ); ?></label>

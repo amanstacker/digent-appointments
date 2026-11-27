@@ -72,13 +72,13 @@ class DGAP_Menu {
 			],
 			[
 				'type'  => 'item',
-				'slug'  => 'staff',
-				'title' => esc_html__( '3. Staff Members', 'digent-appointments' ),
+				'slug'  => 'workers',
+				'title' => esc_html__( '3. Workers', 'digent-appointments' ),
 			],
 			[
 				'type'  => 'item',
-				'slug'  => 'schedules',
-				'title' => esc_html__( '4. Schedules', 'digent-appointments' ),
+				'slug'  => 'connections',
+				'title' => esc_html__( '4. Connections', 'digent-appointments' ),
 			],
 			[
 				'type'  => 'item',

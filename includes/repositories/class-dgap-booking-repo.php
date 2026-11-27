@@ -43,12 +43,12 @@ class DGAP_Booking_Repo {
 				CONCAT_WS(' ', c.first_name, c.last_name) AS customer_name,
 				l.name AS location_name,
 				s.name AS service_name,
-				CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+				CONCAT_WS(' ', st.first_name, st.last_name) AS worker_name
 			FROM {$wpdb->prefix}dgap_bookings b
 			LEFT JOIN {$wpdb->prefix}dgap_customers c ON c.id = b.customer_id
 			LEFT JOIN {$wpdb->prefix}dgap_locations l ON l.id = b.location_id
 			LEFT JOIN {$wpdb->prefix}dgap_services s ON s.id = b.service_id
-			LEFT JOIN {$wpdb->prefix}dgap_staff st ON st.id = b.staff_id
+			LEFT JOIN {$wpdb->prefix}dgap_workers st ON st.id = b.worker_id
 			ORDER BY b.booking_date DESC, b.start_time DESC
 			",
 			ARRAY_A
@@ -86,9 +86,9 @@ class DGAP_Booking_Repo {
 			$params[] = absint( $filters['service_id'] );
 		}
 
-		if ( ! empty( $filters['staff_id'] ) ) {
-			$where[]  = 'b.staff_id = %d';
-			$params[] = absint( $filters['staff_id'] );
+		if ( ! empty( $filters['worker_id'] ) ) {
+			$where[]  = 'b.worker_id = %d';
+			$params[] = absint( $filters['worker_id'] );
 		}
 
 		if ( ! empty( $filters['date_from'] ) ) {
@@ -119,12 +119,12 @@ class DGAP_Booking_Repo {
 				c.email AS customer_email,
 				l.name AS location_name,
 				s.name AS service_name,
-				CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+				CONCAT_WS(' ', st.first_name, st.last_name) AS worker_name
 			FROM {$wpdb->prefix}dgap_bookings b
 			LEFT JOIN {$wpdb->prefix}dgap_customers c ON c.id = b.customer_id
 			LEFT JOIN {$wpdb->prefix}dgap_locations l ON l.id = b.location_id
 			LEFT JOIN {$wpdb->prefix}dgap_services s ON s.id = b.service_id
-			LEFT JOIN {$wpdb->prefix}dgap_staff st ON st.id = b.staff_id
+			LEFT JOIN {$wpdb->prefix}dgap_workers st ON st.id = b.worker_id
 			WHERE {$where_sql}
 			ORDER BY b.booking_date DESC, b.start_time DESC
 		";
@@ -161,12 +161,12 @@ class DGAP_Booking_Repo {
 					c.phone_dial_code,
 					l.name AS location_name,
 					s.name AS service_name,
-					CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+					CONCAT_WS(' ', st.first_name, st.last_name) AS worker_name
 				FROM {$wpdb->prefix}dgap_bookings b
 				LEFT JOIN {$wpdb->prefix}dgap_customers c ON c.id = b.customer_id
 				LEFT JOIN {$wpdb->prefix}dgap_locations l ON l.id = b.location_id
 				LEFT JOIN {$wpdb->prefix}dgap_services s ON s.id = b.service_id
-				LEFT JOIN {$wpdb->prefix}dgap_staff st ON st.id = b.staff_id
+				LEFT JOIN {$wpdb->prefix}dgap_workers st ON st.id = b.worker_id
 				WHERE b.id = %d
 				",
 				$id
@@ -304,11 +304,11 @@ class DGAP_Booking_Repo {
 				b.price,
 				CONCAT_WS(' ', c.first_name, c.last_name) AS customer_name,
 				s.name AS service_name,
-				CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+				CONCAT_WS(' ', st.first_name, st.last_name) AS worker_name
 			FROM {$wpdb->prefix}dgap_bookings b
 			LEFT JOIN {$wpdb->prefix}dgap_customers c ON c.id = b.customer_id
 			LEFT JOIN {$wpdb->prefix}dgap_services s ON s.id = b.service_id
-			LEFT JOIN {$wpdb->prefix}dgap_staff st ON st.id = b.staff_id			
+			LEFT JOIN {$wpdb->prefix}dgap_workers st ON st.id = b.worker_id			
 			ORDER BY b.booking_date ASC, b.start_time ASC
 			",
 			ARRAY_A
@@ -326,7 +326,7 @@ class DGAP_Booking_Repo {
 			"
 			SELECT DISTINCT l.*
 			FROM {$wpdb->prefix}dgap_locations l
-			INNER JOIN {$wpdb->prefix}dgap_schedules s ON s.location_id = l.id
+			INNER JOIN {$wpdb->prefix}dgap_connections s ON s.location_id = l.id
 			WHERE l.status = 1 AND s.status = 1
 			",
 			ARRAY_A
@@ -341,7 +341,7 @@ class DGAP_Booking_Repo {
 				"
 				SELECT DISTINCT srv.*
 				FROM {$wpdb->prefix}dgap_services srv
-				INNER JOIN {$wpdb->prefix}dgap_schedules s ON s.service_id = srv.id
+				INNER JOIN {$wpdb->prefix}dgap_connections s ON s.service_id = srv.id
 				WHERE s.location_id = %d
 				AND s.status = 1
 				AND srv.status = 1
@@ -352,15 +352,15 @@ class DGAP_Booking_Repo {
 		);
 	}
 
-	public static function get_staff_by_location_service( $location_id, $service_id ) {
+	public static function get_workers_by_location_service( $location_id, $service_id ) {
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Fetching location services for a specific staff; result varies per request and caching is not required here.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Fetching location services for a specific worker; result varies per request and caching is not required here.
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"
 				SELECT DISTINCT st.*
-				FROM {$wpdb->prefix}dgap_staff st
-				INNER JOIN {$wpdb->prefix}dgap_schedules s ON s.staff_id = st.id
+				FROM {$wpdb->prefix}dgap_workers st
+				INNER JOIN {$wpdb->prefix}dgap_connections s ON s.worker_id = st.id
 				WHERE s.location_id = %d
 				AND s.service_id = %d
 				AND s.status = 1
@@ -376,16 +376,16 @@ class DGAP_Booking_Repo {
 	/**
 	 * Get all active services that have at least one active schedule (used by Service Only mode).
 	 */
-	public static function get_all_scheduled_services() {
+	public static function get_all_connected_services() {
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific lookup.
 		return $wpdb->get_results(
 			"
 			SELECT DISTINCT srv.*
 			FROM {$wpdb->prefix}dgap_services srv
-			INNER JOIN {$wpdb->prefix}dgap_schedules s ON s.service_id = srv.id
+			INNER JOIN {$wpdb->prefix}dgap_connections s ON s.service_id = srv.id
 			INNER JOIN {$wpdb->prefix}dgap_locations l ON l.id = s.location_id
-			INNER JOIN {$wpdb->prefix}dgap_staff st ON st.id = s.staff_id
+			INNER JOIN {$wpdb->prefix}dgap_workers st ON st.id = s.worker_id
 			WHERE s.status = 1
 			AND srv.status = 1
 			AND l.status = 1
@@ -397,18 +397,18 @@ class DGAP_Booking_Repo {
 	}
 
 	/**
-	 * Resolve matching location_id and staff_id from active schedule for a service (Service Only mode).
+	 * Resolve matching location_id and worker_id from active schedule for a service (Service Only mode).
 	 */
-	public static function resolve_schedule_for_service( $service_id ) {
+	public static function resolve_connection_for_service( $service_id ) {
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Request-specific lookup.
 		return $wpdb->get_row(
 			$wpdb->prepare(
 				"
-				SELECT s.location_id, s.staff_id, l.name AS location_name, CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
-				FROM {$wpdb->prefix}dgap_schedules s
+				SELECT s.location_id, s.worker_id, l.name AS location_name, CONCAT_WS(' ', st.first_name, st.last_name) AS worker_name
+				FROM {$wpdb->prefix}dgap_connections s
 				INNER JOIN {$wpdb->prefix}dgap_locations l ON l.id = s.location_id
-				INNER JOIN {$wpdb->prefix}dgap_staff st ON st.id = s.staff_id
+				INNER JOIN {$wpdb->prefix}dgap_workers st ON st.id = s.worker_id
 				WHERE s.service_id = %d
 				AND s.status = 1
 				AND l.status = 1
@@ -423,7 +423,7 @@ class DGAP_Booking_Repo {
 	}
 
 	/**
-	 * Find active services assigned to 2 or more distinct locations in active schedules.
+	 * Find active services assigned to 2 or more distinct locations in active connections.
 	 */
 	public static function get_multi_location_services() {
 		global $wpdb;
@@ -431,7 +431,7 @@ class DGAP_Booking_Repo {
 		return $wpdb->get_results(
 			"
 			SELECT srv.id, srv.name, COUNT(DISTINCT s.location_id) AS location_count
-			FROM {$wpdb->prefix}dgap_schedules s
+			FROM {$wpdb->prefix}dgap_connections s
 			INNER JOIN {$wpdb->prefix}dgap_services srv ON srv.id = s.service_id
 			WHERE s.status = 1
 			AND srv.status = 1
@@ -472,7 +472,7 @@ class DGAP_Booking_Repo {
 			$wpdb->prepare(
 				"
 				SELECT COUNT(*)
-				FROM {$wpdb->prefix}dgap_schedules
+				FROM {$wpdb->prefix}dgap_connections
 				WHERE service_id = %d
 				AND location_id != %d
 				AND status = 1
@@ -486,25 +486,25 @@ class DGAP_Booking_Repo {
 		return (int) $count > 0;
 	}
 
-	public static function get_schedule( $location_id, $service_id, $staff_id, $date ) {
-		$schedules = self::get_schedules( $location_id, $service_id, $staff_id, $date );
-		return ! empty( $schedules[0] ) ? $schedules[0] : null;
+	public static function get_schedule( $location_id, $service_id, $worker_id, $date ) {
+		$connections = self::get_connections( $location_id, $service_id, $worker_id, $date );
+		return ! empty( $connections[0] ) ? $connections[0] : null;
 	}
 
 	/**
-	 * Get all active schedules matching location, service, staff, and date (supports multiple shifts/schedules).
+	 * Get all active connections matching location, service, worker, and date (supports multiple shifts/connections).
 	 */
-	public static function get_schedules( $location_id, $service_id, $staff_id, $date ) {
+	public static function get_connections( $location_id, $service_id, $worker_id, $date ) {
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Fetching schedule rows by location, service, staff, and date; result is request-specific.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Fetching schedule rows by location, service, worker, and date; result is request-specific.
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"
 				SELECT *
-				FROM {$wpdb->prefix}dgap_schedules
+				FROM {$wpdb->prefix}dgap_connections
 				WHERE location_id = %d
 				AND service_id = %d
-				AND staff_id = %d
+				AND worker_id = %d
 				AND status = 1
 				AND date_start <= %s
 				AND ( is_infinite = 1 OR date_end IS NULL OR date_end >= %s )
@@ -512,7 +512,7 @@ class DGAP_Booking_Repo {
 				",
 				$location_id,
 				$service_id,
-				$staff_id,
+				$worker_id,
 				$date,
 				$date
 			),
@@ -539,17 +539,17 @@ class DGAP_Booking_Repo {
 	/**
 	 * Resolve the exact schedule ID covering the requested date and time window.
 	 */
-	public static function resolve_schedule_id_for_booking( $location_id, $service_id, $staff_id, $date, $start_time, $end_time ) {
-		$schedules = self::get_schedules( $location_id, $service_id, $staff_id, $date );
-		if ( empty( $schedules ) ) {
-			return DGAP_Schedules_Repo::get_schedule_id_by_staff_service_location( $staff_id, $service_id, $location_id );
+	public static function resolve_connection_id_for_booking( $location_id, $service_id, $worker_id, $date, $start_time, $end_time ) {
+		$connections = self::get_connections( $location_id, $service_id, $worker_id, $date );
+		if ( empty( $connections ) ) {
+			return DGAP_Connections_Repo::get_schedule_id_by_worker_service_location( $worker_id, $service_id, $location_id );
 		}
 
 		$day_key   = strtolower( gmdate( 'l', strtotime( $date ) ) );
 		$req_start = strtotime( $date . ' ' . $start_time );
 		$req_end   = strtotime( $date . ' ' . $end_time );
 
-		foreach ( $schedules as $sched ) {
+		foreach ( $connections as $sched ) {
 			$availability = json_decode( $sched['availability'] ?? '', true );
 			if ( empty( $availability[ $day_key ] ) || ( $availability[ $day_key ]['status'] ?? '' ) !== 'open' ) {
 				continue;
@@ -563,23 +563,23 @@ class DGAP_Booking_Repo {
 			}
 		}
 
-		return (int) $schedules[0]['id'];
+		return (int) $connections[0]['id'];
 	}
 
 	public static function create_booking( $data ) {
 		global $wpdb;
 
-		$schedule_id = self::resolve_schedule_id_for_booking(
+		$connection_id = self::resolve_connection_id_for_booking(
 			$data['location_id'],
 			$data['service_id'],
-			$data['staff_id'],
+			$data['worker_id'],
 			$data['booking_date'],
 			$data['start_time'],
 			$data['end_time']
 		);
 
 		if ( ! DGAP_Slot_Generator::is_slot_available(
-			$schedule_id,
+			$connection_id,
 			$data['booking_date'],
 			$data['start_time'],
 			$data['end_time']
@@ -593,11 +593,11 @@ class DGAP_Booking_Repo {
 			self::table(),
 			[
 				'user_id'      => $data['user_id'],
-				'schedule_id'  => $schedule_id,
+				'connection_id'  => $connection_id,
 				'customer_id'  => $customer_id,
 				'location_id'  => $data['location_id'],
 				'service_id'   => $data['service_id'],
-				'staff_id'     => $data['staff_id'],
+				'worker_id'     => $data['worker_id'],
 				'booking_date' => $data['booking_date'],
 				'start_time'   => $data['start_time'],
 				'end_time'     => $data['end_time'],

@@ -71,9 +71,9 @@ class DGAP_Loader {
 		 * =============================== */
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-location-repo.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-service-repo.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-staff-repo.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-worker-repo.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-vacation-repo.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-schedule-repo.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-connection-repo.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-customer-repo.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';
@@ -83,18 +83,18 @@ class DGAP_Loader {
 		 * =============================== */
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-locations-ajax.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-services-ajax.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-staff-ajax.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-workers-ajax.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-vacations-ajax.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-schedules-ajax.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-connections-ajax.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-customers-ajax.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-bookings-ajax.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/ajax/class-dgap-form-ajax.php';
 
 		( new DGAP_Locations_Ajax() )->register();
 		( new DGAP_Services_Ajax() )->register();
-		( new DGAP_Staff_Ajax() )->register();
+		( new DGAP_Workers_Ajax() )->register();
 		( new DGAP_Vacations_Ajax() )->register();
-		( new DGAP_Schedules_Ajax() )->register();
+		( new DGAP_Connections_Ajax() )->register();
 		( new DGAP_Customers_Ajax() )->register();
 		( new DGAP_Bookings_Ajax() )->register();
 		( new DGAP_Form_Ajax() )->register();
@@ -104,9 +104,9 @@ class DGAP_Loader {
 		 * =============================== */
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-locations-table.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-services-table.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-staff-table.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-workers-table.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-vacations-table.php';
-		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-schedules-table.php';
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-connections-table.php';
 		require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-bookings-table.php';
 	}
 

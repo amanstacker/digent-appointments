@@ -717,7 +717,7 @@ jQuery(function ($) {
 			currentForm[0].reset();
 			currentForm.find('[name="id"]').val('');
 			currentForm.find('[name="service_id"]').html('<option value="">Select Service</option>').prop('disabled', true);
-			currentForm.find('[name="staff_id"]').html('<option value="">Select Staff</option>').prop('disabled', true);
+			currentForm.find('[name="worker_id"]').html('<option value="">Select Worker</option>').prop('disabled', true);
 			currentForm.find('[name="time_slot"]').html('<option value="">Select Slot</option>').prop('disabled', true);
 			currentForm.find('[name="status"]').val((dgap_admin && dgap_admin.default_booking_status) ? dgap_admin.default_booking_status : 'pending');
 			currentForm.find('.dgap-footer-error').hide().text('');
@@ -897,7 +897,7 @@ jQuery(function ($) {
 		}
 
 		mediaUploader = wp.media({
-			title: 'Select Staff Image',
+			title: 'Select Worker Image',
 			button: {
 				text: 'Use this image'
 			},
@@ -977,39 +977,39 @@ function loadServices(locationId, selectedServiceId = null) {
 
 function loadStaff(locationId, serviceId, selectedStaffId = null) {
 	return $.post(dgap_admin.ajax_url, {
-		action   : 'digent_get_staff_by_location_service',
+		action   : 'digent_get_workers_by_location_service',
 		location : locationId,
 		service  : serviceId,
 		_dgap_nonce : dgap_admin.nonce
 	}).then(function (res) {
 
-		const $staff = $('#dgap-booking-form [name="staff_id"]');
+		const $worker = $('#dgap-booking-form [name="worker_id"]');
 
-		$staff
-			.html('<option value="">Select Staff</option>')
+		$worker
+			.html('<option value="">Select Worker</option>')
 			.prop('disabled', true);
 
 		if ( ! res.success || ! res.data.length ) {
 			return;
 		}
 
-		$.each(res.data, function (_, staff) {
-			$staff.append(
-				'<option value="' + staff.id + '">' + staff.name + '</option>'
+		$.each(res.data, function (_, worker) {
+			$worker.append(
+				'<option value="' + worker.id + '">' + worker.name + '</option>'
 			);
 		});
 
 		if ( selectedStaffId ) {
-			$staff.val(selectedStaffId);
+			$worker.val(selectedStaffId);
 		}
 
-		$staff.prop('disabled', false);
+		$worker.prop('disabled', false);
 	});
 }
 
 
 /* =========================================================
- * Booking: Location → Service → Staff (SAFE EXTENSION)
+ * Booking: Location → Service → Worker (SAFE EXTENSION)
  * ========================================================= */
 
 
@@ -1019,7 +1019,7 @@ if ( bookingForm.length ) {
 
 	const $location    = bookingForm.find('[name="location_id"]');
 	const $service     = bookingForm.find('[name="service_id"]');
-	const $staff       = bookingForm.find('[name="staff_id"]');
+	const $worker       = bookingForm.find('[name="worker_id"]');
 	const $bookingDate = bookingForm.find('[name="booking_date"]');
 	const $timeSlot    = bookingForm.find('[name="time_slot"]');
 	const $price       = bookingForm.find('[name="price"]');
@@ -1033,7 +1033,7 @@ if ( bookingForm.length ) {
 		const $f       = ($form && $form.length) ? $form : bookingForm;
 		const locId    = $f.find('[name="location_id"]').val();
 		const srvId    = $f.find('[name="service_id"]').val();
-		const stfId    = $f.find('[name="staff_id"]').val();
+		const stfId    = $f.find('[name="worker_id"]').val();
 		const dateVal  = ($f.find('[name="booking_date"]').val() || '').trim();
 		const bookId   = $f.find('[name="id"]').val() || 0;
 		const $slotSel = $f.find('[name="time_slot"]');
@@ -1049,7 +1049,7 @@ if ( bookingForm.length ) {
 			action      : 'dgap_get_slots',
 			location_id : locId,
 			service_id  : srvId,
-			staff_id    : stfId,
+			worker_id    : stfId,
 			date        : dateVal,
 			booking_id  : bookId,
 			_dgap_nonce : dgap_admin.nonce
@@ -1084,7 +1084,7 @@ if ( bookingForm.length ) {
 	};
 
 	resetSelect($service, 'Select Service');
-	resetSelect($staff, 'Select Staff');
+	resetSelect($worker, 'Select Worker');
 	resetSelect($timeSlot, 'Select Slot');
 
 	/* ---------- Location → Services ---------- */
@@ -1093,7 +1093,7 @@ if ( bookingForm.length ) {
 		const locationId = $(this).val();
 
 		resetSelect($service, 'Loading services...');
-		resetSelect($staff, 'Select Staff');
+		resetSelect($worker, 'Select Worker');
 		resetSelect($timeSlot, 'Select Slot');
 
 		if ( ! locationId ) {
@@ -1125,7 +1125,7 @@ if ( bookingForm.length ) {
 		});
 	});
 
-	/* ---------- Location + Service → Staff ---------- */
+	/* ---------- Location + Service → Worker ---------- */
 	$service.on('change', function () {
 
 		const locationId = $location.val();
@@ -1136,39 +1136,39 @@ if ( bookingForm.length ) {
 			$price.val(srvPrice);
 		}
 
-		resetSelect($staff, 'Loading staff...');
+		resetSelect($worker, 'Loading worker...');
 		resetSelect($timeSlot, 'Select Slot');
 
 		if ( ! locationId || ! serviceId ) {
-			resetSelect($staff, 'Select Staff');
+			resetSelect($worker, 'Select Worker');
 			return;
 		}
 
 		$.post(dgap_admin.ajax_url, {
-			action    : 'dgap_get_staffs',
+			action    : 'dgap_get_workers',
 			location_id  : locationId,
 			service_id   : serviceId,
 			_dgap_nonce  : dgap_admin.nonce
 		}, function (res) {
 
-			resetSelect($staff, 'Select Staff');
+			resetSelect($worker, 'Select Worker');
 
 			if ( ! res.success || ! res.data.length ) {
 				return;
 			}
 
-			$.each(res.data, function (_, staff) {
-				$staff.append(
-					'<option value="' + staff.id + '">' + staff.first_name + ' ' + staff.last_name + '</option>'
+			$.each(res.data, function (_, worker) {
+				$worker.append(
+					'<option value="' + worker.id + '">' + worker.first_name + ' ' + worker.last_name + '</option>'
 				);
 			});
 
-			$staff.prop('disabled', false);
+			$worker.prop('disabled', false);
 		});
 	});
 
-	/* ---------- Staff / Date → Slots ---------- */
-	$staff.on('change', function () {
+	/* ---------- Worker / Date → Slots ---------- */
+	$worker.on('change', function () {
 		window.dgapLoadAdminBookingSlots(bookingForm);
 	});
 
@@ -1651,8 +1651,8 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			* Decide data source (DO NOT BREAK EXISTING)
 			* ================================================== */
 
-			// ✅ Schedule
-			if ( currentEntity === 'schedule' && res.data.availability ) {
+			// ✅ Connection
+			if ( currentEntity === 'connection' && res.data.availability ) {
 				dataSet = JSON.parse( res.data.availability );
 				mode    = 'availability';
 			}
@@ -1747,13 +1747,13 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			}
 
 			/* ==================================================
-			* Booking edit cascade (Location → Service → Staff)
+			* Booking edit cascade (Location → Service → Worker)
 			* ================================================== */
 			if ( currentEntity === 'booking' ) {
 
 				const locationId = res.data.location_id;
 				const serviceId  = res.data.service_id;
-				const staffId    = res.data.staff_id;
+				const workerId    = res.data.worker_id;
 				const startHHMM  = res.data.start_time ? String(res.data.start_time).slice(0, 5) : '';
 				const endHHMM    = res.data.end_time ? String(res.data.end_time).slice(0, 5) : '';
 				const slotVal    = (startHHMM && endHHMM) ? (startHHMM + '|' + endHHMM) : '';
@@ -1766,7 +1766,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 					loadServices(locationId, serviceId)
 						.then(function () {
 							if ( serviceId ) {
-								return loadStaff(locationId, serviceId, staffId);
+								return loadStaff(locationId, serviceId, workerId);
 							}
 						})
 						.then(function () {
@@ -1845,7 +1845,7 @@ $(document).on('click', '.dgap-status-update', function (e) {
 			}
 		}
 
-		if ( entity === 'schedule' ) {
+		if ( entity === 'connection' ) {
 			const startRaw = (form.find('[name="availability[start_time]"]').val() || '').trim();
 			const endRaw   = (form.find('[name="availability[end_time]"]').val() || '').trim();
 			const sParsed  = dgapParseTimeString(startRaw);

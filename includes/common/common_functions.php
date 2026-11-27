@@ -165,7 +165,7 @@ function dgap_render_empty_state( $args = [] ) {
 /**
  * Get the current onboarding & setup guide status.
  * Evaluates the required dependency chain:
- * Location -> Service -> Staff -> Schedule -> Booking Form.
+ * Location -> Service -> Worker -> Connection -> Booking Form.
  *
  * @return array Onboarding progress metrics and step data.
  */
@@ -174,8 +174,8 @@ function dgap_get_onboarding_status() {
 
 	$loc_count      = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dgap_locations" );
 	$service_count  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dgap_services" );
-	$staff_count    = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dgap_staff" );
-	$schedule_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dgap_schedules" );
+	$worker_count    = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dgap_workers" );
+	$schedule_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dgap_connections" );
 	$form_count     = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dgap_forms" );
 
 	$steps = [
@@ -203,28 +203,28 @@ function dgap_get_onboarding_status() {
 			'unlocked'    => true,
 			'icon'        => 'dashicons-admin-tools',
 		],
-		'staff'     => [
+		'worker'     => [
 			'step'        => 3,
-			'title'       => __( 'Add Staff Members', 'digent-appointments' ),
+			'title'       => __( 'Add Workers', 'digent-appointments' ),
 			'desc'        => __( 'Add team members or specialists who provide services.', 'digent-appointments' ),
-			'entity'      => 'staff',
-			'btn_title'   => __( 'Add Staff Member', 'digent-appointments' ),
-			'url'         => admin_url( 'admin.php?page=digent-appointments-staff' ),
-			'count'       => $staff_count,
-			'completed'   => $staff_count > 0,
+			'entity'      => 'worker',
+			'btn_title'   => __( 'Add Worker', 'digent-appointments' ),
+			'url'         => admin_url( 'admin.php?page=digent-appointments-workers' ),
+			'count'       => $worker_count,
+			'completed'   => $worker_count > 0,
 			'unlocked'    => true,
 			'icon'        => 'dashicons-groups',
 		],
-		'schedules' => [
+		'connections' => [
 			'step'        => 4,
-			'title'       => __( 'Configure Schedules', 'digent-appointments' ),
-			'desc'        => __( 'Link staff & services to locations with shift hours & time slots.', 'digent-appointments' ),
+			'title'       => __( 'Configure Connections', 'digent-appointments' ),
+			'desc'        => __( 'Link worker & services to locations with shift hours & time slots.', 'digent-appointments' ),
 			'entity'      => 'schedule',
-			'btn_title'   => __( 'Add Schedule', 'digent-appointments' ),
-			'url'         => admin_url( 'admin.php?page=digent-appointments-schedules' ),
+			'btn_title'   => __( 'Add Connection', 'digent-appointments' ),
+			'url'         => admin_url( 'admin.php?page=digent-appointments-connections' ),
 			'count'       => $schedule_count,
 			'completed'   => $schedule_count > 0,
-			'unlocked'    => ( $loc_count > 0 && $service_count > 0 && $staff_count > 0 ),
+			'unlocked'    => ( $loc_count > 0 && $service_count > 0 && $worker_count > 0 ),
 			'icon'        => 'dashicons-clock',
 		],
 		'forms'     => [
@@ -269,8 +269,8 @@ function dgap_get_onboarding_status() {
 		'counts'          => [
 			'locations' => $loc_count,
 			'services'  => $service_count,
-			'staff'     => $staff_count,
-			'schedules' => $schedule_count,
+			'worker'     => $worker_count,
+			'connections' => $schedule_count,
 			'forms'     => $form_count,
 		],
 	];
@@ -346,12 +346,12 @@ function dgap_get_dashboard_overview() {
 				CONCAT_WS(' ', c.first_name, c.last_name) AS customer_name,
 				s.name AS service_name,
 				l.name AS location_name,
-				CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+				CONCAT_WS(' ', st.first_name, st.last_name) AS worker_name
 			FROM {$wpdb->prefix}dgap_bookings b
 			LEFT JOIN {$wpdb->prefix}dgap_customers c ON c.id = b.customer_id
 			LEFT JOIN {$wpdb->prefix}dgap_services s ON s.id = b.service_id
 			LEFT JOIN {$wpdb->prefix}dgap_locations l ON l.id = b.location_id
-			LEFT JOIN {$wpdb->prefix}dgap_staff st ON st.id = b.staff_id
+			LEFT JOIN {$wpdb->prefix}dgap_workers st ON st.id = b.worker_id
 			WHERE b.booking_date >= %s
 			ORDER BY b.booking_date ASC, b.start_time ASC
 			LIMIT 5
@@ -361,17 +361,17 @@ function dgap_get_dashboard_overview() {
 		ARRAY_A
 	);
 
-	// 3. Staff On-Duty Today & Vacations
+	// 3. Worker On-Duty Today & Vacations
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$staff_list = $wpdb->get_results(
-		"SELECT id, first_name, last_name, email FROM {$wpdb->prefix}dgap_staff WHERE status = 1 ORDER BY id ASC LIMIT 8",
+	$worker_list = $wpdb->get_results(
+		"SELECT id, first_name, last_name, email FROM {$wpdb->prefix}dgap_workers WHERE status = 1 ORDER BY id ASC LIMIT 8",
 		ARRAY_A
 	);
 
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-	$active_schedules = $wpdb->get_results(
+	$active_connections = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT staff_id, availability FROM {$wpdb->prefix}dgap_schedules WHERE status = 1 AND date_start <= %s AND (is_infinite = 1 OR date_end IS NULL OR date_end >= %s)",
+			"SELECT worker_id, availability FROM {$wpdb->prefix}dgap_connections WHERE status = 1 AND date_start <= %s AND (is_infinite = 1 OR date_end IS NULL OR date_end >= %s)",
 			$today,
 			$today
 		),
@@ -384,9 +384,9 @@ function dgap_get_dashboard_overview() {
 		ARRAY_A
 	);
 
-	$staff_name_map = [];
-	foreach ( $staff_list as $st ) {
-		$staff_name_map[ (int) $st['id'] ] = trim( $st['first_name'] . ' ' . $st['last_name'] );
+	$worker_name_map = [];
+	foreach ( $worker_list as $st ) {
+		$worker_name_map[ (int) $st['id'] ] = trim( $st['first_name'] . ' ' . $st['last_name'] );
 	}
 
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -399,7 +399,7 @@ function dgap_get_dashboard_overview() {
 		$service_name_map[ (int) $sr['id'] ] = $sr['name'];
 	}
 
-	$vacation_staff_ids = [];
+	$vacation_worker_ids = [];
 	$upcoming_vacations = [];
 
 	foreach ( $active_vacations as $to ) {
@@ -421,9 +421,9 @@ function dgap_get_dashboard_overview() {
 			if ( empty( $d['date'] ) ) {
 				continue;
 			}
-			if ( $to['type'] === 'staff' && $d['date'] === $today ) {
+			if ( $to['type'] === 'worker' && $d['date'] === $today ) {
 				foreach ( $ids as $sid ) {
-					$vacation_staff_ids[ (int) $sid ] = true;
+					$vacation_worker_ids[ (int) $sid ] = true;
 				}
 			}
 			if ( $d['date'] >= $today ) {
@@ -440,7 +440,7 @@ function dgap_get_dashboard_overview() {
 			);
 
 			$entity_labels = [];
-			$lookup_map    = ( $to['type'] === 'staff' ) ? $staff_name_map : $service_name_map;
+			$lookup_map    = ( $to['type'] === 'worker' ) ? $worker_name_map : $service_name_map;
 			foreach ( $ids as $eid ) {
 				$eid = (int) $eid;
 				if ( isset( $lookup_map[ $eid ] ) ) {
@@ -474,15 +474,15 @@ function dgap_get_dashboard_overview() {
 	);
 	$upcoming_vacations = array_slice( $upcoming_vacations, 0, 5 );
 
-	$staff_shifts = [];
-	foreach ( $active_schedules as $sched ) {
-		$sid   = (int) $sched['staff_id'];
+	$worker_shifts = [];
+	foreach ( $active_connections as $sched ) {
+		$sid   = (int) $sched['worker_id'];
 		$avail = json_decode( $sched['availability'] ?? '{}', true );
 		if ( isset( $avail[ $weekday ] ) && ( $avail[ $weekday ]['status'] ?? '' ) === 'open' ) {
 			$open  = $avail[ $weekday ]['open'] ?? '';
 			$close = $avail[ $weekday ]['close'] ?? '';
 			if ( $open && $close ) {
-				$staff_shifts[ $sid ] = [
+				$worker_shifts[ $sid ] = [
 					'open'  => $open,
 					'close' => $close,
 				];
@@ -490,14 +490,14 @@ function dgap_get_dashboard_overview() {
 		}
 	}
 
-	$staff_duty = [];
-	foreach ( $staff_list as $st ) {
+	$worker_duty = [];
+	foreach ( $worker_list as $st ) {
 		$sid        = (int) $st['id'];
 		$full_name  = trim( $st['first_name'] . ' ' . $st['last_name'] );
-		$on_vac     = ! empty( $vacation_staff_ids[ $sid ] );
-		$shift      = $staff_shifts[ $sid ] ?? null;
+		$on_vac     = ! empty( $vacation_worker_ids[ $sid ] );
+		$shift      = $worker_shifts[ $sid ] ?? null;
 
-		$staff_duty[] = [
+		$worker_duty[] = [
 			'id'          => $sid,
 			'name'        => $full_name,
 			'on_vacation' => $on_vac,
@@ -541,7 +541,7 @@ function dgap_get_dashboard_overview() {
 			'total_customers'  => $total_customers,
 		],
 		'upcoming_bookings'  => $upcoming_bookings ?: [],
-		'staff_duty'         => $staff_duty,
+		'worker_duty'         => $worker_duty,
 		'upcoming_vacations' => $upcoming_vacations,
 		'top_services'       => $top_services ?: [],
 		'booking_forms'      => $booking_forms ?: [],

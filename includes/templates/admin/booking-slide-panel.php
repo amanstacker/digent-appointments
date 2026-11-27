@@ -41,8 +41,8 @@
 				</p>
 
 				<p>
-					<label><?php esc_html_e( 'Staff', 'digent-appointments' ); ?></label>
-					<select name="staff_id" required></select>
+					<label><?php esc_html_e( 'Worker', 'digent-appointments' ); ?></label>
+					<select name="worker_id" required></select>
 				</p>
 			</div>
 

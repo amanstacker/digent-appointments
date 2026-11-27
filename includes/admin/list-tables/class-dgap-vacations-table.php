@@ -46,7 +46,7 @@ class DGAP_Vacations_Table extends WP_List_Table {
 		$count      = is_array( $entity_ids ) ? count( $entity_ids ) : 0;
 		$label      = ( 'service' === $type )
 			? esc_html__( 'Service', 'digent-appointments' )
-			: esc_html__( 'Staff', 'digent-appointments' );
+			: esc_html__( 'Worker', 'digent-appointments' );
 
 		return sprintf(
 			'<span>%s</span> <span class="dgap-muted">(%d)</span>',

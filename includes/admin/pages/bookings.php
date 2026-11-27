@@ -10,9 +10,9 @@ global $wpdb;
 $total_bookings = DGAP_Booking_Repo::count_all();
 $dgap_table          = new DGAP_Bookings_Table();
 $filters             = $dgap_table->get_active_filters();
-$has_filters         = ! empty( $filters['status'] ) || ! empty( $filters['location_id'] ) || ! empty( $filters['service_id'] ) || ! empty( $filters['staff_id'] ) || ! empty( $filters['date_from'] ) || ! empty( $filters['date_to'] ) || ! empty( $filters['s'] );
+$has_filters         = ! empty( $filters['status'] ) || ! empty( $filters['location_id'] ) || ! empty( $filters['service_id'] ) || ! empty( $filters['worker_id'] ) || ! empty( $filters['date_from'] ) || ! empty( $filters['date_to'] ) || ! empty( $filters['s'] );
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-$is_filter_submitted = isset( $_GET['s'] ) || isset( $_GET['status'] ) || isset( $_GET['location_id'] ) || isset( $_GET['service_id'] ) || isset( $_GET['staff_id'] ) || isset( $_GET['date_from'] ) || isset( $_GET['date_to'] );
+$is_filter_submitted = isset( $_GET['s'] ) || isset( $_GET['status'] ) || isset( $_GET['location_id'] ) || isset( $_GET['service_id'] ) || isset( $_GET['worker_id'] ) || isset( $_GET['date_from'] ) || isset( $_GET['date_to'] );
 $is_expanded         = $has_filters || $is_filter_submitted;
 
 // Fetch filter dropdown options
@@ -21,7 +21,7 @@ $filter_locations = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}dga
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 $filter_services  = $wpdb->get_results( "SELECT id, name FROM {$wpdb->prefix}dgap_services ORDER BY name ASC", ARRAY_A );
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-$filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {$wpdb->prefix}dgap_staff ORDER BY first_name ASC", ARRAY_A );
+$filter_worker     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {$wpdb->prefix}dgap_workers ORDER BY first_name ASC", ARRAY_A );
 ?>
 
 <div class="dgap-top-strip">
@@ -66,7 +66,7 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 				<div class="dgap-minibar-left">
 					<span class="dashicons dashicons-filter"></span>
 					<strong><?php esc_html_e( 'Filter Bookings', 'digent-appointments' ); ?></strong>
-					<span class="dgap-minibar-progress"><?php esc_html_e( 'Filter by customer, status, location, service, staff, or date range', 'digent-appointments' ); ?></span>
+					<span class="dgap-minibar-progress"><?php esc_html_e( 'Filter by customer, status, location, service, worker, or date range', 'digent-appointments' ); ?></span>
 				</div>
 				<div class="dgap-minibar-right">
 					<button type="button" class="dgap-btn button button-secondary dgap-toggle-filters" data-action="expand">
@@ -135,10 +135,10 @@ $filter_staff     = $wpdb->get_results( "SELECT id, first_name, last_name FROM {
 						</div>
 
 						<div class="dgap-filter-group dgap-filter-select-wrap">
-							<select name="staff_id" class="dgap-filter-select2" data-placeholder="<?php esc_attr_e( 'All Staff', 'digent-appointments' ); ?>">
-								<option value=""><?php esc_html_e( 'All Staff', 'digent-appointments' ); ?></option>
-								<?php foreach ( $filter_staff as $st ) : ?>
-									<option value="<?php echo esc_attr( $st['id'] ); ?>" <?php selected( $filters['staff_id'], (int) $st['id'] ); ?>>
+							<select name="worker_id" class="dgap-filter-select2" data-placeholder="<?php esc_attr_e( 'All Worker', 'digent-appointments' ); ?>">
+								<option value=""><?php esc_html_e( 'All Worker', 'digent-appointments' ); ?></option>
+								<?php foreach ( $filter_worker as $st ) : ?>
+									<option value="<?php echo esc_attr( $st['id'] ); ?>" <?php selected( $filters['worker_id'], (int) $st['id'] ); ?>>
 										<?php echo esc_html( trim( $st['first_name'] . ' ' . $st['last_name'] ) ); ?>
 									</option>
 								<?php endforeach; ?>

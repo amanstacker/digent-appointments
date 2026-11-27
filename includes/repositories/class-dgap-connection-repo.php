@@ -3,11 +3,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class DGAP_Schedules_Repo {
+class DGAP_Connections_Repo {
 
 	private static function table() {
 		global $wpdb;
-		return $wpdb->prefix . 'dgap_schedules';
+		return $wpdb->prefix . 'dgap_connections';
 	}
 
 	private static function cache_group() {
@@ -17,7 +17,7 @@ class DGAP_Schedules_Repo {
 	/* ================= Get ================= */
 
 	public static function get_all() {
-		$cache_key = 'dgap_all_schedules';
+		$cache_key = 'dgap_all_connections';
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -60,9 +60,9 @@ class DGAP_Schedules_Repo {
 			$params[] = absint( $filters['service_id'] );
 		}
 
-		if ( ! empty( $filters['staff_id'] ) ) {
-			$where[]  = 's.staff_id = %d';
-			$params[] = absint( $filters['staff_id'] );
+		if ( ! empty( $filters['worker_id'] ) ) {
+			$where[]  = 's.worker_id = %d';
+			$params[] = absint( $filters['worker_id'] );
 		}
 
 		if ( ! empty( $filters['s'] ) ) {
@@ -79,11 +79,11 @@ class DGAP_Schedules_Repo {
 				s.*,
 				l.name AS location_name,
 				srv.name AS service_name,
-				CONCAT_WS(' ', st.first_name, st.last_name) AS staff_name
+				CONCAT_WS(' ', st.first_name, st.last_name) AS worker_name
 			FROM " . self::table() . " s
 			LEFT JOIN {$wpdb->prefix}dgap_locations l ON s.location_id = l.id
 			LEFT JOIN {$wpdb->prefix}dgap_services srv ON s.service_id = srv.id
-			LEFT JOIN {$wpdb->prefix}dgap_staff st ON s.staff_id = st.id
+			LEFT JOIN {$wpdb->prefix}dgap_workers st ON s.worker_id = st.id
 			WHERE {$where_sql}
 			ORDER BY s.id DESC
 		";
@@ -98,7 +98,7 @@ class DGAP_Schedules_Repo {
 	}
 
 	public static function get( $id ) {
-		$cache_key = 'dgap_schedule_' . $id;
+		$cache_key = 'dgap_connection_' . $id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -125,7 +125,7 @@ class DGAP_Schedules_Repo {
 			[
 				'%d', // location_id
 				'%d', // service_id
-				'%d', // staff_id
+				'%d', // worker_id
 				'%d', // capacity
 				'%s', // availability (JSON)
 				'%s', // recurrence_type
@@ -144,7 +144,7 @@ class DGAP_Schedules_Repo {
 			);
 		}
 
-		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
+		wp_cache_delete( 'dgap_all_connections', self::cache_group() );
 
 		return (int) $wpdb->insert_id;
 	}
@@ -161,7 +161,7 @@ class DGAP_Schedules_Repo {
 			[
 				'%d', // location_id
 				'%d', // service_id
-				'%d', // staff_id
+				'%d', // worker_id
 				'%d', // capacity
 				'%s', // availability (JSON)
 				'%s', // recurrence_type
@@ -181,8 +181,8 @@ class DGAP_Schedules_Repo {
 			);
 		}
 
-		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
-		wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_connections', self::cache_group() );
+		wp_cache_delete( 'dgap_connection_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -205,8 +205,8 @@ class DGAP_Schedules_Repo {
 			);
 		}
 
-		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
-		wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
+		wp_cache_delete( 'dgap_all_connections', self::cache_group() );
+		wp_cache_delete( 'dgap_connection_' . $id, self::cache_group() );
 
 		return (int) $result;
 	}
@@ -225,9 +225,9 @@ class DGAP_Schedules_Repo {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$updated = $wpdb->query( $wpdb->prepare( "UPDATE {$table} SET status = %d WHERE id IN ({$placeholders})", $params ) );
 
-		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
+		wp_cache_delete( 'dgap_all_connections', self::cache_group() );
 		foreach ( $ids as $id ) {
-			wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
+			wp_cache_delete( 'dgap_connection_' . $id, self::cache_group() );
 		}
 
 		return (int) $updated;
@@ -246,25 +246,25 @@ class DGAP_Schedules_Repo {
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id IN ({$placeholders})", $ids ) );
 
-		wp_cache_delete( 'dgap_all_schedules', self::cache_group() );
+		wp_cache_delete( 'dgap_all_connections', self::cache_group() );
 		foreach ( $ids as $id ) {
-			wp_cache_delete( 'dgap_schedule_' . $id, self::cache_group() );
+			wp_cache_delete( 'dgap_connection_' . $id, self::cache_group() );
 		}
 
 		return (int) $deleted;
 	}
 
 		/**
-	 * Get schedule ID by staff, service and location.
+	 * Get schedule ID by worker, service and location.
 	 *
-	 * @param int $staff_id
+	 * @param int $worker_id
 	 * @param int $service_id
 	 * @param int $location_id
 	 *
-	 * @return int|null Schedule ID or null if not found.
+	 * @return int|null Connection ID or null if not found.
 	 */
-	public static function get_schedule_id_by_staff_service_location( $staff_id, $service_id, $location_id ) {
-		$cache_key = 'schedule_lookup_' . $staff_id . '_' . $service_id . '_' . $location_id;
+	public static function get_schedule_id_by_worker_service_location( $worker_id, $service_id, $location_id ) {
+		$cache_key = 'schedule_lookup_' . $worker_id . '_' . $service_id . '_' . $location_id;
 		$cached    = wp_cache_get( $cache_key, self::cache_group() );
 
 		if ( false !== $cached ) {
@@ -273,13 +273,13 @@ class DGAP_Schedules_Repo {
 
 		global $wpdb;
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
-		$schedule_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM " . self::table() . " WHERE staff_id = %d AND service_id = %d AND location_id = %d AND status = 1 LIMIT 1", $staff_id, $service_id, $location_id ) );
+		$connection_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM " . self::table() . " WHERE worker_id = %d AND service_id = %d AND location_id = %d AND status = 1 LIMIT 1", $worker_id, $service_id, $location_id ) );
 
-		$schedule_id = $schedule_id ? (int) $schedule_id : null;
+		$connection_id = $connection_id ? (int) $connection_id : null;
 
-		wp_cache_set( $cache_key, $schedule_id, self::cache_group() );
+		wp_cache_set( $cache_key, $connection_id, self::cache_group() );
 
-		return $schedule_id;
+		return $connection_id;
 	}
 
 }

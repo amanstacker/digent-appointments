@@ -28,7 +28,7 @@ class DGAP_Vacation_Repo {
 			$params[] = (int) $args['status'];
 		}
 
-		if ( ! empty( $args['type'] ) && in_array( $args['type'], [ 'staff', 'service' ], true ) ) {
+		if ( ! empty( $args['type'] ) && in_array( $args['type'], [ 'worker', 'service' ], true ) ) {
 			$where[]  = 'type = %s';
 			$params[] = sanitize_text_field( $args['type'] );
 		}

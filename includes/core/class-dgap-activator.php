@@ -121,7 +121,7 @@ class DGAP_Activator {
 					'labels'         => [
 						'location' => 'Location',
 						'service'  => 'Service',
-						'worker'   => 'Staff',
+						'worker'   => 'Worker',
 					],
 				];
 

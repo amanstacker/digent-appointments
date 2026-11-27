@@ -7,7 +7,7 @@ add_filter( 'dgap_email_notification_templates', 'dgap_email_notification_templa
 
 if ( ! function_exists( 'dgap_build_internal_email_html' ) ) {
 	/**
-	 * Build a clean admin/staff-facing HTML email template.
+	 * Build a clean admin/worker-facing HTML email template.
 	 *
 	 * @param string $header_bg    Hex background color for header.
 	 * @param string $subtitle     Header subtitle.
@@ -32,7 +32,7 @@ if ( ! function_exists( 'dgap_build_internal_email_html' ) ) {
 						<tr><td style="padding:6px 0; font-weight:600;">Customer</td><td style="padding:6px 0;">{customer_name} ({customer_email})</td></tr>
 						<tr><td style="padding:6px 0; font-weight:600;">Phone</td><td style="padding:6px 0;">{customer_phone}</td></tr>
 						<tr><td style="padding:6px 0; font-weight:600;">Service</td><td style="padding:6px 0;">{service_name}</td></tr>
-						<tr><td style="padding:6px 0; font-weight:600;">Staff</td><td style="padding:6px 0;">{staff_name}</td></tr>
+						<tr><td style="padding:6px 0; font-weight:600;">Worker</td><td style="padding:6px 0;">{worker_name}</td></tr>
 						<tr><td style="padding:6px 0; font-weight:600;">Date &amp; Time</td><td style="padding:6px 0;">{booking_date} ({booking_time})</td></tr>
 						<tr><td style="padding:6px 0; font-weight:600;">Location</td><td style="padding:6px 0;">{location}</td></tr>
 					</table>
@@ -89,7 +89,7 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 			'#111827',
 			'Upcoming Appointment Reminder',
 			'Hello Admin,',
-			'Reminder: <strong>{customer_name}</strong> has an upcoming <strong>{service_name}</strong> appointment with <strong>{staff_name}</strong>.',
+			'Reminder: <strong>{customer_name}</strong> has an upcoming <strong>{service_name}</strong> appointment with <strong>{worker_name}</strong>.',
 			'#3b82f6',
 			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
 		),
@@ -99,7 +99,7 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 		'confirmed' => dgap_build_internal_email_html(
 			'#111827',
 			'New Appointment Confirmed',
-			'Hi {staff_name},',
+			'Hi {worker_name},',
 			'You have a confirmed appointment for <strong>{service_name}</strong> with <strong>{customer_name}</strong>.',
 			'#10b981',
 			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_cancel . $admin_btn_view . '</div>'
@@ -107,7 +107,7 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 		'pending'   => dgap_build_internal_email_html(
 			'#f59e0b',
 			'Appointment Pending Approval',
-			'Hi {staff_name},',
+			'Hi {worker_name},',
 			'A booking request with <strong>{customer_name}</strong> for <strong>{service_name}</strong> is currently pending approval.',
 			'#f59e0b',
 			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_confirm . $admin_btn_cancel . $admin_btn_view . '</div>'
@@ -115,7 +115,7 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 		'reserved'  => dgap_build_internal_email_html(
 			'#10b981',
 			'New Appointment Reserved',
-			'Hi {staff_name},',
+			'Hi {worker_name},',
 			'<strong>{customer_name}</strong> has reserved <strong>{service_name}</strong> with you.',
 			'#10b981',
 			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_confirm . $admin_btn_cancel . $admin_btn_view . '</div>'
@@ -123,7 +123,7 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 		'cancelled' => dgap_build_internal_email_html(
 			'#ef4444',
 			'Appointment Cancelled',
-			'Hi {staff_name},',
+			'Hi {worker_name},',
 			'Your appointment with <strong>{customer_name}</strong> for <strong>{service_name}</strong> has been cancelled.',
 			'#ef4444',
 			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
@@ -131,7 +131,7 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 		'reminder'  => dgap_build_internal_email_html(
 			'#111827',
 			'Upcoming Appointment Reminder',
-			'Hi {staff_name},',
+			'Hi {worker_name},',
 			'Reminder: You have an upcoming <strong>{service_name}</strong> appointment with <strong>{customer_name}</strong>.',
 			'#3b82f6',
 			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
@@ -155,7 +155,7 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 				<div style="margin:30px 0; padding:22px; background:#f9fafb; border-radius:16px; border-left:4px solid #10b981;">
 					<p><strong>Date:</strong> {booking_date}</p>
 					<p><strong>Time:</strong> {booking_time}</p>
-					<p><strong>Staff:</strong> {staff_name}</p>
+					<p><strong>Worker:</strong> {worker_name}</p>
 					<p><strong>Booking ID:</strong> #{booking_id}</p>
 				</div>
 				<div style="text-align:center; margin:28px 0;">' . $cust_btn_manage . $cust_btn_cancel . '</div>
@@ -237,7 +237,7 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 				<div style="margin:24px 0; padding:18px 20px; background:#f9fafb; border-radius:12px; border-left:4px solid #10b981;">
 					<p><strong>Date:</strong> {booking_date}</p>
 					<p><strong>Time:</strong> {booking_time}</p>
-					<p><strong>Staff:</strong> {staff_name}</p>
+					<p><strong>Worker:</strong> {worker_name}</p>
 					<p><strong>Location:</strong> {location}</p>
 				</div>
 				<div style="text-align:center; margin:24px 0;">' . $cust_btn_confirm . $cust_btn_cancel . '</div>

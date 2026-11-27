@@ -12,7 +12,7 @@ class DGAP_Bookings_Table extends WP_List_Table {
 			'cb'        => '<input type="checkbox" />',
 			'booking'   => esc_html__( 'Booking', 'digent-appointments' ),
 			'customer'  => esc_html__( 'Customer', 'digent-appointments' ),
-			'service'   => esc_html__( 'Service & Staff', 'digent-appointments' ),
+			'service'   => esc_html__( 'Service & Worker', 'digent-appointments' ),
 			'date_time' => esc_html__( 'Date & Time', 'digent-appointments' ),
 			'price'     => esc_html__( 'Price', 'digent-appointments' ),
 			'status'    => esc_html__( 'Status', 'digent-appointments' ),
@@ -45,8 +45,8 @@ class DGAP_Bookings_Table extends WP_List_Table {
 
 	public function column_service( $item ) {
 		$service = esc_html( $item['service_name'] ?? '' );
-		$staff   = ! empty( $item['staff_name'] ) ? '<br><span class="dgap-muted">' . esc_html( $item['staff_name'] ) . '</span>' : '';
-		return '<strong>' . $service . '</strong>' . $staff;
+		$worker   = ! empty( $item['worker_name'] ) ? '<br><span class="dgap-muted">' . esc_html( $item['worker_name'] ) . '</span>' : '';
+		return '<strong>' . $service . '</strong>' . $worker;
 	}
 
 	public function column_date_time( $item ) {
@@ -140,7 +140,7 @@ class DGAP_Bookings_Table extends WP_List_Table {
 			'status'       => isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '',
 			'location_id'  => isset( $_GET['location_id'] ) ? absint( $_GET['location_id'] ) : 0,
 			'service_id'   => isset( $_GET['service_id'] ) ? absint( $_GET['service_id'] ) : 0,
-			'staff_id'  => isset( $_GET['staff_id'] ) ? absint( $_GET['staff_id'] ) : 0,
+			'worker_id'  => isset( $_GET['worker_id'] ) ? absint( $_GET['worker_id'] ) : 0,
 			'date_from' => isset( $_GET['date_from'] ) ? sanitize_text_field( wp_unslash( $_GET['date_from'] ) ) : '',
 			'date_to'   => isset( $_GET['date_to'] ) ? sanitize_text_field( wp_unslash( $_GET['date_to'] ) ) : '',
 			's'         => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '',

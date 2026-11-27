@@ -23,8 +23,8 @@ class DGAP_Frontend {
 		// Repos needed on frontend
         require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-location-repo.php';
         require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-service-repo.php';
-        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-staff-repo.php';
-        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-schedule-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-worker-repo.php';
+        require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-connection-repo.php';
         require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
         require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-form-repo.php';
         require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/class-dgap-form-renderer.php';

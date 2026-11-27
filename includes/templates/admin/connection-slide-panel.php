@@ -3,14 +3,14 @@
 	<div class="dgap-panel-header">
 		<div class="dgap-panel-title">
 			<span class="dashicons dashicons-clock"></span>
-			<h2><?php esc_html_e( 'Add Schedule', 'digent-appointments' ); ?></h2>
+			<h2><?php esc_html_e( 'Add Connection', 'digent-appointments' ); ?></h2>
 		</div>
 		<button class="dgap-close dashicons dashicons-no-alt"></button>
 	</div>
 
-	<form id="dgap-schedule-form" class="dgap-form">
+	<form id="dgap-connection-form" class="dgap-form">
 		<input type="hidden" name="id" value="">
-		<?php wp_nonce_field( 'dgap_schedule_action', '_dgap_nonce' ); ?>
+		<?php wp_nonce_field( 'dgap_connection_action', '_dgap_nonce' ); ?>
 
 		<div class="dgap-panel-body">
 
@@ -43,15 +43,15 @@
 				</p>
 
 				<p>
-					<label><?php esc_html_e( 'Staff Member', 'digent-appointments' ); ?></label>
-					<select name="staff_id" required>
-						<option value=""><?php esc_html_e( '-- Select Staff --', 'digent-appointments' ); ?></option>
-						<?php foreach ( DGAP_Staff_Repo::get_all() as $dgap_staff ) : ?>
-							<option value="<?php echo esc_attr( $dgap_staff['id'] ); ?>">
+					<label><?php esc_html_e( 'Worker', 'digent-appointments' ); ?></label>
+					<select name="worker_id" required>
+						<option value=""><?php esc_html_e( '-- Select Worker --', 'digent-appointments' ); ?></option>
+						<?php foreach ( DGAP_Worker_Repo::get_all() as $dgap_workers ) : ?>
+							<option value="<?php echo esc_attr( $dgap_workers['id'] ); ?>">
 								<?php
-									$dgap_full_name = $dgap_staff['first_name'];
-									if ( ! empty( $dgap_staff['last_name'] ) ) {
-										$dgap_full_name .= ' ' . $dgap_staff['last_name'];
+									$dgap_full_name = $dgap_workers['first_name'];
+									if ( ! empty( $dgap_workers['last_name'] ) ) {
+										$dgap_full_name .= ' ' . $dgap_workers['last_name'];
 									}
 									echo esc_html( $dgap_full_name );
 								?>
@@ -226,7 +226,7 @@
 					<?php esc_html_e( 'Cancel', 'digent-appointments' ); ?>
 				</button>
 				<button type="submit" class="button button-primary">
-					<?php esc_html_e( 'Save Schedule', 'digent-appointments' ); ?>
+					<?php esc_html_e( 'Save Connection', 'digent-appointments' ); ?>
 				</button>
 			</div>
 		</div>

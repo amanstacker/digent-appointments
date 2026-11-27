@@ -1815,10 +1815,10 @@
 }
 
 /* Selection Modes */
-.dgap-preview-wrap[data-selection-mode="location_service"] .dgap-field:has(#dgap-staff),
+.dgap-preview-wrap[data-selection-mode="location_service"] .dgap-field:has(#dgap-worker),
 .dgap-preview-wrap[data-selection-mode="location_service"] .dgap-summary-worker,
 .dgap-preview-wrap[data-selection-mode="service_only"] .dgap-field:has(#dgap-location),
-.dgap-preview-wrap[data-selection-mode="service_only"] .dgap-field:has(#dgap-staff),
+.dgap-preview-wrap[data-selection-mode="service_only"] .dgap-field:has(#dgap-worker),
 .dgap-preview-wrap[data-selection-mode="service_only"] .dgap-summary-loc,
 .dgap-preview-wrap[data-selection-mode="service_only"] .dgap-summary-worker {
 	display: none !important;

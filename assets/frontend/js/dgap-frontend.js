@@ -53,7 +53,7 @@ jQuery(function ($) {
         }
         if ( labels.worker ) {
             $wrap.find('[data-label="worker"]').text( labels.worker );
-            $wrap.find('#dgap-staff option[data-placeholder="1"]')
+            $wrap.find('#dgap-worker option[data-placeholder="1"]')
                  .text( '-- Select ' + labels.worker + ' --' );
         }
         $wrap.find('[data-label="section_appointment"]').text( labels.section_appointment || 'Choose Appointment' );
@@ -163,8 +163,8 @@ jQuery(function ($) {
     function refreshCalendarAvailability() {
         const location_id = $('#dgap-location').val();
         const service_id  = $('#dgap-service').val();
-        const staff_id    = $('#dgap-staff').val();
-        if (!location_id || !service_id || !staff_id) return;
+        const worker_id    = $('#dgap-worker').val();
+        if (!location_id || !service_id || !worker_id) return;
 
         const year  = currentMonth.getFullYear();
         const month = currentMonth.getMonth() + 1;
@@ -173,7 +173,7 @@ jQuery(function ($) {
             action:      'dgap_front_get_available_dates',
             location_id: location_id,
             service_id:  service_id,
-            staff_id:    staff_id,
+            worker_id:    worker_id,
             year:        year,
             month:       month,
             _dgap_nonce: dgap_frontend._dgap_frontend_nonce
@@ -228,7 +228,7 @@ jQuery(function ($) {
             .prop('disabled', !location_id)
             .html(`<option value="" data-placeholder="1">-- Select ${serviceLabel} --</option>`);
 
-        $('#dgap-staff')
+        $('#dgap-worker')
             .prop('disabled', true)
             .html(`<option value="" data-placeholder="1">-- Select ${workerLabel} --</option>`);
 
@@ -262,11 +262,11 @@ jQuery(function ($) {
     });
 
     function getSelectionMode() {
-        return $('.dgap-preview-wrap').attr('data-selection-mode') || 'location_service_staff';
+        return $('.dgap-preview-wrap').attr('data-selection-mode') || 'location_service_worker';
     }
 
     /* ------------------------------
-        SERVICE → STAFF (or auto-resolve in hidden modes)
+        SERVICE → Worker (or auto-resolve in hidden modes)
     -------------------------------- */
     $(document).on('change', '#dgap-service', function () {
 
@@ -275,7 +275,7 @@ jQuery(function ($) {
         const service_id  = $(this).val();
         const workerLabel = labels.worker || 'Worker';
 
-        $('#dgap-staff')
+        $('#dgap-worker')
             .prop('disabled', true)
             .html(`<option value="" data-placeholder="1">-- Select ${workerLabel} --</option>`);
 
@@ -290,18 +290,18 @@ jQuery(function ($) {
                 service_id:  service_id,
                 _dgap_nonce: dgap_frontend._dgap_frontend_nonce
             }, function (res) {
-                if (res.success && res.data && res.data.location_id && res.data.staff_id) {
+                if (res.success && res.data && res.data.location_id && res.data.worker_id) {
                     const locId   = String(res.data.location_id);
-                    const staffId = String(res.data.staff_id);
+                    const workerId = String(res.data.worker_id);
 
                     if (!$('#dgap-location option[value="' + locId + '"]').length) {
                         $('#dgap-location').append(`<option value="${locId}">${res.data.location_name || ''}</option>`);
                     }
                     $('#dgap-location').val(locId);
 
-                    $('#dgap-staff')
-                        .html(`<option value="${staffId}">${res.data.staff_name || ''}</option>`)
-                        .val(staffId)
+                    $('#dgap-worker')
+                        .html(`<option value="${workerId}">${res.data.worker_name || ''}</option>`)
+                        .val(workerId)
                         .prop('disabled', false);
 
                     enableCalendar();
@@ -313,23 +313,23 @@ jQuery(function ($) {
         if (!location_id || !service_id) return;
 
         $.post(dgap_frontend.ajax_url, {
-            action: 'dgap_front_get_staffs',
+            action: 'dgap_front_get_workers',
             location_id: location_id,
             service_id: service_id,
             _dgap_nonce: dgap_frontend._dgap_frontend_nonce
         }, function (res) {
             if (res.success) {
-                $.each(res.data, function (_, staff) {
-                    let fullName = staff.first_name;
-                    if (staff.last_name) fullName += ' ' + staff.last_name;
-                    $('#dgap-staff').append(
-                        `<option value="${staff.id}">${fullName}</option>`
+                $.each(res.data, function (_, worker) {
+                    let fullName = worker.first_name;
+                    if (worker.last_name) fullName += ' ' + worker.last_name;
+                    $('#dgap-worker').append(
+                        `<option value="${worker.id}">${fullName}</option>`
                     );
                 });
-                $('#dgap-staff').prop('disabled', false);
+                $('#dgap-worker').prop('disabled', false);
 
                 if (mode === 'location_service' && res.data.length) {
-                    $('#dgap-staff').val(String(res.data[0].id));
+                    $('#dgap-worker').val(String(res.data[0].id));
                     enableCalendar();
                 }
             }
@@ -337,14 +337,14 @@ jQuery(function ($) {
     });
 
     /* ------------------------------
-        STAFF → ENABLE CALENDAR
+        Worker → ENABLE CALENDAR
     -------------------------------- */
-    $(document).on('change', '#dgap-staff', function () {
+    $(document).on('change', '#dgap-worker', function () {
         const location_id = $('#dgap-location').val();
         const service_id  = $('#dgap-service').val();
-        const staff_id    = $(this).val();
+        const worker_id    = $(this).val();
 
-        if (location_id && service_id && staff_id) {
+        if (location_id && service_id && worker_id) {
             enableCalendar();
         } else {
             disableCalendar();
@@ -359,7 +359,7 @@ jQuery(function ($) {
         const date        = $(this).data('date');
         const location_id = $('#dgap-location').val();
         const service_id  = $('#dgap-service').val();
-        const staff_id    = $('#dgap-staff').val();
+        const worker_id    = $('#dgap-worker').val();
         const $calendar   = $(this).closest('.dgap-calendar');
         const isInline    = $calendar.attr('data-slot-position') === 'inside' || $calendar.hasClass('dgap-calendar-style-inline');
 
@@ -382,13 +382,13 @@ jQuery(function ($) {
             $('.dgap-slots').html('<p>Loading slots...</p>');
         }
 
-        if (!location_id || !service_id || !staff_id) return;
+        if (!location_id || !service_id || !worker_id) return;
 
         $.post(dgap_frontend.ajax_url, {
             action:      'dgap_front_get_slots',
             location_id: location_id,
             service_id:  service_id,
-            staff_id:    staff_id,
+            worker_id:    worker_id,
             date:        date,
             _dgap_nonce: dgap_frontend._dgap_frontend_nonce
         }, function (res) {
@@ -538,7 +538,7 @@ jQuery(function ($) {
         const $srvOpt   = $('#dgap-service option:selected');
         const location  = $('#dgap-location option:selected').text();
         const service   = $srvOpt.text();
-        const worker    = $('#dgap-staff option:selected').text();
+        const worker    = $('#dgap-worker option:selected').text();
         const price     = $srvOpt.data('price') || service.split('-')[1] || '';
         const dateHuman = formatDateHuman(selectedDate);
         const timeRange = selectedSlotStart
@@ -640,7 +640,7 @@ jQuery(function ($) {
         $('.dgap-error-message').remove();
         $('.dgap-error').removeClass('dgap-error');
 
-        // ── Step 1 : Location → Service → Staff ──────────────────────
+        // ── Step 1 : Location → Service → Worker ──────────────────────
         if (step === 1) {
 
             if (!$('#dgap-location').val()) {
@@ -655,9 +655,9 @@ jQuery(function ($) {
                 return false;
             }
 
-            if (!$('#dgap-staff').val()) {
-                alert('Please select a staff member.');
-                $('#dgap-staff').focus();
+            if (!$('#dgap-worker').val()) {
+                alert('Please select a worker member.');
+                $('#dgap-worker').focus();
                 return false;
             }
 
@@ -795,7 +795,7 @@ jQuery(function ($) {
             action:            'dgap_front_create_booking',
             location_id:       $('#dgap-location').val(),
             service_id:        $('#dgap-service').val(),
-            staff_id:          $('#dgap-staff').val(),
+            worker_id:          $('#dgap-worker').val(),
             booking_date:      selectedDate,
             start_time:        selectedSlotStart,
             end_time:          selectedSlotEnd,
@@ -902,8 +902,8 @@ jQuery(function ($) {
         const $srvOpt = $('#dgap-service option:selected');
         const serviceText = ($srvOpt.length && $srvOpt.val() && !$srvOpt.data('placeholder')) ? $srvOpt.text().trim() : '';
 
-        const $stfOpt = $('#dgap-staff option:selected');
-        const staffText = ($stfOpt.length && $stfOpt.val() && !$stfOpt.data('placeholder')) ? $stfOpt.text().trim() : '';
+        const $stfOpt = $('#dgap-worker option:selected');
+        const workerText = ($stfOpt.length && $stfOpt.val() && !$stfOpt.data('placeholder')) ? $stfOpt.text().trim() : '';
 
         const dateText = selectedDate ? formatDateHuman(selectedDate) : '';
         const timeText = selectedSlotStart
@@ -921,7 +921,7 @@ jQuery(function ($) {
         const rows = [];
         if (bookingId)     rows.push({ label: 'Booking ID', value: bookingId });
         if (serviceText)   rows.push({ label: 'Service', value: serviceText });
-        if (staffText)     rows.push({ label: 'Staff', value: staffText });
+        if (workerText)     rows.push({ label: 'Worker', value: workerText });
         if (locationText)  rows.push({ label: 'Location', value: locationText });
         if (dateTimeText)  rows.push({ label: 'Date & Time', value: dateTimeText });
         if (customerName)  rows.push({ label: 'Name', value: customerName });
@@ -991,13 +991,13 @@ jQuery(function ($) {
         }
 
         // -------------------------
-        // Staff
+        // Worker
         // -------------------------
-        if (!$('#dgap-staff').val()) {
+        if (!$('#dgap-worker').val()) {
 
             alert('Please select worker');
 
-            $('#dgap-staff').focus();
+            $('#dgap-worker').focus();
 
             return false;
         }

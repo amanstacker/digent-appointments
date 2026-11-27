@@ -14,7 +14,7 @@ class DGAP_Bookings_Ajax {
 
 		add_action( 'wp_ajax_dgap_get_locations', [ $this, 'get_locations' ] );		
 		add_action( 'wp_ajax_dgap_get_services', [ $this, 'get_services' ] );		
-		add_action( 'wp_ajax_dgap_get_staffs', [ $this, 'get_staffs' ] );		
+		add_action( 'wp_ajax_dgap_get_workers', [ $this, 'get_workers' ] );		
 		add_action( 'wp_ajax_dgap_get_slots', [ $this, 'get_slots' ] );	
 
 		add_action( 'wp_ajax_dgap_update_booking_status', [ $this, 'update_booking_status' ] );		
@@ -38,7 +38,7 @@ class DGAP_Bookings_Ajax {
 			'status'      => isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '',
 			'location_id' => isset( $_GET['location_id'] ) ? absint( $_GET['location_id'] ) : 0,
 			'service_id'  => isset( $_GET['service_id'] ) ? absint( $_GET['service_id'] ) : 0,
-			'staff_id'    => isset( $_GET['staff_id'] ) ? absint( $_GET['staff_id'] ) : 0,
+			'worker_id'    => isset( $_GET['worker_id'] ) ? absint( $_GET['worker_id'] ) : 0,
 			'date_from'   => isset( $_GET['date_from'] ) ? sanitize_text_field( wp_unslash( $_GET['date_from'] ) ) : '',
 			'date_to'     => isset( $_GET['date_to'] ) ? sanitize_text_field( wp_unslash( $_GET['date_to'] ) ) : '',
 			's'           => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '',
@@ -76,7 +76,7 @@ class DGAP_Bookings_Ajax {
 				'Email',
 				'Location',
 				'Service',
-				'Staff',
+				'Worker',
 				'Price',
 				'Status',
 				'Notes',
@@ -106,7 +106,7 @@ class DGAP_Bookings_Ajax {
 					$safe_cell( $r['customer_email'] ?? '' ),
 					$safe_cell( $r['location_name'] ?? '' ),
 					$safe_cell( $r['service_name'] ?? '' ),
-					$safe_cell( trim( (string) ( $r['staff_name'] ?? '' ) ) ),
+					$safe_cell( trim( (string) ( $r['worker_name'] ?? '' ) ) ),
 					number_format( (float) ( $r['price'] ?? 0 ), 2, '.', '' ),
 					$safe_cell( ucfirst( (string) ( $r['status'] ?? '' ) ) ),
 					$safe_cell( $r['booking_note'] ?? '' ),
@@ -252,9 +252,9 @@ class DGAP_Bookings_Ajax {
 		wp_send_json_success( $results );
 	}
 
-	/* ================= Staff ================= */
+	/* ================= Worker ================= */
 
-	public function get_staffs() {
+	public function get_workers() {
 
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
 
@@ -269,7 +269,7 @@ class DGAP_Bookings_Ajax {
 			wp_send_json_error( esc_html__( 'Invalid data.', 'digent-appointments' ) );
 		}
 
-		$results = DGAP_Booking_Repo::get_staff_by_location_service(
+		$results = DGAP_Booking_Repo::get_workers_by_location_service(
 			$location_id,
 			$service_id
 		);
@@ -287,13 +287,13 @@ class DGAP_Bookings_Ajax {
 			wp_send_json_error( esc_html__( 'Permission denied.', 'digent-appointments' ) );
 		}
 
-		$staff_id    = absint( $_POST['staff_id'] ?? 0 );
+		$worker_id    = absint( $_POST['worker_id'] ?? 0 );
 		$service_id  = absint( $_POST['service_id'] ?? 0 );
 		$location_id = absint( $_POST['location_id'] ?? 0 );
 		$booking_id  = absint( $_POST['booking_id'] ?? 0 );
 		$date        = sanitize_text_field( wp_unslash( $_POST['date'] ?? '' ) );
 
-		if ( ! $staff_id || ! $service_id || ! $location_id || ! $date ) {
+		if ( ! $worker_id || ! $service_id || ! $location_id || ! $date ) {
 			wp_send_json_error( esc_html__( 'Invalid data.', 'digent-appointments' ) );
 		}
 
@@ -302,17 +302,17 @@ class DGAP_Bookings_Ajax {
 			wp_send_json_error( esc_html__( 'Service not found.', 'digent-appointments' ) );
 		}
 
-		$schedules = DGAP_Booking_Repo::get_schedules(
+		$connections = DGAP_Booking_Repo::get_connections(
 			$location_id,
 			$service_id,
-			$staff_id,
+			$worker_id,
 			$date
 		);
 
 		$slots = [];
-		if ( ! empty( $schedules ) ) {
-			$slots = DGAP_Slot_Generator::generate_slots_from_schedules(
-				$schedules,
+		if ( ! empty( $connections ) ) {
+			$slots = DGAP_Slot_Generator::generate_slots_from_connections(
+				$connections,
 				$service,
 				$date
 			);
@@ -383,7 +383,7 @@ class DGAP_Bookings_Ajax {
 				'end'   => $booking['booking_date'] . 'T' . $booking['end_time'],
 				'extendedProps' => [
 					'status'  => $booking['status'],
-					'staff'   => $booking['staff_name'],
+					'worker'   => $booking['worker_name'],
 					'price'   => $booking['price'],
 				],
 			];
@@ -408,7 +408,7 @@ class DGAP_Bookings_Ajax {
 
 		$location_id  = absint( $data['location_id'] ?? 0 );
 		$service_id   = absint( $data['service_id'] ?? 0 );
-		$staff_id     = absint( $data['staff_id'] ?? 0 );
+		$worker_id     = absint( $data['worker_id'] ?? 0 );
 		$booking_date = sanitize_text_field( $data['booking_date'] ?? '' );
 
 		$start_time = sanitize_text_field( $data['start_time'] ?? '' );
@@ -422,17 +422,17 @@ class DGAP_Bookings_Ajax {
 			}
 		}
 
-		if ( ! $location_id || ! $service_id || ! $staff_id || '' === $booking_date || '' === $start_time || '' === $end_time ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Please select location, service, staff, date, and a valid time slot.', 'digent-appointments' ) ] );
+		if ( ! $location_id || ! $service_id || ! $worker_id || '' === $booking_date || '' === $start_time || '' === $end_time ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Please select location, service, worker, date, and a valid time slot.', 'digent-appointments' ) ] );
 		}
 
-		$schedule_id = ! empty( $data['schedule_id'] )
-			? absint( $data['schedule_id'] )
-			: DGAP_Booking_Repo::resolve_schedule_id_for_booking( $location_id, $service_id, $staff_id, $booking_date, $start_time, $end_time );
+		$connection_id = ! empty( $data['connection_id'] )
+			? absint( $data['connection_id'] )
+			: DGAP_Booking_Repo::resolve_connection_id_for_booking( $location_id, $service_id, $worker_id, $booking_date, $start_time, $end_time );
 
 		$booking_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
 
-		if ( ! $booking_id && ! DGAP_Slot_Generator::is_slot_available( $schedule_id, $booking_date, $start_time, $end_time ) ) {
+		if ( ! $booking_id && ! DGAP_Slot_Generator::is_slot_available( $connection_id, $booking_date, $start_time, $end_time ) ) {
 			wp_send_json_error( [ 'message' => esc_html__( 'Selected time slot is no longer available.', 'digent-appointments' ) ] );
 		}
 
@@ -455,10 +455,10 @@ class DGAP_Bookings_Ajax {
 		$payload = [
 			'user_id'      => ! empty( $data['user_id'] ) ? (int) $data['user_id'] : null,
 			'customer_id'  => $customer_id,
-			'schedule_id'  => $schedule_id,
+			'connection_id'  => $connection_id,
 			'location_id'  => $location_id,
 			'service_id'   => $service_id,
-			'staff_id'     => $staff_id,
+			'worker_id'     => $worker_id,
 			'booking_date' => $booking_date,
 			'start_time'   => $start_time,
 			'end_time'     => $end_time,

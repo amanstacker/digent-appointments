@@ -7,13 +7,13 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-class DGAP_Schedules_Table extends WP_List_Table {
+class DGAP_Connections_Table extends WP_List_Table {
 
 	public function get_columns() {
 		return [
 			'cb'           => '<input type="checkbox" />',
 			'location'     => esc_html__( 'Location', 'digent-appointments' ),
-			'staff'        => esc_html__( 'Staff', 'digent-appointments' ),
+			'worker'        => esc_html__( 'Worker', 'digent-appointments' ),
 			'service'      => esc_html__( 'Service', 'digent-appointments' ),
 			'availability' => esc_html__( 'Availability', 'digent-appointments' ),
 			'status'       => esc_html__( 'Status', 'digent-appointments' ),
@@ -30,15 +30,15 @@ class DGAP_Schedules_Table extends WP_List_Table {
 
 	public function column_location( $item ) {
 		return sprintf(
-			'<a href="#" class="dgap-edit dgap-row-edit-link" data-entity="schedule" data-title="%2$s" data-id="%1$d"><strong class="dgap-location-title">%3$s</strong></a>',
+			'<a href="#" class="dgap-edit dgap-row-edit-link" data-entity="connection" data-title="%2$s" data-id="%1$d"><strong class="dgap-location-title">%3$s</strong></a>',
 			(int) $item['id'],
-			esc_attr__( 'Edit Schedule', 'digent-appointments' ),
+			esc_attr__( 'Edit Connection', 'digent-appointments' ),
 			esc_html( $item['location_name'] ?? '—' )
 		);
 	}
 
-	public function column_staff( $item ) {
-		$name = trim( (string) ( $item['staff_name'] ?? '' ) );
+	public function column_worker( $item ) {
+		$name = trim( (string) ( $item['worker_name'] ?? '' ) );
 		return '<strong>' . esc_html( $name ?: '—' ) . '</strong>';
 	}
 
@@ -159,22 +159,22 @@ class DGAP_Schedules_Table extends WP_List_Table {
 	public function column_actions( $item ) {
 		return sprintf(
 			'<div class="dgap-table-actions">
-				<button type="button" data-title="%2$s" data-entity="schedule" class="button button-small dgap-edit dgap-action-btn" data-id="%1$d" title="%3$s" aria-label="%3$s">
+				<button type="button" data-title="%2$s" data-entity="connection" class="button button-small dgap-edit dgap-action-btn" data-id="%1$d" title="%3$s" aria-label="%3$s">
 					<span class="dashicons dashicons-edit"></span>
 				</button>
-				<button type="button" data-entity="schedule" class="button button-small button-secondary dgap-delete dgap-action-btn is-delete" data-id="%1$d" title="%4$s" aria-label="%4$s">
+				<button type="button" data-entity="connection" class="button button-small button-secondary dgap-delete dgap-action-btn is-delete" data-id="%1$d" title="%4$s" aria-label="%4$s">
 					<span class="dashicons dashicons-trash"></span>
 				</button>
 			</div>',
 			esc_attr( $item['id'] ),
-			esc_attr__( 'Edit Schedule', 'digent-appointments' ),
+			esc_attr__( 'Edit Connection', 'digent-appointments' ),
 			esc_attr__( 'Edit', 'digent-appointments' ),
 			esc_attr__( 'Delete', 'digent-appointments' )
 		);
 	}
 
 	public function no_items() {
-		esc_html_e( 'No schedules match your current filter criteria.', 'digent-appointments' );
+		esc_html_e( 'No connections match your current filter criteria.', 'digent-appointments' );
 	}
 
 	public function get_active_filters() {
@@ -183,14 +183,14 @@ class DGAP_Schedules_Table extends WP_List_Table {
 			'status'      => isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '',
 			'location_id' => isset( $_GET['location_id'] ) ? absint( $_GET['location_id'] ) : 0,
 			'service_id'  => isset( $_GET['service_id'] ) ? absint( $_GET['service_id'] ) : 0,
-			'staff_id'    => isset( $_GET['staff_id'] ) ? absint( $_GET['staff_id'] ) : 0,
+			'worker_id'    => isset( $_GET['worker_id'] ) ? absint( $_GET['worker_id'] ) : 0,
 			's'           => isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '',
 		];
 	}
 
 	public function prepare_items() {
 		$filters   = $this->get_active_filters();
-		$all_items = DGAP_Schedules_Repo::get_filtered( $filters );
+		$all_items = DGAP_Connections_Repo::get_filtered( $filters );
 
 		$per_page     = 20;
 		$current_page = $this->get_pagenum();

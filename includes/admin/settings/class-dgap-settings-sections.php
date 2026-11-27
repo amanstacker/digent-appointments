@@ -719,7 +719,7 @@ class DGAP_Settings_Sections {
 			<div class="dgap-tool-card">
 				<div class="dgap-tool-card-info">
 					<h4><?php esc_html_e( 'Flush Plugin Object Cache', 'digent-appointments' ); ?></h4>
-					<p><?php esc_html_e( 'Clear cached locations, services, staff, schedules, customers, and booking forms.', 'digent-appointments' ); ?></p>
+					<p><?php esc_html_e( 'Clear cached locations, services, worker, connections, customers, and booking forms.', 'digent-appointments' ); ?></p>
 				</div>
 				<a href="<?php echo esc_url( $flush_url ); ?>" class="button button-primary dgap-tool-btn">
 					<span class="dashicons dashicons-update"></span>
@@ -760,7 +760,7 @@ class DGAP_Settings_Sections {
 			<div class="dgap-tool-card<?php echo $is_enabled ? ' is-danger' : ''; ?>">
 				<div class="dgap-tool-card-info">
 					<h4><?php esc_html_e( 'Delete All Data on Uninstall', 'digent-appointments' ); ?></h4>
-					<p><?php esc_html_e( 'Warning: When enabled, deleting the Digent Appointments plugin will permanently erase all bookings, locations, services, staff, customers, forms, and settings.', 'digent-appointments' ); ?></p>
+					<p><?php esc_html_e( 'Warning: When enabled, deleting the Digent Appointments plugin will permanently erase all bookings, locations, services, worker, customers, forms, and settings.', 'digent-appointments' ); ?></p>
 				</div>
 				<div class="dgap-tool-toggle-wrap">
 					<?php
@@ -794,12 +794,12 @@ class DGAP_Settings_Sections {
 			<div class="dgap-tool-card is-danger">
 				<div class="dgap-tool-card-info">
 					<h4><?php esc_html_e( 'Reset All Settings to Default', 'digent-appointments' ); ?></h4>
-					<p><?php esc_html_e( 'Reset all plugin settings back to their default values. Your bookings, services, staff, locations, customers, and booking forms will not be affected.', 'digent-appointments' ); ?></p>
+					<p><?php esc_html_e( 'Reset all plugin settings back to their default values. Your bookings, services, worker, locations, customers, and booking forms will not be affected.', 'digent-appointments' ); ?></p>
 				</div>
 				<a href="<?php echo esc_url( $reset_url ); ?>"
 					class="button button-secondary dgap-tool-btn dgap-tool-btn-danger dgap-reset-confirm-trigger"
 					data-confirm-title="<?php esc_attr_e( 'Reset All Settings', 'digent-appointments' ); ?>"
-					data-confirm-message="<?php esc_attr_e( 'Are you sure you want to reset all plugin settings back to their default values? Your bookings, services, staff, locations, customers, and booking forms will stay intact.', 'digent-appointments' ); ?>"
+					data-confirm-message="<?php esc_attr_e( 'Are you sure you want to reset all plugin settings back to their default values? Your bookings, services, worker, locations, customers, and booking forms will stay intact.', 'digent-appointments' ); ?>"
 					data-confirm-text="<?php esc_attr_e( 'Yes, Reset Settings', 'digent-appointments' ); ?>">
 					<span class="dashicons dashicons-image-rotate"></span>
 					<span><?php esc_html_e( 'Reset Settings', 'digent-appointments' ); ?></span>
@@ -809,12 +809,12 @@ class DGAP_Settings_Sections {
 			<div class="dgap-tool-card is-danger">
 				<div class="dgap-tool-card-info">
 					<h4><?php esc_html_e( 'Full Factory Reset (Fresh Install State)', 'digent-appointments' ); ?></h4>
-					<p><?php esc_html_e( 'Permanently delete all bookings, locations, services, staff, schedules, vacations, customers, booking forms, and settings, restoring the plugin to its exact first-time install state.', 'digent-appointments' ); ?></p>
+					<p><?php esc_html_e( 'Permanently delete all bookings, locations, services, worker, connections, vacations, customers, booking forms, and settings, restoring the plugin to its exact first-time install state.', 'digent-appointments' ); ?></p>
 				</div>
 				<a href="<?php echo esc_url( $factory_reset_url ); ?>"
 					class="button button-secondary dgap-tool-btn dgap-tool-btn-danger dgap-reset-confirm-trigger"
 					data-confirm-title="<?php esc_attr_e( 'Confirm Full Factory Reset', 'digent-appointments' ); ?>"
-					data-confirm-message="<?php esc_attr_e( 'This will permanently erase ALL Digent Appointments data (bookings, locations, services, staff, schedules, vacations, customers, forms, and settings) and reset the plugin to a fresh install state. This action cannot be undone.', 'digent-appointments' ); ?>"
+					data-confirm-message="<?php esc_attr_e( 'This will permanently erase ALL Digent Appointments data (bookings, locations, services, worker, connections, vacations, customers, forms, and settings) and reset the plugin to a fresh install state. This action cannot be undone.', 'digent-appointments' ); ?>"
 					data-confirm-text="<?php esc_attr_e( 'Yes, Factory Reset', 'digent-appointments' ); ?>">
 					<span class="dashicons dashicons-trash"></span>
 					<span><?php esc_html_e( 'Full Factory Reset', 'digent-appointments' ); ?></span>
@@ -911,7 +911,7 @@ class DGAP_Settings_Sections {
 	}
 
 	/**
-	 * Schedule daily WP-Cron for auto-deleting old bookings when enabled.
+	 * Connection daily WP-Cron for auto-deleting old bookings when enabled.
 	 */
 	public function maybe_schedule_cleanup_cron() {
 		$tools_opts = get_option( 'dgap_tools_settings', [] );
@@ -1115,10 +1115,10 @@ class DGAP_Settings_Sections {
 		global $wpdb;
 		$table_slugs = [
 			'dgap_bookings',
-			'dgap_schedules',
+			'dgap_connections',
 			'dgap_vacations',
 			'dgap_services',
-			'dgap_staff',
+			'dgap_workers',
 			'dgap_locations',
 			'dgap_customers',
 			'dgap_forms',

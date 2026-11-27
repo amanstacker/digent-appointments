@@ -3,17 +3,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class DGAP_Staff_Ajax {
+class DGAP_Workers_Ajax {
 
 	public function register() {
-		add_action( 'wp_ajax_dgap_save_staff', [ $this, 'save' ] );
-		add_action( 'wp_ajax_dgap_get_staff', [ $this, 'get' ] );
-		add_action( 'wp_ajax_dgap_delete_staff', [ $this, 'delete' ] );
-		add_action( 'wp_ajax_dgap_bulk_action_staff', [ $this, 'bulk_action' ] );
+		add_action( 'wp_ajax_dgap_save_worker', [ $this, 'save' ] );
+		add_action( 'wp_ajax_dgap_get_worker', [ $this, 'get' ] );
+		add_action( 'wp_ajax_dgap_delete_worker', [ $this, 'delete' ] );
+		add_action( 'wp_ajax_dgap_bulk_action_workers', [ $this, 'bulk_action' ] );
 	}
 
 	/**
-	 * Bulk activate, deactivate, or delete staff members
+	 * Bulk activate, deactivate, or delete worker members
 	 */
 	public function bulk_action() {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
@@ -27,17 +27,17 @@ class DGAP_Staff_Ajax {
 		$bulk_action = isset( $_POST['bulk_action'] ) ? sanitize_key( wp_unslash( $_POST['bulk_action'] ) ) : '';
 
 		if ( empty( $ids ) || empty( $bulk_action ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'No staff members or action selected.', 'digent-appointments' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'No worker members or action selected.', 'digent-appointments' ) ] );
 		}
 
 		if ( 'delete' === $bulk_action ) {
-			$count = DGAP_Staff_Repo::bulk_delete( $ids );
+			$count = DGAP_Worker_Repo::bulk_delete( $ids );
 			wp_send_json_success( [ 'count' => $count, 'action' => 'delete' ] );
 		}
 
 		if ( 'active' === $bulk_action || 'inactive' === $bulk_action ) {
 			$status = ( 'active' === $bulk_action ) ? 1 : 0;
-			$count  = DGAP_Staff_Repo::bulk_update_status( $ids, $status );
+			$count  = DGAP_Worker_Repo::bulk_update_status( $ids, $status );
 			wp_send_json_success( [ 'count' => $count, 'action' => $bulk_action ] );
 		}
 
@@ -154,9 +154,9 @@ class DGAP_Staff_Ajax {
 		];
 
 		if ( ! empty( $data['id'] ) ) {
-			$result = DGAP_Staff_Repo::update( absint( $data['id'] ), $payload );
+			$result = DGAP_Worker_Repo::update( absint( $data['id'] ), $payload );
 		} else {
-			$result = DGAP_Staff_Repo::insert( $payload );
+			$result = DGAP_Worker_Repo::insert( $payload );
 		}
 
 		/* ===============================
@@ -183,8 +183,8 @@ class DGAP_Staff_Ajax {
             wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to view this item.', 'digent-appointments' ) ], 403 );
         }
         $id = absint( $_POST['id'] ?? 0 );
-		$staff = DGAP_Staff_Repo::get( $id );
-		wp_send_json_success( $staff );
+		$worker = DGAP_Worker_Repo::get( $id );
+		wp_send_json_success( $worker );
 	}
 
 	public function delete() {
@@ -193,7 +193,7 @@ class DGAP_Staff_Ajax {
             wp_send_json_error( [ 'message' => esc_html__( 'You do not have permission to delete this item.', 'digent-appointments' ) ], 403 );
         }
         $id = absint( $_POST['id'] ?? 0 );
-		DGAP_Staff_Repo::delete( $id );
+		DGAP_Worker_Repo::delete( $id );
 		wp_send_json_success();
 	}
 }

@@ -19,7 +19,7 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 	<div class="dgap-strip-inner">
 		<div class="dgap-strip-left">
 			<h1><?php esc_html_e( 'Vacations', 'digent-appointments' ); ?></h1>
-			<span><?php esc_html_e( 'Manage staff vacations, holidays, and leave', 'digent-appointments' ); ?></span>
+			<span><?php esc_html_e( 'Manage worker vacations, holidays, and leave', 'digent-appointments' ); ?></span>
 		</div>
 
 		<div class="dgap-strip-right">
@@ -83,7 +83,7 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 						<div class="dgap-filter-group">
 							<select name="type">
 								<option value=""><?php esc_html_e( 'All Types', 'digent-appointments' ); ?></option>
-								<option value="staff" <?php selected( $filters['type'], 'staff' ); ?>><?php esc_html_e( 'Staff', 'digent-appointments' ); ?></option>
+								<option value="worker" <?php selected( $filters['type'], 'worker' ); ?>><?php esc_html_e( 'Worker', 'digent-appointments' ); ?></option>
 								<option value="service" <?php selected( $filters['type'], 'service' ); ?>><?php esc_html_e( 'Service', 'digent-appointments' ); ?></option>
 							</select>
 						</div>
@@ -159,8 +159,8 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 		<?php
 		dgap_render_empty_state( [
 			'icon'         => 'dashicons-palmtree',
-			'title'        => __( 'No Vacations Scheduled Yet', 'digent-appointments' ),
-			'desc'         => __( 'Manage holidays, vacations, or sick leave for staff members and specific services to prevent booking conflicts.', 'digent-appointments' ),
+			'title'        => __( 'No Vacations Connectiond Yet', 'digent-appointments' ),
+			'desc'         => __( 'Manage holidays, vacations, or sick leave for worker members and specific services to prevent booking conflicts.', 'digent-appointments' ),
 			'button_text'  => __( 'Add Vacation', 'digent-appointments' ),
 			'button_title' => __( 'Add Vacation', 'digent-appointments' ),
 			'entity'       => 'vacation',

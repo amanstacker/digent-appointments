@@ -15,9 +15,9 @@ class DGAP_Form_Renderer {
 		$appearance     = $settings['appearance'] ?? [];
 		$design         = $settings['design'] ?? 'flat';
 		$slot_display   = ( 'flat' === $design && 'scroll' === ( $settings['slot_display'] ?? 'full' ) ) ? 'scroll' : 'full';
-		$selection_mode = $settings['selection_mode'] ?? 'location_service_staff';
-		if ( ! in_array( $selection_mode, [ 'location_service_staff', 'location_service', 'service_only' ], true ) ) {
-			$selection_mode = 'location_service_staff';
+		$selection_mode = $settings['selection_mode'] ?? 'location_service_worker';
+		if ( ! in_array( $selection_mode, [ 'location_service_worker', 'location_service', 'service_only' ], true ) ) {
+			$selection_mode = 'location_service_worker';
 		}
 
 		// Build CSS variables.

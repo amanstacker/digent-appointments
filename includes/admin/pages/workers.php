@@ -3,11 +3,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-staff-repo.php';
-require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-staff-table.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-worker-repo.php';
+require_once DGAP_PLUGIN_DIR_PATH . 'includes/admin/list-tables/class-dgap-workers-table.php';
 
-$total_staff         = DGAP_Staff_Repo::count_all();
-$dgap_table          = new DGAP_Staff_Table();
+$total_worker         = DGAP_Worker_Repo::count_all();
+$dgap_table          = new DGAP_Workers_Table();
 $filters             = $dgap_table->get_active_filters();
 $has_filters         = ( $filters['status'] !== '' ) || ! empty( $filters['s'] );
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -18,13 +18,13 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 <div class="dgap-top-strip">
 	<div class="dgap-strip-inner">
 		<div class="dgap-strip-left">
-			<h1><?php esc_html_e( 'Staff Members', 'digent-appointments' ); ?></h1>
+			<h1><?php esc_html_e( 'Workers', 'digent-appointments' ); ?></h1>
 			<span><?php esc_html_e( 'Manage your team members and availability', 'digent-appointments' ); ?></span>
 		</div>
 
 		<div class="dgap-strip-right">
-			<button class="dgap-btn button button-primary dgap-add" data-entity="staff" data-title="<?php esc_attr_e( 'Add Staff Member', 'digent-appointments' ); ?>">
-				<?php esc_html_e( 'Add Staff', 'digent-appointments' ); ?>
+			<button class="dgap-btn button button-primary dgap-add" data-entity="worker" data-title="<?php esc_attr_e( 'Add Worker', 'digent-appointments' ); ?>">
+				<?php esc_html_e( 'Add Worker', 'digent-appointments' ); ?>
 			</button>
 			<?php dgap_render_upgrade_button(); ?>
 		</div>
@@ -32,14 +32,14 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 </div>
 
 <div class="wrap dgap-admin-wrap">
-	<?php if ( $total_staff > 0 || $is_expanded ) : ?>
+	<?php if ( $total_worker > 0 || $is_expanded ) : ?>
 		<div class="dgap-filter-wrapper <?php echo ! $is_expanded ? 'is-collapsed' : ''; ?>" id="dgap-filter-wrapper">
 
 			<!-- Mini Bar (Default collapsed state) -->
 			<div class="dgap-onboarding-minibar dgap-filter-minibar" id="dgap-filter-minibar" <?php echo $is_expanded ? 'style="display:none;"' : ''; ?>>
 				<div class="dgap-minibar-left">
 					<span class="dashicons dashicons-filter"></span>
-					<strong><?php esc_html_e( 'Filter Staff', 'digent-appointments' ); ?></strong>
+					<strong><?php esc_html_e( 'Filter Worker', 'digent-appointments' ); ?></strong>
 					<span class="dgap-minibar-progress"><?php esc_html_e( 'Search by name, email, phone, or status', 'digent-appointments' ); ?></span>
 				</div>
 				<div class="dgap-minibar-right">
@@ -55,7 +55,7 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 				<div class="dgap-filter-card-header">
 					<div class="dgap-filter-card-title">
 						<span class="dashicons dashicons-filter"></span>
-						<strong><?php esc_html_e( 'Filter Staff', 'digent-appointments' ); ?></strong>
+						<strong><?php esc_html_e( 'Filter Worker', 'digent-appointments' ); ?></strong>
 					</div>
 					<button type="button" class="dgap-onboarding-dismiss-btn dgap-toggle-filters" data-action="collapse" title="<?php esc_attr_e( 'Hide Filters', 'digent-appointments' ); ?>">
 						<span class="dashicons dashicons-arrow-up-alt2"></span>
@@ -63,7 +63,7 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 				</div>
 
 				<form method="get" class="dgap-filter-bar">
-					<input type="hidden" name="page" value="digent-appointments-staff" />
+					<input type="hidden" name="page" value="digent-appointments-workers" />
 
 					<div class="dgap-filter-fields">
 						<div class="dgap-filter-group dgap-filter-search">
@@ -72,7 +72,7 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 								type="search"
 								name="s"
 								value="<?php echo esc_attr( $filters['s'] ); ?>"
-								placeholder="<?php esc_attr_e( 'Search staff name, email, or phone...', 'digent-appointments' ); ?>"
+								placeholder="<?php esc_attr_e( 'Search worker name, email, or phone...', 'digent-appointments' ); ?>"
 							/>
 						</div>
 
@@ -91,7 +91,7 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 							<span><?php esc_html_e( 'Filter', 'digent-appointments' ); ?></span>
 						</button>
 						<?php if ( $is_expanded ) : ?>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-staff' ) ); ?>" class="button button-secondary dgap-filter-reset">
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-workers' ) ); ?>" class="button button-secondary dgap-filter-reset">
 								<span class="dashicons dashicons-image-rotate"></span>
 								<span><?php esc_html_e( 'Reset', 'digent-appointments' ); ?></span>
 							</a>
@@ -105,14 +105,14 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 		<div
 			class="dgap-bulk-bar"
 			id="dgap-bulk-bar"
-			data-bulk-action="dgap_bulk_action_staff"
-			data-entity-label="<?php esc_attr_e( 'staff member', 'digent-appointments' ); ?>"
+			data-bulk-action="dgap_bulk_action_workers"
+			data-entity-label="<?php esc_attr_e( 'worker member', 'digent-appointments' ); ?>"
 			style="display:none;"
 		>
 			<div class="dgap-bulk-left">
 				<span class="dgap-bulk-badge">
 					<strong id="dgap-bulk-count">0</strong>
-					<span id="dgap-bulk-label"><?php esc_html_e( 'staff members selected', 'digent-appointments' ); ?></span>
+					<span id="dgap-bulk-label"><?php esc_html_e( 'worker members selected', 'digent-appointments' ); ?></span>
 				</span>
 				<button type="button" class="button-link dgap-bulk-clear" id="dgap-bulk-clear">
 					<?php esc_html_e( 'Clear selection', 'digent-appointments' ); ?>
@@ -147,16 +147,16 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 		<?php
 		dgap_render_empty_state( [
 			'icon'         => 'dashicons-groups',
-			'title'        => __( 'No Staff Members Added Yet', 'digent-appointments' ),
+			'title'        => __( 'No Workers Added Yet', 'digent-appointments' ),
 			'desc'         => __( 'Add team members, doctors, or specialists who deliver services and manage their individual availability.', 'digent-appointments' ),
-			'button_text'  => __( 'Add Staff', 'digent-appointments' ),
-			'button_title' => __( 'Add Staff Member', 'digent-appointments' ),
-			'entity'       => 'staff',
+			'button_text'  => __( 'Add Worker', 'digent-appointments' ),
+			'button_title' => __( 'Add Worker', 'digent-appointments' ),
+			'entity'       => 'worker',
 		] );
 		?>
 	<?php endif; ?>
 </div>
 
 <?php
-include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/staff-slide-panel.php';
+include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/worker-slide-panel.php';
 include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/confirm-modal.php';

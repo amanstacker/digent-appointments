@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             <!-- Step 1 -->
             <div class="dgap-wizard-step active" data-step="1">
                 <h2 class="dgap-wizard-step-title" data-label="section_appointment"><?php echo esc_html( ! empty( $form['settings']['labels']['section_appointment'] ) ? $form['settings']['labels']['section_appointment'] : __( 'Choose Appointment', 'digent-appointments' ) ); ?></h2>
-                <p class="dgap-wizard-step-sub"><?php echo esc_html__( 'Select your location, service and staff', 'digent-appointments' ); ?></p>
+                <p class="dgap-wizard-step-sub"><?php echo esc_html__( 'Select your location, service and worker', 'digent-appointments' ); ?></p>
                 <div class="dgap-field">
                     <label data-label="location"><?php echo esc_html__( 'Location', 'digent-appointments' ); ?></label>
                     <?php include __DIR__ . '/../partials/location.php'; ?>

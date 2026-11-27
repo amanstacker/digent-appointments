@@ -3,17 +3,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class DGAP_Schedules_Ajax {
+class DGAP_Connections_Ajax {
 
 	public function register() {
-		add_action( 'wp_ajax_dgap_save_schedule', [ $this, 'save' ] );
-		add_action( 'wp_ajax_dgap_get_schedule', [ $this, 'get' ] );
-		add_action( 'wp_ajax_dgap_delete_schedule', [ $this, 'delete' ] );
-		add_action( 'wp_ajax_dgap_bulk_action_schedules', [ $this, 'bulk_action' ] );
+		add_action( 'wp_ajax_dgap_save_connection', [ $this, 'save' ] );
+		add_action( 'wp_ajax_dgap_get_connection', [ $this, 'get' ] );
+		add_action( 'wp_ajax_dgap_delete_connection', [ $this, 'delete' ] );
+		add_action( 'wp_ajax_dgap_bulk_action_connections', [ $this, 'bulk_action' ] );
 	}
 
 	/**
-	 * Bulk activate, deactivate, or delete schedules
+	 * Bulk activate, deactivate, or delete connections
 	 */
 	public function bulk_action() {
 		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
@@ -27,17 +27,17 @@ class DGAP_Schedules_Ajax {
 		$bulk_action = isset( $_POST['bulk_action'] ) ? sanitize_key( wp_unslash( $_POST['bulk_action'] ) ) : '';
 
 		if ( empty( $ids ) || empty( $bulk_action ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'No schedules or action selected.', 'digent-appointments' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'No connections or action selected.', 'digent-appointments' ) ] );
 		}
 
 		if ( 'delete' === $bulk_action ) {
-			$count = DGAP_Schedules_Repo::bulk_delete( $ids );
+			$count = DGAP_Connections_Repo::bulk_delete( $ids );
 			wp_send_json_success( [ 'count' => $count, 'action' => 'delete' ] );
 		}
 
 		if ( 'active' === $bulk_action || 'inactive' === $bulk_action ) {
 			$status = ( 'active' === $bulk_action ) ? 1 : 0;
-			$count  = DGAP_Schedules_Repo::bulk_update_status( $ids, $status );
+			$count  = DGAP_Connections_Repo::bulk_update_status( $ids, $status );
 			wp_send_json_success( [ 'count' => $count, 'action' => $bulk_action ] );
 		}
 
@@ -63,7 +63,7 @@ class DGAP_Schedules_Ajax {
 
 		$location_id = isset( $data['location_id'] ) ? absint( $data['location_id'] ) : 0;
 		$service_id  = isset( $data['service_id'] ) ? absint( $data['service_id'] ) : 0;
-		$staff_id    = isset( $data['staff_id'] ) ? absint( $data['staff_id'] ) : 0;
+		$worker_id    = isset( $data['worker_id'] ) ? absint( $data['worker_id'] ) : 0;
 
 		if ( $location_id <= 0 ) {
 			wp_send_json_error(
@@ -77,16 +77,16 @@ class DGAP_Schedules_Ajax {
 			);
 		}
 
-		if ( $staff_id <= 0 ) {
+		if ( $worker_id <= 0 ) {
 			wp_send_json_error(
-				[ 'message' => esc_html__( 'Staff is required.', 'digent-appointments' ) ]
+				[ 'message' => esc_html__( 'Worker is required.', 'digent-appointments' ) ]
 			);
 		}
 
-		$schedule_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
+		$connection_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
 		$is_active   = isset( $data['status'] );
 
-		if ( $is_active && DGAP_Booking_Repo::has_service_only_form() && DGAP_Booking_Repo::has_other_location_schedule_for_service( $service_id, $location_id, $schedule_id ) ) {
+		if ( $is_active && DGAP_Booking_Repo::has_service_only_form() && DGAP_Booking_Repo::has_other_location_schedule_for_service( $service_id, $location_id, $connection_id ) ) {
 			wp_send_json_error(
 				[ 'message' => esc_html__( 'This service is already scheduled at another location. Assigning the same service to multiple locations is not allowed while a booking form uses "Service Only" mode.', 'digent-appointments' ) ]
 			);
@@ -216,7 +216,7 @@ class DGAP_Schedules_Ajax {
 		$payload = [
 			'location_id'      => $location_id,
 			'service_id'       => $service_id,
-			'staff_id'         => $staff_id,
+			'worker_id'         => $worker_id,
 			'capacity'         => absint( $data['capacity_per_slot'] ),
 			'availability'     => wp_json_encode( $availability ),
 			'recurrence_type'  => 'weekly',
@@ -228,9 +228,9 @@ class DGAP_Schedules_Ajax {
 		];
 
 		if ( ! empty( $data['id'] ) ) {
-			$result = DGAP_Schedules_Repo::update( absint( $data['id'] ), $payload );
+			$result = DGAP_Connections_Repo::update( absint( $data['id'] ), $payload );
 		} else {
-			$result = DGAP_Schedules_Repo::insert( $payload );
+			$result = DGAP_Connections_Repo::insert( $payload );
 		}
 
 		if ( is_wp_error( $result ) ) {
@@ -251,7 +251,7 @@ class DGAP_Schedules_Ajax {
 			wp_send_json_error( [ 'message' => __( 'Permission denied.', 'digent-appointments' ) ], 403 );
 		}
 		$id = absint( $_POST['id'] ?? 0 );
-		$schedule = DGAP_Schedules_Repo::get( $id );
+		$schedule = DGAP_Connections_Repo::get( $id );
 
 		wp_send_json_success( $schedule );
 	}
@@ -263,7 +263,7 @@ class DGAP_Schedules_Ajax {
 			wp_send_json_error( [ 'message' => __( 'Permission denied.', 'digent-appointments' ) ], 403 );
 		}
 		$id = absint( $_POST['id'] ?? 0 );
-		DGAP_Schedules_Repo::delete( $id );
+		DGAP_Connections_Repo::delete( $id );
 
 		wp_send_json_success();
 	}

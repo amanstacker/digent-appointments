@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $overview           = dgap_get_dashboard_overview();
 $kpis               = $overview['kpis'];
 $upcoming_bookings  = $overview['upcoming_bookings'];
-$staff_duty         = $overview['staff_duty'];
+$worker_duty         = $overview['worker_duty'];
 $upcoming_vacations = $overview['upcoming_vacations'];
 $top_services       = $overview['top_services'];
 $booking_forms      = $overview['booking_forms'];
@@ -133,8 +133,8 @@ $total_bookings_count = (int) DGAP_Booking_Repo::count_all();
 											<strong><?php echo esc_html( $cust_name ); ?></strong>
 											<span>
 												<?php echo esc_html( $b['service_name'] ?: __( 'Service', 'digent-appointments' ) ); ?>
-												<?php if ( ! empty( $b['staff_name'] ) ) : ?>
-													&bull; <?php echo esc_html( $b['staff_name'] ); ?>
+												<?php if ( ! empty( $b['worker_name'] ) ) : ?>
+													&bull; <?php echo esc_html( $b['worker_name'] ); ?>
 												<?php endif; ?>
 											</span>
 										</div>
@@ -254,14 +254,14 @@ $total_bookings_count = (int) DGAP_Booking_Repo::count_all();
 
 		</div>
 
-		<!-- Right Column: Staff On-Duty + Popular Services -->
+		<!-- Right Column: Worker On-Duty + Popular Services -->
 		<div class="dgap-overview-side">
 
-			<!-- Staff On-Duty Today -->
+			<!-- Worker On-Duty Today -->
 			<div class="dgap-dash-card">
 				<div class="dgap-dash-card-header">
 					<div>
-						<h3><?php esc_html_e( 'Staff On-Duty Today', 'digent-appointments' ); ?></h3>
+						<h3><?php esc_html_e( 'Worker On-Duty Today', 'digent-appointments' ); ?></h3>
 						<span class="dgap-dash-card-sub"><?php echo esc_html( $today_day ); ?></span>
 					</div>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-vacations' ) ); ?>" class="dgap-link-pill is-secondary">
@@ -270,9 +270,9 @@ $total_bookings_count = (int) DGAP_Booking_Repo::count_all();
 				</div>
 
 				<div class="dgap-dash-card-body">
-					<?php if ( ! empty( $staff_duty ) ) : ?>
+					<?php if ( ! empty( $worker_duty ) ) : ?>
 						<div class="dgap-duty-list">
-							<?php foreach ( $staff_duty as $sd ) : ?>
+							<?php foreach ( $worker_duty as $sd ) : ?>
 								<div class="dgap-duty-row">
 									<div class="dgap-duty-person">
 										<span class="dgap-duty-dot <?php echo $sd['on_vacation'] ? 'is-amber' : ( $sd['is_working'] ? 'is-emerald' : 'is-slate' ); ?>"></span>
@@ -292,7 +292,7 @@ $total_bookings_count = (int) DGAP_Booking_Repo::count_all();
 						</div>
 					<?php else : ?>
 						<div class="dgap-dash-empty is-compact">
-							<p><?php esc_html_e( 'No active staff members found.', 'digent-appointments' ); ?></p>
+							<p><?php esc_html_e( 'No active worker members found.', 'digent-appointments' ); ?></p>
 						</div>
 					<?php endif; ?>
 				</div>
@@ -303,7 +303,7 @@ $total_bookings_count = (int) DGAP_Booking_Repo::count_all();
 				<div class="dgap-dash-card-header">
 					<div>
 						<h3><?php esc_html_e( 'Upcoming Vacations', 'digent-appointments' ); ?></h3>
-						<span class="dgap-dash-card-sub"><?php esc_html_e( 'Scheduled staff & service vacations', 'digent-appointments' ); ?></span>
+						<span class="dgap-dash-card-sub"><?php esc_html_e( 'Connectiond worker & service vacations', 'digent-appointments' ); ?></span>
 					</div>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=digent-appointments-vacations' ) ); ?>" class="dgap-link-pill is-secondary">
 						+ <?php esc_html_e( 'Add', 'digent-appointments' ); ?>

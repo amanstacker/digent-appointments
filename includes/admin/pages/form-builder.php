@@ -32,7 +32,7 @@ if ( ! $dgap_is_new && $dgap_id ) {
 $dgap_current_design  = $form['settings']['design'] ?? 'flat';
 $dgap_slot_position   = $form['settings']['slot_position'] ?? 'inside';
 $dgap_slot_display    = $form['settings']['slot_display'] ?? 'full';
-$dgap_selection_mode  = $form['settings']['selection_mode'] ?? 'location_service_staff';
+$dgap_selection_mode  = $form['settings']['selection_mode'] ?? 'location_service_worker';
 $dgap_multi_loc_srvs  = DGAP_Booking_Repo::get_multi_location_services();
 $dgap_multi_loc_names = ! empty( $dgap_multi_loc_srvs ) ? wp_list_pluck( $dgap_multi_loc_srvs, 'name' ) : [];
 $dgap_form_status     = isset( $form['status'] ) ? (int) $form['status'] : 1;
@@ -205,7 +205,7 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 							<div class="dgap-field-row">
 								<label><?php esc_html_e( 'Appointment Fields', 'digent-appointments' ); ?></label>
 								<select name="settings[selection_mode]" id="dgap-selection-mode-select">
-									<option value="location_service_staff" <?php selected( $dgap_selection_mode, 'location_service_staff' ); ?>><?php esc_html_e( 'Location, Service & Staff', 'digent-appointments' ); ?></option>
+									<option value="location_service_worker" <?php selected( $dgap_selection_mode, 'location_service_worker' ); ?>><?php esc_html_e( 'Location, Service & Worker', 'digent-appointments' ); ?></option>
 									<option value="location_service" <?php selected( $dgap_selection_mode, 'location_service' ); ?>><?php esc_html_e( 'Location & Service', 'digent-appointments' ); ?></option>
 									<option value="service_only" <?php selected( $dgap_selection_mode, 'service_only' ); ?>><?php esc_html_e( 'Service Only', 'digent-appointments' ); ?></option>
 								</select>
@@ -266,8 +266,8 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 							</div>
 
 							<div class="dgap-field-row">
-								<label><?php esc_html_e( 'Staff Label', 'digent-appointments' ); ?></label>
-								<input type="text" name="settings[labels][worker]" placeholder="<?php esc_attr_e( 'Staff', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['worker'] ?? 'Staff' ); ?>" />
+								<label><?php esc_html_e( 'Worker Label', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][worker]" placeholder="<?php esc_attr_e( 'Worker', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['worker'] ?? 'Worker' ); ?>" />
 							</div>
 
 							<div class="dgap-field-row" style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;">
@@ -443,7 +443,7 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 					$dgap_summary_field_list = [
 						'location'       => __( 'Location', 'digent-appointments' ),
 						'service'        => __( 'Service', 'digent-appointments' ),
-						'worker'         => __( 'Staff', 'digent-appointments' ),
+						'worker'         => __( 'Worker', 'digent-appointments' ),
 						'price'          => __( 'Price', 'digent-appointments' ),
 						'date_time'      => __( 'Date & Time', 'digent-appointments' ),
 						'customer_name'  => __( 'Customer Name', 'digent-appointments' ),

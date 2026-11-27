@@ -41,7 +41,7 @@ $total_steps     = $dgap_onboarding['total_steps'];
 						<?php echo $is_ready ? esc_html__( '🎉 Your Booking System is Ready!', 'digent-appointments' ) : esc_html__( 'Set Up Digent Appointments', 'digent-appointments' ); ?>
 					</h2>
 					<p class="dgap-onboarding-subtitle">
-						<?php echo $is_ready ? esc_html__( 'All 5 prerequisites are configured. Clients can now book appointments online. Just place form shortcode on pages where you want to accept bookings.', 'digent-appointments' ) : esc_html__( 'Follow these 5 essential steps in order to configure locations, services, staff, schedules, and booking forms.', 'digent-appointments' ); ?>
+						<?php echo $is_ready ? esc_html__( 'All 5 prerequisites are configured. Clients can now book appointments online. Just place form shortcode on pages where you want to accept bookings.', 'digent-appointments' ) : esc_html__( 'Follow these 5 essential steps in order to configure locations, services, worker, connections, and booking forms.', 'digent-appointments' ); ?>
 					</p>
 				</div>
 			</div>
@@ -111,7 +111,7 @@ $total_steps     = $dgap_onboarding['total_steps'];
 								<?php esc_html_e( 'Manage', 'digent-appointments' ); ?>
 							</a>
 						<?php elseif ( ! $is_step_unlocked ) : ?>
-							<button type="button" class="dgap-btn button button-secondary dgap-btn-sm dgap-btn-disabled" disabled title="<?php esc_attr_e( 'Complete Location, Service, and Staff steps first', 'digent-appointments' ); ?>">
+							<button type="button" class="dgap-btn button button-secondary dgap-btn-sm dgap-btn-disabled" disabled title="<?php esc_attr_e( 'Complete Location, Service, and Worker steps first', 'digent-appointments' ); ?>">
 								<span class="dashicons dashicons-lock"></span>
 								<span><?php esc_html_e( 'Locked', 'digent-appointments' ); ?></span>
 							</button>

@@ -36,7 +36,7 @@ foreach ( $dgap_summary_keys as $dgap_sum_key ) {
 			<span class="dgap-value" id="dgap-form-render-service"></span>
 		</div>
 		<div class="dgap-summary-item dgap-summary-worker" data-summary-field="worker"<?php echo $dgap_sum_show( 'worker' ) ? '' : ' style="display:none;"'; ?>>
-			<label data-label="worker"><?php echo esc_html__( 'Staff', 'digent-appointments' ); ?>:</label>
+			<label data-label="worker"><?php echo esc_html__( 'Worker', 'digent-appointments' ); ?>:</label>
 			<span class="dgap-value" id="dgap-form-render-worker"></span>
 		</div>
 		<?php if ( ! $dgap_hide_price ) : ?>

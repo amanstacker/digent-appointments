@@ -26,8 +26,8 @@
 			}
 
 			return {
-				label: 'Staff',
-				placeholder: 'Select staff…'
+				label: 'Worker',
+				placeholder: 'Select worker…'
 			};
 		}
 
