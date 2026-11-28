@@ -1034,6 +1034,9 @@ jQuery(function ($) {
 
         const $srvOpt = $('#dgap-service option:selected');
         const serviceText = ($srvOpt.length && $srvOpt.val() && !$srvOpt.data('placeholder')) ? $srvOpt.text().trim() : '';
+        const priceText   = serviceText
+            ? (String($srvOpt.data('price') || '').trim() || (serviceText.indexOf(' - ') !== -1 ? serviceText.split(' - ').pop().trim() : ''))
+            : '';
 
         const $stfOpt = $('#dgap-worker option:selected');
         const workerText = ($stfOpt.length && $stfOpt.val() && !$stfOpt.data('placeholder')) ? $stfOpt.text().trim() : '';
@@ -1051,16 +1054,39 @@ jQuery(function ($) {
         const customerPhone = [dialCode, phoneNum].filter(Boolean).join(' ');
         const customerNotes = ($('[name="_dgap_form_description"], [name="notes"]').first().val() || '').trim();
 
+        const $summaryEl = $('.dgap-form-wrap .dgap-summary').first();
+        const showOverviewField = function (key) {
+            if (!$summaryEl.length) return true;
+            const $item = $summaryEl.find(`[data-summary-field="${key}"]`).first();
+            if (!$item.length) return key !== 'price' ? true : false;
+            return $item.css('display') !== 'none';
+        };
+        const showCustomOverview = !$summaryEl.length || $summaryEl.attr('data-hide-summary-custom') !== '1';
+
         const rows = [];
-        if (bookingId)     rows.push({ label: 'Booking ID', value: bookingId });
-        if (serviceText)   rows.push({ label: 'Service', value: serviceText });
-        if (workerText)     rows.push({ label: 'Worker', value: workerText });
-        if (locationText)  rows.push({ label: 'Location', value: locationText });
-        if (dateTimeText)  rows.push({ label: 'Date & Time', value: dateTimeText });
-        if (customerName)  rows.push({ label: 'Name', value: customerName });
-        if (customerEmail) rows.push({ label: 'Email', value: customerEmail });
-        if (customerPhone) rows.push({ label: 'Phone', value: customerPhone });
-        if (customerNotes) rows.push({ label: 'Notes', value: customerNotes });
+        if (bookingId)                                       rows.push({ label: 'Booking ID', value: bookingId });
+        if (locationText && showOverviewField('location'))   rows.push({ label: 'Location', value: locationText });
+        if (serviceText && showOverviewField('service'))     rows.push({ label: 'Service', value: serviceText });
+        if (workerText && showOverviewField('worker'))       rows.push({ label: 'Worker', value: workerText });
+        if (priceText && showOverviewField('price'))         rows.push({ label: 'Price', value: priceText });
+        if (dateTimeText && showOverviewField('date_time'))  rows.push({ label: 'Date & Time', value: dateTimeText });
+        if (customerName && showOverviewField('customer_name'))   rows.push({ label: 'Name', value: customerName });
+        if (customerEmail && showOverviewField('customer_email')) rows.push({ label: 'Email', value: customerEmail });
+        if (customerPhone && showOverviewField('customer_phone')) rows.push({ label: 'Phone', value: customerPhone });
+        if (customerNotes && showOverviewField('notes'))          rows.push({ label: 'Notes', value: customerNotes });
+
+        if (showCustomOverview) {
+            const defaultCustom = ['_dgap_form_name', '_dgap_form_email', '_dgap_form_phone', '_dgap_form_description'];
+            $('.dgap-form-wrap .dgap-personal-info').find('input, select, textarea').each(function () {
+                const name = $(this).attr('name') || '';
+                if (!name || name.indexOf('_dgap_form_') !== 0 || defaultCustom.indexOf(name) !== -1) return;
+                if (($(this).attr('type') === 'checkbox' || $(this).attr('type') === 'radio') && !$(this).is(':checked')) return;
+                const val = String($(this).val() || '').trim();
+                if (!val) return;
+                const lbl = ($(this).closest('.dgap-field').find('label').first().text() || name).replace(/\*$/, '').trim();
+                rows.push({ label: lbl, value: val });
+            });
+        }
         rows.push({ label: 'Status', value: statusLabel, isBadge: true });
 
         const rowsHtml = rows.map(function (r) {
