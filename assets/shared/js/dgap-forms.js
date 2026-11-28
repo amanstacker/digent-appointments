@@ -66,9 +66,14 @@ jQuery(function ($) {
             worker:              $('input[name="settings[labels][worker]"]').val()   || '',
             section_appointment: $('input[name="settings[labels][section_appointment]"]').val() || '',
             section_datetime:    $('input[name="settings[labels][section_datetime]"]').val()    || '',
-            section_personal:    $('input[name="settings[labels][section_personal]"]').val()    || '',
-            section_summary:     $('input[name="settings[labels][section_summary]"]').val()     || '',
-            submit_button:       $('input[name="settings[labels][submit_button]"]').val()       || ''
+            section_personal:          $('input[name="settings[labels][section_personal]"]').val()    || '',
+            section_summary:           $('input[name="settings[labels][section_summary]"]').val()     || '',
+            submit_button:             $('input[name="settings[labels][submit_button]"]').val()       || '',
+            start_over_button:         $('input[name="settings[labels][start_over_button]"]').val()   || '',
+            confirm_pending_title:     $('[name="settings[labels][confirm_pending_title]"]').val()    || '',
+            confirm_pending_message:   $('[name="settings[labels][confirm_pending_message]"]').val()  || '',
+            confirm_confirmed_title:   $('[name="settings[labels][confirm_confirmed_title]"]').val()  || '',
+            confirm_confirmed_message: $('[name="settings[labels][confirm_confirmed_message]"]').val()|| ''
         };
     }
 
@@ -810,12 +815,16 @@ jQuery(function ($) {
             const statusCfg     = (typeof dgap_booking_form !== 'undefined' && dgap_booking_form)
                 ? dgap_booking_form
                 : ((typeof dgap_frontend !== 'undefined' && dgap_frontend) ? dgap_frontend : {});
+            const previewLabels = getLabels();
             const defaultStatus = String(statusCfg.default_booking_status || 'pending').toLowerCase();
             const isPending     = defaultStatus === 'pending' || defaultStatus === 'reserved';
-            const titleText     = isPending ? 'Booking Submitted!' : 'Booking Confirmed!';
+            const titleText     = isPending
+                ? (previewLabels.confirm_pending_title || 'Booking Submitted!')
+                : (previewLabels.confirm_confirmed_title || 'Booking Confirmed!');
             const subText       = isPending
-                ? 'Your appointment request has been submitted and is awaiting approval. Once confirmed, you will be notified via your communication channel.'
-                : 'Your appointment has been successfully booked.';
+                ? (previewLabels.confirm_pending_message || 'Your appointment request has been submitted and is awaiting approval. Once confirmed, you will be notified via your communication channel.')
+                : (previewLabels.confirm_confirmed_message || 'Your appointment has been successfully booked.');
+            const startOverText = previewLabels.start_over_button || 'Start Over';
             const statusLabel   = isPending ? 'Pending' : 'Confirmed';
             const statusClass   = isPending ? 'is-pending' : 'is-confirmed';
 
@@ -837,6 +846,52 @@ jQuery(function ($) {
                 return `<div class="dgap-success-row"><span class="dgap-success-label">${escHtml(r.label)}</span><span class="dgap-success-value">${valHtml}</span></div>`;
             }).join('');
 
+            const enabledCalendars = Array.isArray(statusCfg.enabled_calendars) ? statusCfg.enabled_calendars : [];
+            const calendarHtml = (function () {
+                if (!enabledCalendars.length) return '';
+                const dateCompact = String(selectedDate || '').replace(/-/g, '') || new Date().toISOString().slice(0, 10).replace(/-/g, '');
+                const padT = function (t, fb) {
+                    const parts = String(t || fb || '09:00').trim().split(':');
+                    return `${(parts[0] || '09').padStart(2, '0').slice(0, 2)}${(parts[1] || '00').padStart(2, '0').slice(0, 2)}00`;
+                };
+                const sC = padT(selectedSlotStart, '09:00');
+                const eC = selectedSlotEnd ? padT(selectedSlotEnd, '') : `${String((parseInt(sC.slice(0, 2), 10) + 1) % 24).padStart(2, '0')}${sC.slice(2, 4)}00`;
+                const isoD = selectedDate || new Date().toISOString().slice(0, 10);
+                const sIso = `${isoD}T${sC.slice(0, 2)}:${sC.slice(2, 4)}:00`;
+                const eIso = `${isoD}T${eC.slice(0, 2)}:${eC.slice(2, 4)}:00`;
+                const title = serviceText || 'Appointment';
+                const desc  = [workerText ? `Staff: ${workerText}` : '', customerNotes].filter(Boolean).join('\n');
+                const loc   = locationText || '';
+                const map = {
+                    google_calendar: {
+                        label: 'Google Calendar', cls: 'is-google',
+                        href: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dateCompact}T${sC}/${dateCompact}T${eC}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(loc)}`,
+                        icon: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#4285F4" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81z"/></svg>'
+                    },
+                    outlook_calendar: {
+                        label: 'Outlook Calendar', cls: 'is-outlook',
+                        href: `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(title)}&startdt=${encodeURIComponent(sIso)}&enddt=${encodeURIComponent(eIso)}&body=${encodeURIComponent(desc)}&location=${encodeURIComponent(loc)}`,
+                        icon: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#0078D4" d="M2 5.5A2.5 2.5 0 0 1 4.5 3h15A2.5 2.5 0 0 1 22 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 18.5v-13zm2.5-.5a.5.5 0 0 0-.5.5v1.6l8 4.8 8-4.8V5.5a.5.5 0 0 0-.5-.5h-15zm15.5 4.4-7.48 4.49a1 1 0 0 1-1.04 0L4 9.4v9.1a.5.5 0 0 0 .5.5h15a.5.5 0 0 0 .5-.5V9.4z"/></svg>'
+                    },
+                    apple_calendar: {
+                        label: 'Apple Calendar', cls: 'is-apple', download: 'appointment.ics',
+                        href: 'data:text/calendar;charset=utf-8,' + encodeURIComponent(['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Digent Appointments//EN','BEGIN:VEVENT',`DTSTART:${dateCompact}T${sC}`,`DTEND:${dateCompact}T${eC}`,`SUMMARY:${title.replace(/\r?\n/g, ' ')}`,`DESCRIPTION:${desc.replace(/\r?\n/g, '\\n')}`,`LOCATION:${loc.replace(/\r?\n/g, ' ')}`,'END:VEVENT','END:VCALENDAR'].join('\r\n')),
+                        icon: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45z"/></svg>'
+                    },
+                    yahoo_calendar: {
+                        label: 'Yahoo Calendar', cls: 'is-yahoo',
+                        href: `https://calendar.yahoo.com/?v=60&title=${encodeURIComponent(title)}&st=${dateCompact}T${sC}&et=${dateCompact}T${eC}&desc=${encodeURIComponent(desc)}&in_loc=${encodeURIComponent(loc)}`,
+                        icon: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#6001D2" d="M3 4h4.2l4.8 8.3L16.8 4H21l-7 11.4V20h-4v-4.6L3 4z"/></svg>'
+                    }
+                };
+                const btns = enabledCalendars.filter(s => map[s]).map(s => {
+                    const p = map[s];
+                    const attr = p.download ? ` download="${escHtml(p.download)}"` : ' target="_blank" rel="noopener noreferrer"';
+                    return `<a href="${escHtml(p.href)}" class="dgap-calendar-btn ${p.cls}"${attr}>${p.icon}<span>${escHtml(p.label)}</span></a>`;
+                }).join('');
+                return btns ? `<div class="dgap-add-to-calendar"><div class="dgap-add-to-calendar-title">Add to Calendar</div><div class="dgap-calendar-buttons">${btns}</div></div>` : '';
+            })();
+
             const successHtml = `
                 <div class="dgap-success dgap-preview-success-box">
                     <span class="dgap-preview-mode-badge">Preview Mode — No real booking saved</span>
@@ -844,8 +899,9 @@ jQuery(function ($) {
                     <h3>${escHtml(titleText)}</h3>
                     <p class="dgap-success-subtitle">${escHtml(subText)}</p>
                     <div class="dgap-success-details">${rowsHtml}</div>
+                    ${calendarHtml}
                     <div class="dgap-success-actions">
-                        <button type="button" class="dgap-preview-reset-btn dgap-start-over-btn">Start Over</button>
+                        <button type="button" class="dgap-preview-reset-btn dgap-start-over-btn">${escHtml(startOverText)}</button>
                     </div>
                 </div>
             `;

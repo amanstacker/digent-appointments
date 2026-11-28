@@ -898,16 +898,108 @@ jQuery(function ($) {
         return $('<div>').text(str == null ? '' : String(str)).html();
     }
 
+    function buildAddToCalendarHtml(enabledCalendars, eventData) {
+        if (!Array.isArray(enabledCalendars) || !enabledCalendars.length) {
+            return '';
+        }
+
+        const dateCompact = String(eventData.date || '').replace(/-/g, '') || new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const padTime = function (t, fallback) {
+            const raw = String(t || fallback || '09:00').trim();
+            const parts = raw.split(':');
+            const hh = (parts[0] || '09').padStart(2, '0').slice(0, 2);
+            const mm = (parts[1] || '00').padStart(2, '0').slice(0, 2);
+            return `${hh}${mm}00`;
+        };
+        const startCompact = padTime(eventData.startTime, '09:00');
+        let endCompact = padTime(eventData.endTime, '');
+        if (!eventData.endTime) {
+            const endHr = String((parseInt(startCompact.slice(0, 2), 10) + 1) % 24).padStart(2, '0');
+            endCompact = `${endHr}${startCompact.slice(2, 4)}00`;
+        }
+
+        const isoDate = eventData.date || new Date().toISOString().slice(0, 10);
+        const startIso = `${isoDate}T${startCompact.slice(0, 2)}:${startCompact.slice(2, 4)}:00`;
+        const endIso   = `${isoDate}T${endCompact.slice(0, 2)}:${endCompact.slice(2, 4)}:00`;
+
+        const title    = eventData.title || 'Appointment';
+        const desc     = eventData.description || '';
+        const location = eventData.location || '';
+
+        const providers = {
+            google_calendar: {
+                label: 'Google Calendar',
+                cls: 'is-google',
+                href: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dateCompact}T${startCompact}/${dateCompact}T${endCompact}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(location)}`,
+                icon: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#4285F4" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81z"/></svg>'
+            },
+            outlook_calendar: {
+                label: 'Outlook Calendar',
+                cls: 'is-outlook',
+                href: `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(title)}&startdt=${encodeURIComponent(startIso)}&enddt=${encodeURIComponent(endIso)}&body=${encodeURIComponent(desc)}&location=${encodeURIComponent(location)}`,
+                icon: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#0078D4" d="M2 5.5A2.5 2.5 0 0 1 4.5 3h15A2.5 2.5 0 0 1 22 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 18.5v-13zm2.5-.5a.5.5 0 0 0-.5.5v1.6l8 4.8 8-4.8V5.5a.5.5 0 0 0-.5-.5h-15zm15.5 4.4-7.48 4.49a1 1 0 0 1-1.04 0L4 9.4v9.1a.5.5 0 0 0 .5.5h15a.5.5 0 0 0 .5-.5V9.4z"/></svg>'
+            },
+            apple_calendar: {
+                label: 'Apple Calendar',
+                cls: 'is-apple',
+                download: 'appointment.ics',
+                href: 'data:text/calendar;charset=utf-8,' + encodeURIComponent([
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//Digent Appointments//EN',
+                    'BEGIN:VEVENT',
+                    `DTSTART:${dateCompact}T${startCompact}`,
+                    `DTEND:${dateCompact}T${endCompact}`,
+                    `SUMMARY:${title.replace(/\r?\n/g, ' ')}`,
+                    `DESCRIPTION:${desc.replace(/\r?\n/g, '\\n')}`,
+                    `LOCATION:${location.replace(/\r?\n/g, ' ')}`,
+                    'END:VEVENT',
+                    'END:VCALENDAR'
+                ].join('\r\n')),
+                icon: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45z"/></svg>'
+            },
+            yahoo_calendar: {
+                label: 'Yahoo Calendar',
+                cls: 'is-yahoo',
+                href: `https://calendar.yahoo.com/?v=60&title=${encodeURIComponent(title)}&st=${dateCompact}T${startCompact}&et=${dateCompact}T${endCompact}&desc=${encodeURIComponent(desc)}&in_loc=${encodeURIComponent(location)}`,
+                icon: '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="#6001D2" d="M3 4h4.2l4.8 8.3L16.8 4H21l-7 11.4V20h-4v-4.6L3 4z"/></svg>'
+            }
+        };
+
+        const btns = enabledCalendars
+            .filter(function (slug) { return Boolean(providers[slug]); })
+            .map(function (slug) {
+                const p = providers[slug];
+                const extraAttr = p.download ? ` download="${escHtml(p.download)}"` : ' target="_blank" rel="noopener noreferrer"';
+                return `<a href="${escHtml(p.href)}" class="dgap-calendar-btn ${p.cls}"${extraAttr}>${p.icon}<span>${escHtml(p.label)}</span></a>`;
+            })
+            .join('');
+
+        if (!btns) {
+            return '';
+        }
+
+        return `
+            <div class="dgap-add-to-calendar">
+                <div class="dgap-add-to-calendar-title">Add to Calendar</div>
+                <div class="dgap-calendar-buttons">${btns}</div>
+            </div>
+        `;
+    }
+
     function showSuccess(respData) {
         respData = respData || {};
         const bookingId = respData.booking_id ? `#${respData.booking_id}` : '';
         const statusRaw = String(respData.status || 'confirmed').toLowerCase();
         const isPending = statusRaw === 'pending' || statusRaw === 'reserved';
 
-        const titleText = isPending ? 'Booking Submitted!' : 'Booking Confirmed!';
+        const titleText = isPending
+            ? (labels.confirm_pending_title || 'Booking Submitted!')
+            : (labels.confirm_confirmed_title || 'Booking Confirmed!');
         const subText   = isPending
-            ? 'Your appointment request has been submitted and is awaiting approval. Once confirmed, you will be notified via your communication channel.'
-            : 'Your appointment has been successfully booked.';
+            ? (labels.confirm_pending_message || 'Your appointment request has been submitted and is awaiting approval. Once confirmed, you will be notified via your communication channel.')
+            : (labels.confirm_confirmed_message || 'Your appointment has been successfully booked.');
+        const startOverText = labels.start_over_button || 'Start Over';
         const statusLabel = statusRaw.charAt(0).toUpperCase() + statusRaw.slice(1);
 
         const $locOpt = $('#dgap-location option:selected');
@@ -951,14 +1043,27 @@ jQuery(function ($) {
             return `<div class="dgap-success-row"><span class="dgap-success-label">${escHtml(r.label)}</span><span class="dgap-success-value">${valHtml}</span></div>`;
         }).join('');
 
+        const enabledCalendars = (typeof dgap_frontend !== 'undefined' && Array.isArray(dgap_frontend.enabled_calendars))
+            ? dgap_frontend.enabled_calendars
+            : [];
+        const calendarHtml = buildAddToCalendarHtml(enabledCalendars, {
+            date: selectedDate,
+            startTime: selectedSlotStart,
+            endTime: selectedSlotEnd,
+            title: serviceText || 'Appointment',
+            description: [workerText ? `Staff: ${workerText}` : '', customerNotes].filter(Boolean).join('\n'),
+            location: locationText
+        });
+
         $('.dgap-form-wrap').html(`
             <div class="dgap-success">
                 <div class="dgap-success-icon is-${escHtml(statusRaw)}">&#10003;</div>
                 <h3>${escHtml(titleText)}</h3>
                 <p class="dgap-success-subtitle">${escHtml(subText)}</p>
                 <div class="dgap-success-details">${rowsHtml}</div>
+                ${calendarHtml}
                 <div class="dgap-success-actions">
-                    <button type="button" class="dgap-start-over-btn">Start Over</button>
+                    <button type="button" class="dgap-start-over-btn">${escHtml(startOverText)}</button>
                 </div>
             </div>
         `);

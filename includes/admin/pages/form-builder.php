@@ -302,6 +302,35 @@ $dgap_show_recaptcha  = ( $dgap_recaptcha_on && 'v2' === $dgap_recaptcha_ver );
 								<label><?php esc_html_e( 'Submit Button Text', 'digent-appointments' ); ?></label>
 								<input type="text" name="settings[labels][submit_button]" placeholder="<?php esc_attr_e( 'Submit', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['submit_button'] ?? 'Submit' ); ?>" />
 							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Start Over Button Text', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][start_over_button]" placeholder="<?php esc_attr_e( 'Start Over', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['start_over_button'] ?? 'Start Over' ); ?>" />
+							</div>
+
+							<div class="dgap-field-row" style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;">
+								<strong style="font-size:11.5px;color:#64748b;text-transform:uppercase;letter-spacing:0.04em;"><?php esc_html_e( 'Confirmation Page', 'digent-appointments' ); ?></strong>
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Pending Title', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][confirm_pending_title]" placeholder="<?php esc_attr_e( 'Booking Submitted!', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['confirm_pending_title'] ?? 'Booking Submitted!' ); ?>" />
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Pending Message', 'digent-appointments' ); ?></label>
+								<textarea name="settings[labels][confirm_pending_message]" rows="3" placeholder="<?php esc_attr_e( 'Your appointment request has been submitted and is awaiting approval. Once confirmed, you will be notified via your communication channel.', 'digent-appointments' ); ?>"><?php echo esc_textarea( $form['settings']['labels']['confirm_pending_message'] ?? 'Your appointment request has been submitted and is awaiting approval. Once confirmed, you will be notified via your communication channel.' ); ?></textarea>
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Confirmed Title', 'digent-appointments' ); ?></label>
+								<input type="text" name="settings[labels][confirm_confirmed_title]" placeholder="<?php esc_attr_e( 'Booking Confirmed!', 'digent-appointments' ); ?>" value="<?php echo esc_attr( $form['settings']['labels']['confirm_confirmed_title'] ?? 'Booking Confirmed!' ); ?>" />
+							</div>
+
+							<div class="dgap-field-row">
+								<label><?php esc_html_e( 'Confirmed Message', 'digent-appointments' ); ?></label>
+								<textarea name="settings[labels][confirm_confirmed_message]" rows="2" placeholder="<?php esc_attr_e( 'Your appointment has been successfully booked.', 'digent-appointments' ); ?>"><?php echo esc_textarea( $form['settings']['labels']['confirm_confirmed_message'] ?? 'Your appointment has been successfully booked.' ); ?></textarea>
+							</div>
 						</div>
 					</div>
 

@@ -102,6 +102,7 @@ class DGAP_Frontend {
 			'show_price'           => $show_price,
 			'show_decimals'        => $show_decimals,
 			'currency_symbol'      => $currency_symbol,
+			'enabled_calendars'    => apply_filters( 'dgap_enabled_calendar_links', [] ),
 		];
 		$localize_data1 	=	apply_filters( 'dgap_localize_front_data', [] );
 

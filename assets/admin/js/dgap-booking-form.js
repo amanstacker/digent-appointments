@@ -212,9 +212,14 @@ jQuery(function ($) {
             worker:              $('input[name="settings[labels][worker]"]').val(),
             section_appointment: $('input[name="settings[labels][section_appointment]"]').val(),
             section_datetime:    $('input[name="settings[labels][section_datetime]"]').val(),
-            section_personal:    $('input[name="settings[labels][section_personal]"]').val(),
-            section_summary:     $('input[name="settings[labels][section_summary]"]').val(),
-            submit_button:       $('input[name="settings[labels][submit_button]"]').val()
+            section_personal:          $('input[name="settings[labels][section_personal]"]').val(),
+            section_summary:           $('input[name="settings[labels][section_summary]"]').val(),
+            submit_button:             $('input[name="settings[labels][submit_button]"]').val(),
+            start_over_button:         $('input[name="settings[labels][start_over_button]"]').val(),
+            confirm_pending_title:     $('[name="settings[labels][confirm_pending_title]"]').val(),
+            confirm_pending_message:   $('[name="settings[labels][confirm_pending_message]"]').val(),
+            confirm_confirmed_title:   $('[name="settings[labels][confirm_confirmed_title]"]').val(),
+            confirm_confirmed_message: $('[name="settings[labels][confirm_confirmed_message]"]').val()
         };
     }
 

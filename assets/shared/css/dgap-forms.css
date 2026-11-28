@@ -790,16 +790,20 @@
 }
 
 .dgap-preview-wrap .dgap-slot.is-disabled,
+.dgap-preview-wrap .dgap-slot.is-disabled:hover,
 .dgap-preview-wrap .dgap-slot:disabled,
+.dgap-preview-wrap .dgap-slot:disabled:hover,
 .dgap-preview-wrap .dgap-inline-slots-container .dgap-slot.is-disabled,
-.dgap-preview-wrap .dgap-inline-slots-container .dgap-slot:disabled {
-    background:      #f1f5f9 !important;
-    color:           #94a3b8 !important;
-    border-color:    #e2e8f0 !important;
+.dgap-preview-wrap .dgap-inline-slots-container .dgap-slot.is-disabled:hover,
+.dgap-preview-wrap .dgap-inline-slots-container .dgap-slot:disabled,
+.dgap-preview-wrap .dgap-inline-slots-container .dgap-slot:disabled:hover {
+    background:      #fef2f2 !important;
+    color:           #dc2626 !important;
+    border:          1px dashed #fca5a5 !important;
     text-decoration: line-through;
     cursor:          not-allowed !important;
     box-shadow:      none !important;
-    opacity:         0.75;
+    opacity:         0.85;
 }
 
 /* ================================================
@@ -896,6 +900,59 @@
     background:   #fffbeb;
     color:        #b45309;
     border-color: #fde68a;
+}
+
+.dgap-add-to-calendar {
+    margin: 0 0 22px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--dgap-border-radius, 3px);
+    text-align: center;
+}
+
+.dgap-add-to-calendar-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+.dgap-calendar-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.dgap-calendar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: var(--dgap-border-radius, 3px);
+    color: #1e293b;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    line-height: 1.2;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.dgap-calendar-btn:hover {
+    border-color: var(--dgap-primary-color, #2563eb);
+    background: #eff6ff;
+    color: var(--dgap-primary-color, #2563eb);
+    text-decoration: none;
+}
+
+.dgap-calendar-btn svg {
+    flex-shrink: 0;
+    display: block;
 }
 
 .dgap-success-actions {
@@ -1904,11 +1961,23 @@
 
 /* Disabled / Unavailable Calendar Dates */
 .dgap-preview-wrap .dgap-day.disabled {
-	color: #cbd5e1 !important;
-	background: #f8fafc !important;
-	cursor: not-allowed !important;
-	pointer-events: none !important;
-	opacity: 0.55;
+	color:           #64748b !important;
+	background:      #e2e8f0 !important;
+	border-color:    #cbd5e1 !important;
+	text-decoration: line-through;
+	cursor:          not-allowed !important;
+	pointer-events:  none !important;
+	opacity:         0.8;
+}
+
+.dgap-preview-wrap select:disabled,
+.dgap-preview-wrap input:disabled,
+.dgap-preview-wrap textarea:disabled {
+	background:   #f1f5f9 !important;
+	color:        #64748b !important;
+	border-color: #cbd5e1 !important;
+	cursor:       not-allowed !important;
+	opacity:      0.8;
 }
 
 /* Scrollable vs Full Slots Container Option (Flat Forms) */

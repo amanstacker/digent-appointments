@@ -281,6 +281,8 @@ class DGAP_Admin {
             'site_key' => $adv_settings['recaptcha_site_key'] ?? '',
         ];
 
+        $extra['enabled_calendars'] = apply_filters( 'dgap_enabled_calendar_links', [] );
+
         wp_localize_script( 'dgap-booking-form', 'dgap_booking_form', $this->get_ajax_data( $extra ) );
     }   
 
