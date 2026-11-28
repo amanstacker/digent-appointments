@@ -177,4 +177,5 @@ $is_expanded         = $has_filters || $is_filter_submitted;
 
 <?php
 include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/customer-slide-panel.php';
+include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/customer-booking-log-panel.php';
 include DGAP_PLUGIN_DIR_PATH . 'includes/templates/admin/confirm-modal.php';

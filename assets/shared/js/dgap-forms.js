@@ -210,7 +210,8 @@ jQuery(function ($) {
             const mm      = String(month + 1).padStart(2, '0');
             const dd      = String(d).padStart(2, '0');
             const dateStr = `${year}-${mm}-${dd}`;
-            html += `<div class="dgap-day" data-date="${dateStr}">${d}</div>`;
+            const isSel   = selectedDate && selectedDate === dateStr ? ' active' : '';
+            html += `<div class="dgap-day${isSel}" data-date="${dateStr}">${d}</div>`;
         }
 
         const totalRendered = startDay + daysInMonth;
@@ -229,6 +230,7 @@ jQuery(function ($) {
         selectedDate = '';
         selectedSlotStart = '';
         selectedSlotEnd = '';
+        updateSummary();
     }
 
     function refreshCalendarAvailability() {
@@ -267,6 +269,7 @@ jQuery(function ($) {
     function enableCalendar() {
         getWrap().find('.dgap-calendar').removeClass('disabled');
         refreshCalendarAvailability();
+        updateSummary();
     }
 
     function isWizard() {
@@ -448,6 +451,9 @@ jQuery(function ($) {
         const isInline    = $calendar.attr('data-slot-position') === 'inside' || $calendar.hasClass('dgap-calendar-style-inline');
 
         selectedDate = date;
+        selectedSlotStart = '';
+        selectedSlotEnd = '';
+        updateSummary();
 
         getWrap().find('.dgap-day').removeClass('active');
         $(this).addClass('active');
@@ -623,23 +629,35 @@ jQuery(function ($) {
     }
 
     function updateSummary() {
-        const $srvOpt   = $('#dgap-service option:selected');
-        const location  = $('#dgap-location option:selected').text();
-        const service   = $srvOpt.text();
-        const worker    = $('#dgap-worker option:selected').text();
-        const price     = $srvOpt.data('price') || service.split('-')[1] || '';
+        const $wrap     = getWrap();
+        const $locOpt   = $wrap.find('#dgap-location option:selected');
+        const $srvOpt   = $wrap.find('#dgap-service option:selected');
+        const $stfOpt   = $wrap.find('#dgap-worker option:selected');
+
+        const optText = function ($opt) {
+            return ($opt.length && $opt.val() && !$opt.data('placeholder')) ? $opt.text().trim() : '';
+        };
+
+        const location  = optText($locOpt);
+        const service   = optText($srvOpt);
+        const worker    = optText($stfOpt);
+        const price     = service ? ($srvOpt.data('price') || (service.indexOf(' - ') !== -1 ? service.split(' - ').pop() : '')) : '';
         const dateHuman = formatDateHuman(selectedDate);
         const timeRange = selectedSlotStart
             ? `${formatTimeHuman(selectedSlotStart)}${selectedSlotEnd ? ' – ' + formatTimeHuman(selectedSlotEnd) : ''}`
             : '';
         const dateTime  = [dateHuman, timeRange].filter(Boolean).join(' · ');
 
-        getWrap().find('#dgap-form-render-loc').text(location);
-        getWrap().find('#dgap-form-render-service').text(service);
-        getWrap().find('#dgap-form-render-worker').text(worker);
-        getWrap().find('#dgap-form-render-price').text(price);
-        getWrap().find('#dgap-form-render-date').text(dateTime);
-        syncSummaryCustomerDetails(getWrap());
+        $wrap.find('#dgap-form-render-loc').text(location || '—');
+        $wrap.find('#dgap-form-render-service').text(service || '—');
+        $wrap.find('#dgap-form-render-worker').text(worker || '—');
+        $wrap.find('#dgap-form-render-price').text(price || '—');
+        $wrap.find('#dgap-form-render-date').text(dateTime || '—');
+        syncSummaryCustomerDetails($wrap);
+
+        if (location || service || worker || dateTime) {
+            $wrap.find('.dgap-summary').removeClass('disabled');
+        }
     }
 
     /* ================================================
@@ -679,8 +697,14 @@ jQuery(function ($) {
         $wizard.find('.dgap-wizard-submit').toggle(step === total);
 
         // Step-specific actions
-        if (step === 2) renderCalendar();
+        if (step === 2) {
+            renderCalendar();
+            if (!$wrap.find('.dgap-calendar').hasClass('disabled')) {
+                refreshCalendarAvailability();
+            }
+        }
         if (step === 3) renderPersonalInfoFields();
+        if (step === 4) updateSummary();
 
         // Scroll to top on frontend
         if (isFrontend) {

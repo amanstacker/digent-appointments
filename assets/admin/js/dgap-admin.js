@@ -2204,4 +2204,133 @@ $(document).on('click', '.dgap-status-update', function (e) {
 		});
 	});
 
+	/* ================= Customer Booking Log Drawer ================= */
+	let customerLogCache = null;
+
+	function dgapEscHtml(str) {
+		return $('<div>').text(str == null ? '' : String(str)).html();
+	}
+
+	function dgapRenderCustomerLogList(tab) {
+		const $list = $('#dgap-log-list');
+		if (!customerLogCache) {
+			$list.html('<p class="dgap-log-empty">No bookings found.</p>');
+			return;
+		}
+
+		const upcoming = Array.isArray(customerLogCache.upcoming) ? customerLogCache.upcoming : [];
+		const past     = Array.isArray(customerLogCache.past) ? customerLogCache.past : [];
+		let items      = [];
+
+		if (tab === 'upcoming') {
+			items = upcoming;
+		} else if (tab === 'past') {
+			items = past;
+		} else {
+			items = upcoming.concat(past);
+		}
+
+		if (!items.length) {
+			const msg = tab === 'upcoming'
+				? 'No upcoming bookings for this customer.'
+				: (tab === 'past' ? 'No past bookings for this customer.' : 'This customer has no bookings yet.');
+			$list.html(`<div class="dgap-log-empty">${dgapEscHtml(msg)}</div>`);
+			return;
+		}
+
+		const html = items.map(function (b) {
+			const timeRange = b.end_time ? `${b.start_time} – ${b.end_time}` : (b.start_time || '');
+			const periodLbl = b.period === 'upcoming' ? 'Upcoming' : 'Past';
+			const periodCls = b.period === 'upcoming' ? 'is-upcoming' : 'is-past';
+			const statusCls = `is-${b.status || 'pending'}`;
+			const statusLbl = (b.status || 'pending').charAt(0).toUpperCase() + (b.status || 'pending').slice(1);
+			const notesHtml = b.notes ? `<div class="dgap-log-item-notes">${dgapEscHtml(b.notes)}</div>` : '';
+
+			return `
+				<div class="dgap-log-item ${periodCls}">
+					<div class="dgap-log-item-top">
+						<div class="dgap-log-item-datetime">
+							<span class="dgap-log-id">#${dgapEscHtml(b.id)}</span>
+							<strong>${dgapEscHtml(b.booking_date)}</strong>
+							${timeRange ? `<span class="dgap-log-time">${dgapEscHtml(timeRange)}</span>` : ''}
+						</div>
+						<div class="dgap-log-badges">
+							<span class="dgap-log-period-badge ${periodCls}">${periodLbl}</span>
+							<span class="dgap-log-status-badge ${statusCls}">${dgapEscHtml(statusLbl)}</span>
+						</div>
+					</div>
+					<div class="dgap-log-item-meta">
+						<span><strong>Service:</strong> ${dgapEscHtml(b.service_name)}</span>
+						<span><strong>Worker:</strong> ${dgapEscHtml(b.worker_name)}</span>
+						<span><strong>Location:</strong> ${dgapEscHtml(b.location_name)}</span>
+						<span><strong>Price:</strong> ${dgapEscHtml(b.price_display)}</span>
+					</div>
+					${notesHtml}
+					<div class="dgap-log-item-footer">
+						<a href="${dgapEscHtml(b.booking_url)}" class="button button-small">View in Bookings</a>
+					</div>
+				</div>
+			`;
+		}).join('');
+
+		$list.html(html);
+	}
+
+	$(document).on('click', '.dgap-customer-bookings-btn', function (e) {
+		e.preventDefault();
+		const customerId = $(this).data('id');
+		const custName   = $(this).data('name') || 'Customer';
+		const $panel     = $('#dgap-customer-log-panel');
+		if (!customerId || !$panel.length) return;
+
+		customerLogCache = null;
+		$('#dgap-log-panel-title').text(`${custName} — Booking Log`);
+		$('#dgap-log-customer-meta').text('Loading...');
+		$('#dgap-log-stat-total, #dgap-log-stat-upcoming, #dgap-log-stat-past, #dgap-log-count-all, #dgap-log-count-upcoming, #dgap-log-count-past').text('0');
+		$('#dgap-log-stat-spent').text('$0.00');
+		$('.dgap-log-tab').removeClass('is-active').filter('[data-tab="upcoming"]').addClass('is-active');
+		$('#dgap-log-list').html('<div class="dgap-log-loading">Loading booking history...</div>');
+
+		$panel.css('right', '-560px').show().animate({ right: 0 }, 220);
+
+		$.post(dgap_admin.ajax_url, {
+			action: 'dgap_get_customer_bookings',
+			id: customerId,
+			_dgap_nonce: dgap_admin.nonce
+		})
+		.done(function (res) {
+			if (!res || !res.success || !res.data) {
+				$('#dgap-log-list').html(`<div class="dgap-log-empty">${dgapEscHtml(res?.data?.message || 'Failed to load bookings.')}</div>`);
+				return;
+			}
+			customerLogCache = res.data;
+			const c = res.data.customer || {};
+			const counts = res.data.counts || {};
+			$('#dgap-log-panel-title').text(`${c.name || custName} — Booking Log`);
+			$('#dgap-log-customer-meta').text([c.email, c.phone].filter(Boolean).join(' · '));
+			$('#dgap-log-stat-total, #dgap-log-count-all').text(counts.total || 0);
+			$('#dgap-log-stat-upcoming, #dgap-log-count-upcoming').text(counts.upcoming || 0);
+			$('#dgap-log-stat-past, #dgap-log-count-past').text(counts.past || 0);
+			$('#dgap-log-stat-spent').text(res.data.total_spent_display || '$0.00');
+			dgapRenderCustomerLogList('upcoming');
+		})
+		.fail(function () {
+			$('#dgap-log-list').html('<div class="dgap-log-empty">Server error while loading bookings.</div>');
+		});
+	});
+
+	$(document).on('click', '.dgap-log-tab', function () {
+		const tab = $(this).data('tab') || 'all';
+		$('.dgap-log-tab').removeClass('is-active');
+		$(this).addClass('is-active');
+		dgapRenderCustomerLogList(tab);
+	});
+
+	$(document).on('click', '.dgap-close-log', function () {
+		const $panel = $('#dgap-customer-log-panel');
+		$panel.animate({ right: -560 }, 200, function () {
+			$panel.hide();
+		});
+	});
+
 });

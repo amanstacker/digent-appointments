@@ -693,4 +693,132 @@ class DGAP_Booking_Repo {
 
 		return (int) $wpdb->insert_id;
 	}
+
+	/**
+	 * Get booking counts (total & upcoming) grouped by customer ID.
+	 *
+	 * @param array $customer_ids Customer IDs.
+	 * @return array<int, array{total:int, upcoming:int}>
+	 */
+	public static function get_counts_by_customers( array $customer_ids ) {
+		$ids = array_values( array_filter( array_map( 'absint', $customer_ids ) ) );
+		if ( empty( $ids ) ) {
+			return [];
+		}
+
+		global $wpdb;
+		$now_mysql    = current_time( 'mysql' );
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$params       = array_merge( [ $now_mysql ], $ids );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT
+					customer_id,
+					COUNT(*) AS total_count,
+					SUM(
+						CASE
+							WHEN CONCAT(booking_date, ' ', start_time) >= %s
+							AND status NOT IN ('cancelled', 'canceled', 'rejected')
+							THEN 1 ELSE 0
+						END
+					) AS upcoming_count
+				FROM {$wpdb->prefix}dgap_bookings
+				WHERE customer_id IN ({$placeholders})
+				GROUP BY customer_id",
+				...$params
+			),
+			ARRAY_A
+		);
+
+		$map = [];
+		foreach ( (array) $rows as $row ) {
+			$cid         = (int) $row['customer_id'];
+			$map[ $cid ] = [
+				'total'    => (int) $row['total_count'],
+				'upcoming' => (int) $row['upcoming_count'],
+			];
+		}
+		return $map;
+	}
+
+	/**
+	 * Get full booking log (split into upcoming & past) for a single customer.
+	 *
+	 * @param int $customer_id Customer ID.
+	 * @return array{upcoming:array, past:array, counts:array, total_spent:float}
+	 */
+	public static function get_by_customer( $customer_id ) {
+		$customer_id = absint( $customer_id );
+		if ( $customer_id <= 0 ) {
+			return [
+				'upcoming'    => [],
+				'past'        => [],
+				'counts'      => [ 'total' => 0, 'upcoming' => 0, 'past' => 0, 'cancelled' => 0 ],
+				'total_spent' => 0.0,
+			];
+		}
+
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT
+					b.*,
+					l.name AS location_name,
+					s.name AS service_name,
+					CONCAT_WS(' ', st.first_name, st.last_name) AS worker_name
+				FROM {$wpdb->prefix}dgap_bookings b
+				LEFT JOIN {$wpdb->prefix}dgap_locations l ON l.id = b.location_id
+				LEFT JOIN {$wpdb->prefix}dgap_services s ON s.id = b.service_id
+				LEFT JOIN {$wpdb->prefix}dgap_workers st ON st.id = b.worker_id
+				WHERE b.customer_id = %d
+				ORDER BY b.booking_date DESC, b.start_time DESC",
+				$customer_id
+			),
+			ARRAY_A
+		);
+
+		$now_ts      = strtotime( current_time( 'mysql' ) );
+		$upcoming    = [];
+		$past        = [];
+		$cancelled   = 0;
+		$total_spent = 0.0;
+
+		foreach ( (array) $rows as $row ) {
+			$status      = strtolower( (string) ( $row['status'] ?? 'pending' ) );
+			$is_canceled = in_array( $status, [ 'cancelled', 'canceled', 'rejected' ], true );
+			$slot_ts     = strtotime( trim( ( $row['booking_date'] ?? '' ) . ' ' . ( $row['start_time'] ?? '00:00:00' ) ) );
+
+			if ( $is_canceled ) {
+				++$cancelled;
+			} else {
+				$total_spent += (float) ( $row['price'] ?? 0 );
+			}
+
+			if ( ! $is_canceled && $slot_ts && $slot_ts >= $now_ts ) {
+				$row['period'] = 'upcoming';
+				$upcoming[]    = $row;
+			} else {
+				$row['period'] = 'past';
+				$past[]        = $row;
+			}
+		}
+
+		// Upcoming soonest-first; past already most-recent-first.
+		$upcoming = array_reverse( $upcoming );
+
+		return [
+			'upcoming'    => $upcoming,
+			'past'        => $past,
+			'counts'      => [
+				'total'     => count( $upcoming ) + count( $past ),
+				'upcoming'  => count( $upcoming ),
+				'past'      => count( $past ),
+				'cancelled' => $cancelled,
+			],
+			'total_spent' => $total_spent,
+		];
+	}
 }

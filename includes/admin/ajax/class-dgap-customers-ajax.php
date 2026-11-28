@@ -8,9 +8,79 @@ class DGAP_Customers_Ajax {
 	public function register() {
 		add_action( 'wp_ajax_dgap_save_customer', [ $this, 'save' ] );
 		add_action( 'wp_ajax_dgap_get_customer', [ $this, 'get' ] );
+		add_action( 'wp_ajax_dgap_get_customer_bookings', [ $this, 'get_bookings' ] );
 		add_action( 'wp_ajax_dgap_delete_customer', [ $this, 'delete' ] );
 		add_action( 'wp_ajax_dgap_bulk_action_customers', [ $this, 'bulk_action' ] );
 		add_action( 'admin_post_dgap_export_customers', [ $this, 'export_csv' ] );
+	}
+
+	/**
+	 * Fetch customer booking log (upcoming & past)
+	 */
+	public function get_bookings() {
+		check_ajax_referer( 'dgap_admin_action', '_dgap_nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				[ 'message' => esc_html__( 'Permission denied.', 'digent-appointments' ) ],
+				403
+			);
+		}
+
+		$customer_id = absint( $_POST['id'] ?? 0 );
+		if ( ! $customer_id ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Invalid customer ID.', 'digent-appointments' ) ] );
+		}
+
+		$customer = DGAP_Customer_Repo::get( $customer_id );
+		if ( ! $customer ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Customer not found.', 'digent-appointments' ) ] );
+		}
+
+		require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
+		$log = DGAP_Booking_Repo::get_by_customer( $customer_id );
+
+		$general_settings = get_option( 'dgap_general_settings', [] );
+		$time_format      = ( $general_settings['time_format'] ?? '24' ) === '12' ? 'g:i A' : 'H:i';
+		$date_format      = get_option( 'date_format' ) ?: 'M j, Y';
+		$currency_symbol  = function_exists( 'dgap_get_currency_symbol' )
+			? dgap_get_currency_symbol( $general_settings['currency_code'] ?? 'USD' )
+			: '$';
+
+		$format_row = static function ( $row ) use ( $date_format, $time_format, $currency_symbol ) {
+			$date_ts   = ! empty( $row['booking_date'] ) ? strtotime( $row['booking_date'] ) : false;
+			$start_ts  = ! empty( $row['start_time'] ) ? strtotime( $row['start_time'] ) : false;
+			$end_ts    = ! empty( $row['end_time'] ) ? strtotime( $row['end_time'] ) : false;
+			$price_num = (float) ( $row['price'] ?? 0 );
+
+			return [
+				'id'            => (int) $row['id'],
+				'period'        => $row['period'] ?? 'past',
+				'booking_date'  => $date_ts ? date_i18n( $date_format, $date_ts ) : (string) ( $row['booking_date'] ?? '' ),
+				'start_time'    => $start_ts ? date_i18n( $time_format, $start_ts ) : '',
+				'end_time'      => $end_ts ? date_i18n( $time_format, $end_ts ) : '',
+				'service_name'  => $row['service_name'] ?: __( '—', 'digent-appointments' ),
+				'worker_name'   => $row['worker_name'] ?: __( '—', 'digent-appointments' ),
+				'location_name' => $row['location_name'] ?: __( '—', 'digent-appointments' ),
+				'status'        => strtolower( (string) ( $row['status'] ?? 'pending' ) ),
+				'price_display' => $currency_symbol . number_format( $price_num, 2 ),
+				'notes'         => (string) ( $row['booking_note'] ?? '' ),
+				'booking_url'   => admin_url( 'admin.php?page=digent-appointments-list-view&s=' . (int) $row['id'] ),
+			];
+		};
+
+		wp_send_json_success( [
+			'customer'            => [
+				'id'    => (int) $customer['id'],
+				'name'  => trim( ( $customer['first_name'] ?? '' ) . ' ' . ( $customer['last_name'] ?? '' ) ),
+				'email' => $customer['email'] ?? '',
+				'phone' => trim( ( $customer['phone_dial_code'] ?? '' ) . ' ' . ( $customer['phone'] ?? '' ) ),
+			],
+			'counts'              => $log['counts'],
+			'total_spent_display' => $currency_symbol . number_format( (float) $log['total_spent'], 2 ),
+			'upcoming'            => array_map( $format_row, $log['upcoming'] ),
+			'past'                => array_map( $format_row, $log['past'] ),
+		] );
 	}
 
 	/**

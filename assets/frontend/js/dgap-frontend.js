@@ -139,7 +139,8 @@ jQuery(function ($) {
             const mm  = String(month + 1).padStart(2, '0');
             const dd  = String(d).padStart(2, '0');
             const dateStr = `${year}-${mm}-${dd}`;
-            html += `<div class="dgap-day" data-date="${dateStr}">${d}</div>`;
+            const isSel   = selectedDate && selectedDate === dateStr ? ' active' : '';
+            html += `<div class="dgap-day${isSel}" data-date="${dateStr}">${d}</div>`;
         }
 
         const totalRendered = startDay + daysInMonth;
@@ -158,6 +159,7 @@ jQuery(function ($) {
         selectedDate = '';
         selectedSlotStart = '';
         selectedSlotEnd = '';
+        updateSummary();
     }
 
     function refreshCalendarAvailability() {
@@ -194,6 +196,7 @@ jQuery(function ($) {
     function enableCalendar() {
         $('.dgap-calendar').removeClass('disabled');
         refreshCalendarAvailability();
+        updateSummary();
     }
 
     /* ------------------------------
@@ -364,6 +367,9 @@ jQuery(function ($) {
         const isInline    = $calendar.attr('data-slot-position') === 'inside' || $calendar.hasClass('dgap-calendar-style-inline');
 
         selectedDate = date;
+        selectedSlotStart = '';
+        selectedSlotEnd = '';
+        updateSummary();
 
         $('.dgap-day').removeClass('active');
         $(this).addClass('active');
@@ -542,23 +548,35 @@ jQuery(function ($) {
     });
 
     function updateSummary() {
-        const $srvOpt   = $('#dgap-service option:selected');
-        const location  = $('#dgap-location option:selected').text();
-        const service   = $srvOpt.text();
-        const worker    = $('#dgap-worker option:selected').text();
-        const price     = $srvOpt.data('price') || service.split('-')[1] || '';
+        const $wrap   = $('.dgap-form-wrap');
+        const $locOpt = $('#dgap-location option:selected');
+        const $srvOpt = $('#dgap-service option:selected');
+        const $stfOpt = $('#dgap-worker option:selected');
+
+        const optText = function ($opt) {
+            return ($opt.length && $opt.val() && !$opt.data('placeholder')) ? $opt.text().trim() : '';
+        };
+
+        const location  = optText($locOpt);
+        const service   = optText($srvOpt);
+        const worker    = optText($stfOpt);
+        const price     = service ? ($srvOpt.data('price') || (service.indexOf(' - ') !== -1 ? service.split(' - ').pop() : '')) : '';
         const dateHuman = formatDateHuman(selectedDate);
         const timeRange = selectedSlotStart
             ? `${formatTimeHuman(selectedSlotStart)}${selectedSlotEnd ? ' – ' + formatTimeHuman(selectedSlotEnd) : ''}`
             : '';
         const dateTime  = [dateHuman, timeRange].filter(Boolean).join(' · ');
 
-        $('#dgap-form-render-loc').text(location);
-        $('#dgap-form-render-service').text(service);
-        $('#dgap-form-render-worker').text(worker);
-        $('#dgap-form-render-price').text(price);
-        $('#dgap-form-render-date').text(dateTime);
-        syncSummaryCustomerDetails($('.dgap-form-wrap'));
+        $('#dgap-form-render-loc').text(location || '—');
+        $('#dgap-form-render-service').text(service || '—');
+        $('#dgap-form-render-worker').text(worker || '—');
+        $('#dgap-form-render-price').text(price || '—');
+        $('#dgap-form-render-date').text(dateTime || '—');
+        syncSummaryCustomerDetails($wrap);
+
+        if (location || service || worker || dateTime) {
+            $('.dgap-summary').removeClass('disabled');
+        }
     }
 
     /* ------------------------------
@@ -596,9 +614,15 @@ jQuery(function ($) {
         $wrap.find('.dgap-wizard-next').toggle(step < total);
         $wrap.find('.dgap-wizard-submit').toggle(step === total);
 
-        // Re-render personal info on step 3
+        // Step-specific actions
+        if (step === 2 && !$('.dgap-calendar').hasClass('disabled')) {
+            refreshCalendarAvailability();
+        }
         if (step === 3) {
             renderPersonalInfoFields();
+        }
+        if (step === 4) {
+            updateSummary();
         }
 
         // Scroll to top of form

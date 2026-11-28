@@ -9,14 +9,18 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 class DGAP_Customers_Table extends WP_List_Table {
 
+	/** @var array<int, array{total:int, upcoming:int}> */
+	private $booking_counts = [];
+
 	public function get_columns() {
 		return [
-			'cb'      => '<input type="checkbox" />',
-			'name'    => esc_html__( 'Customer Name', 'digent-appointments' ),
-			'email'   => esc_html__( 'Email', 'digent-appointments' ),
-			'phone'   => esc_html__( 'Phone', 'digent-appointments' ),
-			'status'  => esc_html__( 'Status', 'digent-appointments' ),
-			'actions' => esc_html__( 'Actions', 'digent-appointments' ),
+			'cb'       => '<input type="checkbox" />',
+			'name'     => esc_html__( 'Customer Name', 'digent-appointments' ),
+			'email'    => esc_html__( 'Email', 'digent-appointments' ),
+			'phone'    => esc_html__( 'Phone', 'digent-appointments' ),
+			'bookings' => esc_html__( 'Bookings', 'digent-appointments' ),
+			'status'   => esc_html__( 'Status', 'digent-appointments' ),
+			'actions'  => esc_html__( 'Actions', 'digent-appointments' ),
 		];
 	}
 
@@ -55,6 +59,30 @@ class DGAP_Customers_Table extends WP_List_Table {
 		return esc_html( $phone_display );
 	}
 
+	public function column_bookings( $item ) {
+		$cid      = (int) $item['id'];
+		$counts   = $this->booking_counts[ $cid ] ?? [ 'total' => 0, 'upcoming' => 0 ];
+		$total    = (int) $counts['total'];
+		$upcoming = (int) $counts['upcoming'];
+
+		if ( $total === 0 ) {
+			return '<span class="dgap-muted-text">0</span>';
+		}
+
+		$full_name = trim( $item['first_name'] . ' ' . $item['last_name'] );
+		$label     = sprintf( '%d', $total );
+		if ( $upcoming > 0 ) {
+			$label .= sprintf( ' <span class="dgap-upcoming-pill">%d %s</span>', $upcoming, esc_html__( 'Upcoming', 'digent-appointments' ) );
+		}
+
+		return sprintf(
+			'<button type="button" class="button-link dgap-customer-bookings-btn dgap-bookings-count-link" data-id="%1$d" data-name="%2$s">%3$s</button>',
+			$cid,
+			esc_attr( $full_name ),
+			$label
+		);
+	}
+
 	public function column_status( $item ) {
 		if ( (int) $item['status'] === 1 ) {
 			return '<span class="dgap-badge dgap-badge-active">' . esc_html__( 'Active', 'digent-appointments' ) . '</span>';
@@ -67,6 +95,15 @@ class DGAP_Customers_Table extends WP_List_Table {
 		$full_name = trim( $item['first_name'] . ' ' . $item['last_name'] );
 		return sprintf(
 			'<div class="dgap-row-actions-wrap">
+				<button
+					type="button"
+					class="button button-small dgap-action-btn dgap-customer-bookings-btn"
+					data-id="%1$d"
+					data-name="%3$s"
+					title="%5$s"
+					aria-label="%5$s">
+					<span class="dashicons dashicons-calendar-alt"></span>
+				</button>
 				<button
 					type="button"
 					class="button button-small dgap-action-btn dgap-edit"
@@ -91,7 +128,8 @@ class DGAP_Customers_Table extends WP_List_Table {
 			esc_attr( $item['id'] ),
 			esc_attr__( 'Edit Customer', 'digent-appointments' ),
 			esc_attr( $full_name ),
-			esc_attr__( 'Delete', 'digent-appointments' )
+			esc_attr__( 'Delete', 'digent-appointments' ),
+			esc_attr__( 'Booking Log', 'digent-appointments' )
 		);
 	}
 
@@ -124,6 +162,11 @@ class DGAP_Customers_Table extends WP_List_Table {
 
 		$total_items = DGAP_Customer_Repo::get_filtered( array_merge( $filters, [ 'count' => true ] ) );
 		$this->items = DGAP_Customer_Repo::get_filtered( $query_args );
+
+		if ( ! empty( $this->items ) ) {
+			require_once DGAP_PLUGIN_DIR_PATH . 'includes/repositories/class-dgap-booking-repo.php';
+			$this->booking_counts = DGAP_Booking_Repo::get_counts_by_customers( wp_list_pluck( $this->items, 'id' ) );
+		}
 
 		$this->_column_headers = [
 			$this->get_columns(),
