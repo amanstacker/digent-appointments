@@ -85,6 +85,30 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 			'#ef4444',
 			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
 		),
+		'abandoned' => dgap_build_internal_email_html(
+			'#f97316',
+			'Appointment Abandoned',
+			'Hello Admin,',
+			'The reserved appointment for <strong>{customer_name}</strong> (<strong>{service_name}</strong>) was marked as abandoned and its slot has been released.',
+			'#f97316',
+			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
+		),
+		'expired' => dgap_build_internal_email_html(
+			'#64748b',
+			'Pending Appointment Expired',
+			'Hello Admin,',
+			'The pending appointment for <strong>{customer_name}</strong> (<strong>{service_name}</strong> on <strong>{booking_date}</strong> at <strong>{booking_time}</strong>) was not confirmed in time and has been marked as expired.',
+			'#64748b',
+			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
+		),
+		'urgent_reminder' => dgap_build_internal_email_html(
+			'#dc2626',
+			'Urgent: Pending Appointment Needs Confirmation',
+			'Hello Admin,',
+			'<strong>{customer_name}</strong> has a <strong>pending</strong> appointment for <strong>{service_name}</strong> starting soon on <strong>{booking_date}</strong> at <strong>{booking_time}</strong>. Please confirm or cancel it immediately.',
+			'#dc2626',
+			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_confirm . $admin_btn_cancel . $admin_btn_view . '</div>'
+		),
 		'reminder'  => dgap_build_internal_email_html(
 			'#111827',
 			'Upcoming Appointment Reminder',
@@ -127,6 +151,30 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 			'Your appointment with <strong>{customer_name}</strong> for <strong>{service_name}</strong> has been cancelled.',
 			'#ef4444',
 			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
+		),
+		'abandoned' => dgap_build_internal_email_html(
+			'#f97316',
+			'Appointment Abandoned',
+			'Hi {worker_name},',
+			'The reserved appointment with <strong>{customer_name}</strong> for <strong>{service_name}</strong> was marked as abandoned and the time slot is now open.',
+			'#f97316',
+			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
+		),
+		'expired' => dgap_build_internal_email_html(
+			'#64748b',
+			'Pending Appointment Expired',
+			'Hi {worker_name},',
+			'The pending appointment with <strong>{customer_name}</strong> for <strong>{service_name}</strong> on <strong>{booking_date}</strong> at <strong>{booking_time}</strong> was not confirmed in time and has expired.',
+			'#64748b',
+			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_view . '</div>'
+		),
+		'urgent_reminder' => dgap_build_internal_email_html(
+			'#dc2626',
+			'Urgent: Pending Appointment Needs Confirmation',
+			'Hi {worker_name},',
+			'Your <strong>pending</strong> appointment with <strong>{customer_name}</strong> for <strong>{service_name}</strong> starts soon on <strong>{booking_date}</strong> at <strong>{booking_time}</strong>. Please confirm or cancel it immediately.',
+			'#dc2626',
+			'<div style="text-align:center; margin-top:24px;">' . $admin_btn_confirm . $admin_btn_cancel . $admin_btn_view . '</div>'
 		),
 		'reminder'  => dgap_build_internal_email_html(
 			'#111827',
@@ -222,6 +270,48 @@ function dgap_email_notification_templates_clbk( $email_templates ) {
 					</tr>
 				</table>
 				<p style="margin-top:24px; color:#6b7280; text-align:center;">We hope to serve you soon.</p>
+			</div>
+		</div>',
+
+		'abandoned' => '
+		<div style="font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Arial,sans-serif; max-width:800px; margin:auto; background:#ffffff; border-radius:20px; border:1px solid #e5e7eb; overflow:hidden;">
+			<div style="padding:30px 36px; background:#f97316; color:#ffffff; text-align:center;">
+				<h1 style="margin:0; font-weight:700; font-size:26px;">{site_name}</h1>
+				<p style="margin-top:6px; font-size:16px;">Your Reserved Slot Is About to Expire</p>
+			</div>
+			<div style="padding:36px; color:#111827;">
+				<h2 style="font-size:22px; margin-top:0;">Hi {customer_name},</h2>
+				<p>You started booking <strong>{service_name}</strong> on <strong>{booking_date}</strong> at <strong>{booking_time}</strong>, and your reserved slot will expire soon if not confirmed.</p>
+				<div style="background:#fff7ed; padding:20px; border-radius:14px; border:1px solid #fed7aa; margin:22px 0;">
+					<p style="margin:4px 0;"><strong>Service:</strong> {service_name}</p>
+					<p style="margin:4px 0;"><strong>Date:</strong> {booking_date}</p>
+					<p style="margin:4px 0;"><strong>Time:</strong> {booking_time}</p>
+					<p style="margin:4px 0;"><strong>Location:</strong> {location}</p>
+				</div>
+				<div style="text-align:center; margin:24px 0;">' . $cust_btn_confirm . $cust_btn_manage . '</div>
+				<p style="margin-top:20px; color:#6b7280; text-align:center;">Confirm now to keep your appointment slot before it is released.</p>
+			</div>
+		</div>',
+
+		'expired' => '
+		<div style="font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Arial,sans-serif; max-width:800px; margin:auto; background:#ffffff; border-radius:20px; border:1px solid #e5e7eb; overflow:hidden;">
+			<div style="padding:30px 36px; background:#64748b; color:#ffffff; text-align:center;">
+				<h1 style="margin:0; font-weight:700; font-size:26px;">{site_name}</h1>
+				<p style="margin-top:6px; font-size:16px;">Appointment Request Expired</p>
+			</div>
+			<div style="padding:36px; color:#111827;">
+				<h2 style="font-size:22px; margin-top:0;">Hi {customer_name},</h2>
+				<p>Unfortunately, your pending appointment request for <strong>{service_name}</strong> on <strong>{booking_date}</strong> at <strong>{booking_time}</strong> could not be confirmed before the scheduled time and has expired.</p>
+				<table cellspacing="0" cellpadding="0" border="0" align="center" style="margin:30px auto;">
+					<tr>
+						<td align="center" bgcolor="#2563eb" style="border-radius:6px;">
+							<a href="{reschedule_link}" target="_blank" style="display:inline-block; padding:12px 28px; font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,Arial,sans-serif; color:#ffffff; text-decoration:none; font-weight:600; font-size:16px;">
+								Book Another Slot &rarr;
+							</a>
+						</td>
+					</tr>
+				</table>
+				<p style="margin-top:24px; color:#6b7280; text-align:center;">We apologize for the inconvenience and look forward to serving you soon.</p>
 			</div>
 		</div>',
 

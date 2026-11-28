@@ -71,6 +71,8 @@ class DGAP_Bookings_Table extends WP_List_Table {
 			'pending'   => 'warning',
 			'confirmed' => 'active',
 			'cancelled' => 'inactive',
+			'abandoned' => 'inactive',
+			'expired'   => 'inactive',
 			'completed' => 'success',
 		];
 
@@ -96,6 +98,8 @@ class DGAP_Bookings_Table extends WP_List_Table {
 					<option value="pending" <?php selected( $status_key, 'pending' ); ?>><?php esc_html_e( 'Pending', 'digent-appointments' ); ?></option>
 					<option value="confirmed" <?php selected( $status_key, 'confirmed' ); ?>><?php esc_html_e( 'Confirmed', 'digent-appointments' ); ?></option>
 					<option value="cancelled" <?php selected( $status_key, 'cancelled' ); ?>><?php esc_html_e( 'Cancelled', 'digent-appointments' ); ?></option>
+					<option value="abandoned" <?php selected( $status_key, 'abandoned' ); ?>><?php esc_html_e( 'Abandoned', 'digent-appointments' ); ?></option>
+					<option value="expired" <?php selected( $status_key, 'expired' ); ?>><?php esc_html_e( 'Expired', 'digent-appointments' ); ?></option>
 					<option value="completed" <?php selected( $status_key, 'completed' ); ?>><?php esc_html_e( 'Completed', 'digent-appointments' ); ?></option>
 				</select>
 				<hr>

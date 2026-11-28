@@ -20,6 +20,7 @@ class DGAP_Settings_Sections {
 		add_action( 'admin_post_dgap_flush_cache', [ $this, 'handle_flush_cache' ] );
 		add_action( 'admin_post_dgap_repair_tables', [ $this, 'handle_repair_tables' ] );
 		add_action( 'init', [ $this, 'maybe_schedule_cleanup_cron' ] );
+		add_action( 'init', [ $this, 'maybe_run_auto_abandon_reserved' ] );
 		add_action( 'dgap_daily_cleanup_cron', [ $this, 'run_auto_delete_old_bookings' ] );
 		add_action( 'wp_ajax_dgap_submit_support_ticket', [ $this, 'handle_support_ticket' ] );
 		add_filter( 'dgap_settings_show_submit', [ $this, 'filter_submit_visibility' ], 10, 3 );
@@ -64,6 +65,50 @@ class DGAP_Settings_Sections {
 					'confirmed' => esc_html__( 'Confirmed Automatically', 'digent-appointments' ),
 				],
 				'description' => __( 'Status assigned to newly submitted customer bookings.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'auto_abandon_minutes',
+			esc_html__( 'Auto-Abandon Reserved Bookings (Minutes)', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'number' ],
+			'dgap_general_booking',
+			'dgap_general_booking',
+			[
+				'id'          => 'auto_abandon_minutes',
+				'tab'         => 'general',
+				'default'     => 30,
+				'min'         => 0,
+				'description' => __( 'Automatically mark unconfirmed "Reserved" bookings as Abandoned after N minutes to release the time slot (0 = disabled). If the Abandoned email template is enabled, a reminder is sent automatically 30% before this time expires.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'auto_expire_pending_enabled',
+			esc_html__( 'Auto-Expire Past Unconfirmed Pending Bookings', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'toggle' ],
+			'dgap_general_booking',
+			'dgap_general_booking',
+			[
+				'id'          => 'auto_expire_pending_enabled',
+				'tab'         => 'general',
+				'default'     => 1,
+				'description' => __( 'Automatically mark unconfirmed "Pending" bookings as Expired once their scheduled start time passes, and notify the customer.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'pending_urgent_alert_minutes',
+			esc_html__( 'Urgent Pending Alert Before Slot (Minutes)', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'number' ],
+			'dgap_general_booking',
+			'dgap_general_booking',
+			[
+				'id'          => 'pending_urgent_alert_minutes',
+				'tab'         => 'general',
+				'default'     => 60,
+				'min'         => 0,
+				'description' => __( 'Send an urgent confirmation alert to Admin and Employee N minutes before a pending booking starts (0 = disabled).', 'digent-appointments' ),
 			]
 		);
 
@@ -457,6 +502,118 @@ class DGAP_Settings_Sections {
 			]
 		);
 
+		// 1b. Spam Protection & Rate Limiting
+		add_settings_section(
+			'dgap_advanced_spam_protection',
+			'',
+			static function () {
+				echo '<p>' . esc_html__( 'Protect your public booking forms from bots, fake emails, and repetitive spam submissions.', 'digent-appointments' ) . '</p>';
+			},
+			'dgap_advanced_spam_protection'
+		);
+
+		add_settings_field(
+			'honeypot_enabled',
+			esc_html__( 'Honeypot Bot Trap', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'toggle' ],
+			'dgap_advanced_spam_protection',
+			'dgap_advanced_spam_protection',
+			[
+				'id'          => 'honeypot_enabled',
+				'tab'         => 'advanced',
+				'default'     => 1,
+				'description' => __( 'Adds an invisible trap field that humans never see or fill, automatically blocking automated bots.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'min_submit_seconds',
+			esc_html__( 'Minimum Form Fill Time (Seconds)', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'number' ],
+			'dgap_advanced_spam_protection',
+			'dgap_advanced_spam_protection',
+			[
+				'id'          => 'min_submit_seconds',
+				'tab'         => 'advanced',
+				'default'     => 3,
+				'min'         => 0,
+				'description' => __( 'Reject submissions made faster than N seconds after page load (0 = disabled).', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'submit_cooldown_seconds',
+			esc_html__( 'Submission Cooldown (Seconds)', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'number' ],
+			'dgap_advanced_spam_protection',
+			'dgap_advanced_spam_protection',
+			[
+				'id'          => 'submit_cooldown_seconds',
+				'tab'         => 'advanced',
+				'default'     => 30,
+				'min'         => 0,
+				'description' => __( 'Minimum wait time between consecutive bookings from the same IP or email (0 = disabled).', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'daily_booking_limit',
+			esc_html__( 'Daily Booking Limit (Per IP / Email)', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'number' ],
+			'dgap_advanced_spam_protection',
+			'dgap_advanced_spam_protection',
+			[
+				'id'          => 'daily_booking_limit',
+				'tab'         => 'advanced',
+				'default'     => 0,
+				'min'         => 0,
+				'description' => __( 'Maximum pending, reserved, or abandoned booking requests allowed per IP or email in 24 hours (0 = unlimited).', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'block_disposable_emails',
+			esc_html__( 'Block Disposable Email Domains', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'toggle' ],
+			'dgap_advanced_spam_protection',
+			'dgap_advanced_spam_protection',
+			[
+				'id'          => 'block_disposable_emails',
+				'tab'         => 'advanced',
+				'default'     => 1,
+				'description' => __( 'Reject temporary/throwaway email providers such as Mailinator, TempMail, 10MinuteMail, and Yopmail.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'block_urls_in_fields',
+			esc_html__( 'Block URLs / Links in Name & Notes', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'toggle' ],
+			'dgap_advanced_spam_protection',
+			'dgap_advanced_spam_protection',
+			[
+				'id'          => 'block_urls_in_fields',
+				'tab'         => 'advanced',
+				'default'     => 1,
+				'description' => __( 'Reject bookings containing http://, https://, or www. links in customer name or notes fields.', 'digent-appointments' ),
+			]
+		);
+
+		add_settings_field(
+			'blocked_ips_domains',
+			esc_html__( 'Blocked IPs & Email Domains', 'digent-appointments' ),
+			[ 'DGAP_Settings_Fields', 'textarea' ],
+			'dgap_advanced_spam_protection',
+			'dgap_advanced_spam_protection',
+			[
+				'id'          => 'blocked_ips_domains',
+				'tab'         => 'advanced',
+				'rows'        => 4,
+				'placeholder' => "192.168.1.50\nspamdomain.com",
+				'description' => __( 'Enter one IP address or email domain per line to block from submitting bookings.', 'digent-appointments' ),
+			]
+		);
+
 		// 2. GDPR
 		add_settings_section(
 			'dgap_advanced_gdpr',
@@ -741,7 +898,7 @@ class DGAP_Settings_Sections {
 			<div class="dgap-tool-card">
 				<div class="dgap-tool-card-info">
 					<h4><?php esc_html_e( 'Auto-Delete Old Bookings (Days)', 'digent-appointments' ); ?></h4>
-					<p><?php esc_html_e( 'Automatically purge completed and cancelled bookings older than N days via daily WP-Cron (0 = disabled).', 'digent-appointments' ); ?></p>
+					<p><?php esc_html_e( 'Automatically purge completed, cancelled, and abandoned bookings older than N days via daily WP-Cron (0 = disabled).', 'digent-appointments' ); ?></p>
 				</div>
 				<div class="dgap-tool-number-wrap">
 					<?php
@@ -949,10 +1106,185 @@ class DGAP_Settings_Sections {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM `{$table}` WHERE status IN ('completed', 'cancelled') AND booking_date < DATE_SUB(CURDATE(), INTERVAL %d DAY)",
+				"DELETE FROM `{$table}` WHERE status IN ('completed', 'cancelled', 'abandoned', 'expired') AND booking_date < DATE_SUB(CURDATE(), INTERVAL %d DAY)",
 				$days
 			)
 		);
+	}
+
+	/**
+	 * Run booking lifecycle checks:
+	 * 1) Pre-abandon reminder (30% before timeout) & auto-abandon stale 'reserved' bookings.
+	 * 2) Urgent pending alert to Admin/Employee N minutes before start time.
+	 * 3) Auto-expire past unconfirmed 'pending' bookings & notify customer.
+	 */
+	public function maybe_run_auto_abandon_reserved() {
+		if ( get_transient( 'dgap_auto_abandon_last_run' ) ) {
+			return;
+		}
+		set_transient( 'dgap_auto_abandon_last_run', 1, MINUTE_IN_SECONDS );
+
+		global $wpdb;
+		$table = $wpdb->prefix . 'dgap_bookings';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table ) ) !== $table ) {
+			return;
+		}
+
+		$general_opts = get_option( 'dgap_general_settings', [] );
+		$tools_opts   = get_option( 'dgap_tools_settings', [] );
+		$email_opts   = get_option( 'dgap_email_notifications_settings', [] );
+		$now_mysql    = current_time( 'mysql' );
+		$now_ts       = strtotime( $now_mysql );
+		$master_on    = ! isset( $email_opts['enable_notifications'] ) || 1 === (int) $email_opts['enable_notifications'];
+
+		// --- 1. Reserved -> Pre-abandon reminder (30% before) & Auto-abandon ---
+		if ( isset( $general_opts['auto_abandon_minutes'] ) ) {
+			$minutes = absint( $general_opts['auto_abandon_minutes'] );
+		} elseif ( isset( $tools_opts['auto_abandon_minutes'] ) ) {
+			$minutes = absint( $tools_opts['auto_abandon_minutes'] );
+		} else {
+			$minutes = 30;
+		}
+
+		if ( $minutes > 0 ) {
+			$total_sec      = $minutes * MINUTE_IN_SECONDS;
+			$abandon_cutoff = gmdate( 'Y-m-d H:i:s', $now_ts - $total_sec );
+			$cust_aban_on   = ! isset( $email_opts['customer_email_abandoned_enabled'] ) || 1 === (int) $email_opts['customer_email_abandoned_enabled'];
+
+			if ( $master_on && $cust_aban_on && class_exists( 'DGAP_Email_Notification' ) && class_exists( 'DGAP_Booking_Repo' ) ) {
+				$elapsed_before_remind = max( 60, (int) round( $total_sec * 0.70 ) );
+				$reminder_cutoff       = gmdate( 'Y-m-d H:i:s', $now_ts - $elapsed_before_remind );
+
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$candidate_ids = $wpdb->get_col(
+					$wpdb->prepare(
+						"SELECT id FROM `{$table}` WHERE status = 'reserved' AND created_at <= %s AND created_at > %s",
+						$reminder_cutoff,
+						$abandon_cutoff
+					)
+				);
+
+				if ( ! empty( $candidate_ids ) ) {
+					$sent_map = get_option( 'dgap_abandon_reminder_sent', [] );
+					$sent_map = is_array( $sent_map ) ? $sent_map : [];
+					$prune    = time() - ( 2 * DAY_IN_SECONDS );
+					foreach ( $sent_map as $sid => $sts ) {
+						if ( (int) $sts < $prune ) {
+							unset( $sent_map[ $sid ] );
+						}
+					}
+
+					$changed = false;
+					foreach ( $candidate_ids as $bid ) {
+						$bid = absint( $bid );
+						if ( ! $bid || isset( $sent_map[ $bid ] ) ) {
+							continue;
+						}
+						$booking_data = DGAP_Booking_Repo::get( $bid );
+						if ( ! empty( $booking_data ) && is_array( $booking_data ) ) {
+							$booking_data['booking_id'] = $bid;
+							DGAP_Email_Notification::send_notification_email( 'abandoned', $booking_data, 'customer' );
+							$sent_map[ $bid ] = time();
+							$changed          = true;
+						}
+					}
+
+					if ( $changed ) {
+						update_option( 'dgap_abandon_reminder_sent', $sent_map, false );
+					}
+				}
+			}
+
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query(
+				$wpdb->prepare(
+					"UPDATE `{$table}` SET status = 'abandoned' WHERE status = 'reserved' AND created_at <= %s",
+					$abandon_cutoff
+				)
+			);
+		}
+
+		// --- 2. Urgent Pending Alert (N minutes before appointment starts) ---
+		$alert_minutes = isset( $general_opts['pending_urgent_alert_minutes'] ) ? absint( $general_opts['pending_urgent_alert_minutes'] ) : 60;
+		if ( $alert_minutes > 0 && $master_on && class_exists( 'DGAP_Email_Notification' ) && class_exists( 'DGAP_Booking_Repo' ) ) {
+			$alert_until = gmdate( 'Y-m-d H:i:s', $now_ts + ( $alert_minutes * MINUTE_IN_SECONDS ) );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$urgent_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT id FROM `{$table}` WHERE status = 'pending' AND CONCAT(booking_date, ' ', start_time) >= %s AND CONCAT(booking_date, ' ', start_time) <= %s",
+					$now_mysql,
+					$alert_until
+				)
+			);
+
+			if ( ! empty( $urgent_ids ) ) {
+				$urgent_sent = get_option( 'dgap_urgent_alert_sent', [] );
+				$urgent_sent = is_array( $urgent_sent ) ? $urgent_sent : [];
+				$prune       = time() - ( 2 * DAY_IN_SECONDS );
+				foreach ( $urgent_sent as $uid => $uts ) {
+					if ( (int) $uts < $prune ) {
+						unset( $urgent_sent[ $uid ] );
+					}
+				}
+
+				$u_changed = false;
+				foreach ( $urgent_ids as $bid ) {
+					$bid = absint( $bid );
+					if ( ! $bid || isset( $urgent_sent[ $bid ] ) ) {
+						continue;
+					}
+					$booking_data = DGAP_Booking_Repo::get( $bid );
+					if ( ! empty( $booking_data ) && is_array( $booking_data ) ) {
+						$booking_data['booking_id'] = $bid;
+						DGAP_Email_Notification::send_notification_email( 'urgent_reminder', $booking_data, 'admin' );
+						DGAP_Email_Notification::send_notification_email( 'urgent_reminder', $booking_data, 'employee' );
+						$urgent_sent[ $bid ] = time();
+						$u_changed           = true;
+					}
+				}
+
+				if ( $u_changed ) {
+					update_option( 'dgap_urgent_alert_sent', $urgent_sent, false );
+				}
+			}
+		}
+
+		// --- 3. Auto-Expire Past Unconfirmed Pending Bookings ---
+		$auto_expire_on = ! isset( $general_opts['auto_expire_pending_enabled'] ) || 1 === (int) $general_opts['auto_expire_pending_enabled'];
+		if ( $auto_expire_on ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$expired_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT id FROM `{$table}` WHERE status = 'pending' AND CONCAT(booking_date, ' ', start_time) < %s",
+					$now_mysql
+				)
+			);
+
+			if ( ! empty( $expired_ids ) ) {
+				$placeholders = implode( ',', array_fill( 0, count( $expired_ids ), '%d' ) );
+				$ids_int      = array_map( 'absint', $expired_ids );
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->query(
+					$wpdb->prepare(
+						"UPDATE `{$table}` SET status = 'expired' WHERE id IN ({$placeholders})",
+						...$ids_int
+					)
+				);
+
+				$cust_exp_on = ! isset( $email_opts['customer_email_expired_enabled'] ) || 1 === (int) $email_opts['customer_email_expired_enabled'];
+				if ( $master_on && $cust_exp_on && class_exists( 'DGAP_Email_Notification' ) && class_exists( 'DGAP_Booking_Repo' ) ) {
+					foreach ( $ids_int as $bid ) {
+						$booking_data = DGAP_Booking_Repo::get( $bid );
+						if ( ! empty( $booking_data ) && is_array( $booking_data ) ) {
+							$booking_data['booking_id'] = $bid;
+							$booking_data['status']     = 'expired';
+							DGAP_Email_Notification::send_notification_email( 'expired', $booking_data, 'customer' );
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**

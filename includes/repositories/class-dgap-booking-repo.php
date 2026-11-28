@@ -720,7 +720,7 @@ class DGAP_Booking_Repo {
 					SUM(
 						CASE
 							WHEN CONCAT(booking_date, ' ', start_time) >= %s
-							AND status NOT IN ('cancelled', 'canceled', 'rejected')
+							AND status NOT IN ('cancelled', 'canceled', 'abandoned', 'expired', 'rejected')
 							THEN 1 ELSE 0
 						END
 					) AS upcoming_count
@@ -788,7 +788,7 @@ class DGAP_Booking_Repo {
 
 		foreach ( (array) $rows as $row ) {
 			$status      = strtolower( (string) ( $row['status'] ?? 'pending' ) );
-			$is_canceled = in_array( $status, [ 'cancelled', 'canceled', 'rejected' ], true );
+			$is_canceled = in_array( $status, [ 'cancelled', 'canceled', 'abandoned', 'expired', 'rejected' ], true );
 			$slot_ts     = strtotime( trim( ( $row['booking_date'] ?? '' ) . ' ' . ( $row['start_time'] ?? '00:00:00' ) ) );
 
 			if ( $is_canceled ) {

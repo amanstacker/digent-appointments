@@ -109,6 +109,8 @@ $filter_worker     = $wpdb->get_results( "SELECT id, first_name, last_name FROM 
 								<option value="confirmed" <?php selected( $filters['status'], 'confirmed' ); ?>><?php esc_html_e( 'Confirmed', 'digent-appointments' ); ?></option>
 								<option value="completed" <?php selected( $filters['status'], 'completed' ); ?>><?php esc_html_e( 'Completed', 'digent-appointments' ); ?></option>
 								<option value="cancelled" <?php selected( $filters['status'], 'cancelled' ); ?>><?php esc_html_e( 'Cancelled', 'digent-appointments' ); ?></option>
+								<option value="abandoned" <?php selected( $filters['status'], 'abandoned' ); ?>><?php esc_html_e( 'Abandoned', 'digent-appointments' ); ?></option>
+								<option value="expired" <?php selected( $filters['status'], 'expired' ); ?>><?php esc_html_e( 'Expired', 'digent-appointments' ); ?></option>
 							</select>
 						</div>
 
@@ -206,6 +208,8 @@ $filter_worker     = $wpdb->get_results( "SELECT id, first_name, last_name FROM 
 						<option value="completed"><?php esc_html_e( 'Completed', 'digent-appointments' ); ?></option>
 						<option value="pending"><?php esc_html_e( 'Pending', 'digent-appointments' ); ?></option>
 						<option value="cancelled"><?php esc_html_e( 'Cancelled', 'digent-appointments' ); ?></option>
+						<option value="abandoned"><?php esc_html_e( 'Abandoned', 'digent-appointments' ); ?></option>
+						<option value="expired"><?php esc_html_e( 'Expired', 'digent-appointments' ); ?></option>
 					</select>
 					<button type="button" class="button button-primary dgap-bulk-apply" id="dgap-bulk-status-btn" disabled>
 						<span class="dashicons dashicons-yes"></span>

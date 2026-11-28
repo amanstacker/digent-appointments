@@ -144,7 +144,7 @@ class DGAP_Bookings_Ajax {
 			wp_send_json_success( [ 'count' => $count, 'action' => 'delete' ] );
 		}
 
-		$allowed_statuses = [ 'pending', 'confirmed', 'completed', 'cancelled' ];
+		$allowed_statuses = [ 'pending', 'confirmed', 'completed', 'cancelled', 'abandoned', 'expired' ];
 		if ( in_array( $bulk_action, $allowed_statuses, true ) ) {
 			$count = DGAP_Booking_Repo::bulk_update_status( $ids, $bulk_action );
 			wp_send_json_success( [ 'count' => $count, 'action' => $bulk_action ] );
@@ -178,6 +178,7 @@ class DGAP_Bookings_Ajax {
 			'cancelled',
 			'completed',
 			'abandoned',
+			'expired',
 			'reserved',
 		];
 

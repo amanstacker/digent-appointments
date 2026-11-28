@@ -17,6 +17,18 @@ $dgap_recap_key    = $dgap_adv_opts['recaptcha_site_key'] ?? '';
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 $dgap_is_admin_prv = is_admin() && ( ! function_exists( 'wp_doing_ajax' ) || ! wp_doing_ajax() || ( isset( $_REQUEST['action'] ) && 'dgap_render_preview' === $_REQUEST['action'] ) );
 ?>
+<?php if ( ! $dgap_is_admin_prv ) :
+	$dgap_form_ts     = time();
+	$dgap_form_ts_sig = hash_hmac( 'sha256', (string) $dgap_form_ts, wp_salt( 'nonce' ) );
+?>
+	<div class="dgap-hp-wrap" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;">
+		<label for="dgap_website_url"><?php esc_html_e( 'Website', 'digent-appointments' ); ?></label>
+		<input type="text" id="dgap_website_url" name="dgap_website_url" value="" tabindex="-1" autocomplete="off" />
+	</div>
+	<input type="hidden" name="dgap_form_ts" value="<?php echo esc_attr( $dgap_form_ts ); ?>" />
+	<input type="hidden" name="dgap_form_ts_sig" value="<?php echo esc_attr( $dgap_form_ts_sig ); ?>" />
+<?php endif; ?>
+
 <?php if ( $dgap_gdpr_global ) : ?>
 	<label class="dgap-terms dgap-gdpr-consent-row" style="<?php echo esc_attr( $dgap_gdpr_form ? 'margin-top:14px;display:flex;align-items:flex-start;gap:8px;' : 'display:none;margin-top:14px;align-items:flex-start;gap:8px;' ); ?>">
 		<input type="checkbox" name="dgap_gdpr_consent" class="dgap-gdpr-consent" value="1" <?php echo $dgap_gdpr_form ? 'required' : ''; ?> style="margin-top:3px;width:auto;flex-shrink:0;" />

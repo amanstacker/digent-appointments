@@ -833,6 +833,9 @@ jQuery(function ($) {
             _dgap_nonce:       dgap_frontend._dgap_frontend_nonce,
             form_id:           formId,
             dgap_gdpr_consent: $gdprCheckbox.length ? ($gdprCheckbox.is(':checked') ? '1' : '0') : '1',
+            dgap_website_url:  ($('[name="dgap_website_url"]').first().val() || ''),
+            dgap_form_ts:      ($('[name="dgap_form_ts"]').first().val() || ''),
+            dgap_form_ts_sig:  ($('[name="dgap_form_ts_sig"]').first().val() || ''),
             ...customFieldData
         };
 

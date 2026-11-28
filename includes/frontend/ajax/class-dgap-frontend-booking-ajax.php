@@ -355,9 +355,117 @@ class DGAP_Frontend_Booking_Ajax {
 		$data['status']   = $default_status;
 
 		// ------------------------------
+		// Anti-Spam & Rate-Limit Checks
+		// ------------------------------
+		$ip_addr     = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
+		$email_lower = strtolower( trim( (string) $data['email'] ) );
+		$email_parts = explode( '@', $email_lower );
+		$email_dom   = isset( $email_parts[1] ) ? $email_parts[1] : '';
+
+		// 1. Honeypot trap
+		$honeypot_on = ! isset( $adv_settings['honeypot_enabled'] ) || 1 === (int) $adv_settings['honeypot_enabled'];
+		if ( $honeypot_on && '' !== trim( sanitize_text_field( wp_unslash( $_POST['dgap_website_url'] ?? '' ) ) ) ) {
+			wp_send_json_error( esc_html__( 'Spam submission detected.', 'digent-appointments' ) );
+		}
+
+		// 2. Minimum form fill time check
+		$min_sec = isset( $adv_settings['min_submit_seconds'] ) ? absint( $adv_settings['min_submit_seconds'] ) : 3;
+		if ( $min_sec > 0 ) {
+			$form_ts     = absint( $_POST['dgap_form_ts'] ?? 0 );
+			$form_ts_sig = sanitize_text_field( wp_unslash( $_POST['dgap_form_ts_sig'] ?? '' ) );
+			if ( $form_ts > 0 && '' !== $form_ts_sig ) {
+				$expected_ts_sig = hash_hmac( 'sha256', (string) $form_ts, wp_salt( 'nonce' ) );
+				if ( ! hash_equals( $expected_ts_sig, $form_ts_sig ) || ( time() - $form_ts ) < $min_sec ) {
+					wp_send_json_error( esc_html__( 'Submission was too fast. Please wait a moment and try again.', 'digent-appointments' ) );
+				}
+			}
+		}
+
+		// 3. Blocked IPs & Email Domains blacklist
+		if ( ! empty( $adv_settings['blocked_ips_domains'] ) ) {
+			$raw_list = preg_split( '/[\r\n,]+/', strtolower( (string) $adv_settings['blocked_ips_domains'] ) );
+			$blocked  = array_filter( array_map( 'trim', (array) $raw_list ) );
+			if ( ( '' !== $ip_addr && in_array( strtolower( $ip_addr ), $blocked, true ) ) || ( '' !== $email_dom && in_array( $email_dom, $blocked, true ) ) ) {
+				wp_send_json_error( esc_html__( 'Your IP address or email domain is not allowed to submit bookings.', 'digent-appointments' ) );
+			}
+		}
+
+		// 4. Disposable email domain check
+		$block_disp = ! isset( $adv_settings['block_disposable_emails'] ) || 1 === (int) $adv_settings['block_disposable_emails'];
+		if ( $block_disp && '' !== $email_dom ) {
+			$disposable_domains = [
+				'mailinator.com', 'tempmail.com', '10minutemail.com', 'guerrillamail.com',
+				'yopmail.com', 'throwawaymail.com', 'trashmail.com', 'getnada.com',
+				'dispostable.com', 'fakeinbox.com', 'sharklasers.com', 'maildrop.cc',
+			];
+			if ( in_array( $email_dom, $disposable_domains, true ) ) {
+				wp_send_json_error( esc_html__( 'Disposable or temporary email addresses are not allowed. Please use a valid email.', 'digent-appointments' ) );
+			}
+		}
+
+		// 5. Block URLs/links in name & notes
+		$block_urls = ! isset( $adv_settings['block_urls_in_fields'] ) || 1 === (int) $adv_settings['block_urls_in_fields'];
+		if ( $block_urls ) {
+			$text_to_check = implode( ' ', [ $data['first_name'], $data['last_name'], $data['notes'] ] );
+			if ( preg_match( '/(?:https?:\/\/|www\.)\S+/i', $text_to_check ) ) {
+				wp_send_json_error( esc_html__( 'Links or URLs are not allowed in name or notes fields.', 'digent-appointments' ) );
+			}
+		}
+
+		// 6. Submission cooldown per IP / email
+		$cooldown_sec = isset( $adv_settings['submit_cooldown_seconds'] ) ? absint( $adv_settings['submit_cooldown_seconds'] ) : 30;
+		$cooldown_key = 'dgap_cd_' . md5( $ip_addr . '|' . $email_lower );
+		if ( $cooldown_sec > 0 && get_transient( $cooldown_key ) ) {
+			wp_send_json_error(
+				sprintf(
+					/* translators: %d: cooldown seconds */
+					esc_html__( 'Please wait %d seconds before submitting another booking.', 'digent-appointments' ),
+					$cooldown_sec
+				)
+			);
+		}
+
+		// 7. Daily spam / abandonment rate-limit guard per IP or customer email
+		$tools_settings = get_option( 'dgap_tools_settings', [] );
+		$daily_limit    = isset( $adv_settings['daily_booking_limit'] )
+			? absint( $adv_settings['daily_booking_limit'] )
+			: ( isset( $tools_settings['daily_booking_limit'] ) ? absint( $tools_settings['daily_booking_limit'] ) : 0 );
+		if ( $daily_limit > 0 ) {
+			global $wpdb;
+			$since_mysql = gmdate( 'Y-m-d H:i:s', strtotime( current_time( 'mysql' ) ) - DAY_IN_SECONDS );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$recent_count = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(b.id)
+					FROM {$wpdb->prefix}dgap_bookings b
+					LEFT JOIN {$wpdb->prefix}dgap_customers c ON c.id = b.customer_id
+					WHERE b.status IN ('pending', 'reserved', 'abandoned')
+					AND b.created_at >= %s
+					AND ( ( %s != '' AND b.ip_address = %s ) OR c.email = %s )",
+					$since_mysql,
+					$ip_addr,
+					$ip_addr,
+					$data['email']
+				)
+			);
+			if ( $recent_count >= $daily_limit ) {
+				wp_send_json_error(
+					sprintf(
+						/* translators: %d: daily booking request limit */
+						esc_html__( 'Daily limit of %d booking requests has been reached. Please contact us directly.', 'digent-appointments' ),
+						$daily_limit
+					)
+				);
+			}
+		}
+
+		// ------------------------------
 		// Create booking via repo
 		// ------------------------------
 		$result = DGAP_Booking_Repo::create_booking( $data );
+		if ( ! is_wp_error( $result ) && $cooldown_sec > 0 ) {
+			set_transient( $cooldown_key, 1, $cooldown_sec );
+		}
 
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( esc_html( $result->get_error_message() ) );

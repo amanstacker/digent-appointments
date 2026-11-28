@@ -4683,6 +4683,8 @@
 
 .dgap-log-status-badge.is-cancelled,
 .dgap-log-status-badge.is-canceled,
+.dgap-log-status-badge.is-abandoned,
+.dgap-log-status-badge.is-expired,
 .dgap-log-status-badge.is-rejected {
 	background: #fee2e2;
 	color: #991b1b;

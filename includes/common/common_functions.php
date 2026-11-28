@@ -308,7 +308,7 @@ function dgap_get_dashboard_overview() {
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	$today_bookings = (int) $wpdb->get_var(
 		$wpdb->prepare(
-			"SELECT COUNT(*) FROM {$wpdb->prefix}dgap_bookings WHERE booking_date = %s AND status != 'cancelled'",
+			"SELECT COUNT(*) FROM {$wpdb->prefix}dgap_bookings WHERE booking_date = %s AND status NOT IN ('cancelled', 'abandoned', 'expired')",
 			$today
 		)
 	);
@@ -517,7 +517,7 @@ function dgap_get_dashboard_overview() {
 			s.duration,
 			COUNT(b.id) AS bookings_count
 		FROM {$wpdb->prefix}dgap_services s
-		LEFT JOIN {$wpdb->prefix}dgap_bookings b ON b.service_id = s.id AND b.status != 'cancelled'
+		LEFT JOIN {$wpdb->prefix}dgap_bookings b ON b.service_id = s.id AND b.status NOT IN ('cancelled', 'abandoned', 'expired')
 		WHERE s.status = 1
 		GROUP BY s.id
 		ORDER BY bookings_count DESC, s.id ASC

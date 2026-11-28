@@ -27,9 +27,10 @@ class DGAP_Settings_Render {
 			'advanced' => [
 				'label'    => esc_html__( 'Advanced', 'digent-appointments' ),
 				'sections' => [
-					'recaptcha'         => esc_html__( 'Google reCAPTCHA', 'digent-appointments' ),
-					'gdpr'              => esc_html__( 'GDPR', 'digent-appointments' ),
-					'custom_css' => esc_html__( 'Custom CSS', 'digent-appointments' ),
+					'recaptcha'       => esc_html__( 'Google reCAPTCHA', 'digent-appointments' ),
+					'spam_protection' => esc_html__( 'Spam Protection', 'digent-appointments' ),
+					'gdpr'            => esc_html__( 'GDPR', 'digent-appointments' ),
+					'custom_css'      => esc_html__( 'Custom CSS', 'digent-appointments' ),
 				],
 			],
 			'tools' => [

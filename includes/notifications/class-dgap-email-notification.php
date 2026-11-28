@@ -86,8 +86,8 @@ class DGAP_Email_Notification {
             );
         }
 
-        $new_status  = ( 'confirm' === $do ) ? 'confirmed' : 'cancelled';
         $is_customer = ( 'customer' === $actor );
+        $new_status  = ( 'confirm' === $do ) ? 'confirmed' : ( $is_customer ? 'abandoned' : 'cancelled' );
         $return_url  = $is_customer ? home_url( '/' ) : admin_url( 'admin.php?page=digent-appointments-bookings' );
         $return_lbl  = $is_customer ? __( 'Back to Website', 'digent-appointments' ) : __( 'View Bookings in Admin', 'digent-appointments' );
 
@@ -129,7 +129,9 @@ class DGAP_Email_Notification {
         wp_die(
             sprintf(
                 '<div style="font-family:sans-serif;max-width:480px;margin:20px auto;text-align:center;"><h2>%s</h2><p>%s</p><p><a href="%s" style="display:inline-block;padding:10px 20px;background:#10b981;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;">%s</a></p></div>',
-                'confirmed' === $new_status ? esc_html__( 'Booking Confirmed', 'digent-appointments' ) : esc_html__( 'Booking Cancelled', 'digent-appointments' ),
+                'confirmed' === $new_status
+                    ? esc_html__( 'Booking Confirmed', 'digent-appointments' )
+                    : ( 'abandoned' === $new_status ? esc_html__( 'Booking Abandoned', 'digent-appointments' ) : esc_html__( 'Booking Cancelled', 'digent-appointments' ) ),
                 /* translators: 1: booking ID, 2: status */
                 sprintf( esc_html__( 'Booking #%1$d has been marked as %2$s.', 'digent-appointments' ), $booking_id, esc_html( ucfirst( $new_status ) ) ),
                 esc_url( $return_url ),
@@ -181,7 +183,8 @@ class DGAP_Email_Notification {
 
         if ( empty( $template ) ) {
             // If user has not saved the notification settings then fetch the default template.
-            $template = isset( self::$email_templates[ "{$type}_email_templates" ][ $status ] ) ? self::$email_templates[ "{$type}_email_templates" ][ $status ] : '';
+            $fallback_status = ( 'abandoned' === $status && empty( self::$email_templates[ "{$type}_email_templates" ]['abandoned'] ) ) ? 'cancelled' : $status;
+            $template        = isset( self::$email_templates[ "{$type}_email_templates" ][ $fallback_status ] ) ? self::$email_templates[ "{$type}_email_templates" ][ $fallback_status ] : '';
         }
 
         $template = apply_filters( 'dgap_email_template_override', $template, $type, $status, $data, $options );
@@ -489,25 +492,33 @@ class DGAP_Email_Notification {
 
         $subjects = [
             'admin' => [
-                'confirmed' => esc_html__( 'Appointment Confirmed', 'digent-appointments' ),
-                'pending'   => esc_html__( 'Appointment Pending', 'digent-appointments' ),
-                'reserved'  => esc_html__( 'Appointment Reserved', 'digent-appointments' ),
-                'cancelled' => esc_html__( 'Appointment Cancelled', 'digent-appointments' ),
-                'reminder'  => esc_html__( 'Appointment Reminder', 'digent-appointments' ),
+                'confirmed'       => esc_html__( 'Appointment Confirmed', 'digent-appointments' ),
+                'pending'         => esc_html__( 'Appointment Pending', 'digent-appointments' ),
+                'reserved'        => esc_html__( 'Appointment Reserved', 'digent-appointments' ),
+                'cancelled'       => esc_html__( 'Appointment Cancelled', 'digent-appointments' ),
+                'abandoned'       => esc_html__( 'Appointment Abandoned', 'digent-appointments' ),
+                'expired'         => esc_html__( 'Pending Appointment Expired', 'digent-appointments' ),
+                'urgent_reminder' => esc_html__( 'Urgent: Pending Appointment Needs Confirmation', 'digent-appointments' ),
+                'reminder'        => esc_html__( 'Appointment Reminder', 'digent-appointments' ),
             ],
             'customer' => [
                 'confirmed' => esc_html__( 'Your Appointment Confirmed', 'digent-appointments' ),
                 'pending'   => esc_html__( 'Your Appointment Pending', 'digent-appointments' ),
                 'reserved'  => esc_html__( 'Your Appointment Reserved', 'digent-appointments' ),
                 'cancelled' => esc_html__( 'Your Appointment Cancelled', 'digent-appointments' ),
+                'abandoned' => esc_html__( 'Action Required: Your Reserved Slot Is About to Expire', 'digent-appointments' ),
+                'expired'   => esc_html__( 'Your Pending Appointment Request Expired', 'digent-appointments' ),
                 'reminder'  => esc_html__( 'Your Appointment Reminder', 'digent-appointments' ),
             ],
             'employee' => [
-                'confirmed' => esc_html__( 'New Appointment Confirmed', 'digent-appointments' ),
-                'pending'   => esc_html__( 'Appointment Pending', 'digent-appointments' ),
-                'reserved'  => esc_html__( 'Appointment Reserved', 'digent-appointments' ),
-                'cancelled' => esc_html__( 'Appointment Cancelled', 'digent-appointments' ),
-                'reminder'  => esc_html__( 'Appointment Reminder', 'digent-appointments' ),
+                'confirmed'       => esc_html__( 'New Appointment Confirmed', 'digent-appointments' ),
+                'pending'         => esc_html__( 'Appointment Pending', 'digent-appointments' ),
+                'reserved'        => esc_html__( 'Appointment Reserved', 'digent-appointments' ),
+                'cancelled'       => esc_html__( 'Appointment Cancelled', 'digent-appointments' ),
+                'abandoned'       => esc_html__( 'Appointment Abandoned', 'digent-appointments' ),
+                'expired'         => esc_html__( 'Pending Appointment Expired', 'digent-appointments' ),
+                'urgent_reminder' => esc_html__( 'Urgent: Pending Appointment Needs Confirmation', 'digent-appointments' ),
+                'reminder'        => esc_html__( 'Appointment Reminder', 'digent-appointments' ),
             ]
         ];
 

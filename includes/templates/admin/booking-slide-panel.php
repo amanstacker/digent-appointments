@@ -141,6 +141,7 @@
 					<option value="pending"><?php esc_html_e( 'Pending', 'digent-appointments' ); ?></option>
 					<option value="confirmed"><?php esc_html_e( 'Confirmed', 'digent-appointments' ); ?></option>
 					<option value="abandoned"><?php esc_html_e( 'Abandoned', 'digent-appointments' ); ?></option>
+					<option value="expired"><?php esc_html_e( 'Expired', 'digent-appointments' ); ?></option>
 					<option value="cancelled"><?php esc_html_e( 'Cancelled', 'digent-appointments' ); ?></option>
 				</select>
 			</div>

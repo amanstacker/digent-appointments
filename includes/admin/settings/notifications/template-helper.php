@@ -15,8 +15,13 @@ if ( ! function_exists( 'dgap_render_email_templates_section' ) ) {
 			'pending'   => esc_html__( 'Pending', 'digent-appointments' ),
 			'confirmed' => esc_html__( 'Confirmed', 'digent-appointments' ),
 			'cancelled' => esc_html__( 'Cancelled', 'digent-appointments' ),
+			'abandoned' => esc_html__( 'Abandoned', 'digent-appointments' ),
+			'expired'   => esc_html__( 'Expired', 'digent-appointments' ),
 			'reminder'  => esc_html__( 'Reminder', 'digent-appointments' ),
 		];
+		if ( 'customer' !== $type ) {
+			$statuses['urgent_reminder'] = esc_html__( 'Urgent Pending Alert', 'digent-appointments' );
+		}
 
 		$options = get_option( 'dgap_email_notifications_settings', [] );
 
